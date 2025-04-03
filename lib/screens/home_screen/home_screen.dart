@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
-import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_grid.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
-import '../../widgets/custom_animated_circular_progress.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_slider.dart';
 import 'home_screen_widget/chapter_progress.dart';
@@ -37,6 +35,8 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizeHelper.height(),
+
+            /// search bar
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: SearchBar(leading: AppIcons.search),
@@ -50,8 +50,12 @@ class HomeScreen extends StatelessWidget {
               animationDuration: Duration(seconds: 3),
             ),
             SizeHelper.height(),
+
+            /// user pashes
             SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
             SizeHelper.height(),
+
+            /// recent activity text
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: CustomText(
@@ -69,6 +73,36 @@ class HomeScreen extends StatelessWidget {
               chapter: "Chapter 1:",
               description: "Analysis Thought Process.",
               progressPercent: 90,
+            ),
+
+            SizeHelper.height(),
+            SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+            SizeHelper.height(),
+
+            /// recent activity text
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomText(
+                text: AppStrings.suggestedBooks,
+                style: TextStyleHelper.mediumHeading.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            SizeHelper.height(),
+            CustomGridWidget(
+              isScroll: true,
+              data: List<String>.generate(10, (index) => ""),
+              itemBuilder:
+                  (item, index) => CustomContainer(
+                    backGroundColor: AppColors.cream,
+                    child: CustomImageWithLoader(
+                      imageUrl:
+                          "https://picsum.photos/id/1084/536/354?grayscale",
+                    ),
+                  ),
+
+              axisCount: 3,
             ),
           ],
         ),

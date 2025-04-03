@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:sizer/sizer.dart';
-
 import '../../app_const/app_strings.dart';
+import '../../widgets/custom_grid.dart';
 
 class ProgramsScreens extends StatelessWidget {
   const ProgramsScreens({super.key});
@@ -21,17 +19,10 @@ class ProgramsScreens extends StatelessWidget {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body: GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: AppSize.size10,
-          mainAxisSpacing: AppSize.size10,
-          childAspectRatio: 1,
-        ),
-        itemCount: 10,
+      body: CustomGridWidget(
+        data: <String>["one", "Two", "Three"],
         itemBuilder:
-            (context, index) => CustomContainer(
+            (item, index) => CustomContainer(
               backGroundColor: AppColors.cream,
               borderRadius: BorderRadius.circular(AppSize.size10),
               child: Column(
@@ -52,6 +43,7 @@ class ProgramsScreens extends StatelessWidget {
                 ],
               ),
             ),
+        axisCount: 2,
       ),
     );
   }

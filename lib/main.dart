@@ -90,6 +90,12 @@ class MyApp extends StatelessWidget {
                 unselectedItemColor: AppColors.black,
                 type: BottomNavigationBarType.fixed,
               ),
+              tabBarTheme: TabBarThemeData(
+                labelColor: AppColors.secondary,
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: AppColors.secondary,
+                indicatorColor: AppColors.secondary,
+              ),
             ),
             home: SplashScreen(),
           ),

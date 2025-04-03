@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
@@ -29,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
 
     Future.delayed(
       Duration(seconds: time + time + time),
-      () => push(
+      () => pushRemoveUntil(
         context: context,
         widget: OnBoardingScreen(),
         transition: FadeForwardsPageTransitionsBuilder(),

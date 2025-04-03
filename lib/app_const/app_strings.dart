@@ -25,4 +25,6 @@ class AppStrings {
   static const programs = "Programs";
   static const yourScore = 'Your Score';
   static const recentActivity = "Recent Activity";
+  static const suggestedBooks = "Suggested Books";
+  static const scoreBoard = "Scoreboard";
 }
