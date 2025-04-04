@@ -14,4 +14,8 @@ class ApiHelper {
   /// chapter
   static String getChapters({required String id}) =>
       "$baseUrl/chapters?programId=$id";
+
+  /// posts
+  static String getPostById({required String id}) =>
+      "$baseUrl/posts?chapterId=$id";
 }

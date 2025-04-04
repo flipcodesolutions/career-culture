@@ -21,18 +21,28 @@ class CustomImageWithLoader extends StatelessWidget {
   final double? errorIconSize;
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      height: height,
-      width: width,
-      errorWidget:
-          (context, url, error) => Icon(
-            Icons.error_outline,
-            color: AppColors.primary,
-            size: errorIconSize ?? AppSize.size50,
+    return GestureDetector(
+      onTap:
+          () => showDialog(
+            context: context,
+            builder:
+                (context) => Dialog(
+                  child: InteractiveViewer(child: Image.network(imageUrl)),
+                ),
           ),
-      fit: fit ?? BoxFit.cover,
-      placeholder: (context, url) => Center(child: CustomLoader()),
-      imageUrl: imageUrl,
+      child: CachedNetworkImage(
+        height: height,
+        width: width,
+        errorWidget:
+            (context, url, error) => Icon(
+              Icons.error_outline,
+              color: AppColors.primary,
+              size: errorIconSize ?? AppSize.size50,
+            ),
+        fit: fit ?? BoxFit.cover,
+        placeholder: (context, url) => Center(child: CustomLoader()),
+        imageUrl: imageUrl,
+      ),
     );
   }
 }
