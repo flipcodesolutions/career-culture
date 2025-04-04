@@ -1,10 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:sizer/sizer.dart';
-import '../app_const/app_colors.dart';
-import '../utils/method_helpers/shadow_helper.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
 import 'custom_image.dart';

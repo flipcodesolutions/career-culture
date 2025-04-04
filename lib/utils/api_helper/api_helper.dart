@@ -4,4 +4,5 @@ class ApiHelper {
   static String baseUrl = Environment.baseUrl;
 
   static String onBoarding = "$baseUrl/onboardings";
+  static String programs = "$baseUrl/programs";
 }

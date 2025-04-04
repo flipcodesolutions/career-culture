@@ -5,6 +5,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
+import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/screens/spalsh_screen/spalsh_screen.dart';
 import 'package:mindful_youth/utils/app_theme/app_theme_helper.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => HomeScreenProvider()),
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
+        ChangeNotifierProvider(create: (context) => ProgramsProvider()),
       ],
       child: const MyApp(),
     ),

@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';

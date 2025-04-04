@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_strings.dart';
@@ -46,9 +47,9 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
             Expanded(
               flex: 3,
               child: CustomContainer(
-                child: CircleAvatar(
-                  maxRadius: AppSize.size30,
-                  backgroundImage: NetworkImage(imageUrl),
+                child: CustomLoaderImage(
+                  imageUrl: imageUrl,
+                  radius: AppSize.size30,
                 ),
               ),
             ),

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../app_const/app_colors.dart';
 
 class CustomSmoothPageIndicator extends StatelessWidget {

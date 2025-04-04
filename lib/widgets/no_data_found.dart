@@ -24,8 +24,8 @@ class NoDataFoundWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       width: width ?? 80.w,
       height: height ?? 10.h,
-      borderRadius: BorderRadius.circular(10),
-      backGroundColor: color ?? AppColors.grey.withOpacity(0.5),
+      // borderRadius: BorderRadius.circular(10),
+      // backGroundColor: color ?? AppColors.grey.withOpacity(0.5),
       child: CustomText(text: AppStrings.noDataFound),
     );
   }
