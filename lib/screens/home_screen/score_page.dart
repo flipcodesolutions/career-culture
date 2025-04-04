@@ -154,7 +154,7 @@ class TopPlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      margin: EdgeInsets.symmetric(horizontal: 2.w),
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
       child: Column(
         children: [
           CustomContainer(

@@ -5,6 +5,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
+import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/screens/spalsh_screen/spalsh_screen.dart';
 import 'package:mindful_youth/utils/app_theme/app_theme_helper.dart';
@@ -29,6 +30,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => HomeScreenProvider()),
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
         ChangeNotifierProvider(create: (context) => ProgramsProvider()),
+        ChangeNotifierProvider(create: (context) => ChapterProvider()),
       ],
       child: const MyApp(),
     ),
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
             title: AppStrings.appName,
             // app theme
             theme: ThemeData(
+              fontFamily: "Merriweather",
               scaffoldBackgroundColor: AppColors.white,
               appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.white,

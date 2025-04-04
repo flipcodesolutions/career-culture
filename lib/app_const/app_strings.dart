@@ -27,4 +27,6 @@ class AppStrings {
   static const recentActivity = "Recent Activity";
   static const suggestedBooks = "Suggested Books";
   static const scoreBoard = "Scoreboard";
+  static const aspectForYourMentalWellBeing =
+      "Aspect For Your Mental Well Being";
 }

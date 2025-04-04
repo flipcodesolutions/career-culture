@@ -1,32 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/widgets/custom_score_with_animation.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_size.dart';
 import '../../../utils/method_helpers/shadow_helper.dart';
 import '../../../utils/text_style_helper/text_style_helper.dart';
-import '../../../widgets/custom_animated_circular_progress.dart';
 import '../../../widgets/custom_container.dart';
 import '../../../widgets/custom_image.dart';
 import '../../../widgets/custom_text.dart';
 
-class ChapterProgressWidget extends StatelessWidget {
-  const ChapterProgressWidget({
-    super.key,
-    required this.imageUrl,
-    required this.chapter,
-    required this.description,
-    required this.progressPercent,
-  });
-  final String imageUrl;
-  final String chapter;
-  final String description;
-  final double progressPercent;
+class ChapterContainer extends StatelessWidget {
+  const ChapterContainer({super.key, required this.chaptersInfo});
+  final ChaptersInfo chaptersInfo;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       width: 90.w,
-      height: 15.h,
-      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      height: 12.h,
+      padding: EdgeInsets.all(AppSize.size10),
+      margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
       borderRadius: BorderRadius.circular(AppSize.size10),
       backGroundColor: AppColors.white,
       borderColor: AppColors.grey,
@@ -37,13 +32,15 @@ class ChapterProgressWidget extends StatelessWidget {
           Expanded(
             flex: 3,
             child: CustomContainer(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.size10),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppSize.size10),
-                child: CustomImageWithLoader(imageUrl: imageUrl),
+                child: CustomImageWithLoader(
+                  imageUrl: "${AppStrings.assetsUrl}${chaptersInfo.image}",
+                ),
               ),
             ),
           ),
+          SizeHelper.width(),
           Expanded(
             flex: 6,
             child: CustomContainer(
@@ -53,10 +50,10 @@ class ChapterProgressWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: chapter,
+                    text: chaptersInfo.title ?? "",
                     style: TextStyleHelper.mediumHeading,
                   ),
-                  CustomText(text: description),
+                  CustomText(text: chaptersInfo.description ?? ""),
                 ],
               ),
             ),
@@ -64,10 +61,11 @@ class ChapterProgressWidget extends StatelessWidget {
           Expanded(
             flex: 3,
             child: CustomContainer(
-              child: AnimatedCircularProgress(
-                percentage: progressPercent, // Pass the desired percentage
-                size: AppSize.size100, // Size of the widget
-                duration: Duration(seconds: 3), // Animation duration
+              alignment: Alignment.topRight,
+              child: CustomAnimatedScore(
+                score: "100",
+                lastText: "Points",
+                textStyle: TextStyleHelper.smallHeading,
               ),
             ),
           ),

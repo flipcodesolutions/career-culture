@@ -12,6 +12,14 @@ class ProgramsProvider extends ChangeNotifier {
   ProgramsModel? _programsModel;
   ProgramsModel? get programsModel => _programsModel;
 
+  /// current Selected program
+  ProgramsInfo? _currentProgramInfo;
+  ProgramsInfo? get currentProgramInfo => _currentProgramInfo;
+  set setCurrentProgramInfo(ProgramsInfo info) {
+    _currentProgramInfo = info;
+    notifyListeners();
+  }
+
   Future<void> getAllPrograms({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();

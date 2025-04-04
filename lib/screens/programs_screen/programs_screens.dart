@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/app_const/app_colors.dart';
-import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -13,7 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/programs/programs_model.dart';
 import '../../widgets/custom_grid.dart';
-import '../../widgets/custom_image.dart';
+import 'widgets/program_container.dart';
 
 class ProgramsScreens extends StatefulWidget {
   const ProgramsScreens({super.key});
@@ -29,9 +26,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
     super.initState();
     Future.microtask(() {
       ProgramsProvider programsProvider = context.read<ProgramsProvider>();
-      if (programsProvider.programsModel?.data?.isEmpty == true) {
-        programsProvider.getAllPrograms(context: context);
-      }
+      programsProvider.getAllPrograms(context: context);
     });
   }
 
@@ -57,31 +52,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
                   data: <ProgramsInfo>[
                     ...programsProvider.programsModel?.data ?? [],
                   ],
-                  itemBuilder:
-                      (item, index) => CustomContainer(
-                        backGroundColor: AppColors.cream,
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: CustomContainer(
-                                child: CustomLoaderImage(
-                                  imageUrl:
-                                      "${AppStrings.assetsUrl}${item.image}",
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: CustomText(
-                                text: item.title ?? "",
-                                style: TextStyleHelper.smallHeading,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  itemBuilder: (item, index) => ProgramContainer(item: item),
                   axisCount: 2,
                 ),
               )

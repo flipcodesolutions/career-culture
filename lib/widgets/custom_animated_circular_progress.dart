@@ -11,14 +11,16 @@ import 'custom_text.dart';
 class AnimatedCircularProgress extends StatefulWidget {
   final double percentage; // Percentage to animate to (0-100)
   final double size; // Size of the circular progress
-  final Color color; // Progress color
-  final Duration duration; // Animation duration
+  final Color? fromColor;
+  final Color? toColor;
+  final Duration duration;
 
   const AnimatedCircularProgress({
     super.key,
     required this.percentage,
     this.size = 0,
-    this.color = Colors.blue,
+    this.fromColor,
+    this.toColor,
     this.duration = const Duration(seconds: 2),
   });
 
@@ -73,7 +75,8 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
                 size: Size(widget.size, widget.size),
                 painter: CirclePainter(
                   progress: _animation.value,
-                  color: widget.color,
+                  fromColor: widget.fromColor,
+                  toColor: widget.toColor,
                 ),
               ),
 
@@ -99,12 +102,14 @@ class _AnimatedCircularProgressState extends State<AnimatedCircularProgress>
 // Custom Painter for the Circular Progress
 class CirclePainter extends CustomPainter {
   final double progress;
-  final Color color;
+  final Color? fromColor;
+  final Color? toColor;
 
-  CirclePainter({required this.progress, required this.color});
+  CirclePainter({required this.progress, this.fromColor, this.toColor});
 
   @override
   void paint(Canvas canvas, Size size) {
+    final Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
     Paint trackPaint =
         Paint()
           ..color = AppColors.grey.withOpacity(0.3)
@@ -114,7 +119,10 @@ class CirclePainter extends CustomPainter {
 
     Paint progressPaint =
         Paint()
-          ..color = color
+          ..shader = LinearGradient(
+            colors: [fromColor ?? Colors.green, toColor ?? Colors.yellow],
+          ).createShader(rect)
+          // ..color = color
           ..style = PaintingStyle.stroke
           ..strokeWidth = 8.0
           ..strokeCap = StrokeCap.round;

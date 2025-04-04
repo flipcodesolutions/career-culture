@@ -8,6 +8,7 @@ import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_strings.dart';
+import '../../../utils/navigation_helper/transitions/fade_slide_from_belove.dart';
 import '../../../widgets/custom_container.dart';
 import '../../../widgets/custom_score_with_animation.dart';
 import '../score_page.dart'; // Import for formatting
@@ -31,14 +32,14 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
           () => push(
             context: context,
             widget: ScoreboardPage(),
-            transition: ZoomPageTransitionsBuilder(),
+            transition: FadeSlidePageTransitionsBuilder(),
           ),
       child: CustomContainer(
         width: 90.w,
         height: 10.h,
         margin: EdgeInsets.symmetric(horizontal: 5.w),
         borderRadius: BorderRadius.circular(AppSize.size10),
-        backGroundColor: AppColors.white,
+        backGroundColor: AppColors.lightWhite,
         borderColor: AppColors.grey,
         borderWidth: 0.5,
         boxShadow: ShadowHelper.scoreContainer,

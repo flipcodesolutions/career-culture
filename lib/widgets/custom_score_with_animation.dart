@@ -7,12 +7,14 @@ class CustomAnimatedScore extends StatelessWidget {
   const CustomAnimatedScore({
     super.key,
     required this.score,
+    this.lastText,
+    this.textStyle,
     this.animationDuration = const Duration(seconds: 3),
   });
-
+  final String? lastText;
   final String score;
   final Duration animationDuration;
-
+  final TextStyle? textStyle;
   @override
   Widget build(BuildContext context) {
     int targetScore = int.tryParse(score) ?? 0; // Convert score to int
@@ -23,8 +25,9 @@ class CustomAnimatedScore extends StatelessWidget {
       duration: animationDuration,
       builder:
           (context, value, child) => CustomText(
-            text: formatter.format(value), // Format number,
-            style: TextStyleHelper.mediumHeading,
+            text:
+                "${formatter.format(value)} ${lastText ?? ""}", // Format number,
+            style:textStyle ?? TextStyleHelper.mediumHeading,
           ),
     );
   }
