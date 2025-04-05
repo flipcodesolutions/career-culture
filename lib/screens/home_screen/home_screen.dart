@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -30,81 +31,94 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizeHelper.height(),
-
-            /// search bar
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: SearchBar(leading: AppIcons.search),
-            ),
-            SizeHelper.height(height: 4.h),
-
-            /// user score tracking
-            DashBoardUserScoreWidget(
-              imageUrl: "https://picsum.photos/id/237/200/300",
-              score: "5000",
-              animationDuration: Duration(seconds: 3),
-            ),
-            SizeHelper.height(),
-
-            /// user pashes
-            SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
-            SizeHelper.height(),
-
-            /// recent activity text
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: CustomText(
-                text: AppStrings.recentActivity,
-                style: TextStyleHelper.mediumHeading.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-            SizeHelper.height(),
-
-            /// progress
-            ChapterProgressWidget(
-              imageUrl: "https://picsum.photos/id/237/200/300",
-              chapter: "Chapter 1:",
-              description: "Analysis Thought Process.",
-              progressPercent: 90,
-            ),
-
-            SizeHelper.height(),
-            SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
-            SizeHelper.height(),
-
-            /// recent activity text
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: CustomText(
-                text: AppStrings.suggestedBooks,
-                style: TextStyleHelper.mediumHeading.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-            SizeHelper.height(),
-            CustomGridWidget(
-              isScroll: true,
-              data: List<String>.generate(10, (index) => ""),
-              itemBuilder:
-                  (item, index) => CustomContainer(
-                    backGroundColor: AppColors.cream,
-                    child: CustomImageWithLoader(
-                      imageUrl:
-                          "https://picsum.photos/id/1084/536/354?grayscale",
+        child: AnimationLimiter(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: AnimationConfiguration.toStaggeredList(
+              childAnimationBuilder:
+                  (widget) => SlideAnimation(
+                    horizontalOffset: 10.w,
+                    duration: Duration(milliseconds: 300),
+                    child: FadeInAnimation(
+                      duration: Duration(milliseconds: 300),
+                      child: widget,
                     ),
                   ),
+              children: [
+                SizeHelper.height(),
 
-              axisCount: 3,
+                /// search bar
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: SearchBar(leading: AppIcons.search),
+                ),
+                SizeHelper.height(height: 4.h),
+
+                /// user score tracking
+                DashBoardUserScoreWidget(
+                  imageUrl: "https://picsum.photos/id/237/200/300",
+                  score: "5000",
+                  animationDuration: Duration(seconds: 3),
+                ),
+                SizeHelper.height(),
+
+                /// user pashes
+                SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+                SizeHelper.height(),
+
+                /// recent activity text
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomText(
+                    text: AppStrings.recentActivity,
+                    style: TextStyleHelper.mediumHeading.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                SizeHelper.height(),
+
+                /// progress
+                ChapterProgressWidget(
+                  imageUrl: "https://picsum.photos/id/237/200/300",
+                  chapter: "Chapter 1:",
+                  description: "Analysis Thought Process.",
+                  progressPercent: 90,
+                ),
+
+                SizeHelper.height(),
+                SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+                SizeHelper.height(),
+
+                /// recent activity text
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomText(
+                    text: AppStrings.suggestedBooks,
+                    style: TextStyleHelper.mediumHeading.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                SizeHelper.height(),
+                CustomGridWidget(
+                  isScroll: true,
+                  data: List<String>.generate(10, (index) => ""),
+                  itemBuilder:
+                      (item, index) => CustomContainer(
+                        backGroundColor: AppColors.cream,
+                        child: CustomImageWithLoader(
+                          imageUrl:
+                              "https://picsum.photos/id/1084/536/354?grayscale",
+                        ),
+                      ),
+
+                  axisCount: 3,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

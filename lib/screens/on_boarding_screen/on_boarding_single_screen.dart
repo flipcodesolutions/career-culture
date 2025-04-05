@@ -45,7 +45,8 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
               widget.onBoardingInfo.videoUrl?.isNotEmpty == true)
             CustomContainer(
               child: VideoPlayerWidget(
-                videoUrl: widget.onBoardingInfo.videoUrl ?? "",
+                videoUrl:
+                    "${AppStrings.assetsUrl}${widget.onBoardingInfo.videoUrl}",
               ),
             ),
           if (widget.onBoardingInfo.image != null &&

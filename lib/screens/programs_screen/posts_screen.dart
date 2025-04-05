@@ -6,9 +6,9 @@ import 'package:mindful_youth/screens/programs_screen/individual_program_screen.
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
@@ -49,10 +49,7 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
       appBar: AppBar(
         /// if only one post
         title: CustomText(
-          text:
-              postProvider.postListModel?.data?.length == 1
-                  ? (postProvider.postListModel?.data?[0].title ?? "")
-                  : widget.chapterName,
+          text: postProvider.currentPost?.title ?? widget.chapterName,
         ),
       ),
       body:
@@ -133,6 +130,16 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               textAlign: TextAlign.justify,
             ),
             SizeHelper.height(),
+            CustomContainer(
+              boxShadow: ShadowHelper.scoreContainer,
+              child: VideoPlayerWidget(
+                height: 30.h,
+                width: 90.w,
+                showControls: true,
+                videoUrl:
+                    "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+              ),
+            ),
           ],
         ),
       ),
