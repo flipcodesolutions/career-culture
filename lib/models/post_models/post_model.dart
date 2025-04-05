@@ -39,17 +39,18 @@ class PostInfo {
   String? status;
   List<Media>? media;
 
-  PostInfo(
-      {this.id,
-      this.chapterId,
-      this.title,
-      this.description,
-      this.image,
-      this.video,
-      this.audio,
-      this.isAnnouncement,
-      this.status,
-      this.media});
+  PostInfo({
+    this.id,
+    this.chapterId,
+    this.title,
+    this.description,
+    this.image,
+    this.video,
+    this.audio,
+    this.isAnnouncement,
+    this.status,
+    this.media,
+  });
 
   PostInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -96,14 +97,15 @@ class Media {
   String? type;
   String? status;
 
-  Media(
-      {this.id,
-      this.postId,
-      this.title,
-      this.url,
-      this.thumbnail,
-      this.type,
-      this.status});
+  Media({
+    this.id,
+    this.postId,
+    this.title,
+    this.url,
+    this.thumbnail,
+    this.type,
+    this.status,
+  });
 
   Media.fromJson(Map<String, dynamic> json) {
     id = json['id'];

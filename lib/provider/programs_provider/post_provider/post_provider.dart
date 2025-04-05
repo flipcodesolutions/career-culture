@@ -12,6 +12,13 @@ class PostProvider extends ChangeNotifier {
   PostListModel? _postListModel;
   PostListModel? get postListModel => _postListModel;
 
+  PostInfo? _currentPost;
+  PostInfo? get currentPost => _currentPost;
+  set setPostInfo(PostInfo? post) {
+    _currentPost = post;
+    notifyListeners();
+  }
+
   Future<void> getPostById({
     required BuildContext context,
     required String id,
@@ -20,10 +27,13 @@ class PostProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     _postListModel = await postService.getPostById(context: context, id: id);
+    if (_postListModel?.success == true && _postListModel?.data?.length == 1) {
+      _currentPost = _postListModel?.data?.first;
+      notifyListeners();
+    }
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
   }
-
 }
