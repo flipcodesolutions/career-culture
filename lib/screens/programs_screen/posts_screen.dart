@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/post_models/post_model.dart';
+import '../../widgets/custom_audio_player.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({
@@ -130,16 +131,23 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               textAlign: TextAlign.justify,
             ),
             SizeHelper.height(),
-            CustomContainer(
-              boxShadow: ShadowHelper.scoreContainer,
-              child: VideoPlayerWidget(
-                height: 30.h,
-                width: 90.w,
-                showControls: true,
-                videoUrl:
-                    "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+            if (post?.video?.isNotEmpty == true)
+              CustomContainer(
+                boxShadow: ShadowHelper.scoreContainer,
+                child: VideoPlayerWidget(
+                  height: 30.h,
+                  width: 90.w,
+                  showControls: true,
+                  videoUrl:
+                      "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+                ),
               ),
-            ),
+            SizeHelper.height(),
+            if (post?.audio?.isNotEmpty == true)
+              CustomAudioPlayer(
+                audioUrl:
+                    "https://cdn.s3waas.gov.in/master/uploads/2017/11/2017111337.mp3",
+              ),
           ],
         ),
       ),
