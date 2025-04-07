@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 SizeHelper.height(),
                 CustomGridWidget(
-                  isScroll: true,
+                  isNotScroll: true,
                   data: List<String>.generate(10, (index) => ""),
                   itemBuilder:
                       (item, index) => CustomContainer(

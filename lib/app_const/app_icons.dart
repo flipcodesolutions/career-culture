@@ -6,9 +6,13 @@ import 'app_size.dart';
 class AppIcons {
   static const Icon remove = Icon(Icons.remove, color: AppColors.primary);
   static const Icon removeWhite = Icon(Icons.remove, color: AppColors.white);
-  static const Icon add = Icon(Icons.add, color: AppColors.primary);
+  static Icon add({Color? color}) =>
+      Icon(Icons.add, color: color ?? AppColors.primary);
   static const Icon addWhite = Icon(Icons.add, color: AppColors.white);
-  static const Icon forwardArrow = Icon(size: AppSize.size20, Icons.arrow_forward);
+  static const Icon forwardArrow = Icon(
+    size: AppSize.size20,
+    Icons.arrow_forward,
+  );
   static const Icon backArrow = Icon(Icons.arrow_back, color: AppColors.black);
   static const Icon search = Icon(Icons.search);
   static const Icon shoppingCart = Icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
@@ -16,6 +17,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/post_models/post_model.dart';
 import '../../widgets/custom_audio_player.dart';
+import 'widgets/render_media_data.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({
@@ -95,6 +97,11 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                     },
                   )
               : ListView(children: [NoDataFoundWidget(height: 80.h)]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: AppColors.black,
+        child: AppIcons.add(color: AppColors.white),
+      ),
     );
   }
 }
@@ -120,34 +127,68 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
         }
       },
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        padding: EdgeInsets.symmetric(vertical: 2.h),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ImageContainer(image: "${AppStrings.assetsUrl}${post?.image}"),
-            SizeHelper.height(),
-            CustomText(
-              text: post?.description ?? "",
-              useOverflow: false,
-              textAlign: TextAlign.justify,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: ImageContainer(
+                image: "${AppStrings.assetsUrl}${post?.image}",
+              ),
             ),
             SizeHelper.height(),
-            if (post?.video?.isNotEmpty == true)
-              CustomContainer(
-                boxShadow: ShadowHelper.scoreContainer,
-                child: VideoPlayerWidget(
-                  height: 30.h,
-                  width: 90.w,
-                  showControls: true,
-                  videoUrl:
-                      "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomText(
+                text: post?.description ?? "",
+                useOverflow: false,
+                textAlign: TextAlign.justify,
+              ),
+            ),
+            SizeHelper.height(),
+            if (post?.video?.isNotEmpty == true) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: CustomContainer(
+                  backGroundColor: AppColors.lightWhite,
+                  boxShadow: ShadowHelper.scoreContainer,
+                  child: VideoPlayerWidget(
+                    height: 30.h,
+                    width: 90.w,
+                    showControls: true,
+                    videoUrl:
+                        "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+                  ),
                 ),
               ),
-            SizeHelper.height(),
-            if (post?.audio?.isNotEmpty == true)
-              CustomAudioPlayer(
-                audioUrl:
-                    "https://cdn.s3waas.gov.in/master/uploads/2017/11/2017111337.mp3",
+              SizeHelper.height(),
+            ],
+            if (post?.audio?.isNotEmpty == true) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: CustomAudioPlayer(
+                  audioUrl:
+                      "https://cdn.s3waas.gov.in/master/uploads/2017/11/2017111337.mp3",
+                ),
               ),
+              SizeHelper.height(),
+            ],
+
+            MediaRender(heading: AppStrings.video, data: ["", "", ""]),
+
+            MediaRender(heading: AppStrings.articles, data: ["", "", ""]),
+
+            MediaRender(heading: AppStrings.audio, data: ["", "", ""]),
+
+            MediaRender(
+              heading: AppStrings.recommendedBooks,
+              isList: false,
+              axisCountForGrid: 3,
+              isNotScroll: true,
+              data: ["", "", "", "", "", ""],
+            ),
           ],
         ),
       ),
