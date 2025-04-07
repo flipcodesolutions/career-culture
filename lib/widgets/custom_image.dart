@@ -13,37 +13,43 @@ class CustomImageWithLoader extends StatelessWidget {
     this.height,
     this.fit,
     this.errorIconSize,
+    this.showImageInPanel = true,
   });
   final String imageUrl;
   final double? width;
   final double? height;
   final BoxFit? fit;
   final double? errorIconSize;
+  final bool showImageInPanel;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap:
-          () => showDialog(
-            context: context,
-            builder:
-                (context) => Dialog(
-                  child: InteractiveViewer(child: Image.network(imageUrl)),
-                ),
+    final image = CachedNetworkImage(
+      height: height,
+      width: width,
+      errorWidget:
+          (context, url, error) => Icon(
+            Icons.error_outline,
+            color: AppColors.primary,
+            size: errorIconSize ?? AppSize.size50,
           ),
-      child: CachedNetworkImage(
-        height: height,
-        width: width,
-        errorWidget:
-            (context, url, error) => Icon(
-              Icons.error_outline,
-              color: AppColors.primary,
-              size: errorIconSize ?? AppSize.size50,
-            ),
-        fit: fit ?? BoxFit.cover,
-        placeholder: (context, url) => Center(child: CustomLoader()),
-        imageUrl: imageUrl,
-      ),
+      fit: fit ?? BoxFit.cover,
+      placeholder: (context, url) => Center(child: CustomLoader()),
+      imageUrl: imageUrl,
     );
+
+    return showImageInPanel
+        ? GestureDetector(
+          onTap:
+              () => showDialog(
+                context: context,
+                builder:
+                    (context) => Dialog(
+                      child: InteractiveViewer(child: Image.network(imageUrl)),
+                    ),
+              ),
+          child: image,
+        )
+        : image;
   }
 }
 

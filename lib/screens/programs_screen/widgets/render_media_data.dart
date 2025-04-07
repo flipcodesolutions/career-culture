@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/widgets/custom_grid.dart';
+import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_size.dart';
@@ -9,7 +11,7 @@ import '../../../widgets/custom_container.dart';
 import '../../../widgets/custom_listview.dart';
 import '../../../widgets/custom_text.dart';
 
-class MediaRender extends StatelessWidget {
+class MediaRender<T> extends StatelessWidget {
   const MediaRender({
     super.key,
     required this.heading,
@@ -17,12 +19,14 @@ class MediaRender extends StatelessWidget {
     this.axisCountForGrid,
     required this.data,
     this.isNotScroll = false,
+    required this.itemBuilder,
   });
   final String heading;
   final bool isList;
   final int? axisCountForGrid;
-  final List data;
+  final List<T> data;
   final bool isNotScroll;
+  final Widget Function(T item, int index) itemBuilder; // Custom widget builder
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
@@ -49,23 +53,14 @@ class MediaRender extends StatelessWidget {
                 scrollAxis: Axis.horizontal,
                 isNotScroll: isNotScroll,
                 data: data,
-                itemBuilder:
-                    (item, index) => CustomContainer(
-                      margin: EdgeInsets.only(right: 5.w),
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      height: 25.h,
-                      width: 90.w,
-                      backGroundColor: AppColors.cream,
-                    ),
+                itemBuilder: itemBuilder,
               ),
             )
             : CustomGridWidget(
               isNotScroll: isNotScroll,
               axisCount: axisCountForGrid ?? 2,
               data: data,
-              itemBuilder:
-                  (item, index) =>
-                      CustomContainer(backGroundColor: AppColors.cream),
+              itemBuilder: itemBuilder,
             ),
         SizeHelper.height(),
       ],

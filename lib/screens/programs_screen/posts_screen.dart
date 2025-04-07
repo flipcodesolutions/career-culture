@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -16,7 +17,9 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/post_models/post_model.dart';
+import '../../utils/widget_helper/widget_helper.dart';
 import '../../widgets/custom_audio_player.dart';
+import '../../widgets/custom_image.dart';
 import 'widgets/render_media_data.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -176,22 +179,128 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               SizeHelper.height(),
             ],
 
-            MediaRender(heading: AppStrings.video, data: ["", "", ""]),
+            MediaRender(
+              heading: AppStrings.video,
+              data:
+                  post?.media?.where((e) => e.type == 'video').toList() ??
+                  <Media>[],
+              itemBuilder:
+                  (item, index) => GestureDetector(
+                    onTap:
+                        () async =>
+                            launchUrl(url: item.url ?? "", context: context),
+                    child: CustomContainer(
+                      backGroundColor: AppColors.lightWhite,
+                      margin: EdgeInsets.only(right: 5.w),
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      height: 25.h,
+                      width: 90.w,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: CustomImageWithLoader(
+                          showImageInPanel: false,
+                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
 
-            MediaRender(heading: AppStrings.articles, data: ["", "", ""]),
+            MediaRender(
+              heading: AppStrings.articles,
+              data:
+                  post?.media?.where((e) => e.type == 'article').toList() ?? [],
+              itemBuilder:
+                  (item, index) => GestureDetector(
+                    onTap:
+                        () async =>
+                            launchUrl(url: item.url ?? "", context: context),
+                    child: CustomContainer(
+                      margin: EdgeInsets.only(right: 5.w),
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      height: 25.h,
+                      width: 90.w,
+                      backGroundColor: AppColors.lightWhite,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: CustomImageWithLoader(
+                          showImageInPanel: false,
+                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
 
-            MediaRender(heading: AppStrings.audio, data: ["", "", ""]),
+            MediaRender(
+              heading: AppStrings.audio,
+              data: post?.media?.where((e) => e.type == 'audio').toList() ?? [],
+              itemBuilder:
+                  (item, index) => GestureDetector(
+                    onTap:
+                        () async =>
+                            launchUrl(url: item.url ?? "", context: context),
+                    child: CustomContainer(
+                      margin: EdgeInsets.only(right: 5.w),
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      height: 25.h,
+                      width: 90.w,
+                      backGroundColor: AppColors.lightWhite,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: CustomImageWithLoader(
+                          showImageInPanel: false,
+                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        ),
+                      ),
+                    ),
+                  ),
+            ),
 
             MediaRender(
               heading: AppStrings.recommendedBooks,
               isList: false,
               axisCountForGrid: 3,
               isNotScroll: true,
-              data: ["", "", "", "", "", ""],
+              data: post?.media?.where((e) => e.type == 'book').toList() ?? [],
+              itemBuilder:
+                  (item, index) => GestureDetector(
+                    onTap:
+                        () async =>
+                            launchUrl(url: item.url ?? "", context: context),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      child: CustomContainer(
+                        margin: EdgeInsets.only(right: 5.w),
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        backGroundColor: AppColors.lightWhite,
+                        child: CustomImageWithLoader(
+                          showImageInPanel: false,
+                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        ),
+                      ),
+                    ),
+                  ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+Future<void> launchUrl({
+  required String url,
+  required BuildContext context,
+}) async {
+  bool success = await MethodHelper.launchUrlInBrowser(url: url);
+  if (!success) {
+    print("failed");
+    if (!context.mounted) return;
+    WidgetHelper.customSnackBar(
+      context: context,
+      title: "Could Not Launch This Url",
+      isError: true,
     );
   }
 }

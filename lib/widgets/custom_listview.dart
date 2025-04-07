@@ -9,11 +9,13 @@ class CustomListWidget<T> extends StatelessWidget {
     required this.itemBuilder,
     this.isNotScroll = false,
     this.scrollAxis,
+    this.padding,
   });
   final bool isNotScroll;
   final List<T> data; // Generic data list
   final Widget Function(T item, int index) itemBuilder; // Custom widget builder
   final Axis? scrollAxis;
+  final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
     return AnimationLimiter(
@@ -21,7 +23,7 @@ class CustomListWidget<T> extends StatelessWidget {
         scrollDirection: scrollAxis ?? Axis.vertical,
         shrinkWrap: true,
         physics: isNotScroll ? NeverScrollableScrollPhysics() : null,
-        padding: EdgeInsets.only(left: 5.w),
+        padding: padding ?? EdgeInsets.only(left: 5.w),
         itemCount: data.length,
         itemBuilder:
             (context, index) => AnimationConfiguration.staggeredList(
