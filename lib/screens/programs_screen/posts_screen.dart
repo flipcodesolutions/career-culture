@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -13,6 +14,7 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -178,7 +180,20 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               ),
               SizeHelper.height(),
             ],
-
+            CustomContainer(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: PrimaryBtn(
+                width: 90.w,
+                btnText: AppStrings.assessment,
+                onTap:
+                    () => push(
+                      context: context,
+                      widget: AssessmentScreen(),
+                      transition: FadeUpwardsPageTransitionsBuilder(),
+                    ),
+              ),
+            ),
+            SizeHelper.height(),
             MediaRender(
               heading: AppStrings.video,
               data:
