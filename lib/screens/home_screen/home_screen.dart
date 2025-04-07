@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
+import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_grid.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
@@ -14,7 +17,7 @@ import '../../widgets/custom_slider.dart';
 import 'home_screen_widget/chapter_progress.dart';
 import 'home_screen_widget/dashboard_user_score_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatelessWidget with NavigateHelper {
   const HomeScreen({super.key});
 
   @override
@@ -23,9 +26,12 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {
-              // notification logic
-            },
+            onPressed:
+                () => push(
+                  context: context,
+                  widget: NotificationScreen(),
+                  transition: ScaleFadePageTransitionsBuilder(),
+                ),
             icon: Icon(Icons.notifications),
           ),
         ],

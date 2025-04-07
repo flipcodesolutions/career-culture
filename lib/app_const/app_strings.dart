@@ -30,6 +30,7 @@ class AppStrings {
   static const video = "Videos";
   static const articles = "Articles";
   static const audio = "Audios";
+  static const notifications = "Notifications";
   static const recommendedBooks = "Recommended Books";
   static const aspectForYourMentalWellBeing =
       "Aspect For Your Mental Well Being";
