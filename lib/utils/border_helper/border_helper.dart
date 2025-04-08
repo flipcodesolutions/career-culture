@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../app_const/app_colors.dart';
-import '../../app_const/app_size.dart';
 import '../text_style_helper/text_style_helper.dart';
 
 class BorderHelper {
@@ -10,15 +8,12 @@ class BorderHelper {
     borderSide: BorderSide(width: 0.5, color: AppColors.black),
   );
   static OutlineInputBorder inputBorderFocused = OutlineInputBorder(
-    
     borderSide: BorderSide(width: 1, color: AppColors.primary),
   );
   static OutlineInputBorder inputBorderError = OutlineInputBorder(
-    
     borderSide: BorderSide(width: 1, color: AppColors.error),
   );
   static OutlineInputBorder inputBorderDisabled = OutlineInputBorder(
-   
     borderSide: BorderSide(width: 0.3, color: AppColors.grey),
   );
 

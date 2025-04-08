@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
@@ -73,6 +76,7 @@ class AssessmentProvider extends ChangeNotifier {
     }
   }
 
+  /// select radio answer
   void makeRadioSelection({
     required int questionId,
     required String selection,
@@ -85,5 +89,21 @@ class AssessmentProvider extends ChangeNotifier {
       _assessmentQuestions?.data?[index].selectedOption = selection;
       notifyListeners();
     }
+  }
+
+  /// select text area answer
+  void textAreaAnswer({required int questionId, required String selection}) {
+    int? index = _assessmentQuestions?.data?.indexWhere(
+      (e) => e.id == questionId,
+    );
+    if (index != null && index != -1) {
+      // Get the current selectedOption JSON string
+      _assessmentQuestions?.data?[index].selectedOption = selection;
+      notifyListeners();
+    }
+  }
+
+  void submitAssessmentQuestions() {
+    log(jsonEncode(_assessmentQuestions?.toJson()));
   }
 }

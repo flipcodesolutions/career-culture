@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
-import '../app_const/app_colors.dart';
 import '../app_const/app_strings.dart';
 import 'custom_container.dart';
 

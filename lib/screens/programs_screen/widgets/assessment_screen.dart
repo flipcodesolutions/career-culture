@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
-import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_listview.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
@@ -66,6 +68,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   btnText: AppStrings.submit,
                   onTap: () {
                     /// logic to submit after finishing all questions
+                    assessmentProvider.submitAssessmentQuestions();
                   },
                 ),
               )
@@ -75,12 +78,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 }
 
 class QuestionWidget<T> extends StatelessWidget {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final AssessmentQuestion question;
-  const QuestionWidget({super.key, required this.question});
-
+  QuestionWidget({super.key, required this.question});
+  final TextEditingController answerController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
+    answerController.text = question.selectedOption ?? "";
     return CustomContainer(
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
@@ -91,6 +96,7 @@ class QuestionWidget<T> extends StatelessWidget {
               useOverflow: false,
               text: question.question ?? "",
               style: TextStyleHelper.mediumHeading,
+              textAlign: TextAlign.justify,
             ),
             if (question.type == "checkbox") ...[
               ...question.extractedOptions?.asMap().entries.map((entry) {
@@ -118,6 +124,7 @@ class QuestionWidget<T> extends StatelessWidget {
               ...question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value;
                     return RadioListTile<String>(
+                      controlAffinity: ListTileControlAffinity.trailing,
                       activeColor: AppColors.primary,
                       selected: entry.value == question.selectedOption,
                       selectedTileColor: AppColors.lightWhite,
@@ -136,9 +143,41 @@ class QuestionWidget<T> extends StatelessWidget {
                   }) ??
                   [SizedBox.shrink()],
             ] else if (question.type == "text") ...[
-              CustomText(text: question.type ?? ""),
-            ] else if (question.type == "textarea") ...[
-              CustomText(text: question.type ?? ""),
+              SizeHelper.height(height: 1.h),
+              CustomTextFormField(
+                controller: answerController,
+                maxLines: 1,
+                maxLength: 200,
+                validator:
+                    (value) => ValidatorHelper.validateValue(
+                      value: value,
+                      context: context,
+                    ),
+              ),
+            ] else if (question.type == "textArea") ...[
+              SizeHelper.height(height: 1.h),
+              Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.onUnfocus,
+                child: CustomTextFormField(
+                  controller: answerController,
+                  maxLines: 5,
+                  maxLength: 500,
+                  validator: (value) {
+                    final validate = ValidatorHelper.validateValue(
+                      value: value,
+                      context: context,
+                    );
+                    if (validate == null) {
+                      assessmentProvider.textAreaAnswer(
+                        questionId: question.id ?? -1,
+                        selection: answerController.text,
+                      );
+                    }
+                    return validate;
+                  },
+                ),
+              ),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],

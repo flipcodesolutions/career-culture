@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:ui';
 import 'package:url_launcher/url_launcher.dart';
 
 class MethodHelper {
@@ -31,12 +31,35 @@ class MethodHelper {
   }
 
   /// will extract options from string
-  static List<String> parseOptions(String jsonString) {
+  static List<String> parseOptions(String? jsonString) {
     try {
-      return jsonString.split(',');
+      if (jsonString?.isNotEmpty == true) {
+        return jsonString?.split(',') ?? [];
+      } else {
+        return [];
+      }
     } catch (e) {
       print('Failed to parse options: $e');
       return [];
     }
+  }
+
+  // Debounce function to prevent multiple API calls
+  static void Function() debounce(
+    VoidCallback action, {
+    int milliseconds = 500,
+  }) {
+    Timer? _timer;
+
+    return () {
+      print('ksdnsjv');
+      // Cancel any previous timer if it exists
+      if (_timer?.isActive ?? false) {
+        _timer?.cancel();
+      }
+
+      // Start a new timer with a delay
+      _timer = Timer(Duration(milliseconds: milliseconds), action);
+    };
   }
 }

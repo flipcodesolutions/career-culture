@@ -21,44 +21,51 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final InputDecoration? decoration;
   final bool enabled;
-
-  const CustomTextFormField(
-      {super.key,
-      required this.controller,
-      this.focusNode,
-      this.autocorrect = true,
-      this.cursorColor,
-      this.keyboardType,
-      this.obscureText = false,
-      this.maxLength,
-      this.maxLines = 1,
-      this.minLines = 1,
-      this.readOnly = false,
-      this.style,
-      this.textAlign = TextAlign.start,
-      required this.validator,
-      this.decoration,
-      this.enabled = true,
-      this.hintText,
-      this.labelText});
+  final void Function(String)? onChanged;
+  const CustomTextFormField({
+    super.key,
+    required this.controller,
+    this.focusNode,
+    this.autocorrect = true,
+    this.cursorColor,
+    this.keyboardType,
+    this.obscureText = false,
+    this.maxLength,
+    this.maxLines = 1,
+    this.minLines = 1,
+    this.readOnly = false,
+    this.style,
+    this.textAlign = TextAlign.start,
+    required this.validator,
+    this.decoration,
+    this.enabled = true,
+    this.hintText,
+    this.labelText,
+    this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autocorrect: autocorrect,
       controller: controller,
-      buildCounter: (context,
-              {required currentLength,
-              required isFocused,
-              required maxLength}) =>
-          null,
+      buildCounter:
+          (
+            context, {
+            required currentLength,
+            required isFocused,
+            required maxLength,
+          }) => null,
       cursorColor: AppColors.primary,
       cursorErrorColor: AppColors.error,
       enabled: enabled,
-      decoration: decoration ??
+      onChanged: onChanged,
+      decoration:
+          decoration ??
           BorderHelper.textFormFieldPrimary(
-              label: labelText,
-              hintText: hintText ?? ""),
+            label: labelText,
+            hintText: hintText ?? "",
+          ),
       focusNode: focusNode,
       keyboardType: keyboardType ?? TextInputType.text,
       obscureText: obscureText,

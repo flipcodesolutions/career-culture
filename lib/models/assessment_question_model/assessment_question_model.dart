@@ -56,7 +56,7 @@ class AssessmentQuestion {
     type = json['type'];
     options = json['options'];
     status = json['status'];
-    extractedOptions = MethodHelper.parseOptions(json['options']);
+    extractedOptions =  MethodHelper.parseOptions(json['options']);
   }
 
   Map<String, dynamic> toJson() {
@@ -67,8 +67,8 @@ class AssessmentQuestion {
     data['type'] = this.type;
     data['options'] = this.options;
     data['status'] = this.status;
-    data['answer'] = this.status;
-    // data['extractedOptions'] = this.extractedOptions;
+    data['answer'] = this.selectedOption;
+    data['extractedOptions'] = this.extractedOptions;
     return data;
   }
 }

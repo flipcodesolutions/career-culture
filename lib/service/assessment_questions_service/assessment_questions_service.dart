@@ -11,10 +11,12 @@ class AssessmentQuestionsService {
     required String postId,
   }) async {
     try {
-      Map<String, dynamic> response = await HttpHelper.get(
+      var response = await HttpHelper.get(
         context: context,
         uri: ApiHelper.getAssessmentQuestionsByPostId(id: postId),
       );
+      log(response.toString());
+      log(response.runtimeType.toString());
       if (response.isNotEmpty) {
         AssessmentQuestionModel model = AssessmentQuestionModel.fromJson(
           response,
