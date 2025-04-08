@@ -72,4 +72,18 @@ class AssessmentProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void makeRadioSelection({
+    required int questionId,
+    required String selection,
+  }) {
+    int? index = _assessmentQuestions?.data?.indexWhere(
+      (e) => e.id == questionId,
+    );
+    if (index != null && index != -1) {
+      // Get the current selectedOption JSON string
+      _assessmentQuestions?.data?[index].selectedOption = selection;
+      notifyListeners();
+    }
+  }
 }

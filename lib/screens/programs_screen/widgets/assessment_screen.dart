@@ -115,7 +115,26 @@ class QuestionWidget<T> extends StatelessWidget {
                   }) ??
                   [SizedBox.shrink()],
             ] else if (question.type == "radio") ...[
-              CustomText(text: question.type ?? ""),
+              ...question.extractedOptions?.asMap().entries.map((entry) {
+                    String option = entry.value;
+                    return RadioListTile<String>(
+                      activeColor: AppColors.primary,
+                      selected: entry.value == question.selectedOption,
+                      selectedTileColor: AppColors.lightWhite,
+                      title: CustomText(text: option, useOverflow: false),
+                      value: entry.value,
+                      groupValue: question.selectedOption,
+                      onChanged: (value) {
+                        if (value != null) {
+                          assessmentProvider.makeRadioSelection(
+                            questionId: question.id ?? -1,
+                            selection: entry.value,
+                          );
+                        }
+                      },
+                    );
+                  }) ??
+                  [SizedBox.shrink()],
             ] else if (question.type == "text") ...[
               CustomText(text: question.type ?? ""),
             ] else if (question.type == "textarea") ...[
