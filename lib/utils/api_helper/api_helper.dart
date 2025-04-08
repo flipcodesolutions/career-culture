@@ -19,6 +19,11 @@ class ApiHelper {
   static String getPostById({required String id}) =>
       "$baseUrl/posts?chapterId=$id";
 
-  /// posts
-  static String getAllEvents({required String id}) => "$baseUrl/events?eventId=$id";
+  /// events
+  static String getAllEvents({required String id}) =>
+      "$baseUrl/events?eventId=$id";
+
+  /// assessments questions
+  static String getAssessmentQuestionsByPostId({required String id}) =>
+      "$baseUrl/questions?postId=$id";
 }

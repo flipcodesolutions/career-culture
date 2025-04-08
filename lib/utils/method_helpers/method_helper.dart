@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 
 class MethodHelper {
@@ -26,6 +27,16 @@ class MethodHelper {
     } else {
       print('❌ Cannot launch URL: $url');
       return false;
+    }
+  }
+
+  /// will extract options from string
+  static List<String> parseOptions(String jsonString) {
+    try {
+      return jsonString.split(',');
+    } catch (e) {
+      print('Failed to parse options: $e');
+      return [];
     }
   }
 }

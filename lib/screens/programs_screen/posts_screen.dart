@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
@@ -186,11 +187,14 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                 width: 90.w,
                 btnText: AppStrings.assessment,
                 onTap:
-                    () => push(
-                      context: context,
-                      widget: AssessmentScreen(),
-                      transition: FadeUpwardsPageTransitionsBuilder(),
-                    ),
+                    () => {
+                      context.read<AssessmentProvider>().setPostId = post?.id?.toString() ?? "",
+                      push(
+                        context: context,
+                        widget: AssessmentScreen(),
+                        transition: FadeUpwardsPageTransitionsBuilder(),
+                      ),
+                    },
               ),
             ),
             SizeHelper.height(),
