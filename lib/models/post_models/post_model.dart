@@ -38,7 +38,7 @@ class PostInfo {
   String? isAnnouncement;
   String? status;
   List<Media>? media;
-
+  bool? isUseVideoOrImageForWall;
   PostInfo({
     this.id,
     this.chapterId,

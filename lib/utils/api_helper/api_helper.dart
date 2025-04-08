@@ -26,4 +26,7 @@ class ApiHelper {
   /// assessments questions
   static String getAssessmentQuestionsByPostId({required String id}) =>
       "$baseUrl/questions?postId=$id";
+
+  /// wall
+  static String getWallPosts = "$baseUrl/wall";
 }

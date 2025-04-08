@@ -37,4 +37,5 @@ class AppStrings {
   static const recommendedBooks = "Recommended Books";
   static const aspectForYourMentalWellBeing =
       "Aspect For Your Mental Well Being";
+  static const wall = "Wall";
 }

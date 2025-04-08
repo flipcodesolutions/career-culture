@@ -37,7 +37,12 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     AllEventProvider eventProvider = context.watch<AllEventProvider>();
     return Scaffold(
-      appBar: AppBar(title: CustomText(text: AppStrings.eventActivity)),
+      appBar: AppBar(
+        title: CustomText(
+          text: AppStrings.eventActivity,
+          style: TextStyleHelper.mediumHeading,
+        ),
+      ),
       body:
           eventProvider.isLoading
               ? Center(child: CustomLoader())

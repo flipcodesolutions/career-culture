@@ -25,4 +25,22 @@ class PostService {
       return null;
     }
   }
+
+  /// get wall post
+  Future<PostListModel?> getWallPosts({required BuildContext context}) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getWallPosts,
+      );
+      if (response.isNotEmpty) {
+        PostListModel model = PostListModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode ? log('error while getting wall post => $e') : null;
+      return null;
+    }
+  }
 }
