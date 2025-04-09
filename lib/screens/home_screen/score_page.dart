@@ -158,7 +158,8 @@ class TopPlayerCard extends StatelessWidget {
       child: Column(
         children: [
           CustomContainer(
-            padding: EdgeInsets.all(2),
+            padding: EdgeInsets.only(top: 0),
+            borderWidth: 1,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(AppSize.size50),
             ),
@@ -170,8 +171,11 @@ class TopPlayerCard extends StatelessWidget {
                   radius: isFirst ? AppSize.size40 : AppSize.size30,
                 ),
                 SizeHelper.height(height: 1.h),
-                CustomText(text: name),
-                CustomAnimatedScore(score: score),
+                CustomText(text: name, style: TextStyleHelper.smallHeading),
+                CustomAnimatedScore(
+                  score: score,
+                  textStyle: TextStyleHelper.smallHeading,
+                ),
               ],
             ),
           ),

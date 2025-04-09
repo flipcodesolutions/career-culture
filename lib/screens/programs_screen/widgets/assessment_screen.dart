@@ -5,7 +5,9 @@ import 'package:mindful_youth/provider/assessment_provider/assessment_provider.d
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_file_picker.dart';
 import 'package:mindful_youth/widgets/custom_listview.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
@@ -18,13 +20,15 @@ import '../../../app_const/app_colors.dart';
 import '../../../models/assessment_question_model/assessment_question_model.dart';
 
 class AssessmentScreen extends StatefulWidget {
-  AssessmentScreen({super.key});
+  const AssessmentScreen({super.key});
 
   @override
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
 
 class _AssessmentScreenState extends State<AssessmentScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool isMedia = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -57,7 +61,13 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                 data:
                     assessmentProvider.assessmentQuestions?.data ??
                     <AssessmentQuestion>[],
-                itemBuilder: (item, index) => QuestionWidget(question: item),
+                itemBuilder: (item, index) {
+                  if (!isMedia && item.type == "video" ||
+                      item.type == "audio") {
+                    isMedia = true;
+                  }
+                  return QuestionWidget(question: item, formKey: formKey);
+                },
               )
               : Center(child: NoDataFoundWidget()),
       bottomNavigationBar:
@@ -68,7 +78,33 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   btnText: AppStrings.submit,
                   onTap: () {
                     /// logic to submit after finishing all questions
-                    assessmentProvider.submitAssessmentQuestions();
+                    if (formKey.currentState?.validate() == true) {
+                      if (isMedia &&
+                          assessmentProvider.assessmentQuestions?.data?.any(
+                                (e) => e.selectedFiles?.isEmpty == true,
+                              ) ==
+                              true) {
+                        WidgetHelper.customSnackBar(
+                          context: context,
+                          title: "Some Media missing",
+                          isError: true,
+                        );
+                      } else {
+                        WidgetHelper.customSnackBar(
+                          context: context,
+                          title: "Success And Ready",
+                        );
+                      }
+                      assessmentProvider.submitAssessmentQuestions(
+                        context: context,
+                      );
+                    } else {
+                      WidgetHelper.customSnackBar(
+                        context: context,
+                        title: "Validation Failed",
+                        isError: true,
+                      );
+                    }
                   },
                 ),
               )
@@ -78,14 +114,14 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 }
 
 class QuestionWidget<T> extends StatelessWidget {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey;
   final AssessmentQuestion question;
-  QuestionWidget({super.key, required this.question});
+  QuestionWidget({super.key, required this.question, required this.formKey});
   final TextEditingController answerController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
-    answerController.text = question.selectedOption ?? "";
+    answerController.text = question.answer ?? "";
     return CustomContainer(
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
@@ -96,19 +132,17 @@ class QuestionWidget<T> extends StatelessWidget {
               useOverflow: false,
               text: question.question ?? "",
               style: TextStyleHelper.mediumHeading,
-              textAlign: TextAlign.justify,
+              // textAlign: TextAlign.justify,
             ),
             if (question.type == "checkbox") ...[
               ...question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value;
                     return CheckboxListTile(
                       activeColor: AppColors.primary,
-                      selected: entry.value == question.selectedOption,
+                      selected: entry.value == question.answer,
                       selectedTileColor: AppColors.lightWhite,
                       title: CustomText(text: option, useOverflow: false),
-                      value:
-                          question.selectedOption?.contains(entry.value) ??
-                          false,
+                      value: question.answer?.contains(entry.value) ?? false,
                       onChanged: (value) {
                         if (value != null) {
                           assessmentProvider.makeOptionSelection(
@@ -126,11 +160,11 @@ class QuestionWidget<T> extends StatelessWidget {
                     return RadioListTile<String>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       activeColor: AppColors.primary,
-                      selected: entry.value == question.selectedOption,
+                      selected: entry.value == question.answer,
                       selectedTileColor: AppColors.lightWhite,
                       title: CustomText(text: option, useOverflow: false),
                       value: entry.value,
-                      groupValue: question.selectedOption,
+                      groupValue: question.answer,
                       onChanged: (value) {
                         if (value != null) {
                           assessmentProvider.makeRadioSelection(
@@ -161,6 +195,7 @@ class QuestionWidget<T> extends StatelessWidget {
                 autovalidateMode: AutovalidateMode.onUnfocus,
                 child: CustomTextFormField(
                   controller: answerController,
+                  minLines: 5,
                   maxLines: 5,
                   maxLength: 500,
                   validator: (value) {
@@ -178,9 +213,24 @@ class QuestionWidget<T> extends StatelessWidget {
                   },
                 ),
               ),
+            ] else if (question.type == "video") ...[
+              CustomFilePicker(
+                questionId: question.id ?? -1,
+                allowMultiple: true,
+                allowedExtensions: ["mp4", "mkv", "webp"],
+                icon: Icons.video_call,
+              ),
+            ] else if (question.type == "audio") ...[
+              CustomFilePicker(
+                questionId: question.id ?? -1,
+                allowMultiple: true,
+                allowedExtensions: ["mp3", "ogg", "wav"],
+                icon: Icons.audio_file,
+              ),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
+            // Divider(color: AppColors.grey.withOpacity(0.5)),
           ],
         ),
       ),

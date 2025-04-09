@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
@@ -47,8 +48,7 @@ class AssessmentProvider extends ChangeNotifier {
 
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      String? selectedOptionJson =
-          _assessmentQuestions?.data?[index].selectedOption;
+      String? selectedOptionJson = _assessmentQuestions?.data?[index].answer;
 
       // Decode it into a List<String>
       List<String> currentOptions = [];
@@ -68,9 +68,7 @@ class AssessmentProvider extends ChangeNotifier {
       }
 
       // Save it back
-      _assessmentQuestions?.data?[index].selectedOption = currentOptions.join(
-        ",",
-      );
+      _assessmentQuestions?.data?[index].answer = currentOptions.join(",");
 
       notifyListeners();
     }
@@ -86,7 +84,7 @@ class AssessmentProvider extends ChangeNotifier {
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      _assessmentQuestions?.data?[index].selectedOption = selection;
+      _assessmentQuestions?.data?[index].answer = selection;
       notifyListeners();
     }
   }
@@ -98,12 +96,40 @@ class AssessmentProvider extends ChangeNotifier {
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      _assessmentQuestions?.data?[index].selectedOption = selection;
+      _assessmentQuestions?.data?[index].answer = selection;
       notifyListeners();
     }
   }
 
-  void submitAssessmentQuestions() {
-    log(jsonEncode(_assessmentQuestions?.toJson()));
+  /// select files
+  void makeFilesSelection({
+    required int questionId,
+    required List<PlatformFile>? selectedFiles,
+  }) {
+    int? index = _assessmentQuestions?.data?.indexWhere(
+      (e) => e.id == questionId,
+    );
+    if (index != null && index != -1) {
+      // Get the current selectedOption JSON string
+      _assessmentQuestions?.data?[index].selectedFiles = selectedFiles;
+      notifyListeners();
+    }
+  }
+
+  Future<void> submitAssessmentQuestions({
+    required BuildContext context,
+  }) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    bool success = await assessmentQuestionsService
+        .postAssessmentQuestionsByPostId(
+          context: context,
+          assessmentAnswer: _assessmentQuestions,
+        );
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 }

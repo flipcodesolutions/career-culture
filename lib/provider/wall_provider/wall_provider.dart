@@ -25,16 +25,12 @@ class WallProvider extends ChangeNotifier {
       _wallPost.clear();
 
       if (_wallModel?.success == true && _wallModel?.data != null) {
-        for (PostInfo post in _wallModel!.data!) {
-          if (post.video != "") {
-            PostInfo postInfo = PostInfo();
-            postInfo.isUseVideoOrImageForWall = true;
-            _wallPost.add(post);
+        for (PostInfo post in _wallModel?.data ?? []) {
+          if (post.video?.isNotEmpty == true) {
+            _wallPost.add(post.copyWith(isForVideo: true, isForImage: false));
           }
-          if (post.image != "") {
-            PostInfo postInfo = PostInfo();
-            postInfo.isUseVideoOrImageForWall = false;
-            _wallPost.add(post);
+          if (post.image?.isNotEmpty == true) {
+            _wallPost.add(post.copyWith(isForImage: true, isForVideo: false));
           }
         }
       }

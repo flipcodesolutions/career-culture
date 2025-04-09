@@ -1,4 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -11,7 +10,6 @@ import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
-import 'package:sizer/sizer.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
 
@@ -57,12 +55,14 @@ class _WallScreenState extends State<WallScreen> {
                   return CustomContainer(
                     borderRadius: BorderRadius.circular(AppSize.size10),
                     child:
-                        post.isUseVideoOrImageForWall == true
+                        post.isForVideo == true
                             ? VideoPlayerWidget(
+                              autoPlay: false,
+                              showControls: true,
+                              showOnlyPlay: true,
                               videoUrl: "${AppStrings.assetsUrl}${post.video}",
                             )
                             : CustomImageWithLoader(
-                              fit: BoxFit.fitHeight,
                               showImageInPanel: false,
                               imageUrl: "${AppStrings.assetsUrl}${post.image}",
                             ),

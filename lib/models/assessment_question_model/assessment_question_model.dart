@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 
 class AssessmentQuestionModel {
@@ -36,8 +37,9 @@ class AssessmentQuestion {
   String? type;
   String? options;
   String? status;
-  String? selectedOption;
+  String? answer;
   List<String>? extractedOptions;
+  List<PlatformFile>? selectedFiles;
   AssessmentQuestion({
     this.id,
     this.postId,
@@ -45,8 +47,9 @@ class AssessmentQuestion {
     this.type,
     this.options,
     this.status,
-    this.selectedOption,
+    this.answer,
     this.extractedOptions,
+    this.selectedFiles,
   });
 
   AssessmentQuestion.fromJson(Map<String, dynamic> json) {
@@ -56,7 +59,7 @@ class AssessmentQuestion {
     type = json['type'];
     options = json['options'];
     status = json['status'];
-    extractedOptions =  MethodHelper.parseOptions(json['options']);
+    extractedOptions = MethodHelper.parseOptions(json['options']);
   }
 
   Map<String, dynamic> toJson() {
@@ -67,7 +70,7 @@ class AssessmentQuestion {
     data['type'] = this.type;
     data['options'] = this.options;
     data['status'] = this.status;
-    data['answer'] = this.selectedOption;
+    data['answer'] = this.answer;
     data['extractedOptions'] = this.extractedOptions;
     return data;
   }

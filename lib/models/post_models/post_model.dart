@@ -38,7 +38,8 @@ class PostInfo {
   String? isAnnouncement;
   String? status;
   List<Media>? media;
-  bool? isUseVideoOrImageForWall;
+  bool? isForVideo;
+  bool? isForImage;
   PostInfo({
     this.id,
     this.chapterId,
@@ -50,7 +51,23 @@ class PostInfo {
     this.isAnnouncement,
     this.status,
     this.media,
+    this.isForImage,
+    this.isForVideo,
   });
+
+  PostInfo copyWith({
+    String? image,
+    String? video,
+    bool? isForImage,
+    bool? isForVideo,
+  }) {
+    return PostInfo(
+      image: image ?? this.image,
+      video: video ?? this.video,
+      isForImage: isForImage ?? this.isForImage,
+      isForVideo: isForVideo ?? this.isForVideo,
+    );
+  }
 
   PostInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];

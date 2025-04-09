@@ -16,13 +16,16 @@ class VideoPlayerWidget extends StatefulWidget {
     this.height,
     this.width,
     this.showControls = false,
+    this.autoPlay = true,
+    this.showOnlyPlay = false,
   });
 
   final String videoUrl;
   final double? width;
   final double? height;
   final bool showControls;
-
+  final bool autoPlay;
+  final bool showOnlyPlay;
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
 }
@@ -38,7 +41,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
         setState(() {});
-        _controller.play();
+        widget.autoPlay ? _controller.play() : null;
       });
     _controller.addListener(() {
       if (mounted && !_isDragging) setState(() {});
@@ -105,8 +108,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                                 ),
                               ),
                               Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
+                                    iconSize: 10,
                                     icon: Icon(
                                       _controller.value.isPlaying
                                           ? Icons.pause
@@ -122,24 +127,26 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                                       });
                                     },
                                   ),
-                                  SizeHelper.width(),
-                                  CustomText(
-                                    text:
-                                        "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
-                                    style: TextStyleHelper.smallText.copyWith(
-                                      color: AppColors.white,
+                                  if (!widget.showOnlyPlay) ...[
+                                    SizeHelper.width(),
+                                    CustomText(
+                                      text:
+                                          "${_formatDuration(_controller.value.position)} / ${_formatDuration(_controller.value.duration)}",
+                                      style: TextStyleHelper.smallText.copyWith(
+                                        color: AppColors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.fullscreen,
-                                      color: Colors.white,
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.fullscreen,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        // Optional: add fullscreen navigation here
+                                      },
                                     ),
-                                    onPressed: () {
-                                      // Optional: add fullscreen navigation here
-                                    },
-                                  ),
+                                  ],
                                 ],
                               ),
                             ],
