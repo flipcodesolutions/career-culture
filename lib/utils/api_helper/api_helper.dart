@@ -30,4 +30,6 @@ class ApiHelper {
 
   /// wall
   static String getWallPosts = "$baseUrl/wall";
+  /// login 
+  static String login = "$baseUrl/login";
 }

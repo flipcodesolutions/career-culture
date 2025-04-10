@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../utils/api_helper/api_helper.dart';
 
 class AssessmentQuestionsService {
@@ -44,8 +45,6 @@ class AssessmentQuestionsService {
       Map<String, String> headers = {
         'Authorization':
             'Bearer 3|BT4ZESsBKaOloWbVP4ZEd2OxLyouHCsAebxSME8f7456f494',
-        'content-type': 'application/json',
-        "Content-Type": "multipart/form-data",
       };
       request.headers.addAll(headers);
       List<Map<String, dynamic>> replyList = [];
@@ -53,7 +52,7 @@ class AssessmentQuestionsService {
       for (AssessmentQuestion question in assessmentAnswer?.data ?? []) {
         // Build each question's data
         replyList.add({
-          'question_Id': question.id,
+          'questionId': question.id,
           'type': question.type,
           'answer':
               (question.type == "audio" || question.type == "video")
@@ -77,11 +76,10 @@ class AssessmentQuestionsService {
         }
       }
 
-      // Add full reply list as a single field
-      request.fields['data'] = jsonEncode(replyList);
+      // ✅ This is the key step
+      request.fields['data'] = jsonEncode({"data": replyList});
 
-      log('Request fields: ${request.fields}');
-      log('Attached files: ${request.files.length}');
+      log('Request fields: ${jsonEncode({"data": replyList})}');
 
       final streamedResponse = await request.send();
       final data = await http.Response.fromStream(streamedResponse);
@@ -89,8 +87,17 @@ class AssessmentQuestionsService {
       print(data.body);
       if (streamedResponse.statusCode == 200) {
         final jsonResponse = jsonDecode(data.body);
+        WidgetHelper.customSnackBar(
+          context: context,
+          title: "${jsonResponse['message']}",
+        );
         return jsonResponse['success'];
       } else {
+        WidgetHelper.customSnackBar(
+          context: context,
+          title: "${streamedResponse.statusCode}",
+          isError: true,
+        );
         log("Error uploading assessment: ${streamedResponse.statusCode}");
       }
 

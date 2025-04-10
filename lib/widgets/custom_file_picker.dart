@@ -33,6 +33,7 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: widget.allowMultiple,
       type: FileType.custom,
+      withData: true,
       allowedExtensions:
           widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
     );

@@ -21,7 +21,10 @@ class BorderHelper {
   static InputDecoration textFormFieldPrimary({
     String? label,
     required String hintText,
+    Widget? suffix,
   }) => InputDecoration(
+    // suffix: suffix,
+    suffixIcon: suffix,
     floatingLabelAlignment: FloatingLabelAlignment.start,
     floatingLabelBehavior: FloatingLabelBehavior.always,
     floatingLabelStyle: TextStyleHelper.mediumHeading.copyWith(

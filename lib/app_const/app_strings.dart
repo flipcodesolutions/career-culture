@@ -38,4 +38,18 @@ class AppStrings {
   static const aspectForYourMentalWellBeing =
       "Aspect For Your Mental Well Being";
   static const wall = "Wall";
+  static const signInToYourAccount = "Sign In to your Account";
+  static const emailOrPhone = "Email OR Phone";
+  static const password = "Password";
+  static const forgetPassword = "Forget Password";
+  static const login = "Login";
+  static const orLoginWith = "Or Login With";
+  static const google = "Google";
+  static const facebook = "FaceBook";
+  static const dontHaveAccount = "Don’t have an account ? Register";
+  static const startYourJourney = "Start Your Journey";
+  static const createAnAccountToJoinUS = "Create An Account To Join US";
+  static const name = "Name";
+  static const continue_ = "Continue";
+  static const uploadPhoto = "Upload Photo";
 }

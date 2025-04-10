@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MethodHelper {
@@ -61,5 +65,31 @@ class MethodHelper {
       // Start a new timer with a delay
       _timer = Timer(Duration(milliseconds: milliseconds), action);
     };
+  }
+
+  static Widget buildFilePreview(PlatformFile file) {
+    final mimeType = file.extension?.toLowerCase();
+
+    if (mimeType == 'jpg' ||
+        mimeType == 'jpeg' ||
+        mimeType == 'png' ||
+        mimeType == 'gif') {
+      return Image.file(
+        File(file.path!),
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+      );
+    } else if (mimeType == 'pdf') {
+      return Icon(Icons.picture_as_pdf, color: Colors.red, size: 40);
+    } else if (mimeType == 'mp4' || mimeType == 'mov' || mimeType == 'avi') {
+      return Icon(Icons.videocam, color: Colors.blue, size: 40);
+    } else if (mimeType == 'mp3' || mimeType == 'wav') {
+      return Icon(Icons.audiotrack, color: Colors.green, size: 40);
+    } else if (mimeType == 'doc' || mimeType == 'docx') {
+      return Icon(Icons.description, color: Colors.blueGrey, size: 40);
+    } else {
+      return Icon(Icons.insert_drive_file, color: Colors.grey, size: 40);
+    }
   }
 }

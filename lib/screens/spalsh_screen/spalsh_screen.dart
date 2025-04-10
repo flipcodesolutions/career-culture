@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       Duration(seconds: time + time + time),
       () => pushRemoveUntil(
         context: context,
-        widget: OnBoardingScreen(),
+        widget: LoginScreen(),
         transition: FadeForwardsPageTransitionsBuilder(),
       ),
     );

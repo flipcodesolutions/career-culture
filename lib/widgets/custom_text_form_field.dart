@@ -22,6 +22,7 @@ class CustomTextFormField extends StatelessWidget {
   final InputDecoration? decoration;
   final bool enabled;
   final void Function(String)? onChanged;
+  final Widget? suffix;
   const CustomTextFormField({
     super.key,
     required this.controller,
@@ -42,6 +43,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.labelText,
     this.onChanged,
+    this.suffix,
   });
 
   @override
@@ -63,6 +65,7 @@ class CustomTextFormField extends StatelessWidget {
       decoration:
           decoration ??
           BorderHelper.textFormFieldPrimary(
+            suffix: suffix,
             label: labelText,
             hintText: hintText ?? "",
           ),

@@ -5,6 +5,8 @@ import 'app_size.dart';
 
 class AppIcons {
   static const Icon remove = Icon(Icons.remove, color: AppColors.primary);
+  static const Icon audio = Icon(Icons.audio_file, color: AppColors.primary);
+  static const Icon video = Icon(Icons.video_call, color: AppColors.primary);
   static const Icon removeWhite = Icon(Icons.remove, color: AppColors.white);
   static Icon add({Color? color}) =>
       Icon(Icons.add, color: color ?? AppColors.primary);
@@ -64,4 +66,6 @@ class AppIconsData {
   static const IconData radioOff = Icons.radio_button_off;
   static const IconData radioOn = Icons.radio_button_checked;
   static const IconData search = Icons.category_rounded;
+  static const IconData audio = Icons.audio_file;
+  static const IconData video = Icons.video_call;
 }

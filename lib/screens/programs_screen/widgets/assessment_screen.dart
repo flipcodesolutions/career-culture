@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
@@ -218,14 +219,14 @@ class QuestionWidget<T> extends StatelessWidget {
                 questionId: question.id ?? -1,
                 allowMultiple: true,
                 allowedExtensions: ["mp4", "mkv", "webp"],
-                icon: Icons.video_call,
+                icon: AppIconsData.video,
               ),
             ] else if (question.type == "audio") ...[
               CustomFilePicker(
                 questionId: question.id ?? -1,
                 allowMultiple: true,
                 allowedExtensions: ["mp3", "ogg", "wav"],
-                icon: Icons.audio_file,
+                icon: AppIconsData.audio,
               ),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),

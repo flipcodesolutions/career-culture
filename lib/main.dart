@@ -16,6 +16,7 @@ import 'package:mindful_youth/utils/app_theme/app_theme_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'app_const/app_colors.dart';
+import 'provider/user_provider/user_provider.dart';
 import 'utils/text_style_helper/text_style_helper.dart';
 
 void main() async {
@@ -39,6 +40,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => AssessmentProvider()),
         ChangeNotifierProvider(create: (context) => AllEventProvider()),
         ChangeNotifierProvider(create: (context) => WallProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: const MyApp(),
     ),
