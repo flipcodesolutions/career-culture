@@ -15,7 +15,10 @@ class AppIcons {
     size: AppSize.size20,
     Icons.arrow_forward,
   );
-  static const Icon backArrow = Icon(Icons.arrow_back, color: AppColors.black);
+  static const Icon backArrow = Icon(
+    Icons.arrow_back,
+    color: AppColors.primary,
+  );
   static const Icon search = Icon(Icons.search);
   static const Icon shoppingCart = Icon(
     Icons.shopping_cart_rounded,

@@ -1,6 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
+import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_colors.dart';
@@ -72,9 +74,18 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
                           Icons.insert_drive_file,
                           color: AppColors.grey,
                         ),
-                        title: Text(file.name),
-                        subtitle: Text(
-                          '${(file.size / 1024).toStringAsFixed(2)} KB',
+                        title: CustomText(text: file.name),
+                        subtitle: CustomText(
+                          text: '${(file.size / 1024).toStringAsFixed(2)} KB',
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            _selectedFiles.removeWhere(
+                              (e) => e.name == file.name,
+                            );
+                            setState(() {});
+                          },
+                          child: AppIcons.delete,
                         ),
                       ),
                     ),

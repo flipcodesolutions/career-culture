@@ -1,15 +1,18 @@
 import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_icons.dart';
 import '../../../app_const/app_size.dart';
@@ -23,39 +26,30 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  List<Widget> signUpSteps = [
-    CustomContainer(
-      child: SingleChildScrollView(
-        child: AnimationLimiter(
-          child: Column(
-            children: AnimationConfiguration.toStaggeredList(
-              childAnimationBuilder:
-                  (widget) => SlideAnimation(
-                    duration: Duration(milliseconds: 500),
-                    child: FadeInAnimation(
-                      duration: Duration(milliseconds: 500),
-                      child: widget,
-                    ),
-                  ),
-              children: [
-                SizeHelper.height(height: 5.h),
-                CustomText(
-                  text: AppStrings.startYourJourney,
-                  style: TextStyleHelper.largeHeading,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  ];
+class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
+  final PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = context.watch<UserProvider>();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed:
+              () =>
+                  userProvider.currentSignUpPageIndex == 0
+                      ? pop(context)
+                      : {
+                        userProvider.setCurrentSignupPageIndex =
+                            userProvider.currentSignUpPageIndex - 1,
+                        pageController.previousPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        ),
+                      },
+          icon: AppIcons.backArrow,
+        ),
         shape: Border(bottom: BorderSide(color: AppColors.white)),
+
         bottom: PreferredSize(
           preferredSize: Size(0, 0),
           child: CustomContainer(
@@ -63,13 +57,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                5,
+                userProvider.signUpSteps.length,
                 (index) => Expanded(
                   child: CustomContainer(
                     margin: EdgeInsets.symmetric(horizontal: 0.5.w),
-                    gradient: LinearGradient(
-                      colors: [AppColors.primary, AppColors.lightPrimary],
-                    ),
+                    backGroundColor:
+                        index < userProvider.currentSignUpPageIndex
+                            ? AppColors.primary
+                            : AppColors.lightPrimary,
+                    gradient:
+                        index == userProvider.currentSignUpPageIndex
+                            ? LinearGradient(
+                              colors: [
+                                AppColors.primary,
+                                AppColors.lightPrimary,
+                              ],
+                            )
+                            : null,
                   ),
                 ),
               ),
@@ -78,66 +82,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       body: PageView.builder(
-        itemCount: signUpSteps.length,
-        itemBuilder:
-            (context, index) => CustomContainer(
-              child: SingleChildScrollView(
-                child: AnimationLimiter(
-                  child: Column(
-                    children: AnimationConfiguration.toStaggeredList(
-                      childAnimationBuilder:
-                          (widget) => SlideAnimation(
-                            duration: Duration(milliseconds: 500),
-                            child: FadeInAnimation(
-                              duration: Duration(milliseconds: 500),
-                              child: widget,
-                            ),
-                          ),
-                      children: [
-                        SizeHelper.height(height: 5.h),
-                        CustomText(
-                          text: AppStrings.startYourJourney,
-                          style: TextStyleHelper.largeHeading,
-                        ),
-                        SizeHelper.height(height: 3.h),
-                        CustomText(
-                          text: AppStrings.createAnAccountToJoinUS,
-                          style: TextStyleHelper.smallText,
-                        ),
-                        SizeHelper.height(height: 5.h),
-                        CustomContainer(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: CustomTextFormField(
-                            labelText: AppStrings.name,
-                            controller: TextEditingController(),
-                            validator:
-                                (value) => ValidatorHelper.validateValue(
-                                  value: value,
-                                  context: context,
-                                ),
-                          ),
-                        ),
-                        SizeHelper.height(),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: CustomText(text: AppStrings.uploadPhoto),
-                            ),
-                          ],
-                        ),
-                        SizeHelper.height(),
-                        CustomFilePickerV2(
-                          allowMultiple: true,
-                          allowedExtensions: ["jpg", "png", "jpeg"],
-                          icon: AppIconsData.audio,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        controller: pageController,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: userProvider.signUpSteps.length,
+        itemBuilder: (context, index) => userProvider.signUpSteps[index],
+      ),
+      bottomNavigationBar: CustomContainer(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+        child: PrimaryBtn(
+          width: 90.w,
+          btnText: AppStrings.continue_,
+          onTap: () {
+            if (userProvider.currentSignUpPageIndex <
+                (userProvider.signUpSteps.length - 1)) {
+              userProvider.setCurrentSignupPageIndex =
+                  userProvider.currentSignUpPageIndex + 1;
+              pageController.nextPage(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+            setState(() {});
+          },
+        ),
       ),
     );
   }
@@ -198,9 +165,18 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
                     ..._selectedFiles.map(
                       (file) => ListTile(
                         leading: MethodHelper.buildFilePreview(file),
-                        title: Text(file.name),
-                        subtitle: Text(
-                          '${(file.size / 1024).toStringAsFixed(2)} KB',
+                        title: CustomText(text: file.name),
+                        subtitle: CustomText(
+                          text: '${(file.size / 1024).toStringAsFixed(2)} KB',
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            _selectedFiles.removeWhere(
+                              (e) => e.name == file.name,
+                            );
+                            setState(() {});
+                          },
+                          child: AppIcons.delete,
                         ),
                       ),
                     ),

@@ -52,4 +52,24 @@ class AppStrings {
   static const name = "Name";
   static const continue_ = "Continue";
   static const uploadPhoto = "Upload Photo";
+  static const shareContactDetails = "Share Contact Details";
+  static const shareContactDetailsToContinue =
+      "Share Contact Details To Continue";
+  static const email = "Email";
+  static const contactNo1 = "Contact No 1";
+  static const contactNo2 = "Contact No 2";
+  static const education = "Education";
+  static const whatYouDoInFreeTime = "What You Do In Free Time?";
+  static const dreamWhatYouWantToBe = "Dream : What You Want To Be ?";
+  static const educationalDetails = "Educational Details";
+  static const shareYourEducationalDetails =
+      "Share Your Education Details To Continue";
+  static const familyDetails =
+      "Family Details";
+  static const nativePlace =
+      "Native Place";
+  static const currentLocation =
+      "Current Location";
+  static const shareYourPersonalAndFamilyDetails =
+      "Share Your Personal & Family Details To Continue";
 }
