@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/forgot_password/forgot_password.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -192,12 +193,14 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
           mainAxisSize: MainAxisSize.min,
           children: [
             InkWell(
-              onTap:
-                  () => push(
-                    context: context,
-                    widget: SignUpScreen(),
-                    transition: OpenUpwardsPageTransitionsBuilder(),
-                  ),
+              onTap: () {
+                context.read<UserProvider>().setCurrentSignupPageIndex = 0;
+                push(
+                  context: context,
+                  widget: SignUpScreen(),
+                  transition: OpenUpwardsPageTransitionsBuilder(),
+                );
+              },
               child: CustomText(text: AppStrings.dontHaveAccount),
             ),
             SizeHelper.height(height: 1.h),

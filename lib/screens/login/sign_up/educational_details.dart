@@ -22,6 +22,7 @@ class EducationalDetails extends StatelessWidget {
               childAnimationBuilder:
                   (widget) => SlideAnimation(
                     duration: Duration(milliseconds: 500),
+                    horizontalOffset: 30.w,
                     child: FadeInAnimation(
                       duration: Duration(milliseconds: 500),
                       child: widget,
