@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                 SizeHelper.height(height: 4.h),
 
                 /// user score tracking
-                if (userProvider.isUserLoggedIn == true) ...[
+                if (userProvider.isUserLoggedIn) ...[
                   DashBoardUserScoreWidget(
                     score: "5000",
                     animationDuration: Duration(seconds: 3),

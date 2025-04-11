@@ -23,6 +23,7 @@ class StartYourJourney extends StatelessWidget {
             children: AnimationConfiguration.toStaggeredList(
               childAnimationBuilder:
                   (widget) => SlideAnimation(
+                    horizontalOffset: 30.w,
                     duration: Duration(milliseconds: 500),
                     child: FadeInAnimation(
                       duration: Duration(milliseconds: 500),
