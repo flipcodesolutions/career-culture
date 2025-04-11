@@ -74,4 +74,8 @@ class AppStrings {
       "Enter Your Email Account To Reset Your Password";
   static const provideAnswers = "Provide Answers";
   static const giveAnswerOfTheseQuestions = "Give Answer Of These Questions!";
+  static const whatWouldYouLikeToConcentrateOn =
+      "What Would You Like To Concentrate On ?";
+  static const youCanSelectMultipleOptions =
+      "You Can Select Multiple Options ?";
 }

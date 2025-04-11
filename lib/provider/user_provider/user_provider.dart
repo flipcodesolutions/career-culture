@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/screens/login/sign_up/chip_selector.dart';
 import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
 import 'package:mindful_youth/screens/login/sign_up/start_your_journey.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
@@ -19,6 +20,7 @@ class UserProvider extends ChangeNotifier {
     EducationalDetails(),
     FamilyDetails(),
     ProvideAnswer(),
+    ChipSelector(),
   ];
   List<Widget> get signUpSteps => _signUpSteps;
   int _currentSignUpPageIndex = 0;
@@ -37,8 +39,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> checkIfUserIsLoggedIn() async {
-    String isLoggedIn = await SharedPrefs.getToken();
-    if (isLoggedIn != "" && isLoggedIn.isNotEmpty) {
+    String token = await SharedPrefs.getToken();
+    print("got this token ====> $token");
+    if (token != "" && token.isNotEmpty) {
       _isUserLoggedIn = true;
     }
     _isUserLoggedIn = false;

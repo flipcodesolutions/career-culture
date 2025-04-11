@@ -94,7 +94,10 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 10.w,
                                   ),
-                                  child: CustomText(text: post?.title ?? ""),
+                                  child: CustomText(
+                                    text: post?.title ?? "",
+                                    useOverflow: false,
+                                  ),
                                 ),
                               ],
                             ),

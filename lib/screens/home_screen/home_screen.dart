@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           () => push(
                             context: context,
                             widget: LoginScreen(),
-                            transition: ScaleFadePageTransitionsBuilder(),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
                           ),
                     ),
                   ),
@@ -134,30 +134,30 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                 SizeHelper.height(),
 
                 /// recent activity text
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: CustomText(
-                    text: AppStrings.suggestedBooks,
-                    style: TextStyleHelper.mediumHeading.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                SizeHelper.height(),
-                CustomGridWidget(
-                  isNotScroll: true,
-                  data: List<String>.generate(10, (index) => ""),
-                  itemBuilder:
-                      (item, index) => CustomContainer(
-                        backGroundColor: AppColors.cream,
-                        child: CustomImageWithLoader(
-                          imageUrl:
-                              "https://picsum.photos/id/1084/536/354?grayscale",
-                        ),
-                      ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                //   child: CustomText(
+                //     text: AppStrings.suggestedBooks,
+                //     style: TextStyleHelper.mediumHeading.copyWith(
+                //       color: AppColors.primary,
+                //     ),
+                //   ),
+                // ),
+                // SizeHelper.height(),
+                // CustomGridWidget(
+                //   isNotScroll: true,
+                //   data: List<String>.generate(10, (index) => ""),
+                //   itemBuilder:
+                //       (item, index) => CustomContainer(
+                //         backGroundColor: AppColors.cream,
+                //         child: CustomImageWithLoader(
+                //           imageUrl:
+                //               "https://picsum.photos/id/1084/536/354?grayscale",
+                //         ),
+                //       ),
 
-                  axisCount: 3,
-                ),
+                //   axisCount: 3,
+                // ),
               ],
             ),
           ),

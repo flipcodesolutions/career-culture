@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/home_screen/home_screen.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_image_strings.dart';
 
@@ -28,14 +32,24 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       });
     });
 
-    Future.delayed(
-      Duration(seconds: time + time + time),
-      () => pushRemoveUntil(
-        context: context,
-        widget: OnBoardingScreen(),
-        transition: FadeForwardsPageTransitionsBuilder(),
-      ),
-    );
+    Future.delayed(Duration(seconds: time + time + time), () async {
+      UserProvider userProvider = context.read<UserProvider>();
+      String token = await SharedPrefs.getToken();
+      if (token != "" && token.isNotEmpty) {
+        userProvider.setIsUserLoggedIn = true;
+        pushRemoveUntil(
+          context: context,
+          widget: MainScreen(),
+          transition: FadeForwardsPageTransitionsBuilder(),
+        );
+      } else {
+        pushRemoveUntil(
+          context: context,
+          widget: OnBoardingScreen(),
+          transition: FadeForwardsPageTransitionsBuilder(),
+        );
+      }
+    });
   }
 
   @override
