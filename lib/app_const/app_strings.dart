@@ -64,12 +64,14 @@ class AppStrings {
   static const educationalDetails = "Educational Details";
   static const shareYourEducationalDetails =
       "Share Your Education Details To Continue";
-  static const familyDetails =
-      "Family Details";
-  static const nativePlace =
-      "Native Place";
-  static const currentLocation =
-      "Current Location";
+  static const familyDetails = "Family Details";
+  static const nativePlace = "Native Place";
+  static const currentLocation = "Current Location";
   static const shareYourPersonalAndFamilyDetails =
       "Share Your Personal & Family Details To Continue";
+  static const forgotPassword = "Forgot Password";
+  static const enterYourEmailToResetYourPassword =
+      "Enter Your Email Account To Reset Your Password";
+  static const provideAnswers = "Provide Answers";
+  static const giveAnswerOfTheseQuestions = "Give Answer Of These Questions!";
 }

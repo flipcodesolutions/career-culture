@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/screens/login/forgot_password/forgot_password.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
@@ -105,8 +106,13 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                   children: [
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: GestureDetector(
-                        onTap: () => {},
+                      child: InkWell(
+                        onTap:
+                            () => push(
+                              context: context,
+                              widget: ForgotPasswordScreen(),
+                              transition: OpenUpwardsPageTransitionsBuilder(),
+                            ),
                         child: CustomText(text: AppStrings.forgetPassword),
                       ),
                     ),

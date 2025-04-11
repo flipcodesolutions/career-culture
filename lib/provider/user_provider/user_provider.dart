@@ -4,6 +4,7 @@ import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
 import 'package:mindful_youth/screens/login/sign_up/start_your_journey.dart';
 import '../../screens/login/sign_up/educational_details.dart';
 import '../../screens/login/sign_up/family_details.dart';
+import '../../screens/login/sign_up/provide_answer.dart';
 
 class UserProvider extends ChangeNotifier {
   /// if provider is Loading
@@ -16,7 +17,7 @@ class UserProvider extends ChangeNotifier {
     ShareContactDetails(),
     EducationalDetails(),
     FamilyDetails(),
-    StartYourJourney(),
+    ProvideAnswer(),
   ];
   List<Widget> get signUpSteps => _signUpSteps;
   int _currentSignUpPageIndex = 0;
