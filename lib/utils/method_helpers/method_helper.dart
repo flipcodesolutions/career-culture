@@ -4,7 +4,10 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../app_const/app_colors.dart';
 
 class MethodHelper {
   /// launch urls
@@ -38,7 +41,7 @@ class MethodHelper {
   static List<String> parseOptions(String? jsonString) {
     try {
       if (jsonString?.isNotEmpty == true) {
-        return jsonString?.split(',') ?? [];
+        return jsonString?.split('|') ?? [];
       } else {
         return [];
       }
@@ -81,15 +84,35 @@ class MethodHelper {
         fit: BoxFit.cover,
       );
     } else if (mimeType == 'pdf') {
-      return Icon(Icons.picture_as_pdf, color: Colors.red, size: 40);
+      return Icon(
+        Icons.picture_as_pdf,
+        color: AppColors.error,
+        size: AppSize.size40,
+      );
     } else if (mimeType == 'mp4' || mimeType == 'mov' || mimeType == 'avi') {
-      return Icon(Icons.videocam, color: Colors.blue, size: 40);
+      return Icon(
+        Icons.videocam,
+        color: AppColors.primary,
+        size: AppSize.size40,
+      );
     } else if (mimeType == 'mp3' || mimeType == 'wav') {
-      return Icon(Icons.audiotrack, color: Colors.green, size: 40);
+      return Icon(
+        Icons.audiotrack,
+        color: AppColors.primary,
+        size: AppSize.size40,
+      );
     } else if (mimeType == 'doc' || mimeType == 'docx') {
-      return Icon(Icons.description, color: Colors.blueGrey, size: 40);
+      return Icon(
+        Icons.description,
+        color: AppColors.primary,
+        size: AppSize.size40,
+      );
     } else {
-      return Icon(Icons.insert_drive_file, color: Colors.grey, size: 40);
+      return Icon(
+        Icons.insert_drive_file,
+        color: AppColors.primary,
+        size: AppSize.size40,
+      );
     }
   }
 }

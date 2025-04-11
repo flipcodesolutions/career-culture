@@ -10,8 +10,7 @@ import '../../../widgets/custom_container.dart';
 import '../../../widgets/custom_text.dart';
 
 class ProvideAnswer extends StatelessWidget {
-  ProvideAnswer({super.key});
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  const ProvideAnswer({super.key});
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -45,10 +44,9 @@ class ProvideAnswer extends StatelessWidget {
                     question: AssessmentQuestion(
                       question: "Do You Ever Feel Stressed?",
                       type: "radio",
-                      options: "Yes , No",
+                      options: "Yes | No",
                       extractedOptions: ["Yes", "No"],
                     ),
-                    formKey: formKey,
                   ),
                 ),
                 Padding(
@@ -60,7 +58,6 @@ class ProvideAnswer extends StatelessWidget {
                       options: "Yes , No",
                       extractedOptions: ["Yes", "No"],
                     ),
-                    formKey: formKey,
                   ),
                 ),
                 Padding(
@@ -69,10 +66,9 @@ class ProvideAnswer extends StatelessWidget {
                     question: AssessmentQuestion(
                       question: "Do You Need Help?",
                       type: "radio",
-                      options: "Yes , No",
+                      options: "Yes | No",
                       extractedOptions: ["Yes", "No"],
                     ),
-                    formKey: formKey,
                   ),
                 ),
                 Padding(
@@ -81,10 +77,9 @@ class ProvideAnswer extends StatelessWidget {
                     question: AssessmentQuestion(
                       question: "Do You Need Help?",
                       type: "radio",
-                      options: "Yes , No",
+                      options: "Yes | No",
                       extractedOptions: ["Yes", "No"],
                     ),
-                    formKey: formKey,
                   ),
                 ),
                 Padding(
@@ -93,10 +88,9 @@ class ProvideAnswer extends StatelessWidget {
                     question: AssessmentQuestion(
                       question: "Do You Need Help?",
                       type: "radio",
-                      options: "Yes , No",
+                      options: "Yes | No",
                       extractedOptions: ["Yes", "No"],
                     ),
-                    formKey: formKey,
                   ),
                 ),
               ],

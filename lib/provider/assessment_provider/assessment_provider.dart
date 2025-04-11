@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
+import '../../utils/widget_helper/widget_helper.dart';
 
 class AssessmentProvider extends ChangeNotifier {
   /// if provider is Loading
@@ -16,6 +17,8 @@ class AssessmentProvider extends ChangeNotifier {
   AssessmentQuestionModel? _assessmentQuestions;
   AssessmentQuestionModel? get assessmentQuestions => _assessmentQuestions;
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get formKey => _formKey;
   String _postId = "";
   String get postid => _postId;
   set setPostId(String postId) {
@@ -119,9 +122,31 @@ class AssessmentProvider extends ChangeNotifier {
   Future<void> submitAssessmentQuestions({
     required BuildContext context,
   }) async {
+    // Validation before making API call
+    bool hasAllValidAnswers =
+        _assessmentQuestions?.data?.every((q) {
+          final isMediaType = ['video', 'audio', 'image'].contains(q.type);
+          if (isMediaType) {
+            return (q.selectedFiles?.isNotEmpty ?? false);
+          } else {
+            return (q.answer != null && q.answer?.trim().isNotEmpty == true);
+          }
+        }) ??
+        false;
+
+    if (!hasAllValidAnswers) {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: "Please answer all questions and upload required files.",
+        isError: true,
+      );
+      return;
+    }
+
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
+
     bool success = await assessmentQuestionsService
         .postAssessmentQuestionsByPostId(
           context: context,

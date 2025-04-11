@@ -61,7 +61,10 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
         child: ListView(
           padding: EdgeInsets.symmetric(vertical: 2.h),
           children: [
-            ImageContainer(image: "${AppStrings.assetsUrl}${program?.image}"),
+            ImageContainer(
+              image: "${AppStrings.assetsUrl}${program?.image}",
+              showImageInPanel: true,
+            ),
             SizeHelper.height(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -145,8 +148,12 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
 }
 
 class ImageContainer extends StatelessWidget {
-  const ImageContainer({super.key, required this.image});
-
+  const ImageContainer({
+    super.key,
+    required this.image,
+    required this.showImageInPanel,
+  });
+  final bool showImageInPanel;
   final String image;
 
   @override
@@ -157,7 +164,10 @@ class ImageContainer extends StatelessWidget {
       width: 90.w,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppSize.size20),
-        child: CustomImageWithLoader(imageUrl: image),
+        child: CustomImageWithLoader(
+          imageUrl: image,
+          showImageInPanel: showImageInPanel,
+        ),
       ),
     );
   }

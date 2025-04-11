@@ -4,7 +4,6 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_strings.dart';
@@ -16,12 +15,10 @@ import '../score_page.dart'; // Import for formatting
 class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
   const DashBoardUserScoreWidget({
     super.key,
-    required this.imageUrl,
     required this.score,
     this.scoreMessage,
     this.animationDuration = const Duration(seconds: 3),
   });
-  final String imageUrl;
   final String score;
   final String? scoreMessage;
   final Duration animationDuration;
@@ -48,9 +45,11 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
             Expanded(
               flex: 3,
               child: CustomContainer(
-                child: CustomLoaderImage(
-                  imageUrl: imageUrl,
-                  radius: AppSize.size30,
+                child: Icon(
+                  Icons.stars_rounded,
+                  color: AppColors.secondary
+                  ,
+                  size: AppSize.size50,
                 ),
               ),
             ),

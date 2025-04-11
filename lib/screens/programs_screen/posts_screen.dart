@@ -88,6 +88,7 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                                 ImageContainer(
                                   image:
                                       "${AppStrings.assetsUrl}${post?.image}",
+                                  showImageInPanel: false,
                                 ),
                                 CustomContainer(
                                   padding: EdgeInsets.symmetric(
@@ -141,6 +142,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
               child: ImageContainer(
+                showImageInPanel: true,
                 image: "${AppStrings.assetsUrl}${post?.image}",
               ),
             ),
@@ -163,9 +165,9 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                   child: VideoPlayerWidget(
                     height: 30.h,
                     width: 90.w,
+                    autoPlay: false,
                     showControls: true,
-                    videoUrl:
-                        "https://videos.pexels.com/video-files/5532762/5532762-uhd_2732_1440_25fps.mp4",
+                    videoUrl: "${AppStrings.assetsUrl}${post?.video}",
                   ),
                 ),
               ),
@@ -175,8 +177,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: CustomAudioPlayer(
-                  audioUrl:
-                      "https://cdn.s3waas.gov.in/master/uploads/2017/11/2017111337.mp3",
+                  audioUrl: "${AppStrings.assetsUrl}${post?.audio}",
                 ),
               ),
               SizeHelper.height(),
@@ -188,7 +189,8 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                 btnText: AppStrings.assessment,
                 onTap:
                     () => {
-                      context.read<AssessmentProvider>().setPostId = post?.id?.toString() ?? "",
+                      context.read<AssessmentProvider>().setPostId =
+                          post?.id?.toString() ?? "",
                       push(
                         context: context,
                         widget: AssessmentScreen(),

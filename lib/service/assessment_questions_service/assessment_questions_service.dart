@@ -90,6 +90,7 @@ class AssessmentQuestionsService {
         WidgetHelper.customSnackBar(
           context: context,
           title: "${jsonResponse['message']}",
+          isError: !jsonResponse['success'],
         );
         return jsonResponse['success'];
       } else {

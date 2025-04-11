@@ -28,7 +28,6 @@ class AssessmentScreen extends StatefulWidget {
 }
 
 class _AssessmentScreenState extends State<AssessmentScreen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isMedia = false;
   @override
   void initState() {
@@ -57,18 +56,21 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
           assessmentProvider.isLoading
               ? Center(child: CustomLoader())
               : isQuestions
-              ? CustomListWidget(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                data:
-                    assessmentProvider.assessmentQuestions?.data ??
-                    <AssessmentQuestion>[],
-                itemBuilder: (item, index) {
-                  if (!isMedia && item.type == "video" ||
-                      item.type == "audio") {
-                    isMedia = true;
-                  }
-                  return QuestionWidget(question: item, formKey: formKey);
-                },
+              ? Form(
+                key: assessmentProvider.formKey,
+                child: CustomListWidget(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  data:
+                      assessmentProvider.assessmentQuestions?.data ??
+                      <AssessmentQuestion>[],
+                  itemBuilder: (item, index) {
+                    if (!isMedia && item.type == "video" ||
+                        item.type == "audio") {
+                      isMedia = true;
+                    }
+                    return QuestionWidget(question: item);
+                  },
+                ),
               )
               : Center(child: NoDataFoundWidget()),
       bottomNavigationBar:
@@ -79,23 +81,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
                   btnText: AppStrings.submit,
                   onTap: () {
                     /// logic to submit after finishing all questions
-                    if (formKey.currentState?.validate() == true) {
-                      if (isMedia &&
-                          assessmentProvider.assessmentQuestions?.data?.any(
-                                (e) => e.selectedFiles?.isEmpty == true,
-                              ) ==
-                              true) {
-                        WidgetHelper.customSnackBar(
-                          context: context,
-                          title: "Some Media missing",
-                          isError: true,
-                        );
-                      } else {
-                        WidgetHelper.customSnackBar(
-                          context: context,
-                          title: "Success And Ready",
-                        );
-                      }
+                    if (assessmentProvider.formKey.currentState?.validate() ==
+                        true) {
                       assessmentProvider.submitAssessmentQuestions(
                         context: context,
                       );
@@ -115,9 +102,8 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
 }
 
 class QuestionWidget<T> extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
   final AssessmentQuestion question;
-  QuestionWidget({super.key, required this.question, required this.formKey});
+  QuestionWidget({super.key, required this.question});
   final TextEditingController answerController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -183,36 +169,40 @@ class QuestionWidget<T> extends StatelessWidget {
                 controller: answerController,
                 maxLines: 1,
                 maxLength: 200,
-                validator:
-                    (value) => ValidatorHelper.validateValue(
-                      value: value,
-                      context: context,
-                    ),
+                validator: (value) {
+                  final validate = ValidatorHelper.validateValue(
+                    value: value,
+                    context: context,
+                  );
+                  if (validate == null) {
+                    assessmentProvider.textAreaAnswer(
+                      questionId: question.id ?? -1,
+                      selection: answerController.text,
+                    );
+                  }
+                  return validate;
+                },
               ),
             ] else if (question.type == "textArea") ...[
               SizeHelper.height(height: 1.h),
-              Form(
-                key: formKey,
-                autovalidateMode: AutovalidateMode.onUnfocus,
-                child: CustomTextFormField(
-                  controller: answerController,
-                  minLines: 5,
-                  maxLines: 5,
-                  maxLength: 500,
-                  validator: (value) {
-                    final validate = ValidatorHelper.validateValue(
-                      value: value,
-                      context: context,
+              CustomTextFormField(
+                controller: answerController,
+                minLines: 5,
+                maxLines: 5,
+                maxLength: 500,
+                validator: (value) {
+                  final validate = ValidatorHelper.validateValue(
+                    value: value,
+                    context: context,
+                  );
+                  if (validate == null) {
+                    assessmentProvider.textAreaAnswer(
+                      questionId: question.id ?? -1,
+                      selection: answerController.text,
                     );
-                    if (validate == null) {
-                      assessmentProvider.textAreaAnswer(
-                        questionId: question.id ?? -1,
-                        selection: answerController.text,
-                      );
-                    }
-                    return validate;
-                  },
-                ),
+                  }
+                  return validate;
+                },
               ),
             ] else if (question.type == "video") ...[
               CustomFilePicker(
@@ -231,7 +221,6 @@ class QuestionWidget<T> extends StatelessWidget {
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
-            // Divider(color: AppColors.grey.withOpacity(0.5)),
           ],
         ),
       ),

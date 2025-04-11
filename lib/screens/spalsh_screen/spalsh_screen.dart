@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       Duration(seconds: time + time + time),
       () => pushRemoveUntil(
         context: context,
-        widget: LoginScreen(),
+        widget: OnBoardingScreen(),
         transition: FadeForwardsPageTransitionsBuilder(),
       ),
     );
