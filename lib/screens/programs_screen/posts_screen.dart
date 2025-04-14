@@ -4,12 +4,15 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_video_player.dart';
@@ -192,13 +195,29 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                 btnText: AppStrings.assessment,
                 onTap:
                     () => {
-                      context.read<AssessmentProvider>().setPostId =
-                          post?.id?.toString() ?? "",
-                      push(
-                        context: context,
-                        widget: AssessmentScreen(),
-                        transition: FadeUpwardsPageTransitionsBuilder(),
-                      ),
+                      if (context.read<UserProvider>().isUserLoggedIn)
+                        {
+                          context.read<AssessmentProvider>().setPostId =
+                              post?.id?.toString() ?? "",
+                          push(
+                            context: context,
+                            widget: AssessmentScreen(),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          ),
+                        }
+                      else
+                        {
+                          push(
+                            context: context,
+                            widget: LoginScreen(),
+                            transition: ScaleFadePageTransitionsBuilder(),
+                          ),
+                          WidgetHelper.customSnackBar(
+                            context: context,
+                            title: AppStrings.pleaseLoginFirst,
+                            isError: true,
+                          ),
+                        },
                     },
               ),
             ),

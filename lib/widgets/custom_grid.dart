@@ -10,11 +10,15 @@ class CustomGridWidget<T> extends StatelessWidget {
     required this.data,
     required this.itemBuilder,
     this.isNotScroll = false,
+    this.padding,
+    this.gridDelegate,
   });
   final bool isNotScroll;
   final int axisCount;
   final List<T> data; // Generic data list
   final Widget Function(T item, int index) itemBuilder; // Custom widget builder
+  final EdgeInsetsGeometry? padding;
+  final SliverGridDelegate? gridDelegate;
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +26,16 @@ class CustomGridWidget<T> extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         physics: isNotScroll ? NeverScrollableScrollPhysics() : null,
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: axisCount,
-          crossAxisSpacing: AppSize.size10,
-          mainAxisSpacing: AppSize.size10,
-          childAspectRatio: 1,
-        ),
+        padding:
+            padding ?? EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        gridDelegate:
+            gridDelegate ??
+            SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: axisCount,
+              crossAxisSpacing: AppSize.size10,
+              mainAxisSpacing: AppSize.size10,
+              childAspectRatio: 1,
+            ),
         itemCount: data.length,
         itemBuilder:
             (context, index) => AnimationConfiguration.staggeredGrid(

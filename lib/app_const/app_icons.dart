@@ -30,6 +30,10 @@ class AppIcons {
     size: AppSize.size20,
   );
   static const Icon notifications = Icon(Icons.notifications);
+  static const Icon calender = Icon(
+    Icons.calendar_month,
+    color: AppColors.secondary,
+  );
   static const Icon feedBackPerson = Icon(Icons.person, color: AppColors.grey);
   static const edit = Icon(Icons.edit, color: AppColors.primary);
   static const star = Icon(Icons.star, color: AppColors.primary);

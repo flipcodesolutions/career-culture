@@ -19,8 +19,8 @@ class UserProvider extends ChangeNotifier {
     ShareContactDetails(),
     EducationalDetails(),
     FamilyDetails(),
-    ProvideAnswer(),
-    ChipSelector(),
+    // ProvideAnswer(),
+    // ChipSelector(),
   ];
   List<Widget> get signUpSteps => _signUpSteps;
   int _currentSignUpPageIndex = 0;
@@ -40,11 +40,11 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> checkIfUserIsLoggedIn() async {
     String token = await SharedPrefs.getToken();
-    print("got this token ====> $token");
-    if (token != "" && token.isNotEmpty) {
+    if (token.trim().isNotEmpty) {
       _isUserLoggedIn = true;
+    } else {
+      _isUserLoggedIn = false;
     }
-    _isUserLoggedIn = false;
   }
 
   /// Service and getter and setter

@@ -16,6 +16,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../utils/widget_helper/widget_helper.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_slider.dart';
 import 'home_screen_widget/chapter_progress.dart';
@@ -94,12 +95,18 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                     child: PrimaryBtn(
                       width: 90.w,
                       btnText: AppStrings.login,
-                      onTap:
-                          () => push(
-                            context: context,
-                            widget: LoginScreen(),
-                            transition: FadeUpwardsPageTransitionsBuilder(),
-                          ),
+                      onTap: () {
+                        push(
+                          context: context,
+                          widget: LoginScreen(),
+                          transition: FadeUpwardsPageTransitionsBuilder(),
+                        );
+                        WidgetHelper.customSnackBar(
+                          context: context,
+                          title: AppStrings.pleaseLoginFirst,
+                          isError: true,
+                        );
+                      },
                     ),
                   ),
                   SizeHelper.height(),

@@ -7,6 +7,14 @@ class ProgramsProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  /// if provider is Loading
+  bool _isGridView = false;
+  bool get isGridView => _isGridView;
+  set setGridView(bool isGrid) {
+    _isGridView = isGrid;
+    notifyListeners();
+  }
+
   /// Service and getter and setter
   ProgramsService programsService = ProgramsService();
   ProgramsModel? _programsModel;

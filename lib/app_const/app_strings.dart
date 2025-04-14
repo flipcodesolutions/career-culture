@@ -22,7 +22,7 @@ class AppStrings {
   static const next = "Next";
   static const letsBegin = "Let's Begin";
   static const skip = "Skip";
-  static const programs = "Programs";
+  static const programs = "MindFul Youth A Certificate Program";
   static const yourScore = 'Your Score';
   static const recentActivity = "Recent Activity";
   static const suggestedBooks = "Suggested Books";
@@ -50,6 +50,9 @@ class AppStrings {
   static const startYourJourney = "Start Your Journey";
   static const createAnAccountToJoinUS = "Create An Account To Join US";
   static const name = "Name";
+  static const firstName = "First Name";
+  static const middleName = "Middle Name";
+  static const lastName = "Last Name";
   static const continue_ = "Continue";
   static const uploadPhoto = "Upload Photo";
   static const shareContactDetails = "Share Contact Details";
@@ -58,7 +61,12 @@ class AppStrings {
   static const email = "Email";
   static const contactNo1 = "Contact No 1";
   static const contactNo2 = "Contact No 2";
-  static const education = "Education";
+  static const presentORLastStudy = "Present / Last Study";
+  static const nameOfDegree = "Name Of Degree";
+  static const collegeOrUniversity = "College / University";
+  static const nameOfCollegeOrUniversity = "Name Of College Or University";
+  static const companyOrBusiness = "Company / Business Name";
+  static const nameOfCompanyOrBusiness = "Name Of Company / Business Name";
   static const whatYouDoInFreeTime = "What You Do In Free Time?";
   static const dreamWhatYouWantToBe = "Dream : What You Want To Be ?";
   static const educationalDetails = "Educational Details";
@@ -78,4 +86,11 @@ class AppStrings {
       "What Would You Like To Concentrate On ?";
   static const youCanSelectMultipleOptions =
       "You Can Select Multiple Options ?";
+  static const allTopics = "All Topics";
+  static const pleaseLoginFirst = "Pleases Login in To perform this Action";
+  static const gender = "Select Gender";
+  static const male = "Male";
+  static const female = "Female";
+  static const birthDate = "BirthDate";
+  static const areYouWorking = "Are You Working ?";
 }

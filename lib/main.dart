@@ -14,6 +14,7 @@ import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/wall_provider/wall_provider.dart';
 import 'package:mindful_youth/screens/spalsh_screen/spalsh_screen.dart';
 import 'package:mindful_youth/utils/app_theme/app_theme_helper.dart';
+import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'app_const/app_colors.dart';
@@ -79,9 +80,27 @@ class MyApp extends StatelessWidget {
               primaryColor: AppColors.primary,
               splashColor: Colors.transparent,
               datePickerTheme: DatePickerThemeData(
+                confirmButtonStyle: ButtonStyle(
+                  foregroundColor: WidgetStatePropertyAll(AppColors.secondary),
+                ),
+                cancelButtonStyle: ButtonStyle(
+                  foregroundColor: WidgetStatePropertyAll(AppColors.secondary),
+                ),
                 backgroundColor: AppColors.cream,
-                dayBackgroundColor: WidgetStatePropertyAll(AppColors.primary),
-                dayForegroundColor: WidgetStatePropertyAll(AppColors.white),
+                todayBackgroundColor: WidgetStatePropertyAll(
+                  AppColors.secondary,
+                ),
+                todayForegroundColor: WidgetStatePropertyAll(AppColors.white),
+                surfaceTintColor: AppColors.cream,
+                inputDecorationTheme: InputDecorationTheme(
+                  floatingLabelStyle: TextStyleHelper.smallHeading.copyWith(
+                    color: AppColors.primary,
+                  ),
+                  disabledBorder: BorderHelper.inputBorderDisabled,
+                  border: BorderHelper.inputBorder,
+                  errorBorder: BorderHelper.inputBorderError,
+                  focusedBorder: BorderHelper.inputBorderFocused,
+                ),
                 headerBackgroundColor: AppColors.secondary,
                 headerForegroundColor: AppColors.white,
               ),
