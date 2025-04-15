@@ -44,7 +44,7 @@ class UserSignUpRequestModel {
     this.workingStatus,
     this.nameOfCompanyOrBusiness,
     this.images,
-    this.imageFile
+    this.imageFile,
   });
 
   UserSignUpRequestModel.fromJson(Map<String, dynamic> json) {

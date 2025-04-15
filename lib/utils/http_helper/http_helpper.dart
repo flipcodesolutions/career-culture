@@ -215,6 +215,7 @@ class HttpHelper {
       Map<String, String> headers = {
         'Authorization': 'Bearer $token',
         "content-type": "application/json",
+        "Content-Type": "multipart/form-data",
       };
 
       MultipartRequest request = http.MultipartRequest('POST', Uri.parse(uri));
