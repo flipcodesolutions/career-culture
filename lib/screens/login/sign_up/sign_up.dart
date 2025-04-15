@@ -1,16 +1,13 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
-import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -31,6 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
+    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -89,22 +87,50 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
       ),
       bottomNavigationBar: CustomContainer(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        child: PrimaryBtn(
-          width: 90.w,
-          btnText: AppStrings.continue_,
-          onTap: () {
-            if (userProvider.currentSignUpPageIndex <
-                (userProvider.signUpSteps.length - 1)) {
-              userProvider.setCurrentSignupPageIndex =
-                  userProvider.currentSignUpPageIndex + 1;
-              pageController.nextPage(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            }
-            setState(() {});
-          },
-        ),
+        child:
+            signUpProvider.isLoading
+                ? CustomContainer(
+                  alignment: Alignment.center,
+                  width: 90.w,
+                  height: 5.h,
+                  child: CustomLoader(),
+                )
+                : PrimaryBtn(
+                  width: 90.w,
+                  btnText: AppStrings.continue_,
+                  onTap: () async {
+                    int currentPage = userProvider.currentSignUpPageIndex;
+
+                    bool isValid = false;
+                    switch (currentPage) {
+                      case 0:
+                        isValid = signUpProvider.validateFirstPage(context);
+                        break;
+                      case 1:
+                        isValid = await signUpProvider.validateSecondPage(
+                          context,
+                        );
+                        break;
+                      case 2:
+                        isValid = signUpProvider.validateThirdPage(context);
+                        break;
+                      // Add more cases for other pages
+                    }
+
+                    if (!isValid) return;
+                    if (currentPage == userProvider.signUpSteps.length - 1) {
+                      signUpProvider.buildSignUpRequestModel(context: context);
+                    }
+
+                    if (currentPage < (userProvider.signUpSteps.length - 1)) {
+                      userProvider.setCurrentSignupPageIndex = currentPage + 1;
+                      pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                ),
       ),
     );
   }
@@ -126,9 +152,7 @@ class CustomFilePickerV2 extends StatefulWidget {
 }
 
 class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
-  List<PlatformFile> _selectedFiles = [];
-
-  Future<void> pickFiles() async {
+  Future<void> pickFiles({required SignUpProvider signUpProvider}) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: widget.allowMultiple,
       type: FileType.custom,
@@ -139,47 +163,51 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
 
     if (result != null) {
       setState(() {
-        _selectedFiles = result.files;
+        /// do after pick up
+        signUpProvider.signUpRequestModel.imageFile = result.files;
       });
-
-      /// do after pick up
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
     return GestureDetector(
-      onTap: () => pickFiles(),
+      onTap: () => pickFiles(signUpProvider: signUpProvider),
       child: CustomContainer(
         alignment: Alignment.center,
         width: 90.w,
-        height: _selectedFiles.isEmpty ? 15.h : null,
+        height:
+            signUpProvider.signUpRequestModel.imageFile?.isEmpty == true
+                ? 15.h
+                : null,
         borderRadius: BorderRadius.circular(AppSize.size10),
         backGroundColor: AppColors.lightWhite,
         child:
-            _selectedFiles.isNotEmpty
+            signUpProvider.signUpRequestModel.imageFile?.isNotEmpty == true
                 ? ListView(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   children: [
-                    ..._selectedFiles.map(
-                      (file) => ListTile(
-                        leading: MethodHelper.buildFilePreview(file),
-                        title: CustomText(text: file.name),
-                        subtitle: CustomText(
-                          text: '${(file.size / 1024).toStringAsFixed(2)} KB',
-                        ),
-                        trailing: GestureDetector(
-                          onTap: () {
-                            _selectedFiles.removeWhere(
-                              (e) => e.name == file.name,
-                            );
-                            setState(() {});
-                          },
-                          child: AppIcons.delete,
-                        ),
-                      ),
-                    ),
+                    ...signUpProvider.signUpRequestModel.imageFile?.map(
+                          (file) => ListTile(
+                            leading: MethodHelper.buildFilePreview(file),
+                            title: CustomText(text: file.name),
+                            subtitle: CustomText(
+                              text:
+                                  '${(file.size / 1024).toStringAsFixed(2)} KB',
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                signUpProvider.signUpRequestModel.imageFile
+                                    ?.removeWhere((e) => e.name == file.name);
+                                setState(() {});
+                              },
+                              child: AppIcons.delete,
+                            ),
+                          ),
+                        ) ??
+                        [],
                   ],
                 )
                 : Icon(

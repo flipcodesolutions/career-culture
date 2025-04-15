@@ -13,6 +13,7 @@ import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
+import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_video_player.dart';
@@ -62,6 +63,7 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
         /// if only one post
         title: CustomText(
           text: postProvider.currentPost?.title ?? widget.chapterName,
+          style: TextStyleHelper.mediumHeading,
         ),
       ),
       body:

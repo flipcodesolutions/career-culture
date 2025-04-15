@@ -26,4 +26,21 @@ class ChapterService {
       return null;
     }
   }
+
+  Future<ChaptersModel?> getAllChapters({required BuildContext context}) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getAllChapters,
+      );
+      if (response.isNotEmpty) {
+        ChaptersModel model = ChaptersModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode ? log('error while getting chapter by id => $e') : null;
+      return null;
+    }
+  }
 }

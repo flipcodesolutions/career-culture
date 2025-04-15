@@ -18,7 +18,7 @@ class UserProvider extends ChangeNotifier {
     StartYourJourney(),
     ShareContactDetails(),
     EducationalDetails(),
-    FamilyDetails(),
+    // FamilyDetails(),
     // ProvideAnswer(),
     // ChipSelector(),
   ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../app_const/app_regex.dart';
 import '../../app_const/app_strings.dart';
@@ -61,5 +62,23 @@ class ValidatorHelper with NavigateHelper {
       return AppStrings.pleaseEnterMessage;
     }
     return null;
+  }
+
+  static String? validateDateFormate({
+    required String? value,
+    required BuildContext context,
+  }) {
+    if (value == null || value.isEmpty) {
+      return AppStrings.pleaseEnterMessage;
+    }
+
+    // Check if the date is in "yyyy-MM-dd" format
+    try {
+      final parsedDate = DateFormat('yyyy-MM-dd').parseStrict(value);
+    } catch (e) {
+      return AppStrings.needProperDateFormate;
+    }
+
+    return null; // Valid
   }
 }

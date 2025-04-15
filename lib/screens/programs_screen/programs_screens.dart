@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
+import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
+import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
@@ -24,7 +28,7 @@ class ProgramsScreens extends StatefulWidget {
   State<ProgramsScreens> createState() => _ProgramsScreensState();
 }
 
-class _ProgramsScreensState extends State<ProgramsScreens> {
+class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
   @override
   void initState() {
     // TODO: implement initState
@@ -38,6 +42,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
   @override
   Widget build(BuildContext context) {
     ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
+    ChapterProvider chapterProvider = context.watch<ChapterProvider>();
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -50,9 +55,11 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
               ? Center(child: CustomLoader())
               : programsProvider.programsModel?.data?.isNotEmpty == true
               ? CustomRefreshIndicator(
-                onRefresh:
-                    () async =>
-                        await programsProvider.getAllPrograms(context: context),
+                onRefresh: () async {
+                  await programsProvider.getAllPrograms(context: context);
+                  await chapterProvider.getAllChapters(context: context);
+                },
+
                 child: Column(
                   children: [
                     CustomContainer(
@@ -75,10 +82,13 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
                                     ? null
                                     : AppColors.white,
                             btnText: AppStrings.allTopics,
-                            onTap:
-                                () =>
-                                    programsProvider.setGridView =
-                                        !programsProvider.isGridView,
+                            onTap: () async {
+                              programsProvider.setGridView =
+                                  !programsProvider.isGridView;
+                              await chapterProvider.getAllChapters(
+                                context: context,
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -96,46 +106,79 @@ class _ProgramsScreensState extends State<ProgramsScreens> {
                       ),
                     ] else ...[
                       Expanded(
-                        child: CustomGridWidget(
-                          padding: EdgeInsets.all(0),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                              ),
-                          data: List.generate(24, (index) => ""),
-                          itemBuilder:
-                              (item, index) => CustomContainer(
-                                backGroundColor:
-                                    index.isEven
-                                        ? AppColors.cream
-                                        : AppColors.secondary,
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            AppSize.size10,
-                                          ),
-                                          child: CustomImageWithLoader(
-                                            width: 33.w,
-                                            height: 12.h,
-                                            imageUrl:
-                                                "https://placehold.jp/150x150.png",
+                        child:
+                            chapterProvider.isLoading
+                                ? Center(child: CustomLoader())
+                                : CustomGridWidget(
+                                  padding: EdgeInsets.all(0),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        childAspectRatio: 1 / 1.3,
+                                      ),
+                                  data:
+                                      chapterProvider.chaptersModel?.data ??
+                                      <ChaptersInfo>[],
+                                  itemBuilder:
+                                      (item, index) => GestureDetector(
+                                        onTap:
+                                            () => push(
+                                              context: context,
+                                              widget: PostsScreen(
+                                                chapterId: item.id ?? -1,
+                                                chapterName: item.title ?? "",
+                                              ),
+                                              transition:
+                                                  FadeUpwardsPageTransitionsBuilder(),
+                                            ),
+                                        child: CustomContainer(
+                                          height: 50.h,
+                                          backGroundColor:
+                                              index.isEven
+                                                  ? AppColors.cream
+                                                  : AppColors.secondary,
+                                          child: Stack(
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppSize.size10,
+                                                        ),
+                                                    child: CustomImageWithLoader(
+                                                      showImageInPanel: false,
+                                                      width: 33.w,
+                                                      height: 15.h,
+                                                      imageUrl:
+                                                          "${AppStrings.assetsUrl}${item.image}",
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: CustomContainer(
+                                                      child: CustomText(
+                                                        useOverflow: false,
+                                                        text:
+                                                            (item.title?.length ??
+                                                                        0) >
+                                                                    50
+                                                                ? "${item.title!.substring(0, 30)} ..."
+                                                                : item.title ??
+                                                                    "",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        CustomContainer(
-                                          child: CustomText(
-                                            text: "hihisdiii  isddnisi isib",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                  axisCount: 2,
                                 ),
-                              ),
-                          axisCount: 2,
-                        ),
                       ),
                     ],
                   ],

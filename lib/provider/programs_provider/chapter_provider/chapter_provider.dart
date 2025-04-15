@@ -20,6 +20,7 @@ class ChapterProvider extends ChangeNotifier {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
+    _chaptersModel = null;
     _chaptersModel = await chapterService.getChapterById(
       context: context,
       id: id,
@@ -39,5 +40,17 @@ class ChapterProvider extends ChangeNotifier {
       (e) => list.add(ChapterContainer(chaptersInfo: e)),
     );
     return list;
+  }
+
+  Future<void> getAllChapters({required BuildContext context}) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _chaptersModel = null;
+    _chaptersModel = await chapterService.getAllChapters(context: context);
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 }

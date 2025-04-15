@@ -14,6 +14,7 @@ class ApiHelper {
   /// chapter
   static String getChapters({required String id}) =>
       "$baseUrl/chapters?programId=$id";
+  static String getAllChapters = "$baseUrl/all-chapters";
 
   /// posts
   static String getPostById({required String id}) =>
@@ -30,6 +31,13 @@ class ApiHelper {
 
   /// wall
   static String getWallPosts = "$baseUrl/wall";
-  /// login 
+
+  /// login
   static String login = "$baseUrl/login";
+
+  /// signup
+  static String signUp = "$baseUrl/register";
+
+  /// email send otp
+  static String sendEmailOtp = "$baseUrl/sendEmailOtp";
 }

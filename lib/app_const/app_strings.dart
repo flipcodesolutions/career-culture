@@ -93,4 +93,21 @@ class AppStrings {
   static const female = "Female";
   static const birthDate = "BirthDate";
   static const areYouWorking = "Are You Working ?";
+  static const participant = "Participant";
+  static const needProperDateFormate = "Please enter a valid date format !!";
+  static const genderNeeded = "Gender not selected !!";
+  static const mustSelectProfilePic = "Must Select Profile Pic !!";
+  static const otpDoesNotMatch = "Otp Does Not Match !!";
+  static const otp = "Otp";
+  static const verifyEmailWithOtp = "Verify Email With Otp";
+  static const verifyContactNoWithOtp = "Verify Contact Number With Otp";
+  static const resendOtp = "Resend Otp";
+  static const verifyOtp = "Verify Otp";
+  static const mustGiveAllAnswer = "Must Give All Answer !!";
+  static const address1 = "Address Line 1";
+  static const address2 = "Address Line 2";
+  static const city = "City";
+  static const state = "State";
+  static const country = "Country";
+  static const district = "District";
 }

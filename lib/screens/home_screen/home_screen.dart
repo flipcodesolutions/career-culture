@@ -101,11 +101,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                           widget: LoginScreen(),
                           transition: FadeUpwardsPageTransitionsBuilder(),
                         );
-                        WidgetHelper.customSnackBar(
-                          context: context,
-                          title: AppStrings.pleaseLoginFirst,
-                          isError: true,
-                        );
                       },
                     ),
                   ),

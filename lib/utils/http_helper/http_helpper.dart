@@ -212,7 +212,10 @@ class HttpHelper {
   static Future<MultipartRequest> multipart({required String uri}) async {
     try {
       var token = await SharedPrefs.getToken();
-      Map<String, String> headers = {'Authorization': 'Bearer $token'};
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        "content-type": "application/json",
+      };
 
       MultipartRequest request = http.MultipartRequest('POST', Uri.parse(uri));
       request.headers.addAll(headers);

@@ -42,11 +42,7 @@ class AssessmentQuestionsService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.postAssessmentQuestionsByPostId,
       );
-      Map<String, String> headers = {
-        'Authorization':
-            'Bearer 3|BT4ZESsBKaOloWbVP4ZEd2OxLyouHCsAebxSME8f7456f494',
-      };
-      request.headers.addAll(headers);
+     
       List<Map<String, dynamic>> replyList = [];
 
       for (AssessmentQuestion question in assessmentAnswer?.data ?? []) {
