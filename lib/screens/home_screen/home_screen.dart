@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../widgets/custom_slider.dart';
+import '../../widgets/exit_app_dialogbox.dart';
 import 'home_screen_widget/chapter_progress.dart';
 import 'home_screen_widget/dashboard_user_score_widget.dart';
 
@@ -39,124 +40,132 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed:
-                () => push(
-                  context: context,
-                  widget: NotificationScreen(),
-                  transition: ScaleFadePageTransitionsBuilder(),
-                ),
-            icon: Icon(Icons.notifications),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: AnimationLimiter(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: AnimationConfiguration.toStaggeredList(
-              childAnimationBuilder:
-                  (widget) => SlideAnimation(
-                    horizontalOffset: 10.w,
-                    duration: Duration(milliseconds: 300),
-                    child: FadeInAnimation(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          showDialog(context: context, builder: (context) => ExitAppDialog());
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed:
+                  () => push(
+                    context: context,
+                    widget: NotificationScreen(),
+                    transition: ScaleFadePageTransitionsBuilder(),
+                  ),
+              icon: Icon(Icons.notifications),
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: AnimationLimiter(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: AnimationConfiguration.toStaggeredList(
+                childAnimationBuilder:
+                    (widget) => SlideAnimation(
+                      horizontalOffset: 10.w,
                       duration: Duration(milliseconds: 300),
-                      child: widget,
+                      child: FadeInAnimation(
+                        duration: Duration(milliseconds: 300),
+                        child: widget,
+                      ),
                     ),
-                  ),
-              children: [
-                SizeHelper.height(),
-
-                /// search bar
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: SearchBar(leading: AppIcons.search),
-                ),
-                SizeHelper.height(height: 4.h),
-
-                /// user score tracking
-                if (userProvider.isUserLoggedIn) ...[
-                  DashBoardUserScoreWidget(
-                    score: "5000",
-                    animationDuration: Duration(seconds: 3),
-                  ),
+                children: [
                   SizeHelper.height(),
-                ] else ...[
+
+                  /// search bar
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: PrimaryBtn(
-                      width: 90.w,
-                      btnText: AppStrings.login,
-                      onTap: () {
-                        push(
-                          context: context,
-                          widget: LoginScreen(),
-                          transition: FadeUpwardsPageTransitionsBuilder(),
-                        );
-                      },
+                    child: SearchBar(leading: AppIcons.search),
+                  ),
+                  SizeHelper.height(height: 4.h),
+
+                  /// user score tracking
+                  if (userProvider.isUserLoggedIn) ...[
+                    DashBoardUserScoreWidget(
+                      score: "5000",
+                      animationDuration: Duration(seconds: 3),
+                    ),
+                    SizeHelper.height(),
+                  ] else ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: PrimaryBtn(
+                        width: 90.w,
+                        btnText: AppStrings.login,
+                        onTap: () {
+                          push(
+                            context: context,
+                            widget: LoginScreen(),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          );
+                        },
+                      ),
+                    ),
+                    SizeHelper.height(),
+                  ],
+
+                  /// user pashes
+                  SliderRenderWidget(),
+                  SizeHelper.height(),
+
+                  /// recent activity text
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomText(
+                      text: AppStrings.recentActivity,
+                      style: TextStyleHelper.mediumHeading.copyWith(
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                   SizeHelper.height(),
-                ],
 
-                /// user pashes
-                SliderRenderWidget(),
-                SizeHelper.height(),
-
-                /// recent activity text
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: CustomText(
-                    text: AppStrings.recentActivity,
-                    style: TextStyleHelper.mediumHeading.copyWith(
-                      color: AppColors.primary,
-                    ),
+                  /// progress
+                  ChapterProgressWidget(
+                    imageUrl: "https://picsum.photos/id/237/200/300",
+                    chapter: "Chapter 1:",
+                    description: "Analysis Thought Process.",
+                    progressPercent: 90,
                   ),
-                ),
-                SizeHelper.height(),
 
-                /// progress
-                ChapterProgressWidget(
-                  imageUrl: "https://picsum.photos/id/237/200/300",
-                  chapter: "Chapter 1:",
-                  description: "Analysis Thought Process.",
-                  progressPercent: 90,
-                ),
+                  SizeHelper.height(),
+                  // SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+                  SizeHelper.height(),
 
-                SizeHelper.height(),
-                // SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
-                SizeHelper.height(),
+                  /// recent activity text
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  //   child: CustomText(
+                  //     text: AppStrings.suggestedBooks,
+                  //     style: TextStyleHelper.mediumHeading.copyWith(
+                  //       color: AppColors.primary,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizeHelper.height(),
+                  // CustomGridWidget(
+                  //   isNotScroll: true,
+                  //   data: List<String>.generate(10, (index) => ""),
+                  //   itemBuilder:
+                  //       (item, index) => CustomContainer(
+                  //         backGroundColor: AppColors.cream,
+                  //         child: CustomImageWithLoader(
+                  //           imageUrl:
+                  //               "https://picsum.photos/id/1084/536/354?grayscale",
+                  //         ),
+                  //       ),
 
-                /// recent activity text
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 5.w),
-                //   child: CustomText(
-                //     text: AppStrings.suggestedBooks,
-                //     style: TextStyleHelper.mediumHeading.copyWith(
-                //       color: AppColors.primary,
-                //     ),
-                //   ),
-                // ),
-                // SizeHelper.height(),
-                // CustomGridWidget(
-                //   isNotScroll: true,
-                //   data: List<String>.generate(10, (index) => ""),
-                //   itemBuilder:
-                //       (item, index) => CustomContainer(
-                //         backGroundColor: AppColors.cream,
-                //         child: CustomImageWithLoader(
-                //           imageUrl:
-                //               "https://picsum.photos/id/1084/536/354?grayscale",
-                //         ),
-                //       ),
-
-                //   axisCount: 3,
-                // ),
-              ],
+                  //   axisCount: 3,
+                  // ),
+                ],
+              ),
             ),
           ),
         ),

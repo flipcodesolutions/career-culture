@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement initState
     super.initState();
     if (widget.setIndex != null) {
-      context.watch<HomeScreenProvider>().setNavigationIndex =
+      context.read<HomeScreenProvider>().setNavigationIndex =
           widget.setIndex ?? 0;
     }
   }
@@ -36,14 +36,18 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
-    return Scaffold(
-      body: screenList[homeScreenProvider.navigationIndex],
-      bottomNavigationBar: Selector<HomeScreenProvider, int>(
-        builder:
-            (context, navIndex, child) =>
-                NavigationBarWidget(navIndex: navIndex),
-        selector:
-            (context, homeScreenProvider) => homeScreenProvider.navigationIndex,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: screenList[homeScreenProvider.navigationIndex],
+        bottomNavigationBar: Selector<HomeScreenProvider, int>(
+          builder:
+              (context, navIndex, child) =>
+                  NavigationBarWidget(navIndex: navIndex),
+          selector:
+              (context, homeScreenProvider) =>
+                  homeScreenProvider.navigationIndex,
+        ),
       ),
     );
   }

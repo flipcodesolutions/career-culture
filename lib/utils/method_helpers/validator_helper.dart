@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../app_const/app_regex.dart';
 import '../../app_const/app_strings.dart';
 import '../navigation_helper/navigation_helper.dart';

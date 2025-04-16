@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/widgets/custom_grid.dart';
-import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
-import '../../../app_const/app_size.dart';
 import '../../../utils/method_helpers/size_helper.dart';
 import '../../../utils/text_style_helper/text_style_helper.dart';
 import '../../../widgets/custom_container.dart';

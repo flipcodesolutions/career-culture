@@ -11,6 +11,7 @@ import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
+import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
 
@@ -35,50 +36,63 @@ class _WallScreenState extends State<WallScreen> {
   @override
   Widget build(BuildContext context) {
     WallProvider wallProvider = context.watch<WallProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(
-          text: AppStrings.wall,
-          style: TextStyleHelper.mediumHeading,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        HomeScreenProvider homeScreenProvider =
+            context.read<HomeScreenProvider>();
+        if (!didPop) {
+          homeScreenProvider.setNavigationIndex =
+              homeScreenProvider.navigationIndex - 1;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: CustomText(
+            text: AppStrings.wall,
+            style: TextStyleHelper.mediumHeading,
+          ),
         ),
-      ),
-      body:
-          wallProvider.isLoading
-              ? Center(child: CustomLoader())
-              : wallProvider.wallPost.isNotEmpty == true
-              ? CustomRefreshIndicator(
-                onRefresh: () async => wallProvider.getWall(context: context),
-                child: MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  itemCount: wallProvider.wallPost.length,
-                  itemBuilder: (context, index) {
-                    PostInfo? post = wallProvider.wallPost[index];
-                    return CustomContainer(
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      child:
-                          post.isForVideo == true
-                              ? VideoPlayerWidget(
-                                autoPlay: false,
-                                showControls: true,
-                                showOnlyPlay: true,
-                                videoUrl:
-                                    "${AppStrings.assetsUrl}${post.video}",
-                              )
-                              : CustomImageWithLoader(
-                                showImageInPanel: false,
-                                imageUrl:
-                                    "${AppStrings.assetsUrl}${post.image}",
-                              ),
-                    );
-                  },
+        body:
+            wallProvider.isLoading
+                ? Center(child: CustomLoader())
+                : wallProvider.wallPost.isNotEmpty == true
+                ? CustomRefreshIndicator(
+                  onRefresh: () async => wallProvider.getWall(context: context),
+                  child: MasonryGridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                    itemCount: wallProvider.wallPost.length,
+                    itemBuilder: (context, index) {
+                      PostInfo? post = wallProvider.wallPost[index];
+                      return CustomContainer(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child:
+                            post.isForVideo == true
+                                ? VideoPlayerWidget(
+                                  autoPlay: false,
+                                  showControls: true,
+                                  showOnlyPlay: true,
+                                  videoUrl:
+                                      "${AppStrings.assetsUrl}${post.video}",
+                                )
+                                : CustomImageWithLoader(
+                                  showImageInPanel: false,
+                                  imageUrl:
+                                      "${AppStrings.assetsUrl}${post.image}",
+                                ),
+                      );
+                    },
+                  ),
+                )
+                : CustomRefreshIndicator(
+                  onRefresh: () async => wallProvider.getWall(context: context),
+                  child: ListView(
+                    children: [Center(child: NoDataFoundWidget())],
+                  ),
                 ),
-              )
-              : CustomRefreshIndicator(
-                onRefresh: () async => wallProvider.getWall(context: context),
-                child: ListView(children: [Center(child: NoDataFoundWidget())]),
-              ),
+      ),
     );
   }
 }

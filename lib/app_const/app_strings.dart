@@ -59,6 +59,7 @@ class AppStrings {
   static const shareContactDetailsToContinue =
       "Share Contact Details To Continue";
   static const email = "Email";
+  static const contactNo = "Contact";
   static const contactNo1 = "Contact No 1";
   static const contactNo2 = "Contact No 2";
   static const presentORLastStudy = "Present / Last Study";
@@ -106,6 +107,7 @@ class AppStrings {
   static const mustGiveAllAnswer = "Must Give All Answer !!";
   static const address1 = "Address Line 1";
   static const address2 = "Address Line 2";
+  static const address = "Address";
   static const city = "City";
   static const state = "State";
   static const country = "Country";
@@ -122,4 +124,8 @@ class AppStrings {
   static const logOut = "LogOut";
   static const camera = "Camera";
   static const gallery = "Gallery";
+  static const editAccount = "Edit Account";
+  static const areYouSureWantToExit = "Are You Sure Want To Exit ?";
+  static const cancel = "Cancel";
+  static const exit = "Exit";
 }
