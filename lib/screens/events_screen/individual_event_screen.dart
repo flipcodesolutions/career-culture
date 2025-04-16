@@ -53,9 +53,26 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               style: TextStyleHelper.smallHeading,
             ),
             CustomText(
-              text: "Date :- ${eventInfo.date}",
+              text:
+                  "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
               style: TextStyleHelper.smallHeading,
             ),
+            CustomText(
+              text:
+                  "Start Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+              style: TextStyleHelper.smallHeading,
+            ),
+            CustomText(
+              text:
+                  "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+              style: TextStyleHelper.smallHeading,
+            ),
+            if (eventInfo.amount?.isNotEmpty == true)
+              CustomText(
+                text:
+                    "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                style: TextStyleHelper.smallHeading,
+              ),
             SizeHelper.height(),
             CustomText(
               text: eventInfo.description ?? "No Description To Show ",

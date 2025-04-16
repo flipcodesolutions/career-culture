@@ -42,7 +42,7 @@ class AssessmentQuestionsService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.postAssessmentQuestionsByPostId,
       );
-     
+
       List<Map<String, dynamic>> replyList = [];
 
       for (AssessmentQuestion question in assessmentAnswer?.data ?? []) {

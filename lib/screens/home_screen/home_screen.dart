@@ -9,15 +9,11 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/widgets/custom_grid.dart';
-import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
-import '../../utils/widget_helper/widget_helper.dart';
-import '../../widgets/custom_container.dart';
 import '../../widgets/custom_slider.dart';
 import 'home_screen_widget/chapter_progress.dart';
 import 'home_screen_widget/dashboard_user_score_widget.dart';
@@ -108,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                 ],
 
                 /// user pashes
-                SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+                SliderRenderWidget(),
                 SizeHelper.height(),
 
                 /// recent activity text
@@ -132,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                 ),
 
                 SizeHelper.height(),
-                SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
+                // SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
                 SizeHelper.height(),
 
                 /// recent activity text

@@ -8,6 +8,7 @@ class ApiHelper {
 
   /// programs
   static String programs = "$baseUrl/programs";
+  static String sliders = "$baseUrl/sliders";
   static String programById({required String id}) =>
       "$baseUrl/programs?programId=$id";
 

@@ -17,15 +17,23 @@ class SignUpService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.signUp,
       );
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'profile_pick_${signUp.name}',
-          signUp.imageFile?.first.bytes?.toList() ?? [],
-          filename: 'profile_pick_${signUp.name}',
-        ),
-      );
-      request.fields['name'] = signUp.name ?? "";
+      if (signUp.imageFile?.isNotEmpty ?? false) {
+        final fileBytes = signUp.imageFile!.first.bytes?.toList() ?? [];
+        log("File size (bytes): ${fileBytes.length}");
+        log("File name: profile_pick_${signUp.name}");
 
+        if (fileBytes.isNotEmpty) {
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              'profile_pick_${signUp.name}',
+              fileBytes,
+              filename: 'profile_pick_${signUp.name}',
+            ),
+          );
+        }
+      }
+      ;
+      request.fields['name'] = signUp.name ?? "";
       request.fields['email'] = signUp.email ?? "";
       request.fields['is_email_verified'] = signUp.isEmailVerified ?? "";
       request.fields['is_contact_verified'] = signUp.isContactVerified ?? "";

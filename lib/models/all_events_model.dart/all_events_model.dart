@@ -33,22 +33,29 @@ class EventModel {
   String? description;
   String? poster;
   String? venue;
-  String? date;
+  String? registrationEndDate;
+  String? startDate;
+  String? endDate;
+  String? amount;
   String? time;
   String? isAnnouncement;
+  int? points;
   String? status;
 
-  EventModel({
-    this.id,
-    this.title,
-    this.description,
-    this.poster,
-    this.venue,
-    this.date,
-    this.time,
-    this.isAnnouncement,
-    this.status,
-  });
+  EventModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.poster,
+      this.venue,
+      this.registrationEndDate,
+      this.startDate,
+      this.endDate,
+      this.amount,
+      this.time,
+      this.isAnnouncement,
+      this.points,
+      this.status});
 
   EventModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -56,9 +63,13 @@ class EventModel {
     description = json['description'];
     poster = json['poster'];
     venue = json['venue'];
-    date = json['date'];
+    registrationEndDate = json['registrationEndDate'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
+    amount = json['amount'];
     time = json['time'];
     isAnnouncement = json['isAnnouncement'];
+    points = json['points'];
     status = json['status'];
   }
 
@@ -69,10 +80,15 @@ class EventModel {
     data['description'] = this.description;
     data['poster'] = this.poster;
     data['venue'] = this.venue;
-    data['date'] = this.date;
+    data['registrationEndDate'] = this.registrationEndDate;
+    data['startDate'] = this.startDate;
+    data['endDate'] = this.endDate;
+    data['amount'] = this.amount;
     data['time'] = this.time;
     data['isAnnouncement'] = this.isAnnouncement;
+    data['points'] = this.points;
     data['status'] = this.status;
     return data;
   }
 }
+

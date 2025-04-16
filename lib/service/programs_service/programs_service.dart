@@ -45,4 +45,27 @@ class ProgramsService {
       return null;
     }
   }
+
+  /// get home screen sliders
+  /// get single programs by id
+  Future<ProgramsModel?> getHomeScreenSliders({
+    required BuildContext context,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.sliders,
+      );
+      if (response.isNotEmpty) {
+        ProgramsModel model = ProgramsModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode
+          ? log("error while getting sliders for home screen => $e")
+          : null;
+      return null;
+    }
+  }
 }
