@@ -52,8 +52,8 @@ class User {
   String? emailVerifiedAt;
   String? role;
   String? isApproved;
-  bool? isEmailVerified;
-  bool? isContactVerified;
+  String? isEmailVerified;
+  String? isContactVerified;
   String? status;
 
   User({

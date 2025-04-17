@@ -126,6 +126,7 @@ class AppStrings {
   static const gallery = "Gallery";
   static const editAccount = "Edit Account";
   static const areYouSureWantToExit = "Are You Sure Want To Exit ?";
+  static const areYouSureWantToLogout = "Are You Sure Want To Logout ?";
   static const cancel = "Cancel";
   static const exit = "Exit";
 }

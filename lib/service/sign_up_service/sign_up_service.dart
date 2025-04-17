@@ -6,10 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:mindful_youth/models/login_model/user_signup_request_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
+import '../../models/login_model/user_signup_confirm_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpService {
-  Future<void> registerUser({
+  Future<UserSignUpConfirmModel?> registerUser({
     required BuildContext context,
     required UserSignUpRequestModel signUp,
   }) async {
@@ -25,14 +26,14 @@ class SignUpService {
         if (fileBytes.isNotEmpty) {
           request.files.add(
             http.MultipartFile.fromBytes(
-              'profile_pick_${signUp.name}',
+              "images",
               fileBytes,
-              filename: 'profile_pick_${signUp.name}',
+              filename:
+                  'profile_pic_${signUp.name?.replaceAll(" ", "_")}.${signUp.imageFile?.first.extension}',
             ),
           );
         }
       }
-      ;
       request.fields['name'] = signUp.name ?? "";
       request.fields['email'] = signUp.email ?? "";
       request.fields['is_email_verified'] = signUp.isEmailVerified ?? "";
@@ -53,29 +54,29 @@ class SignUpService {
       request.fields['workingStatus'] = signUp.workingStatus ?? "";
       request.fields['nameOfCompanyOrBusiness'] =
           signUp.nameOfCompanyOrBusiness ?? "";
-      request.fields['images'] = signUp.images ?? "string";
-      // request.fields['data'] = jsonEncode(signUp);
-      log('Request fields: ${jsonEncode(signUp)}');
 
       final streamedResponse = await request.send();
       final data = await http.Response.fromStream(streamedResponse);
-
-      print(data.body);
       if (streamedResponse.statusCode == 200) {
-        final jsonResponse = jsonDecode(data.body);
+        Map<String, dynamic> jsonResponse = jsonDecode(data.body);
+        log(jsonResponse.toString());
         WidgetHelper.customSnackBar(
           context: context,
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
-        return jsonResponse['success'];
+        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
+          jsonResponse,
+        );
+        return model;
       } else {
         WidgetHelper.customSnackBar(
           context: context,
           title: "${streamedResponse.statusCode}",
           isError: true,
         );
-        log("Error uploading assessment: ${streamedResponse.statusCode}");
+        log("Error sign up: ${streamedResponse.statusCode}");
+        return null;
       }
     } catch (e) {
       log('error while register user => $e');

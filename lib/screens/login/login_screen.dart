@@ -7,6 +7,7 @@ import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/forgot_password/forgot_password.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -21,8 +22,8 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
+  const LoginScreen({super.key, this.isToNavigateHome = false});
+  final bool isToNavigateHome;
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -145,7 +146,13 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                                     password: passwordController.text,
                                   );
                                   if (success) {
-                                    pop(context);
+                                    if (!context.mounted) return;
+                                    widget.isToNavigateHome
+                                        ? pushRemoveUntil(
+                                          context: context,
+                                          widget: MainScreen(setIndex: 0),
+                                        )
+                                        : pop(context);
                                   }
                                 }
                               },

@@ -4,8 +4,10 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_request_model.dart';
 import 'package:intl/intl.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
@@ -14,6 +16,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
+import '../../models/login_model/user_signup_confirm_model.dart';
 import '../../service/sign_up_service/sign_up_service.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
@@ -284,6 +287,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   SignUpService signUpService = SignUpService();
+  UserSignUpConfirmModel? _signUpConfirmModel;
+  UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
   void buildSignUpRequestModel({required BuildContext context}) async {
     _signUpRequestModel.name =
         "${firstName.text} ${middleName.text} ${lastName.text}";
@@ -303,14 +308,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.study = presentOrLastStudy.text;
     _signUpRequestModel.degree = presentOrLastStudy.text;
     _signUpRequestModel.university = collegeOrUniversity.text;
-    _signUpRequestModel.workingStatus = areYouWorking.answer?.toLowerCase();
+    _signUpRequestModel.workingStatus =
+        areYouWorking.answer?.toLowerCase() ?? "no";
     _signUpRequestModel.nameOfCompanyOrBusiness = companyOrBusiness.text;
     notifyListeners();
 
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    await signUpService.registerUser(
+    _signUpConfirmModel = await signUpService.registerUser(
       context: context,
       signUp: _signUpRequestModel,
     );
@@ -318,5 +324,44 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
+
+    if (_signUpConfirmModel?.success == true) {
+      SharedPrefs.saveToken(_signUpConfirmModel?.data?.token ?? "");
+
+      /// navigate user to home screen
+      pushRemoveUntil(context: context, widget: MainScreen(setIndex: 0));
+    }
+  }
+
+  void refreshSignUpProvider() {
+    _signUpRequestModel = UserSignUpRequestModel();
+
+    /// first page
+    firstName.clear();
+    lastName.clear();
+    middleName.clear();
+    birthDate.clear();
+    _genderQuestion.answer = "";
+
+    /// second page
+    email.clear();
+    emailOtp.clear();
+    contactNo1.clear();
+    contactNo1Otp.clear();
+    contactNo2.clear();
+    contactNo2Otp.clear();
+    address1.clear();
+    address2.clear();
+    city.clear();
+    district.clear();
+    state.clear();
+    country.clear();
+    _emailOtpModel = null;
+
+    /// third page
+    presentOrLastStudy.clear();
+    collegeOrUniversity.clear();
+    _areYouWorking.answer = "";
+    companyOrBusiness.clear();
   }
 }

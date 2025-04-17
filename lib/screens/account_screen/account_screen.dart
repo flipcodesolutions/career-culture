@@ -11,6 +11,7 @@ import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_profile_avatar.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/exit_app_dialogbox.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -115,11 +116,15 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             titleText: AppStrings.deleteAccount,
                           ),
 
-                          /// delete account
+                          /// logout account
                           ProfilePageListTiles(
                             leading: Icons.logout,
                             color: AppColors.error,
-                            onTap: () {},
+                            onTap:
+                                () async => showDialog(
+                                  context: context,
+                                  builder: (context) => LogoutDialog(),
+                                ),
                             titleText: AppStrings.logOut,
                           ),
                         ],
@@ -175,7 +180,7 @@ class ProfilePageListTiles extends StatelessWidget {
           showTrailing
               ? Icon(Icons.keyboard_arrow_right, color: color ?? AppColors.grey)
               : null,
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }

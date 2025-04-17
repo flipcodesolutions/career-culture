@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/login_model.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/service/user_servcies/login_service.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -32,6 +33,7 @@ class LoginProvider extends ChangeNotifier {
     notifyListeners();
     if (_loginResponseModel?.success == true) {
       context.read<UserProvider>().setIsUserLoggedIn = true;
+      SharedPrefs.saveToken(_loginResponseModel?.data?.token ?? "");
       return true;
     }
     return false;
