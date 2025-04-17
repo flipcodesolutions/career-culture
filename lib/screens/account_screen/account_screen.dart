@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_profile_avatar.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/exit_app_dialogbox.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +31,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
+    LoginProvider loginProvider = context.watch<LoginProvider>();
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -109,12 +113,24 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           ),
 
                           /// delete account
-                          ProfilePageListTiles(
-                            leading: Icons.delete_forever,
-                            color: AppColors.error,
-                            onTap: () {},
-                            titleText: AppStrings.deleteAccount,
-                          ),
+                          loginProvider.isLoading
+                              ? Center(child: CustomLoader())
+                              : ProfilePageListTiles(
+                                leading: Icons.delete_forever,
+                                color: AppColors.error,
+                                onTap: () async {
+                                  String uId =
+                                      await SharedPrefs.getSharedString(
+                                        AppStrings.id,
+                                      );
+                                  print("got this id =============> $uId");
+                                  loginProvider.deleteUser(
+                                    context: context,
+                                    uId: uId,
+                                  );
+                                },
+                                titleText: AppStrings.deleteAccount,
+                              ),
 
                           /// logout account
                           ProfilePageListTiles(

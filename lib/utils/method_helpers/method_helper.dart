@@ -7,6 +7,8 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_const/app_colors.dart';
+import '../../app_const/app_strings.dart';
+import '../shared_prefs_helper/shared_prefs_helper.dart';
 
 class MethodHelper {
   /// launch urls
@@ -112,6 +114,77 @@ class MethodHelper {
         color: AppColors.primary,
         size: AppSize.size40,
       );
+    }
+  }
+
+  //// user info in local storage
+  //// user infos in local store
+  static void saveUserInfoInLocale({
+    required String userName,
+    required String userEmail,
+    required String isEmailVerified,
+    required String isContactVerified,
+    required String role,
+    required String isApproved,
+    required String status,
+    required String id,
+    required String images,
+    required String userId,
+    required String userContactNo1,
+    required String userContactNo2,
+    required String userGender,
+    required String dateOfBirth,
+    required String addressLine1,
+    required String addressLine2,
+    required String userCity,
+    required String userState,
+    required String userCountry,
+    required String userDistrict,
+    required String study,
+    required String degree,
+    required String university,
+    required String workingStatus,
+    required String userNameOfCompanyOrBusiness,
+    required String userToken,
+  }) async {
+    await SharedPrefs.saveString(AppStrings.userName, userName);
+    await SharedPrefs.saveString(AppStrings.userEmail, userEmail);
+    await SharedPrefs.saveString(AppStrings.isEmailVerified, isEmailVerified);
+    await SharedPrefs.saveString(
+      AppStrings.isContactVerified,
+      isContactVerified,
+    );
+    await SharedPrefs.saveString(AppStrings.role, role);
+    await SharedPrefs.saveString(AppStrings.isApproved, isApproved);
+    await SharedPrefs.saveString(AppStrings.status, status);
+    await SharedPrefs.saveString(AppStrings.id, id);
+    await SharedPrefs.saveString(AppStrings.images, images);
+    await SharedPrefs.saveString(AppStrings.userId, userId);
+    await SharedPrefs.saveString(AppStrings.userContactNo1, userContactNo1);
+    await SharedPrefs.saveString(AppStrings.userContactNo2, userContactNo2);
+    await SharedPrefs.saveString(AppStrings.userGender, userGender);
+    await SharedPrefs.saveString(AppStrings.dateOfBirth, dateOfBirth);
+    await SharedPrefs.saveString(AppStrings.addressLine1, addressLine1);
+    await SharedPrefs.saveString(AppStrings.addressLine2, addressLine2);
+    await SharedPrefs.saveString(AppStrings.userCity, userCity);
+    await SharedPrefs.saveString(AppStrings.userState, userState);
+    await SharedPrefs.saveString(AppStrings.userCountry, userCountry);
+    await SharedPrefs.saveString(AppStrings.userDistrict, userDistrict);
+    await SharedPrefs.saveString(AppStrings.study, study);
+    await SharedPrefs.saveString(AppStrings.degree, degree);
+    await SharedPrefs.saveString(AppStrings.university, university);
+    await SharedPrefs.saveString(AppStrings.workingStatus, workingStatus);
+    await SharedPrefs.saveString(
+      AppStrings.userNameOfCompanyOrBusiness,
+      userNameOfCompanyOrBusiness,
+    );
+    await SharedPrefs.saveString(AppStrings.userToken, userToken);
+  }
+
+  /// remove strings
+  static void removeLocaleStrings({required List<String> listOfStrings}) async {
+    for (String i in listOfStrings) {
+      SharedPrefs.removeSharedString(i);
     }
   }
 }

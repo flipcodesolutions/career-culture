@@ -129,4 +129,32 @@ class AppStrings {
   static const areYouSureWantToLogout = "Are You Sure Want To Logout ?";
   static const cancel = "Cancel";
   static const exit = "Exit";
+
+  /// list of items stored in local storage when login and signup
+  static const userName = "userName";
+  static const userEmail = "userEmail";
+  static const isEmailVerified = "isEmailVerified";
+  static const isContactVerified = "isContactVerified";
+  static const role = "role";
+  static const isApproved = "isApproved";
+  static const status = "status";
+  static const id = "id";
+  static const images = "images";
+  static const userId = "userId";
+  static const userContactNo1 = "userContactNo1";
+  static const userContactNo2 = "userContactNo2";
+  static const userGender = "userGender";
+  static const dateOfBirth = "dateOfBirth";
+  static const addressLine1 = "addressLine1";
+  static const addressLine2 = "addressLine2";
+  static const userCity = "userCity";
+  static const userState = "userState";
+  static const userCountry = "userCountry";
+  static const userDistrict = "userDistrict";
+  static const study = "study";
+  static const degree = "degree";
+  static const university = "university";
+  static const workingStatus = "workingStatus";
+  static const userNameOfCompanyOrBusiness = "userNameOfCompanyOrBusiness";
+  static const userToken = "token";
 }

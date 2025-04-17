@@ -41,4 +41,8 @@ class ApiHelper {
 
   /// email send otp
   static String sendEmailOtp = "$baseUrl/sendEmailOtp";
+
+  /// delete
+  static String deleteUser({required String uId}) =>
+      "$baseUrl/delete-user/$uId";
 }

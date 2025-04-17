@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/screens/login/sign_up/chip_selector.dart';
 import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
 import 'package:mindful_youth/screens/login/sign_up/start_your_journey.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import '../../screens/login/sign_up/educational_details.dart';
-import '../../screens/login/sign_up/family_details.dart';
-import '../../screens/login/sign_up/provide_answer.dart';
 
 class UserProvider extends ChangeNotifier {
   /// if provider is Loading
@@ -46,9 +43,4 @@ class UserProvider extends ChangeNotifier {
       _isUserLoggedIn = false;
     }
   }
-
-  /// Service and getter and setter
-  // UserServices userService = UserServices();
-  // LoginModel? _loginModel;
-  // LoginModel? get loginModel => _loginModel;
 }

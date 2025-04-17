@@ -29,4 +29,24 @@ class LoginService {
       return null;
     }
   }
+
+  Future<bool> deleteUser({
+    required BuildContext context,
+    required String uId,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        uri: ApiHelper.deleteUser(uId: uId),
+        context: context,
+      );
+      if (response.isNotEmpty && response['success'] == true) {
+        await SharedPrefs.clearShared();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      log('error while loggin in user => $e');
+      return false;
+    }
+  }
 }
