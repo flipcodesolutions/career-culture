@@ -20,10 +20,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.setIndex != null) {
+    Future.microtask(() {
       context.read<HomeScreenProvider>().setNavigationIndex =
           widget.setIndex ?? 0;
-    }
+    });
   }
 
   final List<Widget> screenList = [

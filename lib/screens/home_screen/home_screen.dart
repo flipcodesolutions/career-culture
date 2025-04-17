@@ -34,6 +34,8 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     super.initState();
     Future.microtask(() {
       userProvider.checkIfUserIsLoggedIn();
+    }).then((_) {
+      setState(() {});
     });
   }
 
@@ -87,29 +89,27 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                   SizeHelper.height(height: 4.h),
 
                   /// user score tracking
-                  if (userProvider.isUserLoggedIn) ...[
-                    DashBoardUserScoreWidget(
-                      score: "5000",
-                      animationDuration: Duration(seconds: 3),
-                    ),
-                    SizeHelper.height(),
-                  ] else ...[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: PrimaryBtn(
-                        width: 90.w,
-                        btnText: AppStrings.login,
-                        onTap: () {
-                          push(
-                            context: context,
-                            widget: LoginScreen(),
-                            transition: FadeUpwardsPageTransitionsBuilder(),
-                          );
-                        },
+                  userProvider.isUserLoggedIn
+                      ? DashBoardUserScoreWidget(
+                        score: "5000",
+                        animationDuration: Duration(seconds: 3),
+                      )
+                      : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: PrimaryBtn(
+                          width: 90.w,
+                          btnText: AppStrings.login,
+                          onTap: () {
+                            push(
+                              context: context,
+                              widget: LoginScreen(),
+                              transition: FadeUpwardsPageTransitionsBuilder(),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    SizeHelper.height(),
-                  ],
+
+                  SizeHelper.height(),
 
                   /// user pashes
                   SliderRenderWidget(),

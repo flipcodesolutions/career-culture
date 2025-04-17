@@ -127,8 +127,13 @@ class AppStrings {
   static const editAccount = "Edit Account";
   static const areYouSureWantToExit = "Are You Sure Want To Exit ?";
   static const areYouSureWantToLogout = "Are You Sure Want To Logout ?";
+  static const areYouSureWantToDeleteYourAccount =
+      "Are You Sure Want To Delete Your Account ?";
+  static const thisWillActionIsIrreversible =
+      "This Action is Irreversible , Proceed With Cautions !!";
   static const cancel = "Cancel";
   static const exit = "Exit";
+  static const dateFormate = "YYYY-MM-DD";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

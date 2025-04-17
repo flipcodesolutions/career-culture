@@ -66,7 +66,9 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                   SizeHelper.height(),
                   CustomTextFieldWithAnimatedIconForVerification(
                     isVerified: signUpProvider.isContactNo1Verified,
+                    maxLength: 10,
                     label: AppStrings.contactNo1,
+                    keyboard: TextInputType.number,
                     controller: signUpProvider.contactNo1,
                     validator:
                         (value) => ValidatorHelper.validateMobileNumber(
@@ -76,8 +78,10 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                   ),
                   SizeHelper.height(),
                   CustomTextFieldWithAnimatedIconForVerification(
+                    maxLength: 10,
                     isVerified: false,
                     label: AppStrings.contactNo2,
+                    keyboard: TextInputType.number,
                     controller: signUpProvider.contactNo2,
                     validator:
                         (value) =>
@@ -184,18 +188,24 @@ class CustomTextFieldWithAnimatedIconForVerification extends StatelessWidget {
     this.validator,
     required this.controller,
     this.onTap,
+    this.maxLength = 100,
+    this.keyboard,
   });
   final TextEditingController? controller;
   final String label;
   final bool isVerified;
   final String? Function(String?)? validator;
   final void Function()? onTap;
+  final int? maxLength;
+  final TextInputType? keyboard;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: CustomTextFormField(
         labelText: label,
+        keyboardType: keyboard,
+        maxLength: maxLength,
         controller: controller,
         validator:
             validator ??

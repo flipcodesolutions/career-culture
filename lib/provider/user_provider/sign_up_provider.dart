@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
@@ -10,7 +9,6 @@ import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
@@ -187,6 +185,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
             child: CustomTextFormField(
               labelText: AppStrings.otp,
               controller: otpController,
+              keyboardType: TextInputType.numberWithOptions(),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return "Please enter OTP";
@@ -367,8 +366,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
             "",
         userToken: _signUpConfirmModel?.data?.token ?? "",
       );
+      refreshSignUpProvider();
 
-      /// navigate user to home screen
+      // /// navigate user to home screen
+      // context.read<HomeScreenProvider>().setNavigationIndex = 0;
       pushRemoveUntil(context: context, widget: MainScreen(setIndex: 0));
     }
   }
@@ -396,6 +397,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     district.clear();
     state.clear();
     country.clear();
+    _isEmailVerified = false;
+    _isContactNo1Verified = false;
     _emailOtpModel = null;
 
     /// third page
@@ -403,5 +406,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     collegeOrUniversity.clear();
     _areYouWorking.answer = "";
     companyOrBusiness.clear();
+    notifyListeners();
   }
 }

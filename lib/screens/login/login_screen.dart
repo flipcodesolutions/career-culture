@@ -204,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                 context.read<UserProvider>().setCurrentSignupPageIndex = 0;
                 push(
                   context: context,
-                  widget: SignUpScreen(),
+                  widget: SignUpScreen(isUpdateProfile: false,),
                   transition: OpenUpwardsPageTransitionsBuilder(),
                 );
               },

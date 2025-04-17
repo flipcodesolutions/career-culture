@@ -97,6 +97,7 @@ class StartYourJourney extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
                       labelText: AppStrings.birthDate,
+                      hintText: AppStrings.dateFormate,
                       suffix: CustomContainer(
                         width: 10.w,
                         child: GestureDetector(

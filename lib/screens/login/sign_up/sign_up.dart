@@ -17,8 +17,8 @@ import '../../../app_const/app_strings.dart';
 import '../../../utils/method_helpers/method_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
-
+  const SignUpScreen({super.key, required this.isUpdateProfile});
+  final bool isUpdateProfile;
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
