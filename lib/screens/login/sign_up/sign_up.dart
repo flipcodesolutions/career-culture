@@ -24,6 +24,17 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.isUpdateProfile) {
+      Future.microtask(() {
+        context.read<SignUpProvider>().initControllerWithLocalStorage();
+      });
+    }
+  }
+
   final PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {

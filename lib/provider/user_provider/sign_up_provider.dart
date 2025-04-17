@@ -291,7 +291,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
   void buildSignUpRequestModel({required BuildContext context}) async {
     _signUpRequestModel.name =
-        "${firstName.text} ${middleName.text} ${lastName.text}";
+        "${firstName.text.trim()} ${middleName.text.trim()} ${lastName.text.trim()}";
     _signUpRequestModel.email = email.text;
     _signUpRequestModel.isEmailVerified = isEmailVerified ? "yes" : "no";
     _signUpRequestModel.isContactVerified = isEmailVerified ? "yes" : "no";
@@ -406,6 +406,22 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     collegeOrUniversity.clear();
     _areYouWorking.answer = "";
     companyOrBusiness.clear();
+    notifyListeners();
+  }
+
+  void initControllerWithLocalStorage() async {
+    /// first page
+    String name = await SharedPrefs.getSharedString(AppStrings.userName);
+    print(name);
+    firstName.text = name.split(" ")[0];
+    lastName.text = name.split(" ")[1];
+    middleName.text = name.split(" ")[2];
+    birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
+    _genderQuestion.answer = await SharedPrefs.getSharedString(
+      AppStrings.userGender,
+    );
+
+    ///
     notifyListeners();
   }
 }
