@@ -87,12 +87,6 @@ class StartYourJourney extends StatelessWidget {
                     ),
                   ),
                   SizeHelper.height(),
-                  RadioQuestionWidgetWithHeading(
-                    question: signUpProvider.genderQuestion,
-                    onChanged:
-                        (value) => signUpProvider.setGender(gender: value),
-                  ),
-                  SizeHelper.height(),
                   CustomContainer(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
@@ -117,6 +111,13 @@ class StartYourJourney extends StatelessWidget {
                           ),
                     ),
                   ),
+                  SizeHelper.height(),
+                  RadioQuestionWidgetWithHeading(
+                    question: signUpProvider.genderQuestion,
+                    onChanged:
+                        (value) => signUpProvider.setGender(gender: value),
+                  ),
+
                   SizeHelper.height(),
                   Row(
                     children: [

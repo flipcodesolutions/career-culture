@@ -6,6 +6,7 @@ import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
@@ -29,8 +30,8 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     // TODO: implement initState
     super.initState();
     if (widget.isUpdateProfile) {
-      Future.microtask(() {
-        context.read<SignUpProvider>().initControllerWithLocalStorage();
+      Future.microtask(() async {
+        await context.read<SignUpProvider>().initControllerWithLocalStorage();
       });
     }
   }
@@ -151,11 +152,13 @@ class CustomFilePickerV2 extends StatefulWidget {
   final bool allowMultiple;
   final IconData? icon;
   final List<String>? allowedExtensions;
+  final String? oldPicUrl;
   const CustomFilePickerV2({
     super.key,
     this.allowMultiple = false,
     this.icon,
     this.allowedExtensions,
+    this.oldPicUrl,
   });
 
   @override
@@ -185,48 +188,63 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
-      child: CustomContainer(
-        alignment: Alignment.center,
-        width: 90.w,
-        height:
-            signUpProvider.signUpRequestModel.imageFile?.isEmpty == true
-                ? 15.h
-                : null,
-        borderRadius: BorderRadius.circular(AppSize.size10),
-        backGroundColor: AppColors.lightWhite,
-        child:
-            signUpProvider.signUpRequestModel.imageFile?.isNotEmpty == true
-                ? ListView(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  children: [
-                    ...signUpProvider.signUpRequestModel.imageFile?.map(
-                          (file) => ListTile(
-                            leading: MethodHelper.buildFilePreview(file),
-                            title: CustomText(text: file.name),
-                            subtitle: CustomText(
-                              text:
-                                  '${(file.size / 1024).toStringAsFixed(2)} KB',
-                            ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                signUpProvider.signUpRequestModel.imageFile
-                                    ?.removeWhere((e) => e.name == file.name);
-                                setState(() {});
-                              },
-                              child: AppIcons.delete,
-                            ),
-                          ),
-                        ) ??
-                        [],
-                  ],
-                )
-                : Icon(
-                  widget.icon ?? Icons.add,
-                  size: AppSize.size30,
-                  color: AppColors.primary,
-                ),
-      ),
+      child:
+          widget.oldPicUrl?.isNotEmpty == true &&
+                      signUpProvider.signUpRequestModel.imageFile?.isEmpty ==
+                          true ||
+                  signUpProvider.signUpRequestModel.imageFile == null
+              ? CustomImageWithLoader(imageUrl: "", showImageInPanel: false)
+              : CustomContainer(
+                alignment: Alignment.center,
+                width: 90.w,
+                height:
+                    signUpProvider.signUpRequestModel.imageFile?.isEmpty ==
+                                true ||
+                            signUpProvider.signUpRequestModel.imageFile == null
+                        ? 15.h
+                        : null,
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                backGroundColor: AppColors.lightWhite,
+                child:
+                    signUpProvider.signUpRequestModel.imageFile?.isNotEmpty ==
+                            true
+                        ? ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          children: [
+                            ...signUpProvider.signUpRequestModel.imageFile?.map(
+                                  (file) => ListTile(
+                                    leading: MethodHelper.buildFilePreview(
+                                      file,
+                                    ),
+                                    title: CustomText(text: file.name),
+                                    subtitle: CustomText(
+                                      text:
+                                          '${(file.size / 1024).toStringAsFixed(2)} KB',
+                                    ),
+                                    trailing: GestureDetector(
+                                      onTap: () {
+                                        signUpProvider
+                                            .signUpRequestModel
+                                            .imageFile
+                                            ?.removeWhere(
+                                              (e) => e.name == file.name,
+                                            );
+                                        setState(() {});
+                                      },
+                                      child: AppIcons.delete,
+                                    ),
+                                  ),
+                                ) ??
+                                [],
+                          ],
+                        )
+                        : Icon(
+                          widget.icon ?? Icons.add,
+                          size: AppSize.size30,
+                          color: AppColors.primary,
+                        ),
+              ),
     );
   }
 }

@@ -328,44 +328,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (_signUpConfirmModel?.success == true) {
       SharedPrefs.saveToken(_signUpConfirmModel?.data?.token ?? "");
 
-      ///store user info in locale
-      MethodHelper.saveUserInfoInLocale(
-        userName: _signUpConfirmModel?.data?.user?.name ?? "",
-        userEmail: _signUpConfirmModel?.data?.user?.email ?? "",
-        isEmailVerified: _signUpConfirmModel?.data?.user?.isEmailVerified ?? "",
-        isContactVerified:
-            _signUpConfirmModel?.data?.user?.isContactVerified ?? "",
-        role: _signUpConfirmModel?.data?.user?.role ?? "",
-        isApproved: _signUpConfirmModel?.data?.user?.isApproved ?? "",
-        status: _signUpConfirmModel?.data?.user?.status ?? "",
-        id: _signUpConfirmModel?.data?.user?.id?.toString() ?? "",
-        images: _signUpConfirmModel?.data?.userProfile?.images ?? "",
-        userId:
-            _signUpConfirmModel?.data?.userProfile?.userId?.toString() ?? "",
-        userContactNo1:
-            _signUpConfirmModel?.data?.userProfile?.contactNo1 ?? "",
-        userContactNo2:
-            _signUpConfirmModel?.data?.userProfile?.contactNo2 ?? "",
-        userGender: _signUpConfirmModel?.data?.userProfile?.gender ?? "",
-        dateOfBirth: _signUpConfirmModel?.data?.userProfile?.dateOfBirth ?? "",
-        addressLine1:
-            _signUpConfirmModel?.data?.userProfile?.addressLine1 ?? "",
-        addressLine2:
-            _signUpConfirmModel?.data?.userProfile?.addressLine2 ?? "",
-        userCity: _signUpConfirmModel?.data?.userProfile?.city ?? "",
-        userState: _signUpConfirmModel?.data?.userProfile?.state ?? "",
-        userCountry: _signUpConfirmModel?.data?.userProfile?.country ?? "",
-        userDistrict: _signUpConfirmModel?.data?.userProfile?.district ?? "",
-        study: _signUpConfirmModel?.data?.userEducation?.study ?? "",
-        degree: _signUpConfirmModel?.data?.userEducation?.degree ?? "",
-        university: _signUpConfirmModel?.data?.userEducation?.university ?? "",
-        workingStatus:
-            _signUpConfirmModel?.data?.userEducation?.workingStatus ?? "",
-        userNameOfCompanyOrBusiness:
-            _signUpConfirmModel?.data?.userEducation?.nameOfCompanyOrBusiness ??
-            "",
-        userToken: _signUpConfirmModel?.data?.token ?? "",
-      );
       refreshSignUpProvider();
 
       // /// navigate user to home screen
@@ -409,7 +371,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
-  void initControllerWithLocalStorage() async {
+  Future<void> initControllerWithLocalStorage() async {
     /// first page
     String name = await SharedPrefs.getSharedString(AppStrings.userName);
     print(name);

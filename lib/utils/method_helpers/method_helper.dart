@@ -119,7 +119,7 @@ class MethodHelper {
 
   //// user info in local storage
   //// user infos in local store
-  static void saveUserInfoInLocale({
+  static Future<void> saveUserInfoInLocale({
     required String userName,
     required String userEmail,
     required String isEmailVerified,
@@ -148,37 +148,90 @@ class MethodHelper {
     required String userToken,
   }) async {
     await SharedPrefs.saveString(AppStrings.userName, userName);
+    print("AppStrings.userName ======> $userName");
+
     await SharedPrefs.saveString(AppStrings.userEmail, userEmail);
+    print("AppStrings.userEmail ======> $userEmail");
+
     await SharedPrefs.saveString(AppStrings.isEmailVerified, isEmailVerified);
+    print("AppStrings.isEmailVerified ======> $isEmailVerified");
+
     await SharedPrefs.saveString(
       AppStrings.isContactVerified,
       isContactVerified,
     );
+    print("AppStrings.isContactVerified ======> $isContactVerified");
+
     await SharedPrefs.saveString(AppStrings.role, role);
+    print("AppStrings.role ======> $role");
+
     await SharedPrefs.saveString(AppStrings.isApproved, isApproved);
+    print("AppStrings.isApproved ======> $isApproved");
+
     await SharedPrefs.saveString(AppStrings.status, status);
+    print("AppStrings.status ======> $status");
+
     await SharedPrefs.saveString(AppStrings.id, id);
+    print("AppStrings.id ======> $id");
+
     await SharedPrefs.saveString(AppStrings.images, images);
+    print("AppStrings.images ======> $images");
+
     await SharedPrefs.saveString(AppStrings.userId, userId);
+    print("AppStrings.userId ======> $userId");
+
     await SharedPrefs.saveString(AppStrings.userContactNo1, userContactNo1);
+    print("AppStrings.userContactNo1 ======> $userContactNo1");
+
     await SharedPrefs.saveString(AppStrings.userContactNo2, userContactNo2);
+    print("AppStrings.userContactNo2 ======> $userContactNo2");
+
     await SharedPrefs.saveString(AppStrings.userGender, userGender);
+    print("AppStrings.userGender ======> $userGender");
+
     await SharedPrefs.saveString(AppStrings.dateOfBirth, dateOfBirth);
+    print("AppStrings.dateOfBirth ======> $dateOfBirth");
+
     await SharedPrefs.saveString(AppStrings.addressLine1, addressLine1);
+    print("AppStrings.addressLine1 ======> $addressLine1");
+
     await SharedPrefs.saveString(AppStrings.addressLine2, addressLine2);
+    print("AppStrings.addressLine2 ======> $addressLine2");
+
     await SharedPrefs.saveString(AppStrings.userCity, userCity);
+    print("AppStrings.userCity ======> $userCity");
+
     await SharedPrefs.saveString(AppStrings.userState, userState);
+    print("AppStrings.userState ======> $userState");
+
     await SharedPrefs.saveString(AppStrings.userCountry, userCountry);
+    print("AppStrings.userCountry ======> $userCountry");
+
     await SharedPrefs.saveString(AppStrings.userDistrict, userDistrict);
+    print("AppStrings.userDistrict ======> $userDistrict");
+
     await SharedPrefs.saveString(AppStrings.study, study);
+    print("AppStrings.study ======> $study");
+
     await SharedPrefs.saveString(AppStrings.degree, degree);
+    print("AppStrings.degree ======> $degree");
+
     await SharedPrefs.saveString(AppStrings.university, university);
+    print("AppStrings.university ======> $university");
+
     await SharedPrefs.saveString(AppStrings.workingStatus, workingStatus);
+    print("AppStrings.workingStatus ======> $workingStatus");
+
     await SharedPrefs.saveString(
       AppStrings.userNameOfCompanyOrBusiness,
       userNameOfCompanyOrBusiness,
     );
+    print(
+      "AppStrings.userNameOfCompanyOrBusiness ======> $userNameOfCompanyOrBusiness",
+    );
+
     await SharedPrefs.saveString(AppStrings.userToken, userToken);
+    print("AppStrings.userToken ======> $userToken");
   }
 
   /// remove strings

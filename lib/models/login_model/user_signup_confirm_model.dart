@@ -1,3 +1,6 @@
+import '../../app_const/app_strings.dart';
+import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
+
 class UserSignUpConfirmModel {
   bool? success;
   String? message;
@@ -41,14 +44,15 @@ class UserSignUpConfirmModelData {
   UserSignUpConfirmModelData.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     userProfile =
-        json['userProfile'] != null
-            ? new UserProfile.fromJson(json['userProfile'])
+        json['profile'] != null
+            ? new UserProfile.fromJson(json['profile'])
             : null;
     userEducation =
         json['userEducation'] != null
             ? new UserEducation.fromJson(json['userEducation'])
             : null;
     token = json['token'];
+    _saveToLocalStorage();
   }
 
   Map<String, dynamic> toJson() {
@@ -57,13 +61,173 @@ class UserSignUpConfirmModelData {
       data['user'] = this.user!.toJson();
     }
     if (this.userProfile != null) {
-      data['userProfile'] = this.userProfile!.toJson();
+      data['profile'] = this.userProfile!.toJson();
     }
     if (this.userEducation != null) {
       data['userEducation'] = this.userEducation!.toJson();
     }
     data['token'] = this.token;
     return data;
+  }
+
+  final bool _shouldPrint =
+      true; // 👈 Set to false when you want to disable logging
+
+  void _log(String key, String value) {
+    if (_shouldPrint) {
+      print("$key ======> $value");
+    }
+  }
+
+  void _saveToLocalStorage() async {
+    if (user != null) {
+      await SharedPrefs.saveString(AppStrings.userName, user?.name ?? '');
+      _log(AppStrings.userName, user?.name ?? '');
+
+      await SharedPrefs.saveString(AppStrings.userEmail, user?.email ?? '');
+      _log(AppStrings.userEmail, user?.email ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.isEmailVerified,
+        user?.isEmailVerified ?? '',
+      );
+      _log(AppStrings.isEmailVerified, user?.isEmailVerified ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.isContactVerified,
+        user?.isContactVerified ?? '',
+      );
+      _log(AppStrings.isContactVerified, user?.isContactVerified ?? '');
+
+      await SharedPrefs.saveString(AppStrings.role, user?.role ?? '');
+      _log(AppStrings.role, user?.role ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.isApproved,
+        user?.isApproved ?? '',
+      );
+      _log(AppStrings.isApproved, user?.isApproved ?? '');
+
+      await SharedPrefs.saveString(AppStrings.status, user?.status ?? '');
+      _log(AppStrings.status, user?.status ?? '');
+
+      await SharedPrefs.saveString(AppStrings.id, user?.id.toString() ?? '');
+      _log(AppStrings.id, user?.id.toString() ?? '');
+    }
+
+    if (userProfile != null) {
+      await SharedPrefs.saveString(
+        AppStrings.images,
+        userProfile?.images ?? '',
+      );
+      _log(AppStrings.images, userProfile?.images ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userId,
+        userProfile?.userId.toString() ?? '',
+      );
+      _log(AppStrings.userId, userProfile?.userId.toString() ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userContactNo1,
+        userProfile?.contactNo1 ?? '',
+      );
+      _log(AppStrings.userContactNo1, userProfile?.contactNo1 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userContactNo2,
+        userProfile?.contactNo2 ?? '',
+      );
+      _log(AppStrings.userContactNo2, userProfile?.contactNo2 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userGender,
+        userProfile?.gender ?? '',
+      );
+      _log(AppStrings.userGender, userProfile?.gender ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.dateOfBirth,
+        userProfile?.dateOfBirth ?? '',
+      );
+      _log(AppStrings.dateOfBirth, userProfile?.dateOfBirth ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.addressLine1,
+        userProfile?.addressLine1 ?? '',
+      );
+      _log(AppStrings.addressLine1, userProfile?.addressLine1 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.addressLine2,
+        userProfile?.addressLine2 ?? '',
+      );
+      _log(AppStrings.addressLine2, userProfile?.addressLine2 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userCity,
+        userProfile?.city ?? '',
+      );
+      _log(AppStrings.userCity, userProfile?.city ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userState,
+        userProfile?.state ?? '',
+      );
+      _log(AppStrings.userState, userProfile?.state ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userCountry,
+        userProfile?.country ?? '',
+      );
+      _log(AppStrings.userCountry, userProfile?.country ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userDistrict,
+        userProfile?.district ?? '',
+      );
+      _log(AppStrings.userDistrict, userProfile?.district ?? '');
+    }
+
+    if (userEducation != null) {
+      await SharedPrefs.saveString(
+        AppStrings.study,
+        userEducation?.study ?? '',
+      );
+      _log(AppStrings.study, userEducation?.study ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.degree,
+        userEducation?.degree ?? '',
+      );
+      _log(AppStrings.degree, userEducation?.degree ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.university,
+        userEducation?.university ?? '',
+      );
+      _log(AppStrings.university, userEducation?.university ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.workingStatus,
+        userEducation?.workingStatus ?? '',
+      );
+      _log(AppStrings.workingStatus, userEducation?.workingStatus ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userNameOfCompanyOrBusiness,
+        userEducation?.nameOfCompanyOrBusiness ?? '',
+      );
+      _log(
+        AppStrings.userNameOfCompanyOrBusiness,
+        userEducation?.nameOfCompanyOrBusiness ?? '',
+      );
+    }
+
+    if (token != null) {
+      await SharedPrefs.saveString(AppStrings.userToken, token!);
+      _log(AppStrings.userToken, token!);
+    }
   }
 }
 

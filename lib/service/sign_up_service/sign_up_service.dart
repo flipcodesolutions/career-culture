@@ -7,6 +7,7 @@ import 'package:mindful_youth/models/login_model/user_signup_request_model.dart'
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
+import '../../utils/method_helpers/method_helper.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpService {
@@ -59,7 +60,6 @@ class SignUpService {
       final data = await http.Response.fromStream(streamedResponse);
       if (streamedResponse.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(data.body);
-        log(jsonResponse.toString());
         WidgetHelper.customSnackBar(
           context: context,
           title: "${jsonResponse['message']}",
