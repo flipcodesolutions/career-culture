@@ -21,10 +21,13 @@ import 'package:sizer/sizer.dart';
 import 'app_const/app_colors.dart';
 import 'provider/user_provider/user_provider.dart';
 import 'utils/text_style_helper/text_style_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   /// will wait until every thing is initialized
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   /// this line will prevent app to rotate horizontally
   SystemChrome.setPreferredOrientations([

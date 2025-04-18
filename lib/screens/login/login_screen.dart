@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -8,6 +9,7 @@ import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/forgot_password/forgot_password.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -75,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
                       controller: emailOrPhoneController,
-                      labelText: AppStrings.emailOrPhone,
+                      labelText: AppStrings.enterMobileNo,
                       validator:
                           (value) => ValidatorHelper.validateValue(
                             value: value,
@@ -83,50 +85,50 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                           ),
                     ),
                   ),
-                  SizeHelper.height(height: 5.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: CustomTextFormField(
-                      controller: passwordController,
-                      labelText: AppStrings.password,
-                      obscureText: isPassNotVisible,
-                      suffix: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isPassNotVisible = !isPassNotVisible;
-                          });
-                        },
-                        child: Icon(
-                          isPassNotVisible
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                      ),
-                      validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
-                    ),
-                  ),
-                  SizeHelper.height(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomContainer(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: InkWell(
-                          onTap:
-                              () => push(
-                                context: context,
-                                widget: ForgotPasswordScreen(),
-                                transition: OpenUpwardsPageTransitionsBuilder(),
-                              ),
-                          child: CustomText(text: AppStrings.forgetPassword),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // SizeHelper.height(height: 5.h),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  //   child: CustomTextFormField(
+                  //     controller: passwordController,
+                  //     labelText: AppStrings.password,
+                  //     obscureText: isPassNotVisible,
+                  //     suffix: GestureDetector(
+                  //       onTap: () {
+                  //         setState(() {
+                  //           isPassNotVisible = !isPassNotVisible;
+                  //         });
+                  //       },
+                  //       child: Icon(
+                  //         isPassNotVisible
+                  //             ? Icons.visibility_off
+                  //             : Icons.visibility,
+                  //       ),
+                  //     ),
+                  //     validator:
+                  //         (value) => ValidatorHelper.validateValue(
+                  //           value: value,
+                  //           context: context,
+                  //         ),
+                  //   ),
+                  // ),
+                  // SizeHelper.height(),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     CustomContainer(
+                  //       padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  //       child: InkWell(
+                  //         onTap:
+                  //             () => push(
+                  //               context: context,
+                  //               widget: ForgotPasswordScreen(),
+                  //               transition: OpenUpwardsPageTransitionsBuilder(),
+                  //             ),
+                  //         child: CustomText(text: AppStrings.forgetPassword),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizeHelper.height(height: 3.h),
 
                   CustomContainer(
@@ -174,19 +176,22 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                     ],
                   ),
                   SizeHelper.height(height: 3.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SignInSocialOptions(
-                        logo: AppImageStrings.googleLogo,
-                        name: AppStrings.google,
-                      ),
-                      SizeHelper.width(width: 20.w),
-                      SignInSocialOptions(
-                        logo: AppImageStrings.facebookLogo,
-                        name: AppStrings.facebook,
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SignInSocialOptions(
+                          logo: AppImageStrings.googleLogo,
+                          name: AppStrings.google,
+                        ),
+                        SizeHelper.width(width: 20.w),
+                        SignInSocialOptions(
+                          logo: AppImageStrings.facebookLogo,
+                          name: AppStrings.facebook,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -204,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                 context.read<UserProvider>().setCurrentSignupPageIndex = 0;
                 push(
                   context: context,
-                  widget: SignUpScreen(isUpdateProfile: false,),
+                  widget: SignUpScreen(isUpdateProfile: false),
                   transition: OpenUpwardsPageTransitionsBuilder(),
                 );
               },
@@ -234,18 +239,27 @@ class SignInSocialOptions extends StatelessWidget {
   final String name;
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image(
-            width: AppSize.size30,
-            height: AppSize.size30,
-            image: AssetImage(logo),
-          ),
-          SizeHelper.width(),
-          CustomText(text: name),
-        ],
+    return GestureDetector(
+      onTap: () => {},
+      child: CustomContainer(
+        padding: EdgeInsets.all(AppSize.size10),
+        borderWidth: 0.2,
+        borderColor: AppColors.black,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        // boxShadow: ShadowHelper.scoreContainer,
+        backGroundColor: AppColors.white,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image(
+              width: AppSize.size30,
+              height: AppSize.size30,
+              image: AssetImage(logo),
+            ),
+            // SizeHelper.width(),
+            CustomText(text: name),
+          ],
+        ),
       ),
     );
   }

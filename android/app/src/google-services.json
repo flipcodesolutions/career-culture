@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "454305239270",
+    "project_id": "career-culture-99939",
+    "storage_bucket": "career-culture-99939.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454305239270:android:09f8077a8c4f2794086b27",
+        "android_client_info": {
+          "package_name": "com.flipcode.career_culture"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIXo1lubPMS5ba2Lp9_k_MwMU9Qw5QfrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

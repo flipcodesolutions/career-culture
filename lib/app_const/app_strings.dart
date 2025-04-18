@@ -40,6 +40,7 @@ class AppStrings {
   static const wall = "Wall";
   static const signInToYourAccount = "Sign In to your Account";
   static const emailOrPhone = "Email OR Phone";
+  static const enterMobileNo = "Enter Mobile No";
   static const password = "Password";
   static const forgetPassword = "Forget Password";
   static const login = "Login";
