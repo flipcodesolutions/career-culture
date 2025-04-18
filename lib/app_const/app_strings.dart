@@ -43,6 +43,7 @@ class AppStrings {
   static const enterMobileNo = "Enter Mobile No";
   static const password = "Password";
   static const forgetPassword = "Forget Password";
+  static const verifyOtp = "Verify Otp";
   static const login = "Login";
   static const orLoginWith = "Or Login With";
   static const google = "Google";
@@ -104,7 +105,6 @@ class AppStrings {
   static const verifyEmailWithOtp = "Verify Email With Otp";
   static const verifyContactNoWithOtp = "Verify Contact Number With Otp";
   static const resendOtp = "Resend Otp";
-  static const verifyOtp = "Verify Otp";
   static const mustGiveAllAnswer = "Must Give All Answer !!";
   static const address1 = "Address Line 1";
   static const address2 = "Address Line 2";

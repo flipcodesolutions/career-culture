@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/login_model.dart';
+import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
+import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
@@ -58,6 +60,29 @@ class LoginService {
     } catch (e) {
       log('error while loggin in user => $e');
       return false;
+    }
+  }
+
+  ///
+  ///
+  Future<SentOtpModel?> sentOtpToMobile({
+    required BuildContext context,
+    required String mobileNumber,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.sentOtpToMobile,
+        body: {"contactNo": mobileNumber},
+        context: context,
+      );
+      if (response.isNotEmpty && response['success'] == true) {
+        SentOtpModel model = SentOtpModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      log('error while sending otp to phone => $e');
+      return null;
     }
   }
 }

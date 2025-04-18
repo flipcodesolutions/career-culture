@@ -45,4 +45,6 @@ class ApiHelper {
   /// delete
   static String deleteUser({required String uId}) =>
       "$baseUrl/delete-user/$uId";
+  static String sentOtpToMobile =
+      "$baseUrl/sendOtp";
 }

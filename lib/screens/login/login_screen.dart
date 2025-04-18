@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/login/forgot_password/forgot_password.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
-import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -22,6 +19,8 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../utils/method_helpers/google_login_helper.dart';
+import 'otp_screen/otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.isToNavigateHome = false});
@@ -31,8 +30,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
-  final TextEditingController emailOrPhoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  // final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isPassNotVisible = true;
 
@@ -76,10 +75,11 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
-                      controller: emailOrPhoneController,
+                      controller: mobileController,
+                      keyboardType: TextInputType.number,
                       labelText: AppStrings.enterMobileNo,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
+                          (value) => ValidatorHelper.validateMobileNumber(
                             value: value,
                             context: context,
                           ),
@@ -141,20 +141,24 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                               btnText: AppStrings.login,
                               onTap: () async {
                                 if (formKey.currentState?.validate() == true) {
-                                  bool success = await loginProvider.login(
-                                    context: context,
-                                    emailOrPassword:
-                                        emailOrPhoneController.text,
-                                    password: passwordController.text,
-                                  );
+                                  bool success = await loginProvider
+                                      .sentOtpToMobileNumber(
+                                        context: context,
+                                        mobileNumber: mobileController.text,
+                                      );
                                   if (success) {
-                                    if (!context.mounted) return;
-                                    widget.isToNavigateHome
-                                        ? pushRemoveUntil(
-                                          context: context,
-                                          widget: MainScreen(setIndex: 0),
-                                        )
-                                        : pop(context);
+                                    push(
+                                      context: context,
+                                      widget: OtpScreen(),
+                                      transition:
+                                          FadeForwardsPageTransitionsBuilder(),
+                                    );
+                                    // widget.isToNavigateHome
+                                    //     ? pushRemoveUntil(
+                                    //       context: context,
+                                    //       widget: MainScreen(setIndex: 0),
+                                    //     )
+                                    //     : pop(context);
                                   }
                                 }
                               },
@@ -240,7 +244,7 @@ class SignInSocialOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {},
+      onTap: () => GoogleLoginHelper.signInWithGoogle(context: context),
       child: CustomContainer(
         padding: EdgeInsets.all(AppSize.size10),
         borderWidth: 0.2,

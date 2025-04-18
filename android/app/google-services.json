@@ -12,7 +12,20 @@
           "package_name": "com.flipcode.career_culture"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "454305239270-ubq0t2471ji9u1vrcd3aus0dvk3c2e05.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flipcode.career_culture",
+            "certificate_hash": "3347ded1bfb692a58f3e4897ef09faeacced7e35"
+          }
+        },
+        {
+          "client_id": "454305239270-2fdqnp6a1m8ebdo49lqpe8je9o4q86bb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAIXo1lubPMS5ba2Lp9_k_MwMU9Qw5QfrA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454305239270-2fdqnp6a1m8ebdo49lqpe8je9o4q86bb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "454305239270-pvc7qv14lfes0bijorf04pdrokqp7j0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flipcode.mindfulyouth.mindfulYouth"
+              }
+            }
+          ]
         }
       }
     }
