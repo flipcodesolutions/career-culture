@@ -33,12 +33,14 @@ class UserSignUpConfirmModelData {
   UserProfile? userProfile;
   UserEducation? userEducation;
   String? token;
+  bool? isNewUser;
 
   UserSignUpConfirmModelData({
     this.user,
     this.userProfile,
     this.userEducation,
     this.token,
+    this.isNewUser,
   });
 
   UserSignUpConfirmModelData.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class UserSignUpConfirmModelData {
             ? new UserEducation.fromJson(json['userEducation'])
             : null;
     token = json['token'];
+    isNewUser = json['isNewUser'];
     _saveToLocalStorage();
   }
 
@@ -67,6 +70,7 @@ class UserSignUpConfirmModelData {
       data['userEducation'] = this.userEducation!.toJson();
     }
     data['token'] = this.token;
+    data['isNewUser'] = this.isNewUser;
     return data;
   }
 
@@ -227,6 +231,10 @@ class UserSignUpConfirmModelData {
     if (token != null) {
       await SharedPrefs.saveString(AppStrings.userToken, token!);
       _log(AppStrings.userToken, token!);
+    }
+    if (isNewUser != null) {
+      await SharedPrefs.saveBool(AppStrings.isNewUser, isNewUser!);
+      _log(AppStrings.userToken, isNewUser.toString());
     }
   }
 }

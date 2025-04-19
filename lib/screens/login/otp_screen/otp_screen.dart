@@ -2,30 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
-import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
+
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_strings.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
-
+  const OtpScreen({super.key, required this.isNavigateHome});
+  final bool isNavigateHome;
   @override
-  State<OtpScreen> createState() => _LoginScreenState();
+  State<OtpScreen> createState() => _OtpScreen();
 }
 
-class _LoginScreenState extends State<OtpScreen> with NavigateHelper {
-  final TextEditingController emailOrPhoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  bool isPassNotVisible = true;
+class _OtpScreen extends State<OtpScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
+    LoginProvider loginProvider = context.watch<LoginProvider>();
     return Scaffold(
       body: SingleChildScrollView(
         child: AnimationLimiter(
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<OtpScreen> with NavigateHelper {
                       SizeHelper.height(),
                       CustomText(
                         useOverflow: false,
-                        text: AppStrings.enterYourEmailToResetYourPassword,
+                        text: AppStrings.youWillReceiveOtpSoon,
                         style: TextStyleHelper.smallText.copyWith(
                           color: AppColors.white,
                         ),
@@ -73,25 +74,32 @@ class _LoginScreenState extends State<OtpScreen> with NavigateHelper {
                   ),
                 ),
                 SizeHelper.height(height: 5.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: CustomTextFormField(
-                    controller: emailOrPhoneController,
-                    labelText: AppStrings.email,
-                    validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
+                Pinput(
+                  controller: loginProvider.otpController,
+                  defaultPinTheme: PinTheme(
+                    width: 20.w,
+                    height: 10.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.lightWhite,
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      border: Border.all(color: AppColors.primary),
+                    ),
+                    textStyle: TextStyleHelper.largeHeading,
                   ),
                 ),
                 SizeHelper.height(height: 5.h),
-                PrimaryBtn(
-                  width: 90.w,
-                  textStyle: TextStyleHelper.mediumHeading,
-                  btnText: AppStrings.continue_,
-                  onTap: () {},
-                ),
+                loginProvider.isLoading
+                    ? Center(child: CustomLoader())
+                    : PrimaryBtn(
+                      width: 90.w,
+                      textStyle: TextStyleHelper.mediumHeading,
+                      btnText: AppStrings.verifyOtp,
+                      onTap:
+                          () async => loginProvider.verifyOtpToMobileNumber(
+                            context: context,
+                            isNavigateHome: widget.isNavigateHome,
+                          ),
+                    ),
               ],
             ),
           ),

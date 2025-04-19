@@ -72,16 +72,42 @@ class LoginService {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.sentOtpToMobile,
-        body: {"contactNo": mobileNumber},
+        body: {"contactNo": mobileNumber,},
         context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
-        SentOtpModel model = SentOtpModel.fromJson(response);
+        SentOtpModel model = SentOtpModel.fromJson(
+          response,
+        );
         return model;
       }
       return null;
     } catch (e) {
-      log('error while sending otp to phone => $e');
+      log('error while verify to phone => $e');
+      return null;
+    }
+  }
+
+  Future<UserSignUpConfirmModel?> verifyOtpOfMobile({
+    required BuildContext context,
+    required String mobileNumber,
+    required String otp,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.verifyOtpOfMobile,
+        body: {"contactNo": mobileNumber, "otp": otp},
+        context: context,
+      );
+      if (response.isNotEmpty && response['success'] == true) {
+        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
+          response,
+        );
+        return model;
+      }
+      return null;
+    } catch (e) {
+      log('error while verify to phone => $e');
       return null;
     }
   }

@@ -3,6 +3,7 @@ import 'package:mindful_youth/models/login_model/login_model.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/otp_screen/otp_screen.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/user_servcies/login_service.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -21,6 +22,8 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   UserSignUpConfirmModel? _loginResponseModel;
   UserSignUpConfirmModel? get loginResponseModel => _loginResponseModel;
 
+  /// mobile number controller
+  final TextEditingController mobileController = TextEditingController();
   Future<bool> login({
     required BuildContext context,
     required String emailOrPassword,
@@ -45,22 +48,53 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// sent otp to mobile number
   SentOtpModel? _otpModel;
   SentOtpModel? get otpModel => _otpModel;
-  Future<bool> sentOtpToMobileNumber({
-    required BuildContext context,
-    required String mobileNumber,
-  }) async {
+  TextEditingController otpController = TextEditingController();
+  Future<bool> sentOtpToMobileNumber({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _otpModel = await loginService.sentOtpToMobile(
       context: context,
-      mobileNumber: mobileNumber,
+      mobileNumber: mobileController.text,
     );
+    otpController.text = _otpModel?.data?.otp.toString() ?? "";
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
     return _otpModel?.success == true;
+  }
+
+  Future<void> verifyOtpToMobileNumber({
+    required BuildContext context,
+    required bool isNavigateHome,
+  }) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _loginResponseModel = await loginService.verifyOtpOfMobile(
+      context: context,
+      mobileNumber: mobileController.text,
+      otp: otpController.text,
+    );
+    if (_loginResponseModel?.success == true) {
+      mobileController.clear();
+      otpController.clear();
+      _otpModel = null;
+      if (!context.mounted) return;
+      context.read<UserProvider>().setIsUserLoggedIn = true;
+      isNavigateHome
+          ? pushRemoveUntil(
+            context: context,
+            widget: MainScreen(setIndex: 0),
+            transition: FadeForwardsPageTransitionsBuilder(),
+          )
+          : {pop(context), pop(context)};
+    }
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> deleteUser({

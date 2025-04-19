@@ -83,6 +83,8 @@ class AppStrings {
   static const forgotPassword = "Forgot Password";
   static const enterYourEmailToResetYourPassword =
       "Enter Your Email Account To Reset Your Password";
+  static const youWillReceiveOtpSoon =
+      "You Receive Otp Soon On You Mobile Number";
   static const provideAnswers = "Provide Answers";
   static const giveAnswerOfTheseQuestions = "Give Answer Of These Questions!";
   static const whatWouldYouLikeToConcentrateOn =
@@ -163,4 +165,5 @@ class AppStrings {
   static const workingStatus = "workingStatus";
   static const userNameOfCompanyOrBusiness = "userNameOfCompanyOrBusiness";
   static const userToken = "token";
+  static const isNewUser = "isNewUser";
 }

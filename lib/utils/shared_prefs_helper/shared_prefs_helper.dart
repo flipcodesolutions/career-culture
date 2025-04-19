@@ -36,6 +36,10 @@ class SharedPrefs {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
   }
+  static Future<void> saveBool(String key, bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
+  }
 
   // to get token
   static Future<String> getSharedString(String key) async {
