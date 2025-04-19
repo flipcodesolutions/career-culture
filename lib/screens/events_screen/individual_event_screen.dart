@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -10,6 +12,7 @@ import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -84,6 +87,14 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               btnText: AppStrings.participant,
               onTap: () {
                 if (userProvider.isUserLoggedIn) {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => ContestAgreementWidget(
+                          id: eventInfo.id.toString(),
+                          termsText: eventInfo.terms ?? "No Terms Found!!",
+                        ),
+                  );
                 } else {
                   push(
                     context: context,
@@ -103,6 +114,86 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ContestAgreementWidget extends StatefulWidget {
+  final String termsText;
+  final String id;
+
+  const ContestAgreementWidget({
+    super.key,
+    required this.termsText,
+    required this.id,
+  });
+
+  @override
+  _ContestAgreementWidgetState createState() => _ContestAgreementWidgetState();
+}
+
+class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
+  bool _agreed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    AllEventProvider eventProvider = context.watch<AllEventProvider>();
+    return AlertDialog(
+      backgroundColor: AppColors.white,
+      title: CustomText(
+        useOverflow: false,
+        text: AppStrings.acceptTerms,
+        style: TextStyleHelper.mediumHeading.copyWith(color: AppColors.primary),
+      ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Terms and Conditions Text
+          CustomText(text: widget.termsText),
+          const SizedBox(height: 10),
+
+          // Checkbox to agree
+          Row(
+            children: [
+              Checkbox(
+                activeColor: AppColors.primary,
+                value: _agreed,
+                onChanged: (value) {
+                  setState(() {
+                    _agreed = value ?? false;
+                  });
+                },
+              ),
+              Expanded(
+                child: CustomText(
+                  useOverflow: false,
+                  text: AppStrings.agreeToTerms,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        eventProvider.isLoading
+            ? Center(child: CustomLoader())
+            : PrimaryBtn(
+              btnText: AppStrings.submit,
+              onTap:
+                  _agreed
+                      ? () => eventProvider.eventParticipate(
+                        context: context,
+                        id: widget.id.toString(),
+                      )
+                      : () => WidgetHelper.customSnackBar(
+                        context: context,
+                        title: AppStrings.mustAcceptTerms,
+                        isError: true,
+                      ),
+            ),
+      ],
     );
   }
 }

@@ -137,6 +137,9 @@ class AppStrings {
   static const cancel = "Cancel";
   static const exit = "Exit";
   static const dateFormate = "YYYY-MM-DD";
+  static const acceptTerms = "Accept Terms Before Proceeding !!";
+  static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
+  static const agreeToTerms = "I agree to the terms Of This Event.";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

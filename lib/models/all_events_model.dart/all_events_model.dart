@@ -40,22 +40,25 @@ class EventModel {
   String? time;
   String? isAnnouncement;
   int? points;
+  String? terms;
   String? status;
 
-  EventModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.poster,
-      this.venue,
-      this.registrationEndDate,
-      this.startDate,
-      this.endDate,
-      this.amount,
-      this.time,
-      this.isAnnouncement,
-      this.points,
-      this.status});
+  EventModel({
+    this.id,
+    this.title,
+    this.description,
+    this.poster,
+    this.venue,
+    this.registrationEndDate,
+    this.startDate,
+    this.endDate,
+    this.amount,
+    this.time,
+    this.isAnnouncement,
+    this.points,
+    this.terms,
+    this.status,
+  });
 
   EventModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -70,6 +73,7 @@ class EventModel {
     time = json['time'];
     isAnnouncement = json['isAnnouncement'];
     points = json['points'];
+    terms = json['terms'];
     status = json['status'];
   }
 
@@ -87,8 +91,8 @@ class EventModel {
     data['time'] = this.time;
     data['isAnnouncement'] = this.isAnnouncement;
     data['points'] = this.points;
+    data['terms'] = this.terms;
     data['status'] = this.status;
     return data;
   }
 }
-

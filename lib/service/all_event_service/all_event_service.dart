@@ -6,7 +6,10 @@ import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 
 class AllEventService {
-  Future<AllEventModel?> getAllEvents({required BuildContext context,required String id}) async {
+  Future<AllEventModel?> getAllEvents({
+    required BuildContext context,
+    required String id,
+  }) async {
     try {
       log(ApiHelper.getAllEvents(id: id));
       Map<String, dynamic> response = await HttpHelper.get(
@@ -20,6 +23,28 @@ class AllEventService {
       return null;
     } catch (e) {
       kDebugMode ? log("error while getting all events => $e") : null;
+      return null;
+    }
+  }
+
+  Future<AllEventModel?> eventParticipation({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        context: context,
+        uri: ApiHelper.eventParticipation,
+        body: {"eventId": id},
+      );
+      if (response.isNotEmpty) {
+        log(response.toString());
+        AllEventModel model = AllEventModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode ? log("error while participate in event => $e") : null;
       return null;
     }
   }

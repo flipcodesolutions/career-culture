@@ -77,7 +77,9 @@ class _EventsScreenState extends State<EventsScreen> with NavigateHelper {
                           borderColor: AppColors.grey,
                           borderWidth: 0.5,
                           boxShadow: ShadowHelper.scoreContainer,
-                          borderRadius: BorderRadius.circular(AppSize.size20 - 5),
+                          borderRadius: BorderRadius.circular(
+                            AppSize.size20 - 5,
+                          ),
                           height: 20.h,
                           child: Column(
                             children: [

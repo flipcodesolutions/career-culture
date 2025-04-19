@@ -25,4 +25,19 @@ class AllEventProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  ///
+  Future<void> eventParticipate({
+    required BuildContext context,
+    String id = "",
+  }) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _eventModel = await eventService.eventParticipation(context: context, id: id);
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
+  }
 }

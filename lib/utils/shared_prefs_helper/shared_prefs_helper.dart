@@ -1,7 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../app_const/app_strings.dart';
 
 class SharedPrefs {
-  static const String tokenKey = 'CAREERCULTURETOKEN';
+  static const String tokenKey = AppStrings.userToken;
 
   /// ================================================
   // for clear shared preferences
@@ -36,6 +37,7 @@ class SharedPrefs {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
   }
+
   static Future<void> saveBool(String key, bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(key, value);

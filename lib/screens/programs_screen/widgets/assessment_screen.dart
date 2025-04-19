@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
@@ -58,18 +59,38 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
               : isQuestions
               ? Form(
                 key: assessmentProvider.formKey,
-                child: CustomListWidget(
+                child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  data:
-                      assessmentProvider.assessmentQuestions?.data ??
-                      <AssessmentQuestion>[],
-                  itemBuilder: (item, index) {
-                    if (!isMedia && item.type == "video" ||
-                        item.type == "audio") {
-                      isMedia = true;
-                    }
-                    return QuestionWidget(question: item);
-                  },
+                  child: AnimationLimiter(
+                    child: Column(
+                      children: AnimationConfiguration.toStaggeredList(
+                        childAnimationBuilder:
+                            (widget) => SlideAnimation(
+                              child: FadeInAnimation(child: widget),
+                            ),
+                        children: List.generate(
+                          assessmentProvider
+                                  .assessmentQuestions
+                                  ?.data
+                                  ?.length ??
+                              0,
+                          (index) {
+                            AssessmentQuestion? item =
+                                assessmentProvider
+                                    .assessmentQuestions
+                                    ?.data?[index];
+                            if (!isMedia && item?.type == "video" ||
+                                item?.type == "audio") {
+                              isMedia = true;
+                            }
+                            return QuestionWidget(
+                              question: item ?? AssessmentQuestion(),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               )
               : Center(child: NoDataFoundWidget()),

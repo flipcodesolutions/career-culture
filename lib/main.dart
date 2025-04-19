@@ -137,6 +137,10 @@ class MyApp extends StatelessWidget {
                 dividerColor: AppColors.secondary,
                 indicatorColor: AppColors.secondary,
               ),
+              checkboxTheme: CheckboxThemeData(
+                checkColor: WidgetStatePropertyAll(AppColors.white),
+                overlayColor: WidgetStatePropertyAll(AppColors.lightPrimary),
+              ),
             ),
             home: SplashScreen(),
           ),
