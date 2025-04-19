@@ -131,7 +131,10 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
 
                     if (!isValid) return;
                     if (currentPage == userProvider.signUpSteps.length - 1) {
-                      signUpProvider.buildSignUpRequestModel(context: context);
+                      signUpProvider.buildSignUpRequestModel(
+                        context: context,
+                        isUpdating: widget.isUpdateProfile,
+                      );
                     }
 
                     if (currentPage < (userProvider.signUpSteps.length - 1)) {

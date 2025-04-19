@@ -50,13 +50,61 @@ class UserSignUpConfirmModelData {
             ? new UserProfile.fromJson(json['profile'])
             : null;
     userEducation =
-        json['userEducation'] != null
+        (json.containsKey("user_education") && json['user_education'] != null)
+            ? UserEducation.fromJson(json['user_education'])
+            : json['userEducation'] != null
             ? new UserEducation.fromJson(json['userEducation'])
             : null;
     token = json['token'];
     isNewUser = json['isNewUser'];
     _saveToLocalStorage();
   }
+  // UserSignUpConfirmModelData.fromJson(Map<String, dynamic> json) {
+  //   // 1) show all incoming keys
+  //   print('⏱ [DEBUG] JSON keys: ${json.keys.toList()}');
+
+  //   // 2) user
+  //   if (json.containsKey('user')) {
+  //     print('⏱ [DEBUG] "user" -> ${json['user']}');
+  //     user = User.fromJson(json['user']);
+  //   } else {
+  //     print('⏱ [DEBUG] no "user" key found');
+  //     user = null;
+  //   }
+
+  //   // 3) profile
+  //   if (json.containsKey('profile')) {
+  //     print('⏱ [DEBUG] "profile" -> ${json['profile']}');
+  //     userProfile = UserProfile.fromJson(json['profile']);
+  //   } else {
+  //     print('⏱ [DEBUG] no "profile" key found');
+  //     userProfile = null;
+  //   }
+
+  //   // 4) education (two variants)
+  //   if (json.containsKey('user_education') && json['user_education'] != null) {
+  //     print(
+  //       '⏱ [DEBUG] using snake_case key "user_education": ${json['user_education']}',
+  //     );
+  //     userEducation = UserEducation.fromJson(json['user_education']);
+  //   } else if (json.containsKey('userEducation') &&
+  //       json['userEducation'] != null) {
+  //     print(
+  //       '⏱ [DEBUG] using camelCase key "userEducation": ${json['userEducation']}',
+  //     );
+  //     userEducation = UserEducation.fromJson(json['userEducation']);
+  //   } else {
+  //     print('⏱ [DEBUG] no education key present or value is null');
+  //     userEducation = null;
+  //   }
+
+  //   // 5) simple scalars
+  //   token = json['token'];
+  //   isNewUser = json['isNewUser'];
+  //   print('⏱ [DEBUG] token="$token", isNewUser=$isNewUser');
+
+  //   _saveToLocalStorage();
+  // }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -38,6 +38,8 @@ class ApiHelper {
 
   /// signup
   static String signUp = "$baseUrl/register";
+  /// signup
+  static String updateUserInfo({required String uId}) => "$baseUrl/update-user-profile/$uId";
 
   /// email send otp
   static String sendEmailOtp = "$baseUrl/sendEmailOtp";

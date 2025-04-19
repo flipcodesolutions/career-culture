@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/models/login_model/login_model.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
-import 'package:mindful_youth/screens/login/otp_screen/otp_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/user_servcies/login_service.dart';
-import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
-
 import '../../models/login_model/sent_otp_model.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
 

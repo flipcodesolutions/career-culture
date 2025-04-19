@@ -303,7 +303,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   SignUpService signUpService = SignUpService();
   UserSignUpConfirmModel? _signUpConfirmModel;
   UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
-  void buildSignUpRequestModel({required BuildContext context}) async {
+  void buildSignUpRequestModel({
+    required BuildContext context,
+    required bool isUpdating,
+  }) async {
     _signUpRequestModel.name =
         "${firstName.text.trim()} ${middleName.text.trim()} ${lastName.text.trim()}";
     _signUpRequestModel.email = email.text;
@@ -330,7 +333,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _signUpConfirmModel = await signUpService.registerUser(
+    _signUpConfirmModel = isUpdating ? await signUpService.updateUserInfo(context: context, signUp: _signUpRequestModel) : await signUpService.registerUser(
       context: context,
       signUp: _signUpRequestModel,
     );
@@ -414,7 +417,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       AppStrings.isContactVerified,
     );
     setIsContactNo1Verified = contact1Check == "yes";
-    
+
     contactNo2.text = await SharedPrefs.getSharedString(
       AppStrings.userContactNo2,
     );
@@ -427,6 +430,21 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     state.text = await SharedPrefs.getSharedString(AppStrings.userState);
     country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
     district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
+
+    /// third page
+    presentOrLastStudy.text = await SharedPrefs.getSharedString(
+      AppStrings.study,
+    );
+    collegeOrUniversity.text = await SharedPrefs.getSharedString(
+      AppStrings.university,
+    );
+    areYouWorking.answer =
+        await SharedPrefs.getSharedString(AppStrings.workingStatus) == "yes"
+            ? "Yes"
+            : "No";
+    companyOrBusiness.text = await SharedPrefs.getSharedString(
+      AppStrings.userNameOfCompanyOrBusiness,
+    );
     notifyListeners();
   }
 }
