@@ -72,13 +72,11 @@ class LoginService {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.sentOtpToMobile,
-        body: {"contactNo": mobileNumber,},
+        body: {"contactNo": mobileNumber},
         context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
-        SentOtpModel model = SentOtpModel.fromJson(
-          response,
-        );
+        SentOtpModel model = SentOtpModel.fromJson(response);
         return model;
       }
       return null;

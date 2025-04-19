@@ -48,7 +48,10 @@ class SharedPrefs {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.getString(key) ?? '';
   }
-
+   static Future<bool> getSharedBool(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getBool(key) ?? false;
+  }
   static Future<void> removeSharedString(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(key);

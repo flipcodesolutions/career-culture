@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -86,7 +87,13 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// event history
                           ProfilePageListTiles(
                             leading: Icons.event_note_rounded,
-                            onTap: () {},
+                            onTap:
+                                () => push(
+                                  context: context,
+                                  widget: EventsScreen(),
+                                  transition:
+                                      OpenUpwardsPageTransitionsBuilder(),
+                                ),
                             titleText: AppStrings.eventHistory,
                           ),
 

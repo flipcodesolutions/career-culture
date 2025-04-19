@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/login_model.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/otp_screen/otp_screen.dart';
+import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/user_servcies/login_service.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
@@ -78,18 +80,30 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       otp: otpController.text,
     );
     if (_loginResponseModel?.success == true) {
-      mobileController.clear();
-      otpController.clear();
-      _otpModel = null;
-      if (!context.mounted) return;
-      context.read<UserProvider>().setIsUserLoggedIn = true;
-      isNavigateHome
-          ? pushRemoveUntil(
-            context: context,
-            widget: MainScreen(setIndex: 0),
-            transition: FadeForwardsPageTransitionsBuilder(),
-          )
-          : {pop(context), pop(context)};
+      if (_otpModel?.data?.isNewUser == true) {
+        // if (!context.mounted) return;
+        SignUpProvider signUpProvider = context.read<SignUpProvider>();
+        signUpProvider.contactNo1.text = mobileController.text;
+        signUpProvider.setIsContactNo1Verified = true;
+        pushRemoveUntil(
+          context: context,
+          widget: SignUpScreen(isUpdateProfile: false),
+        );
+      } else {
+        mobileController.clear();
+        otpController.clear();
+        _otpModel = null;
+
+        if (!context.mounted) return;
+        context.read<UserProvider>().setIsUserLoggedIn = true;
+        isNavigateHome
+            ? pushRemoveUntil(
+              context: context,
+              widget: MainScreen(setIndex: 0),
+              transition: FadeForwardsPageTransitionsBuilder(),
+            )
+            : {pop(context), pop(context)};
+      }
     }
 
     /// set _isLoading false

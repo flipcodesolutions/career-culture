@@ -152,13 +152,11 @@ class CustomFilePickerV2 extends StatefulWidget {
   final bool allowMultiple;
   final IconData? icon;
   final List<String>? allowedExtensions;
-  final String? oldPicUrl;
   const CustomFilePickerV2({
     super.key,
     this.allowMultiple = false,
     this.icon,
     this.allowedExtensions,
-    this.oldPicUrl,
   });
 
   @override
@@ -189,10 +187,14 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
       child:
-          widget.oldPicUrl?.isNotEmpty == true &&
-                      signUpProvider.signUpRequestModel.imageFile?.isEmpty ==
-                          true ||
-                  signUpProvider.signUpRequestModel.imageFile == null
+          signUpProvider
+                          .signUpConfirmModel
+                          ?.data
+                          ?.userProfile
+                          ?.images
+                          ?.isNotEmpty ==
+                      true &&
+                  signUpProvider.signUpRequestModel.imageFile?.isEmpty == true
               ? CustomImageWithLoader(imageUrl: "", showImageInPanel: false)
               : CustomContainer(
                 alignment: Alignment.center,

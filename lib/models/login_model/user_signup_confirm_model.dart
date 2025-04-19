@@ -93,13 +93,13 @@ class UserSignUpConfirmModelData {
 
       await SharedPrefs.saveString(
         AppStrings.isEmailVerified,
-        user?.isEmailVerified ?? '',
+        user?.isEmailVerified ?? "no",
       );
       _log(AppStrings.isEmailVerified, user?.isEmailVerified ?? '');
 
       await SharedPrefs.saveString(
         AppStrings.isContactVerified,
-        user?.isContactVerified ?? '',
+        user?.isContactVerified ?? "no",
       );
       _log(AppStrings.isContactVerified, user?.isContactVerified ?? '');
 
@@ -234,7 +234,7 @@ class UserSignUpConfirmModelData {
     }
     if (isNewUser != null) {
       await SharedPrefs.saveBool(AppStrings.isNewUser, isNewUser!);
-      _log(AppStrings.userToken, isNewUser.toString());
+      _log(AppStrings.isNewUser, isNewUser.toString());
     }
   }
 }

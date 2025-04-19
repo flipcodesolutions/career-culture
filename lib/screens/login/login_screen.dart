@@ -30,7 +30,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
-  
   // final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isPassNotVisible = true;
@@ -76,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
                       controller: loginProvider.mobileController,
+                      maxLength: 10,
                       keyboardType: TextInputType.number,
                       labelText: AppStrings.enterMobileNo,
                       validator:
@@ -142,13 +142,13 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                               onTap: () async {
                                 if (formKey.currentState?.validate() == true) {
                                   bool success = await loginProvider
-                                      .sentOtpToMobileNumber(
-                                        context: context,
-                                      );
+                                      .sentOtpToMobileNumber(context: context);
                                   if (success) {
                                     push(
                                       context: context,
-                                      widget: OtpScreen(isNavigateHome: widget.isToNavigateHome,),
+                                      widget: OtpScreen(
+                                        isNavigateHome: widget.isToNavigateHome,
+                                      ),
                                       transition:
                                           FadeForwardsPageTransitionsBuilder(),
                                     );

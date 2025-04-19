@@ -34,7 +34,10 @@ class AllEventProvider extends ChangeNotifier {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _eventModel = await eventService.eventParticipation(context: context, id: id);
+    _eventModel = await eventService.eventParticipation(
+      context: context,
+      id: id,
+    );
 
     /// set _isLoading false
     _isLoading = false;

@@ -118,14 +118,28 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   bool _isEmailVerified = false;
   bool get isEmailVerified => _isEmailVerified;
+  set setIsEmailVerified(bool isVerified) {
+    _isEmailVerified = isVerified;
+    notifyListeners();
+  }
 
   TextEditingController contactNo1 = TextEditingController();
   TextEditingController contactNo1Otp = TextEditingController();
   bool _isContactNo1Verified = false;
-  bool get isContactNo1Verified => _isEmailVerified;
+  bool get isContactNo1Verified => _isContactNo1Verified;
+  set setIsContactNo1Verified(bool isVerified) {
+    _isContactNo1Verified = isVerified;
+    notifyListeners();
+  }
 
   TextEditingController contactNo2 = TextEditingController();
   TextEditingController contactNo2Otp = TextEditingController();
+  bool _isContactNo2Verified = false;
+  bool get isContactNo2Verified => _isContactNo2Verified;
+  set setIsContactNo2Verified(bool isVerified) {
+    _isContactNo2Verified = isVerified;
+    notifyListeners();
+  }
 
   /// address
   TextEditingController address1 = TextEditingController();
@@ -143,7 +157,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   Future<bool> validateSecondPage(BuildContext context) async {
     // Validate the second-page form normally
     bool isValid = secondPageFormKey.currentState?.validate() ?? false;
-    if (isEmailVerified && isValid) return true;
+    if (isEmailVerified && isContactNo1Verified && isValid) return true;
     if (!isValid) return false;
 
     // Send the OTP for email verification
@@ -382,8 +396,37 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,
     );
+    _signUpConfirmModel
+        ?.data
+        ?.userProfile
+        ?.images = await SharedPrefs.getSharedString(AppStrings.images);
 
-    ///
+    /// second page
+    email.text = await SharedPrefs.getSharedString(AppStrings.userEmail);
+    String emailCheck = await SharedPrefs.getSharedString(
+      AppStrings.isEmailVerified,
+    );
+    setIsEmailVerified = emailCheck == "yes";
+    contactNo1.text = await SharedPrefs.getSharedString(
+      AppStrings.userContactNo1,
+    );
+    String contact1Check = await SharedPrefs.getSharedString(
+      AppStrings.isContactVerified,
+    );
+    setIsContactNo1Verified = contact1Check == "yes";
+    
+    contactNo2.text = await SharedPrefs.getSharedString(
+      AppStrings.userContactNo2,
+    );
+    // setIsContactNo2Verified = await SharedPrefs.getSharedBool(
+    //   AppStrings.isContactVerified,
+    // );
+    address1.text = await SharedPrefs.getSharedString(AppStrings.addressLine1);
+    address2.text = await SharedPrefs.getSharedString(AppStrings.addressLine2);
+    city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
+    state.text = await SharedPrefs.getSharedString(AppStrings.userState);
+    country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
+    district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
     notifyListeners();
   }
 }
