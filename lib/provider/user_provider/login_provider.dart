@@ -81,10 +81,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;
         signUpProvider.setIsContactNo1Verified = true;
-        pushRemoveUntil(
-          context: context,
-          widget: SignUpScreen(isUpdateProfile: false),
-        );
+        push(context: context, widget: SignUpScreen(isUpdateProfile: false));
       } else {
         mobileController.clear();
         otpController.clear();

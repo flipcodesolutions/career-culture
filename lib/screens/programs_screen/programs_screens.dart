@@ -70,7 +70,6 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                     await programsProvider.getAllPrograms(context: context);
                     await chapterProvider.getAllChapters(context: context);
                   },
-      
                   child: Column(
                     children: [
                       CustomContainer(
@@ -153,7 +152,8 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                                                 Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     ClipRRect(
                                                       borderRadius:
@@ -197,8 +197,9 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                 )
                 : CustomRefreshIndicator(
                   onRefresh:
-                      () async =>
-                          await programsProvider.getAllPrograms(context: context),
+                      () async => await programsProvider.getAllPrograms(
+                        context: context,
+                      ),
                   child: ListView(children: [NoDataFoundWidget(height: 80.h)]),
                 ),
       ),
