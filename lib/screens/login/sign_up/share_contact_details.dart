@@ -42,19 +42,23 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                       ),
                     ),
                 children: [
-                  SizeHelper.height(height: 5.h),
-                  CustomText(
-                    text: AppStrings.shareContactDetails,
-                    style: TextStyleHelper.largeHeading,
-                  ),
-                  SizeHelper.height(height: 3.h),
-                  CustomText(
-                    text: AppStrings.shareContactDetailsToContinue,
-                    style: TextStyleHelper.smallText,
-                  ),
+                  if (!signUpProvider.isUpdatingProfile) ...[
+                    SizeHelper.height(height: 5.h),
+
+                    CustomText(
+                      text: AppStrings.shareContactDetails,
+                      style: TextStyleHelper.largeHeading,
+                    ),
+                    SizeHelper.height(height: 3.h),
+                    CustomText(
+                      text: AppStrings.shareContactDetailsToContinue,
+                      style: TextStyleHelper.smallText,
+                    ),
+                  ],
                   SizeHelper.height(height: 5.h),
                   CustomTextFieldWithAnimatedIconForVerification(
                     isVerified: signUpProvider.isEmailVerified,
+                    enabled: !signUpProvider.isUpdatingProfile,
                     label: AppStrings.email,
                     controller: signUpProvider.email,
                     validator:
@@ -68,6 +72,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                     isVerified: signUpProvider.isContactNo1Verified,
                     maxLength: 10,
                     label: AppStrings.contactNo1,
+                    enabled: !signUpProvider.isUpdatingProfile,
                     keyboard: TextInputType.number,
                     controller: signUpProvider.contactNo1,
                     validator:
@@ -80,6 +85,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                   CustomTextFieldWithAnimatedIconForVerification(
                     maxLength: 10,
                     isVerified: false,
+                    enabled: signUpProvider.contactNo2.text.isEmpty,
                     label: AppStrings.contactNo2,
                     keyboard: TextInputType.number,
                     controller: signUpProvider.contactNo2,
@@ -190,6 +196,7 @@ class CustomTextFieldWithAnimatedIconForVerification extends StatelessWidget {
     this.onTap,
     this.maxLength = 100,
     this.keyboard,
+    this.enabled = true,
   });
   final TextEditingController? controller;
   final String label;
@@ -198,11 +205,13 @@ class CustomTextFieldWithAnimatedIconForVerification extends StatelessWidget {
   final void Function()? onTap;
   final int? maxLength;
   final TextInputType? keyboard;
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: CustomTextFormField(
+        enabled: enabled,
         labelText: label,
         keyboardType: keyboard,
         maxLength: maxLength,

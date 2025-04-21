@@ -29,9 +29,12 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     if (widget.isUpdateProfile) {
       Future.microtask(() async {
-        await context.read<SignUpProvider>().initControllerWithLocalStorage();
+        SignUpProvider signUpProvider = context.read<SignUpProvider>();
+        signUpProvider.setIsUpdatingProfile = widget.isUpdateProfile;
+        await signUpProvider.initControllerWithLocalStorage();
       });
     }
   }
@@ -190,15 +193,13 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
       child:
-          signUpProvider
-                          .signUpConfirmModel
-                          ?.data
-                          ?.userProfile
-                          ?.images
-                          ?.isNotEmpty ==
-                      true &&
-                  signUpProvider.signUpRequestModel.imageFile?.isEmpty == true
-              ? CustomImageWithLoader(imageUrl: "", showImageInPanel: false)
+          signUpProvider.signUpRequestModel.imageFile?.isEmpty == true &&
+                  signUpProvider.isUpdatingProfile
+              ? CustomImageWithLoader(
+                imageUrl:
+                    "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                showImageInPanel: false,
+              )
               : CustomContainer(
                 alignment: Alignment.center,
                 width: 90.w,

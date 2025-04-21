@@ -39,12 +39,18 @@ class StartYourJourney extends StatelessWidget {
                 children: [
                   SizeHelper.height(height: 5.h),
                   CustomText(
-                    text: AppStrings.startYourJourney,
+                    text:
+                        signUpProvider.isUpdatingProfile
+                            ? AppStrings.updateYourInfo
+                            : AppStrings.startYourJourney,
                     style: TextStyleHelper.largeHeading,
                   ),
                   SizeHelper.height(height: 3.h),
                   CustomText(
-                    text: AppStrings.createAnAccountToJoinUS,
+                    text:
+                        signUpProvider.isUpdatingProfile
+                            ? AppStrings.onlyChangeWhatYouMust
+                            : AppStrings.createAnAccountToJoinUS,
                     style: TextStyleHelper.smallText,
                   ),
                   SizeHelper.height(height: 5.h),

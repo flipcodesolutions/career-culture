@@ -24,6 +24,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  /// if provider is Loading
+  bool _isUpdatingProfile = false;
+  bool get isUpdatingProfile => _isUpdatingProfile;
+  set setIsUpdatingProfile(bool isUpdate) {
+    _isUpdatingProfile = isUpdate;
+    notifyListeners();
+  }
+
   UserSignUpRequestModel _signUpRequestModel = UserSignUpRequestModel();
   UserSignUpRequestModel get signUpRequestModel => _signUpRequestModel;
 
@@ -333,10 +341,16 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _signUpConfirmModel = isUpdating ? await signUpService.updateUserInfo(context: context, signUp: _signUpRequestModel) : await signUpService.registerUser(
-      context: context,
-      signUp: _signUpRequestModel,
-    );
+    _signUpConfirmModel =
+        isUpdating
+            ? await signUpService.updateUserInfo(
+              context: context,
+              signUp: _signUpRequestModel,
+            )
+            : await signUpService.registerUser(
+              context: context,
+              signUp: _signUpRequestModel,
+            );
 
     /// set _isLoading false
     _isLoading = false;
