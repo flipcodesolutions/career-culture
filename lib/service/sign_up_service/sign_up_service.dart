@@ -92,6 +92,7 @@ class SignUpService {
   }) async {
     try {
       String uId = await SharedPrefs.getSharedString(AppStrings.userId);
+      String token = await SharedPrefs.getSharedString(AppStrings.userToken);
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.updateUserInfo(uId: uId),
       );
@@ -144,6 +145,7 @@ class SignUpService {
         UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
           jsonResponse,
         );
+        model.data?.token = token;
         return model;
       } else {
         WidgetHelper.customSnackBar(

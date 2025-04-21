@@ -21,7 +21,7 @@ class UserSignUpRequestModel {
   String? workingStatus;
   String? nameOfCompanyOrBusiness;
   String? images = "String";
-  List<PlatformFile>? imageFile;
+  List<PlatformFile> imageFile = [];
 
   UserSignUpRequestModel({
     this.name,
@@ -44,7 +44,7 @@ class UserSignUpRequestModel {
     this.workingStatus,
     this.nameOfCompanyOrBusiness,
     this.images,
-    this.imageFile,
+    this.imageFile = const [],
   });
 
   UserSignUpRequestModel.fromJson(Map<String, dynamic> json) {

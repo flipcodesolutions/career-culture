@@ -52,7 +52,7 @@ class AppStrings {
   static const startYourJourney = "Start Your Journey";
   static const updateYourInfo = "Update Your Profile";
   static const createAnAccountToJoinUS = "Create An Account To Join US";
-  static const onlyChangeWhatYouMust = "Only Touch You Must";
+  static const onlyChangeWhatYouMust = "Only Change What You Must";
   static const name = "Name";
   static const firstName = "First Name";
   static const middleName = "Middle Name";
