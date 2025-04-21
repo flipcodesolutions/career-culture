@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     WallScreen(),
     ProgramsScreens(),
-    EventsScreen(),
+    EventsScreen(isMyEvents: false),
     AccountScreen(),
   ];
   @override

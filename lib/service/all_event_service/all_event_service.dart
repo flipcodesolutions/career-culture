@@ -27,6 +27,28 @@ class AllEventService {
     }
   }
 
+  ///
+  Future<AllEventModel?> getAllUserEvents({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      log(ApiHelper.getAllEvents(id: id));
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.myParticipation,
+      );
+      if (response.isNotEmpty) {
+        AllEventModel model = AllEventModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode ? log("error while getting all user events => $e") : null;
+      return null;
+    }
+  }
+
   Future<AllEventModel?> eventParticipation({
     required BuildContext context,
     required String id,

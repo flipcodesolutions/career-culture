@@ -90,7 +90,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             onTap:
                                 () => push(
                                   context: context,
-                                  widget: EventsScreen(),
+                                  widget: EventsScreen(isMyEvents: true,),
                                   transition:
                                       OpenUpwardsPageTransitionsBuilder(),
                                 ),

@@ -9,7 +9,6 @@ import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
-import '../../utils/method_helpers/method_helper.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpService {

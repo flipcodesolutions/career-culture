@@ -15,13 +15,12 @@ import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 
 class EventsScreen extends StatefulWidget {
-  const EventsScreen({super.key});
-
+  const EventsScreen({super.key, required this.isMyEvents});
+  final bool isMyEvents;
   @override
   State<EventsScreen> createState() => _EventsScreenState();
 }
@@ -32,7 +31,9 @@ class _EventsScreenState extends State<EventsScreen> with NavigateHelper {
     super.initState();
     Future.microtask(() {
       AllEventProvider eventProvider = context.read<AllEventProvider>();
-      eventProvider.getAllEvents(context: context);
+      widget.isMyEvents
+          ? eventProvider.getAllUserEvents(context: context)
+          : eventProvider.getAllEvents(context: context);
     });
   }
 
@@ -40,7 +41,8 @@ class _EventsScreenState extends State<EventsScreen> with NavigateHelper {
   Widget build(BuildContext context) {
     AllEventProvider eventProvider = context.watch<AllEventProvider>();
     return PopScope(
-      canPop: false,
+      /// if from my profile pop
+      canPop: widget.isMyEvents,
       onPopInvokedWithResult: (didPop, result) {
         HomeScreenProvider homeScreenProvider =
             context.read<HomeScreenProvider>();

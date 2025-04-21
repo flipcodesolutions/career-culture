@@ -24,6 +24,7 @@ class ApiHelper {
   /// events
   static String getAllEvents({required String id}) =>
       "$baseUrl/events?eventId=$id";
+  static String myParticipation = "$baseUrl/my-participation";
 
   /// assessments questions
   static String getAssessmentQuestionsByPostId({required String id}) =>
@@ -38,8 +39,10 @@ class ApiHelper {
 
   /// signup
   static String signUp = "$baseUrl/register";
+
   /// signup
-  static String updateUserInfo({required String uId}) => "$baseUrl/update-user-profile/$uId";
+  static String updateUserInfo({required String uId}) =>
+      "$baseUrl/update-user-profile/$uId";
 
   /// email send otp
   static String sendEmailOtp = "$baseUrl/sendEmailOtp";
@@ -50,5 +53,4 @@ class ApiHelper {
   static String sentOtpToMobile = "$baseUrl/sendOtp";
   static String verifyOtpOfMobile = "$baseUrl/verifyOtp";
   static String eventParticipation = "$baseUrl/event-participation";
-  static String myParticipation = "$baseUrl/my-participation";
 }
