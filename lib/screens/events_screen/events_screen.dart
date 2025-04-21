@@ -10,6 +10,7 @@ import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_listview.dart';
+import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
@@ -62,58 +63,92 @@ class _EventsScreenState extends State<EventsScreen> with NavigateHelper {
             eventProvider.isLoading
                 ? Center(child: CustomLoader())
                 : eventProvider.eventModel?.data?.isNotEmpty == true
-                ? CustomListWidget(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  data: eventProvider.eventModel?.data ?? <EventModel>[],
-                  itemBuilder:
-                      (item, index) => GestureDetector(
-                        onTap:
-                            () => push(
-                              context: context,
-                              widget: IndividualEventScreen(eventInfo: item),
-                              transition: FadeForwardsPageTransitionsBuilder(),
+                ? CustomRefreshIndicator(
+                  onRefresh:
+                      () async =>
+                          widget.isMyEvents
+                              ? await eventProvider.getAllUserEvents(
+                                context: context,
+                              )
+                              : await eventProvider.getAllEvents(
+                                context: context,
+                              ),
+                  child: CustomListWidget(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    data: eventProvider.eventModel?.data ?? <EventModel>[],
+                    itemBuilder:
+                        (item, index) => GestureDetector(
+                          onTap:
+                              () => push(
+                                context: context,
+                                widget: IndividualEventScreen(eventInfo: item),
+                                transition:
+                                    FadeForwardsPageTransitionsBuilder(),
+                              ),
+                          child: CustomContainer(
+                            backGroundColor: AppColors.lightWhite,
+                            margin: EdgeInsets.only(bottom: 1.h),
+                            borderColor: AppColors.grey,
+                            borderWidth: 0.5,
+                            boxShadow: ShadowHelper.scoreContainer,
+                            borderRadius: BorderRadius.circular(
+                              AppSize.size20 - 5,
                             ),
-                        child: CustomContainer(
-                          backGroundColor: AppColors.lightWhite,
-                          margin: EdgeInsets.only(bottom: 1.h),
-                          borderColor: AppColors.grey,
-                          borderWidth: 0.5,
-                          boxShadow: ShadowHelper.scoreContainer,
-                          borderRadius: BorderRadius.circular(
-                            AppSize.size20 - 5,
-                          ),
-                          height: 20.h,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(AppSize.size10),
-                                  ),
-                                  child: CustomImageWithLoader(
-                                    showImageInPanel: false,
-                                    width: 90.w,
-                                    imageUrl:
-                                        "${AppStrings.assetsUrl}${item.poster}",
+                            height: 20.h,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(AppSize.size10),
+                                    ),
+                                    child: CustomImageWithLoader(
+                                      showImageInPanel: false,
+                                      width: 90.w,
+                                      imageUrl:
+                                          "${AppStrings.assetsUrl}${item.poster}",
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: CustomContainer(
-                                  alignment: Alignment.center,
-                                  child: CustomText(
-                                    text: item.title ?? "",
-                                    style: TextStyleHelper.smallHeading,
+                                Expanded(
+                                  child: CustomContainer(
+                                    alignment: Alignment.center,
+                                    child: CustomText(
+                                      text: item.title ?? "",
+                                      style: TextStyleHelper.smallHeading,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                  ),
                 )
-                : Center(child: NoDataFoundWidget()),
+                : CustomRefreshIndicator(
+                  onRefresh:
+                      () async =>
+                          widget.isMyEvents
+                              ? await eventProvider.getAllUserEvents(
+                                context: context,
+                              )
+                              : await eventProvider.getAllEvents(
+                                context: context,
+                              ),
+                  child: ListView(
+                    children: [
+                      CustomContainer(
+                        alignment: Alignment.center,
+                        height: 90.h,
+                        child: NoDataFoundWidget(),
+                      ),
+                    ],
+                  ),
+                ),
       ),
     );
   }
