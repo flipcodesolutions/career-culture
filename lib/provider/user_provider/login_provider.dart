@@ -17,8 +17,8 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   bool get isLoading => _isLoading;
 
   LoginService loginService = LoginService();
-  UserSignUpConfirmModel? _loginResponseModel;
-  UserSignUpConfirmModel? get loginResponseModel => _loginResponseModel;
+  UserModel? _loginResponseModel;
+  UserModel? get loginResponseModel => _loginResponseModel;
 
   /// mobile number controller
   final TextEditingController mobileController = TextEditingController();
@@ -55,7 +55,6 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       context: context,
       mobileNumber: mobileController.text,
     );
-    otpController.text = _otpModel?.data?.otp.toString() ?? "";
 
     /// set _isLoading false
     _isLoading = false;
@@ -76,7 +75,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       otp: otpController.text,
     );
     if (_loginResponseModel?.success == true) {
-      if (_otpModel?.data?.isNewUser == true) {
+      if (_loginResponseModel?.data?.isNewUser == true) {
         // if (!context.mounted) return;
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;

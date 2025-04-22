@@ -308,8 +308,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   SignUpService signUpService = SignUpService();
-  UserSignUpConfirmModel? _signUpConfirmModel;
-  UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
+  UserModel? _signUpConfirmModel;
+  UserModel? get signUpConfirmModel => _signUpConfirmModel;
   void buildSignUpRequestModel({required BuildContext context}) async {
     _signUpRequestModel.name =
         "${firstName.text.trim()} ${middleName.text.trim()} ${lastName.text.trim()}";
@@ -359,7 +359,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
       // /// navigate user to home screen
       // context.read<HomeScreenProvider>().setNavigationIndex = 0;
-      pushRemoveUntil(context: context, widget: MainScreen(setIndex: 0));
+      _isUpdatingProfile
+          ? pop(context)
+          : pushRemoveUntil(context: context, widget: MainScreen(setIndex: 0));
     }
   }
 
@@ -399,6 +401,11 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<void> initControllerWithLocalStorage() async {
+    _signUpRequestModel.imageFile = [];
+    _signUpRequestModel.images = await SharedPrefs.getSharedString(
+      AppStrings.images,
+    );
+
     /// first page
     String name = await SharedPrefs.getSharedString(AppStrings.userName);
     print(name);
@@ -411,7 +418,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     );
     _signUpConfirmModel
         ?.data
-        ?.userProfile
+        ?.user
+        ?.profile
         ?.images = await SharedPrefs.getSharedString(AppStrings.images);
 
     /// second page

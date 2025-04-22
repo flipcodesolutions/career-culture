@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -202,6 +204,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
+    log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}"); 
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
       child:

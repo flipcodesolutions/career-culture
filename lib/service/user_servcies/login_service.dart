@@ -1,18 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/models/login_model/login_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
-import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider/user_provider.dart';
-import '../../utils/method_helpers/method_helper.dart';
 
 class LoginService {
-  Future<UserSignUpConfirmModel?> loginUser({
+  Future<UserModel?> loginUser({
     required BuildContext context,
     required String emailOrPassword,
     required String password,
@@ -26,9 +23,7 @@ class LoginService {
       );
       if (response.isNotEmpty) {
         log(response.toString());
-        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
-          response,
-        );
+        UserModel model = UserModel.fromJson(response);
         if (model.success == true) {
           context.read<UserProvider>().setIsUserLoggedIn = true;
           SharedPrefs.saveToken(model.data?.token ?? "");
@@ -86,7 +81,7 @@ class LoginService {
     }
   }
 
-  Future<UserSignUpConfirmModel?> verifyOtpOfMobile({
+  Future<UserModel?> verifyOtpOfMobile({
     required BuildContext context,
     required String mobileNumber,
     required String otp,
@@ -98,9 +93,7 @@ class LoginService {
         context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
-        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
-          response,
-        );
+        UserModel model = UserModel.fromJson(response);
         return model;
       }
       return null;

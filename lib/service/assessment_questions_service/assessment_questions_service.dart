@@ -42,47 +42,50 @@ class AssessmentQuestionsService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.postAssessmentQuestionsByPostId,
       );
-
-      List<Map<String, dynamic>> replyList = [];
-
+      // Build replyList as before
+      final replyList = <Map<String, dynamic>>[];
       for (AssessmentQuestion question in assessmentAnswer?.data ?? []) {
-        // Build each question's data
         replyList.add({
           'questionId': question.id,
           'type': question.type,
           'answer':
-              (question.type == "audio" || question.type == "video")
-                  ? ""
+              (question.type == 'audio' ||
+                      question.type == 'video' ||
+                      question.type == 'video')
+                  ? 'string'
                   : question.answer,
         });
+      }
 
-        // Attach files if any
-        for (var i = 0; i < (question.selectedFiles?.length ?? 0); i++) {
-          final file = question.selectedFiles![i];
-          final fileBytes = await file.bytes;
-          final fileName = file.path?.split('/').last;
+      // Flatten it into form-fields
+      for (var i = 0; i < replyList.length; i++) {
+        final item = replyList[i];
+        request.fields['data[$i][questionId]'] = item['questionId'].toString();
+        request.fields['data[$i][type]'] = item['type'];
+        request.fields['data[$i][answer]'] = item['answer'].toString();
 
+        // attach any files for this question
+        final files = (assessmentAnswer?.data?[i].selectedFiles ?? []);
+        for (var j = 0; j < files.length; j++) {
+          final file = files[j];
+          final bytes = await file.bytes;
           request.files.add(
             http.MultipartFile.fromBytes(
-              'question_${question.id}_file_$i',
-              fileBytes?.toList() ?? [],
-              filename: fileName,
+              'data[$i][answer]', // <<< same key
+              bytes?.toList() ?? [],
+              filename: 'q${item['questionId']}_file_$j',
             ),
           );
         }
       }
+      log(jsonEncode(request.fields));
+      // send & handle response as before...
+      final streamed = await request.send();
+      final resp = await http.Response.fromStream(streamed);
 
-      // ✅ This is the key step
-      request.fields['data'] = jsonEncode({"data": replyList});
-
-      log('Request fields: ${jsonEncode({"data": replyList})}');
-
-      final streamedResponse = await request.send();
-      final data = await http.Response.fromStream(streamedResponse);
-
-      print(data.body);
-      if (streamedResponse.statusCode == 200) {
-        final jsonResponse = jsonDecode(data.body);
+      print(resp.body);
+      if (streamed.statusCode == 200) {
+        final jsonResponse = jsonDecode(resp.body);
         WidgetHelper.customSnackBar(
           context: context,
           title: "${jsonResponse['message']}",
@@ -92,10 +95,10 @@ class AssessmentQuestionsService {
       } else {
         WidgetHelper.customSnackBar(
           context: context,
-          title: "${streamedResponse.statusCode}",
+          title: "${streamed.statusCode}",
           isError: true,
         );
-        log("Error uploading assessment: ${streamedResponse.statusCode}");
+        log("Error uploading assessment: ${streamed.statusCode}");
       }
 
       return false;

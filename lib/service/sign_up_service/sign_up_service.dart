@@ -12,7 +12,7 @@ import '../../models/login_model/user_signup_confirm_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpService {
-  Future<UserSignUpConfirmModel?> registerUser({
+  Future<UserModel?> registerUser({
     required BuildContext context,
     required UserSignUpRequestModel signUp,
   }) async {
@@ -20,8 +20,8 @@ class SignUpService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.signUp,
       );
-      if (signUp.imageFile?.isNotEmpty ?? false) {
-        final fileBytes = signUp.imageFile!.first.bytes?.toList() ?? [];
+      if (signUp.imageFile.isNotEmpty) {
+        final fileBytes = signUp.imageFile.first.bytes?.toList() ?? [];
         log("File size (bytes): ${fileBytes.length}");
         log("File name: profile_pick_${signUp.name}");
 
@@ -31,7 +31,7 @@ class SignUpService {
               "images",
               fileBytes,
               filename:
-                  'profile_pic_${signUp.name?.replaceAll(" ", "_")}.${signUp.imageFile?.first.extension}',
+                  'profile_pic_${signUp.name?.replaceAll(" ", "_")}.${signUp.imageFile.first.extension}',
             ),
           );
         }
@@ -66,7 +66,7 @@ class SignUpService {
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
-        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
+        UserModel model = UserModel.fromJson(
           jsonResponse,
         );
         return model;
@@ -86,7 +86,7 @@ class SignUpService {
   }
 
   ///
-  Future<UserSignUpConfirmModel?> updateUserInfo({
+  Future<UserModel?> updateUserInfo({
     required BuildContext context,
     required UserSignUpRequestModel signUp,
   }) async {
@@ -96,8 +96,8 @@ class SignUpService {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.updateUserInfo(uId: uId),
       );
-      if (signUp.imageFile?.isNotEmpty ?? false) {
-        final fileBytes = signUp.imageFile!.first.bytes?.toList() ?? [];
+      if (signUp.imageFile.isNotEmpty) {
+        final fileBytes = signUp.imageFile.first.bytes?.toList() ?? [];
         log("File size (bytes): ${fileBytes.length}");
         log("File name: profile_pick_${signUp.name}");
 
@@ -107,7 +107,7 @@ class SignUpService {
               "images",
               fileBytes,
               filename:
-                  'profile_pic_${signUp.name?.replaceAll(" ", "_")}.${signUp.imageFile?.first.extension}',
+                  'profile_pic_${signUp.name?.replaceAll(" ", "_")}.${signUp.imageFile.first.extension}',
             ),
           );
         }
@@ -142,7 +142,7 @@ class SignUpService {
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
-        UserSignUpConfirmModel model = UserSignUpConfirmModel.fromJson(
+        UserModel model = UserModel.fromJson(
           jsonResponse,
         );
         model.data?.token = token;
