@@ -48,6 +48,18 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
             text: AppStrings.account,
             style: TextStyleHelper.mediumHeading,
           ),
+          actions: [
+            if (!userProvider.isUserLoggedIn)
+              IconButton(
+                onPressed:
+                    () => push(
+                      context: context,
+                      widget: LoginScreen(),
+                      transition: FadeUpwardsPageTransitionsBuilder(),
+                    ),
+                icon: Icon(Icons.login, color: AppColors.primary),
+              ),
+          ],
         ),
         body:
             userProvider.isUserLoggedIn
@@ -77,13 +89,10 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               context
                                   .read<UserProvider>()
                                   .setCurrentSignupPageIndex = 0;
-                                  context
+                              context
                                   .read<SignUpProvider>()
                                   .setIsUpdatingProfile = true;
-                              push(
-                                context: context,
-                                widget: SignUpScreen(),
-                              );
+                              push(context: context, widget: SignUpScreen());
                             },
                             titleText: AppStrings.profile,
                           ),
@@ -94,7 +103,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             onTap:
                                 () => push(
                                   context: context,
-                                  widget: EventsScreen(isMyEvents: true,),
+                                  widget: EventsScreen(isMyEvents: true),
                                   transition:
                                       OpenUpwardsPageTransitionsBuilder(),
                                 ),

@@ -64,6 +64,16 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                   ),
               icon: Icon(Icons.notifications),
             ),
+            if (!userProvider.isUserLoggedIn)
+              IconButton(
+                onPressed:
+                    () => push(
+                      context: context,
+                      widget: LoginScreen(),
+                      transition: FadeUpwardsPageTransitionsBuilder(),
+                    ),
+                icon: Icon(Icons.login, color: AppColors.primary),
+              ),
           ],
         ),
         body: AnimationLimiter(
@@ -99,26 +109,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizeHelper.height(height: 4.h),
 
                       /// user score tracking
-                      userProvider.isUserLoggedIn
-                          ? DashBoardUserScoreWidget(
-                            score: "5000",
-                            animationDuration: Duration(seconds: 3),
-                          )
-                          : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: PrimaryBtn(
-                              width: 90.w,
-                              btnText: AppStrings.login,
-                              onTap: () {
-                                push(
-                                  context: context,
-                                  widget: LoginScreen(),
-                                  transition:
-                                      FadeUpwardsPageTransitionsBuilder(),
-                                );
-                              },
-                            ),
-                          ),
+                      if (userProvider.isUserLoggedIn)
+                        DashBoardUserScoreWidget(
+                          score: "5000",
+                          animationDuration: Duration(seconds: 3),
+                        ),
 
                       SizeHelper.height(),
 

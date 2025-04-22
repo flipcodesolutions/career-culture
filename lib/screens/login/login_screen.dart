@@ -6,7 +6,6 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
-import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -188,6 +187,10 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                         SignInSocialOptions(
                           logo: AppImageStrings.googleLogo,
                           name: AppStrings.google,
+                          onTap:
+                              () => GoogleLoginHelper.signInWithGoogle(
+                                context: context,
+                              ),
                         ),
                         SizeHelper.width(width: 20.w),
                         SignInSocialOptions(
@@ -239,13 +242,15 @@ class SignInSocialOptions extends StatelessWidget {
     super.key,
     required this.logo,
     required this.name,
+    this.onTap,
   });
   final String logo;
   final String name;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => GoogleLoginHelper.signInWithGoogle(context: context),
+      onTap: onTap,
       child: CustomContainer(
         padding: EdgeInsets.all(AppSize.size10),
         borderWidth: 0.2,
