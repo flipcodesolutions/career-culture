@@ -310,9 +310,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   SignUpService signUpService = SignUpService();
   UserSignUpConfirmModel? _signUpConfirmModel;
   UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
-  void buildSignUpRequestModel({
-    required BuildContext context,
-  }) async {
+  void buildSignUpRequestModel({required BuildContext context}) async {
     _signUpRequestModel.name =
         "${firstName.text.trim()} ${middleName.text.trim()} ${lastName.text.trim()}";
     _signUpRequestModel.email = email.text;

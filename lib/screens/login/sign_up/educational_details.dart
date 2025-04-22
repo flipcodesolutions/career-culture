@@ -22,95 +22,99 @@ class EducationalDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    return CustomContainer(
-      child: SingleChildScrollView(
-        child: AnimationLimiter(
-          child: Form(
-            key: signUpProvider.thirdPageFormKey,
-            child: Column(
-              children: AnimationConfiguration.toStaggeredList(
-                childAnimationBuilder:
-                    (widget) => SlideAnimation(
-                      duration: Duration(milliseconds: 500),
-                      horizontalOffset: 30.w,
-                      child: FadeInAnimation(
+    return PopScope(
+      canPop: false,
+      child: CustomContainer(
+        child: SingleChildScrollView(
+          child: AnimationLimiter(
+            child: Form(
+              key: signUpProvider.thirdPageFormKey,
+              child: Column(
+                children: AnimationConfiguration.toStaggeredList(
+                  childAnimationBuilder:
+                      (widget) => SlideAnimation(
                         duration: Duration(milliseconds: 500),
-                        child: widget,
+                        horizontalOffset: 30.w,
+                        child: FadeInAnimation(
+                          duration: Duration(milliseconds: 500),
+                          child: widget,
+                        ),
                       ),
+                  children: [
+                    SizeHelper.height(height: 5.h),
+                    CustomText(
+                      text: AppStrings.educationalDetails,
+                      style: TextStyleHelper.largeHeading,
                     ),
-                children: [
-                  SizeHelper.height(height: 5.h),
-                  CustomText(
-                    text: AppStrings.educationalDetails,
-                    style: TextStyleHelper.largeHeading,
-                  ),
-                  SizeHelper.height(height: 3.h),
-                  CustomText(
-                    text: AppStrings.shareYourEducationalDetails,
-                    style: TextStyleHelper.smallText,
-                  ),
-                  SizeHelper.height(height: 5.h),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: CustomTextFormField(
-                      maxLines: 5,
-                      hintText: AppStrings.nameOfDegree,
-                      labelText: AppStrings.presentORLastStudy,
-                      controller: signUpProvider.presentOrLastStudy,
-                      validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                    SizeHelper.height(height: 3.h),
+                    CustomText(
+                      text: AppStrings.shareYourEducationalDetails,
+                      style: TextStyleHelper.smallText,
                     ),
-                  ),
-                  SizeHelper.height(),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: CustomTextFormField(
-                      maxLines: 5,
-                      labelText: AppStrings.collegeOrUniversity,
-                      hintText: AppStrings.nameOfCollegeOrUniversity,
-                      controller: signUpProvider.collegeOrUniversity,
-                      validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
-                    ),
-                  ),
-                  SizeHelper.height(),
-                  CustomContainer(
-                    child: RadioQuestionWidgetWithHeading(
-                      question: signUpProvider.areYouWorking,
-                      onChanged:
-                          (value) => signUpProvider.setWorking(working: value),
-                    ),
-                  ),
-                  SizeHelper.height(),
-                  if (signUpProvider.areYouWorking.answer?.toLowerCase() ==
-                      "yes")
+                    SizeHelper.height(height: 5.h),
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
                         maxLines: 5,
-                        labelText: AppStrings.companyOrBusiness,
-                        hintText: AppStrings.nameOfCompanyOrBusiness,
-                        controller: signUpProvider.companyOrBusiness,
+                        hintText: AppStrings.nameOfDegree,
+                        labelText: AppStrings.presentORLastStudy,
+                        controller: signUpProvider.presentOrLastStudy,
                         validator:
-                            (value) =>
-                                signUpProvider.areYouWorking.answer
-                                            ?.toLowerCase() ==
-                                        "yes"
-                                    ? ValidatorHelper.validateValue(
-                                      value: value,
-                                      context: context,
-                                    )
-                                    : null,
+                            (value) => ValidatorHelper.validateValue(
+                              value: value,
+                              context: context,
+                            ),
                       ),
                     ),
-                  SizeHelper.height(),
-                ],
+                    SizeHelper.height(),
+                    CustomContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: CustomTextFormField(
+                        maxLines: 5,
+                        labelText: AppStrings.collegeOrUniversity,
+                        hintText: AppStrings.nameOfCollegeOrUniversity,
+                        controller: signUpProvider.collegeOrUniversity,
+                        validator:
+                            (value) => ValidatorHelper.validateValue(
+                              value: value,
+                              context: context,
+                            ),
+                      ),
+                    ),
+                    SizeHelper.height(),
+                    CustomContainer(
+                      child: RadioQuestionWidgetWithHeading(
+                        question: signUpProvider.areYouWorking,
+                        onChanged:
+                            (value) =>
+                                signUpProvider.setWorking(working: value),
+                      ),
+                    ),
+                    SizeHelper.height(),
+                    if (signUpProvider.areYouWorking.answer?.toLowerCase() ==
+                        "yes")
+                      CustomContainer(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: CustomTextFormField(
+                          maxLines: 5,
+                          labelText: AppStrings.companyOrBusiness,
+                          hintText: AppStrings.nameOfCompanyOrBusiness,
+                          controller: signUpProvider.companyOrBusiness,
+                          validator:
+                              (value) =>
+                                  signUpProvider.areYouWorking.answer
+                                              ?.toLowerCase() ==
+                                          "yes"
+                                      ? ValidatorHelper.validateValue(
+                                        value: value,
+                                        context: context,
+                                      )
+                                      : null,
+                        ),
+                      ),
+                    SizeHelper.height(),
+                  ],
+                ),
               ),
             ),
           ),
