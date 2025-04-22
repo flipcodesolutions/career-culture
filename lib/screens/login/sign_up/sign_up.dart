@@ -41,108 +41,126 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed:
-              () =>
-                  userProvider.currentSignUpPageIndex == 0
-                      ? pop(context)
-                      : {
-                        userProvider.setCurrentSignupPageIndex =
-                            userProvider.currentSignUpPageIndex - 1,
-                        pageController.previousPage(
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        ),
-                      },
-          icon: AppIcons.backArrow,
-        ),
-        shape: Border(bottom: BorderSide(color: AppColors.white)),
+    return PopScope(
+      canPop: userProvider.currentSignUpPageIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          if (userProvider.currentSignUpPageIndex > 0) {
+            userProvider.setCurrentSignupPageIndex =
+                userProvider.currentSignUpPageIndex - 1;
+            pageController.previousPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed:
+                () =>
+                    userProvider.currentSignUpPageIndex == 0
+                        ? pop(context)
+                        : {
+                          userProvider.setCurrentSignupPageIndex =
+                              userProvider.currentSignUpPageIndex - 1,
+                          pageController.previousPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          ),
+                        },
+            icon: AppIcons.backArrow,
+          ),
+          shape: Border(bottom: BorderSide(color: AppColors.white)),
 
-        bottom: PreferredSize(
-          preferredSize: Size(0, 0),
-          child: CustomContainer(
-            backGroundColor: AppColors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                userProvider.signUpSteps.length,
-                (index) => Expanded(
-                  child: CustomContainer(
-                    margin: EdgeInsets.symmetric(horizontal: 0.5.w),
-                    backGroundColor:
-                        index < userProvider.currentSignUpPageIndex
-                            ? AppColors.primary
-                            : AppColors.lightPrimary,
-                    gradient:
-                        index == userProvider.currentSignUpPageIndex
-                            ? LinearGradient(
-                              colors: [
-                                AppColors.primary,
-                                AppColors.lightPrimary,
-                              ],
-                            )
-                            : null,
+          bottom: PreferredSize(
+            preferredSize: Size(0, 0),
+            child: CustomContainer(
+              backGroundColor: AppColors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  userProvider.signUpSteps.length,
+                  (index) => Expanded(
+                    child: CustomContainer(
+                      margin: EdgeInsets.symmetric(horizontal: 0.5.w),
+                      backGroundColor:
+                          index < userProvider.currentSignUpPageIndex
+                              ? AppColors.primary
+                              : AppColors.lightPrimary,
+                      gradient:
+                          index == userProvider.currentSignUpPageIndex
+                              ? LinearGradient(
+                                colors: [
+                                  AppColors.primary,
+                                  AppColors.lightPrimary,
+                                ],
+                              )
+                              : null,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      body: PageView.builder(
-        controller: pageController,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: userProvider.signUpSteps.length,
-        itemBuilder: (context, index) => userProvider.signUpSteps[index],
-      ),
-      bottomNavigationBar: CustomContainer(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        child:
-            signUpProvider.isLoading
-                ? CustomContainer(
-                  alignment: Alignment.center,
-                  width: 90.w,
-                  height: 5.h,
-                  child: CustomLoader(),
-                )
-                : PrimaryBtn(
-                  width: 90.w,
-                  btnText: AppStrings.continue_,
-                  onTap: () async {
-                    int currentPage = userProvider.currentSignUpPageIndex;
+        body: PageView.builder(
+          controller: pageController,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: userProvider.signUpSteps.length,
+          itemBuilder: (context, index) => userProvider.signUpSteps[index],
+        ),
+        bottomNavigationBar: CustomContainer(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+          child:
+              signUpProvider.isLoading
+                  ? CustomContainer(
+                    alignment: Alignment.center,
+                    width: 90.w,
+                    height: 5.h,
+                    child: CustomLoader(),
+                  )
+                  : PrimaryBtn(
+                    width: 90.w,
+                    btnText: AppStrings.continue_,
+                    onTap: () async {
+                      int currentPage = userProvider.currentSignUpPageIndex;
 
-                    bool isValid = false;
-                    switch (currentPage) {
-                      case 0:
-                        isValid = signUpProvider.validateFirstPage(context);
-                        break;
-                      case 1:
-                        isValid = await signUpProvider.validateSecondPage(
-                          context,
+                      bool isValid = false;
+                      switch (currentPage) {
+                        case 0:
+                          isValid = signUpProvider.validateFirstPage(context);
+                          break;
+                        case 1:
+                          isValid = await signUpProvider.validateSecondPage(
+                            context,
+                          );
+                          break;
+                        case 2:
+                          isValid = signUpProvider.validateThirdPage(context);
+                          break;
+                        // Add more cases for other pages
+                      }
+
+                      if (!isValid) return;
+                      if (currentPage == userProvider.signUpSteps.length - 1) {
+                        signUpProvider.buildSignUpRequestModel(
+                          context: context,
                         );
-                        break;
-                      case 2:
-                        isValid = signUpProvider.validateThirdPage(context);
-                        break;
-                      // Add more cases for other pages
-                    }
+                      }
 
-                    if (!isValid) return;
-                    if (currentPage == userProvider.signUpSteps.length - 1) {
-                      signUpProvider.buildSignUpRequestModel(context: context);
-                    }
-
-                    if (currentPage < (userProvider.signUpSteps.length - 1)) {
-                      userProvider.setCurrentSignupPageIndex = currentPage + 1;
-                      pageController.nextPage(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                ),
+                      if (currentPage < (userProvider.signUpSteps.length - 1)) {
+                        userProvider.setCurrentSignupPageIndex =
+                            currentPage + 1;
+                        pageController.nextPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                  ),
+        ),
       ),
     );
   }

@@ -21,134 +21,131 @@ class StartYourJourney extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    UserProvider userProvider = context.watch<UserProvider>();
-    return PopScope(
-      canPop: userProvider.currentSignUpPageIndex == 0,
-      child: CustomContainer(
-        child: SingleChildScrollView(
-          child: AnimationLimiter(
-            child: Form(
-              key: signUpProvider.firstPageFormKey,
-              child: Column(
-                children: AnimationConfiguration.toStaggeredList(
-                  childAnimationBuilder:
-                      (widget) => SlideAnimation(
-                        horizontalOffset: 30.w,
+    // UserProvider userProvider = context.watch<UserProvider>();
+    return CustomContainer(
+      child: SingleChildScrollView(
+        child: AnimationLimiter(
+          child: Form(
+            key: signUpProvider.firstPageFormKey,
+            child: Column(
+              children: AnimationConfiguration.toStaggeredList(
+                childAnimationBuilder:
+                    (widget) => SlideAnimation(
+                      horizontalOffset: 30.w,
+                      duration: Duration(milliseconds: 500),
+                      child: FadeInAnimation(
                         duration: Duration(milliseconds: 500),
-                        child: FadeInAnimation(
-                          duration: Duration(milliseconds: 500),
-                          child: widget,
-                        ),
-                      ),
-                  children: [
-                    SizeHelper.height(height: 5.h),
-                    CustomText(
-                      text:
-                          signUpProvider.isUpdatingProfile
-                              ? AppStrings.updateYourInfo
-                              : AppStrings.startYourJourney,
-                      style: TextStyleHelper.largeHeading,
-                    ),
-                    SizeHelper.height(height: 3.h),
-                    CustomText(
-                      text:
-                          signUpProvider.isUpdatingProfile
-                              ? AppStrings.onlyChangeWhatYouMust
-                              : AppStrings.createAnAccountToJoinUS,
-                      style: TextStyleHelper.smallText,
-                    ),
-                    SizeHelper.height(height: 5.h),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.firstName,
-                        controller: signUpProvider.firstName,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
+                        child: widget,
                       ),
                     ),
-                    SizeHelper.height(),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.middleName,
-                        controller: signUpProvider.middleName,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
-                      ),
-                    ),
-                    SizeHelper.height(),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.lastName,
-                        controller: signUpProvider.lastName,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
-                      ),
-                    ),
-                    SizeHelper.height(),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.birthDate,
-                        hintText: AppStrings.dateFormate,
-                        suffix: CustomContainer(
-                          width: 10.w,
-                          child: GestureDetector(
-                            child: AppIcons.calender,
-                            onTap:
-                                () =>
-                                    signUpProvider.selectBirthDateByDatePicker(
-                                      context: context,
-                                    ),
+                children: [
+                  SizeHelper.height(height: 5.h),
+                  CustomText(
+                    text:
+                        signUpProvider.isUpdatingProfile
+                            ? AppStrings.updateYourInfo
+                            : AppStrings.startYourJourney,
+                    style: TextStyleHelper.largeHeading,
+                  ),
+                  SizeHelper.height(height: 3.h),
+                  CustomText(
+                    text:
+                        signUpProvider.isUpdatingProfile
+                            ? AppStrings.onlyChangeWhatYouMust
+                            : AppStrings.createAnAccountToJoinUS,
+                    style: TextStyleHelper.smallText,
+                  ),
+                  SizeHelper.height(height: 5.h),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomTextFormField(
+                      labelText: AppStrings.firstName,
+                      controller: signUpProvider.firstName,
+                      validator:
+                          (value) => ValidatorHelper.validateValue(
+                            value: value,
+                            context: context,
                           ),
-                        ),
-                        keyboardType: TextInputType.numberWithOptions(),
-                        controller: signUpProvider.birthDate,
-                        validator:
-                            (value) => ValidatorHelper.validateDateFormate(
-                              value: value,
-                              context: context,
-                            ),
-                      ),
                     ),
-                    SizeHelper.height(),
-                    RadioQuestionWidgetWithHeading(
-                      question: signUpProvider.genderQuestion,
-                      onChanged:
-                          (value) => signUpProvider.setGender(gender: value),
-                    ),
-
-                    SizeHelper.height(),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: CustomText(
-                            text: AppStrings.uploadPhoto,
-                            style: TextStyleHelper.smallHeading,
+                  ),
+                  SizeHelper.height(),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomTextFormField(
+                      labelText: AppStrings.middleName,
+                      controller: signUpProvider.middleName,
+                      validator:
+                          (value) => ValidatorHelper.validateValue(
+                            value: value,
+                            context: context,
                           ),
+                    ),
+                  ),
+                  SizeHelper.height(),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomTextFormField(
+                      labelText: AppStrings.lastName,
+                      controller: signUpProvider.lastName,
+                      validator:
+                          (value) => ValidatorHelper.validateValue(
+                            value: value,
+                            context: context,
+                          ),
+                    ),
+                  ),
+                  SizeHelper.height(),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomTextFormField(
+                      labelText: AppStrings.birthDate,
+                      hintText: AppStrings.dateFormate,
+                      suffix: CustomContainer(
+                        width: 10.w,
+                        child: GestureDetector(
+                          child: AppIcons.calender,
+                          onTap:
+                              () =>
+                                  signUpProvider.selectBirthDateByDatePicker(
+                                    context: context,
+                                  ),
                         ),
-                      ],
+                      ),
+                      keyboardType: TextInputType.numberWithOptions(),
+                      controller: signUpProvider.birthDate,
+                      validator:
+                          (value) => ValidatorHelper.validateDateFormate(
+                            value: value,
+                            context: context,
+                          ),
                     ),
-                    SizeHelper.height(),
-                    CustomFilePickerV2(
-                      allowMultiple: false,
-                      allowedExtensions: ["jpg", "png", "jpeg"],
-                      icon: AppIconsData.audio,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizeHelper.height(),
+                  RadioQuestionWidgetWithHeading(
+                    question: signUpProvider.genderQuestion,
+                    onChanged:
+                        (value) => signUpProvider.setGender(gender: value),
+                  ),
+    
+                  SizeHelper.height(),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: CustomText(
+                          text: AppStrings.uploadPhoto,
+                          style: TextStyleHelper.smallHeading,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizeHelper.height(),
+                  CustomFilePickerV2(
+                    allowMultiple: false,
+                    allowedExtensions: ["jpg", "png", "jpeg"],
+                    icon: AppIconsData.audio,
+                  ),
+                ],
               ),
             ),
           ),
