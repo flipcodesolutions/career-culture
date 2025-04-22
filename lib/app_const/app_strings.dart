@@ -107,7 +107,8 @@ class AppStrings {
   static const otpDoesNotMatch = "Otp Does Not Match !!";
   static const otp = "Otp";
   static const verifyEmailWithOtp = "Verify Email With Otp";
-  static const verifyContactNoWithOtp = "Verify Contact Number With Otp";
+  static const verifyContactNo1WithOtp = "Verify Contact No 1 With Otp";
+  static const verifyContactNo2WithOtp = "Verify Contact No 2 With Otp";
   static const resendOtp = "Resend Otp";
   static const mustGiveAllAnswer = "Must Give All Answer !!";
   static const address1 = "Address Line 1";
@@ -142,6 +143,7 @@ class AppStrings {
   static const acceptTerms = "Accept Terms Before Proceeding !!";
   static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
   static const agreeToTerms = "I agree to the terms Of This Event.";
+  static const thisNumberIsTaken = "This Number Is Taken";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

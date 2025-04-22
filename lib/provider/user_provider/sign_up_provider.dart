@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
+import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_request_model.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
@@ -9,8 +11,10 @@ import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/pin_put_widget.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -159,27 +163,65 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   SendOtpService otpService = SendOtpService();
   SendEmailOtpModel? _emailOtpModel;
   SendEmailOtpModel? get emailOtpModel => _emailOtpModel;
+  SentOtpModel? _mobileOtpModel;
+  SentOtpModel? get mobileOtpModel => _mobileOtpModel;
+  UserModel? _verifyMobileModel;
+  UserModel? get verifyMobileModel => _verifyMobileModel;
 
   /// Main validation method for the second page
   Future<bool> validateSecondPage(BuildContext context) async {
-    // Validate the second-page form normally
-    bool isValid = secondPageFormKey.currentState?.validate() ?? false;
-    if (isEmailVerified && isContactNo1Verified && isValid) return true;
+    final isValid = secondPageFormKey.currentState?.validate() ?? false;
     if (!isValid) return false;
 
-    // Send the OTP for email verification
-    await sendEmailOtp(context: context);
-
-    // Await the OTP verification dialog result
-    final emailVerified = await _showEmailOtpDialog(context);
-    if (emailVerified) {
-      _isEmailVerified = true;
-      _signUpRequestModel.isEmailVerified = "yes";
-      // Assuming contact is verified in a similar manner:
-      _signUpRequestModel.isContactVerified = "yes";
-      notifyListeners();
+    // 1) Email OTP
+    if (!_isEmailVerified) {
+      await sendEmailOtp(context: context);
+      final ok = await _showEmailOtpDialog(context);
+      setIsEmailVerified = ok;
+      _signUpRequestModel.isEmailVerified = ok ? 'yes' : 'no';
+      if (!ok) return false;
     }
-    return emailVerified;
+
+    // 2) Contact #1 OTP
+    if (!_isContactNo1Verified) {
+      final sent1 = await sendMobileOtp(
+        context: context,
+        number: contactNo1.text,
+      );
+      if (!sent1) return false;
+
+      final ok1 = await _showMobileOtpDialog(
+        context: context,
+        title: AppStrings.verifyContactNo1WithOtp,
+        contact: contactNo1.text,
+      );
+      setIsContactNo1Verified = ok1;
+      _signUpRequestModel.isContactVerified = ok1 ? 'yes' : 'no';
+      if (!ok1) return false;
+    }
+
+    // 3) Contact #2 OTP (only if provided)
+    if (contactNo2.text.isNotEmpty && !_isContactNo2Verified) {
+      final sent2 = await sendMobileOtp(
+        context: context,
+        number: contactNo2.text, // ✅ correct number
+      );
+      if (!sent2) return false;
+
+      final ok2 = await _showMobileOtpDialog(
+        context: context,
+        title: AppStrings.verifyContactNo2WithOtp,
+        contact: contactNo2.text,
+      );
+      setIsContactNo2Verified = ok2;
+      if (!ok2) return false;
+    }
+
+    // 4) Final sanity‑check
+    return isValid &&
+        isEmailVerified &&
+        isContactNo1Verified &&
+        (contactNo2.text.isEmpty || isContactNo2Verified);
   }
 
   /// Separate method for showing the OTP verification dialog
@@ -189,57 +231,59 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // Create a local form key for OTP verification
     final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
 
-    final result = await showDialog<bool>(
-      context: context,
-      // barrierDismissible: false, // Force user to verify or cancel explicitly
-      builder: (builderContext) {
-        return AlertDialog(
-          backgroundColor: AppColors.lightWhite,
-          title: CustomText(
-            text: AppStrings.verifyEmailWithOtp,
-            style: TextStyleHelper.mediumHeading.copyWith(
-              color: AppColors.primary,
-            ),
-          ),
-          content: Form(
-            key: otpFormKey,
-            child: CustomTextFormField(
-              labelText: AppStrings.otp,
-              controller: otpController,
-              keyboardType: TextInputType.numberWithOptions(),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter OTP";
-                }
-                if (value != _emailOtpModel?.data?.otp.toString()) {
-                  return AppStrings.otpDoesNotMatch;
-                }
-                return null;
-              },
-            ),
-          ),
-          actions: [
-            PrimaryBtn(
-              width: 30.w,
-              btnText: AppStrings.resendOtp,
-              onTap: () async {
-                await sendEmailOtp(context: context);
-              },
-            ),
-            PrimaryBtn(
-              width: 30.w,
-              btnText: AppStrings.verifyOtp,
-              onTap: () {
-                if (otpFormKey.currentState?.validate() == true) {
-                  Navigator.of(builderContext).pop(true);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-    return result ?? false;
+    _isEmailVerified =
+        await showDialog<bool>(
+          context: context,
+          // barrierDismissible: false, // Force user to verify or cancel explicitly
+          builder: (builderContext) {
+            return AlertDialog(
+              backgroundColor: AppColors.lightWhite,
+              title: CustomText(
+                text: AppStrings.verifyEmailWithOtp,
+                style: TextStyleHelper.mediumHeading.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              content: Form(
+                key: otpFormKey,
+                child: CustomTextFormField(
+                  labelText: AppStrings.otp,
+                  controller: otpController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter OTP";
+                    }
+                    if (value != _emailOtpModel?.data?.otp.toString()) {
+                      return AppStrings.otpDoesNotMatch;
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              actions: [
+                PrimaryBtn(
+                  width: 30.w,
+                  btnText: AppStrings.resendOtp,
+                  onTap: () async {
+                    await sendEmailOtp(context: context);
+                  },
+                ),
+                PrimaryBtn(
+                  width: 30.w,
+                  btnText: AppStrings.verifyOtp,
+                  onTap: () {
+                    if (otpFormKey.currentState?.validate() == true) {
+                      Navigator.of(builderContext).pop(true);
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+    return _isEmailVerified;
   }
 
   /// Method to send the OTP
@@ -254,6 +298,130 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> sendMobileOtp({
+    required BuildContext context,
+    required String number,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    _mobileOtpModel = await otpService.sendMobileOtp(
+      context: context,
+      contactNo: number,
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    if (_mobileOtpModel?.success == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> verifyMobileOtp({
+    required BuildContext context,
+    required String contactNo,
+    required String otp,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    _verifyMobileModel = await otpService.verifyMobileOtp(
+      context: context,
+      contactNo: contactNo,
+      otp: otp,
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    if (_verifyMobileModel?.success == true &&
+        _verifyMobileModel?.data?.isNewUser == true) {
+      return true;
+    } else {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.thisNumberIsTaken,
+        isError: true,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> _showMobileOtpDialog({
+    required BuildContext context,
+    required String title,
+    required String contact,
+  }) async {
+    // Create a local TextEditingController for OTP input
+    final TextEditingController otpController = TextEditingController();
+    // Create a local form key for OTP verification
+    final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
+
+    bool success =
+        await showDialog<bool>(
+          context: context,
+          // barrierDismissible: false, // Force user to verify or cancel explicitly
+          builder: (builderContext) {
+            return AlertDialog(
+              backgroundColor: AppColors.lightWhite,
+              title: CustomText(
+                text: title,
+                style: TextStyleHelper.mediumHeading.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              content: Form(
+                key: otpFormKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomContainer(
+                      height: AppSize.size100,
+                      child: CustomPinPut(
+                        controller: otpController,
+                        height: AppSize.size70,
+                        width: AppSize.size80,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actionsAlignment: MainAxisAlignment.spaceBetween,
+              actions: [
+                PrimaryBtn(
+                  width: 30.w,
+                  btnText: AppStrings.resendOtp,
+                  onTap: () async {
+                    await sendMobileOtp(context: context, number: contact);
+                  },
+                ),
+                PrimaryBtn(
+                  width: 30.w,
+                  btnText: AppStrings.verifyOtp,
+                  onTap: () async {
+                    if (otpFormKey.currentState?.validate() == true) {
+                      bool success = await verifyMobileOtp(
+                        context: context,
+                        contactNo: contact,
+                        otp: otpController.text,
+                      );
+                      if (success) {
+                        Navigator.of(builderContext).pop(true);
+                      }
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+    return success;
   }
 
   ///==========================================================================

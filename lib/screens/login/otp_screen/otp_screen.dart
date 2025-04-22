@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
-import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
-
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
-import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_strings.dart';
+import '../../../widgets/pin_put_widget.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, required this.isNavigateHome});
@@ -74,19 +72,9 @@ class _OtpScreen extends State<OtpScreen> with NavigateHelper {
                   ),
                 ),
                 SizeHelper.height(height: 5.h),
-                Pinput(
-                  controller: loginProvider.otpController,
-                  defaultPinTheme: PinTheme(
-                    width: 20.w,
-                    height: 10.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.lightWhite,
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      border: Border.all(color: AppColors.primary),
-                    ),
-                    textStyle: TextStyleHelper.largeHeading,
-                  ),
-                ),
+
+                /// otp input
+                CustomPinPut(controller: loginProvider.otpController),
                 SizeHelper.height(height: 5.h),
                 loginProvider.isLoading
                     ? Center(child: CustomLoader())

@@ -38,6 +38,29 @@ class LoginService {
     }
   }
 
+  ///
+  Future<UserModel?> checkEmailExit({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.verifyEmail,
+        context: context,
+        body: {"email": email},
+      );
+      if (response.isNotEmpty) {
+        UserModel model = UserModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      log('error while checking email if exit => $e');
+      return null;
+    }
+  }
+
+  //// delete user
   Future<bool> deleteUser({
     required BuildContext context,
     required String uId,

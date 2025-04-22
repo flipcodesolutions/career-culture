@@ -100,15 +100,15 @@ class StartYourJourney extends StatelessWidget {
                     child: CustomTextFormField(
                       labelText: AppStrings.birthDate,
                       hintText: AppStrings.dateFormate,
+                      maxLength: 10,
                       suffix: CustomContainer(
                         width: 10.w,
                         child: GestureDetector(
                           child: AppIcons.calender,
                           onTap:
-                              () =>
-                                  signUpProvider.selectBirthDateByDatePicker(
-                                    context: context,
-                                  ),
+                              () => signUpProvider.selectBirthDateByDatePicker(
+                                context: context,
+                              ),
                         ),
                       ),
                       keyboardType: TextInputType.numberWithOptions(),
@@ -126,7 +126,7 @@ class StartYourJourney extends StatelessWidget {
                     onChanged:
                         (value) => signUpProvider.setGender(gender: value),
                   ),
-    
+
                   SizeHelper.height(),
                   Row(
                     children: [

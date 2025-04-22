@@ -470,6 +470,7 @@ class UserModelData {
   String? token;
   bool? isNewUser;
   String? contactNo;
+  String? email;
   User? user;
 
   UserModelData({this.token, this.isNewUser, this.contactNo, this.user});
@@ -478,6 +479,7 @@ class UserModelData {
     token = json['token'];
     isNewUser = json['isNewUser'];
     contactNo = json['contactNo'];
+    email = json['email'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     _saveUserStorage();
   }
@@ -487,6 +489,7 @@ class UserModelData {
     data['token'] = this.token;
     data['isNewUser'] = this.isNewUser;
     data['contactNo'] = this.contactNo;
+    data['email'] = this.email;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }

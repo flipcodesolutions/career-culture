@@ -53,4 +53,5 @@ class ApiHelper {
   static String sentOtpToMobile = "$baseUrl/sendOtp";
   static String verifyOtpOfMobile = "$baseUrl/verifyOtp";
   static String eventParticipation = "$baseUrl/event-participation";
+  static String verifyEmail = "$baseUrl/verifyEmail";
 }

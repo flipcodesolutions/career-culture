@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:provider/provider.dart';
 import '../../app_const/app_strings.dart';
+import '../../provider/user_provider/login_provider.dart';
 import '../../widgets/cutom_loader.dart';
 import '../widget_helper/widget_helper.dart';
 
@@ -24,8 +26,8 @@ class GoogleLoginHelper {
         }
         return;
       }
-      // LoginProvider loginProvider = context.read<LoginProvider>();
-      // ProfileProvider profileProvider = context.read<ProfileProvider>();
+      LoginProvider loginProvider = context.read<LoginProvider>();
+      UserProvider profileProvider = context.read<UserProvider>();
 
       ///
       final GoogleSignInAuthentication? googleAuth =
@@ -62,21 +64,21 @@ class GoogleLoginHelper {
         title: "Signed in as ${user.email}",
       );
 
-      if (context.mounted) {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 300),
-            pageBuilder:
-                (context, animation, secondaryAnimation) =>
-                    MainScreen(setIndex: 0),
-          ),
-        );
-      }
-
-      // bool emailExists = await loginProvider.checkEmail(
-      //   context: context,
-      //   email: user.email ?? "",
-      // );
+      // if (context.mounted) {
+      //   Navigator.of(context).push(
+      //     PageRouteBuilder(
+      //       transitionDuration: Duration(milliseconds: 300),
+      //       pageBuilder:
+      //           (context, animation, secondaryAnimation) =>
+      //               MainScreen(setIndex: 0),
+      //     ),
+      //   );
+      // }
+      if (!context.mounted) return;
+      await loginProvider.checkEmailExit(
+        context: context,
+        email: user.email ?? "",
+      );
       // if (emailExists) {
       //   if (context.mounted) {
       //     redirectToMainScreen(context);

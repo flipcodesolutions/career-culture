@@ -104,6 +104,44 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
+  /// check if email exit or not
+  Future<void> checkEmailExit({
+    required BuildContext context,
+    required String email,
+  }) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _loginResponseModel = await loginService.checkEmailExit(
+      context: context,
+      email: email,
+    );
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
+    if (_loginResponseModel?.success == true) {
+      if (_loginResponseModel?.data?.isNewUser == true) {
+        if (!context.mounted) return;
+        SignUpProvider signUpProvider = context.read<SignUpProvider>();
+        signUpProvider.email.text = loginResponseModel?.data?.email ?? '';
+        signUpProvider.setIsUpdatingProfile = false;
+        notifyListeners();
+        signUpProvider.setIsEmailVerified = true;
+        push(context: context, widget: SignUpScreen());
+      } else {
+        if (!context.mounted) return;
+        context.read<UserProvider>().setIsUserLoggedIn = true;
+        pushRemoveUntil(
+          context: context,
+          widget: LoginScreen(isToNavigateHome: true),
+          transition: FadeForwardsPageTransitionsBuilder(),
+        );
+      }
+    }
+  }
+
+  /// delete user
   Future<void> deleteUser({
     required BuildContext context,
     required String uId,
