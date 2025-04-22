@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
@@ -76,9 +77,12 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               context
                                   .read<UserProvider>()
                                   .setCurrentSignupPageIndex = 0;
+                                  context
+                                  .read<SignUpProvider>()
+                                  .setIsUpdatingProfile = true;
                               push(
                                 context: context,
-                                widget: SignUpScreen(isUpdateProfile: true),
+                                widget: SignUpScreen(),
                               );
                             },
                             titleText: AppStrings.profile,

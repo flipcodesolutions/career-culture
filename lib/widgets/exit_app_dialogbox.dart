@@ -155,7 +155,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
 }
 
 class DeleteAccount extends StatelessWidget with NavigateHelper {
-  const DeleteAccount({super.key,required this.uId});
+  const DeleteAccount({super.key, required this.uId});
   final String uId;
   @override
   Widget build(BuildContext context) {

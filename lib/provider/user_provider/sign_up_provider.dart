@@ -54,8 +54,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       );
       isValid = false;
     }
-    if (_signUpRequestModel.imageFile?.isEmpty == true ||
-        _signUpRequestModel.imageFile == null) {
+    if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
       WidgetHelper.customSnackBar(
         context: context,
         title: AppStrings.mustSelectProfilePic,
@@ -313,7 +312,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   UserSignUpConfirmModel? get signUpConfirmModel => _signUpConfirmModel;
   void buildSignUpRequestModel({
     required BuildContext context,
-    required bool isUpdating,
   }) async {
     _signUpRequestModel.name =
         "${firstName.text.trim()} ${middleName.text.trim()} ${lastName.text.trim()}";
@@ -342,7 +340,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _signUpConfirmModel =
-        isUpdating
+        _isUpdatingProfile
             ? await signUpService.updateUserInfo(
               context: context,
               signUp: _signUpRequestModel,

@@ -4,7 +4,6 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
@@ -18,8 +17,7 @@ import '../../../app_const/app_strings.dart';
 import '../../../utils/method_helpers/method_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key, required this.isUpdateProfile});
-  final bool isUpdateProfile;
+  const SignUpScreen({super.key});
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -30,10 +28,9 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     // TODO: implement initState
     super.initState();
 
-    if (widget.isUpdateProfile) {
+    SignUpProvider signUpProvider = context.read<SignUpProvider>();
+    if (signUpProvider.isUpdatingProfile) {
       Future.microtask(() async {
-        SignUpProvider signUpProvider = context.read<SignUpProvider>();
-        signUpProvider.setIsUpdatingProfile = widget.isUpdateProfile;
         await signUpProvider.initControllerWithLocalStorage();
       });
     }
@@ -136,7 +133,6 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
                     if (currentPage == userProvider.signUpSteps.length - 1) {
                       signUpProvider.buildSignUpRequestModel(
                         context: context,
-                        isUpdating: widget.isUpdateProfile,
                       );
                     }
 
@@ -193,8 +189,8 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
       child:
-          signUpProvider.signUpRequestModel.imageFile?.isEmpty == true &&
-                  signUpProvider.isUpdatingProfile
+          signUpProvider.isUpdatingProfile &&
+                  signUpProvider.signUpRequestModel.imageFile.isEmpty
               ? CustomImageWithLoader(
                 imageUrl:
                     "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
@@ -204,45 +200,38 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
                 alignment: Alignment.center,
                 width: 90.w,
                 height:
-                    signUpProvider.signUpRequestModel.imageFile?.isEmpty ==
-                                true ||
-                            signUpProvider.signUpRequestModel.imageFile == null
+                    signUpProvider.signUpRequestModel.imageFile.isEmpty == true
                         ? 15.h
                         : null,
                 borderRadius: BorderRadius.circular(AppSize.size10),
                 backGroundColor: AppColors.lightWhite,
                 child:
-                    signUpProvider.signUpRequestModel.imageFile?.isNotEmpty ==
+                    signUpProvider.signUpRequestModel.imageFile.isNotEmpty ==
                             true
                         ? ListView(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           children: [
-                            ...signUpProvider.signUpRequestModel.imageFile?.map(
-                                  (file) => ListTile(
-                                    leading: MethodHelper.buildFilePreview(
-                                      file,
-                                    ),
-                                    title: CustomText(text: file.name),
-                                    subtitle: CustomText(
-                                      text:
-                                          '${(file.size / 1024).toStringAsFixed(2)} KB',
-                                    ),
-                                    trailing: GestureDetector(
-                                      onTap: () {
-                                        signUpProvider
-                                            .signUpRequestModel
-                                            .imageFile
-                                            ?.removeWhere(
-                                              (e) => e.name == file.name,
-                                            );
-                                        setState(() {});
-                                      },
-                                      child: AppIcons.delete,
-                                    ),
-                                  ),
-                                ) ??
-                                [],
+                            ...signUpProvider.signUpRequestModel.imageFile.map(
+                              (file) => ListTile(
+                                leading: MethodHelper.buildFilePreview(file),
+                                title: CustomText(text: file.name),
+                                subtitle: CustomText(
+                                  text:
+                                      '${(file.size / 1024).toStringAsFixed(2)} KB',
+                                ),
+                                trailing: GestureDetector(
+                                  onTap: () {
+                                    signUpProvider.signUpRequestModel.imageFile
+                                        .removeWhere(
+                                          (e) => e.name == file.name,
+                                        );
+                                    setState(() {});
+                                  },
+                                  child: AppIcons.delete,
+                                ),
+                              ),
+                            ),
                           ],
                         )
                         : Icon(

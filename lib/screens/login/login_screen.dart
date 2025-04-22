@@ -19,6 +19,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../provider/user_provider/sign_up_provider.dart';
 import '../../utils/method_helpers/google_login_helper.dart';
 import 'otp_screen/otp_screen.dart';
 
@@ -210,9 +211,10 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
             InkWell(
               onTap: () {
                 context.read<UserProvider>().setCurrentSignupPageIndex = 0;
+                context.read<SignUpProvider>().setIsUpdatingProfile = false;
                 push(
                   context: context,
-                  widget: SignUpScreen(isUpdateProfile: false),
+                  widget: SignUpScreen(),
                   transition: OpenUpwardsPageTransitionsBuilder(),
                 );
               },
