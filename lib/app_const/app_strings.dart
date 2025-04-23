@@ -126,6 +126,7 @@ class AppStrings {
   static const saved = "saved";
   static const refer = "Refer";
   static const bookCounselingAppointment = "Book Counseling Appointment";
+  static const counselingAppointment = " Counseling Appointment";
   static const deleteAccount = "Delete Account";
   static const logOut = "LogOut";
   static const camera = "Camera";
@@ -144,6 +145,9 @@ class AppStrings {
   static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
   static const agreeToTerms = "I agree to the terms Of This Event.";
   static const thisNumberIsTaken = "This Number Is Taken";
+  static const dateAndTimeFormate = "Date And Time Formate";
+  static const dateAndTime = "Date & Time";
+  static const preferredModeOfCounseling = "Preferred Mode Of Counseling";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

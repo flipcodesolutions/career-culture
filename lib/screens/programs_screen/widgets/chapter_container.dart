@@ -58,10 +58,12 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
               ],
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: 3,
                   child: CustomContainer(
+                    width: 20.w,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(AppSize.size10),
                       child: CustomImageWithLoader(
@@ -85,7 +87,19 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
                           style: TextStyleHelper.mediumHeading,
                           useOverflow: false,
                         ),
-                        CustomText(text: chaptersInfo.description ?? ""),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomText(
+                                text: chaptersInfo.description ?? "",
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_right,
+                              color: AppColors.secondary,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

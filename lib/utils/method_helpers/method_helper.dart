@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -238,6 +239,37 @@ class MethodHelper {
   static void removeLocaleStrings({required List<String> listOfStrings}) async {
     for (String i in listOfStrings) {
       SharedPrefs.removeSharedString(i);
+    }
+  }
+
+  /// pick time
+  static Future<String> selectBirthDateByDatePicker({
+    required BuildContext context,
+    String? initDate,
+  }) async {
+    DateTime? initialDate;
+    try {
+      // Try parsing the existing text to a DateTime
+      initialDate = DateFormat('yyyy-MM-dd').parse(initDate ?? "");
+    } catch (_) {
+      // Fallback if parsing fails or text is empty
+      initialDate = null;
+    }
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1947),
+      lastDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      ),
+    );
+    if (date != null) {
+      /// set the controller text in string like "1999-01-12"
+      return DateFormat('yyyy-MM-dd').format(date);
+    } else {
+      return "";
     }
   }
 }

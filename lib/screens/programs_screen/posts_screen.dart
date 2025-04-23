@@ -96,12 +96,25 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                                   showImageInPanel: false,
                                 ),
                                 CustomContainer(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w,
-                                  ),
-                                  child: CustomText(
-                                    text: post?.title ?? "",
-                                    useOverflow: false,
+                                  padding: EdgeInsets.only(left: 5.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 9,
+                                        child: CustomText(
+                                          text: post?.title ?? "",
+                                          useOverflow: false,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: AppColors.secondary,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -112,11 +125,50 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                     },
                   )
               : ListView(children: [NoDataFoundWidget(height: 80.h)]),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.black,
-        child: AppIcons.add(color: AppColors.white),
-      ),
+      bottomNavigationBar:
+          postProvider.currentPost != null
+              ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                child: PrimaryBtn(
+                  width: 90.w,
+                  btnText: AppStrings.assessment,
+                  onTap:
+                      () => {
+                        if (context.read<UserProvider>().isUserLoggedIn)
+                          {
+                            context.read<AssessmentProvider>().setPostId =
+                                postProvider.currentPost?.id?.toString() ?? "",
+                            push(
+                              context: context,
+                              widget: AssessmentScreen(),
+                              transition: FadeUpwardsPageTransitionsBuilder(),
+                            ),
+                          }
+                        else
+                          {
+                            push(
+                              context: context,
+                              widget: LoginScreen(),
+                              transition: ScaleFadePageTransitionsBuilder(),
+                            ),
+                            WidgetHelper.customSnackBar(
+                              context: context,
+                              title: AppStrings.pleaseLoginFirst,
+                              isError: true,
+                            ),
+                          },
+                      },
+                ),
+              )
+              : null,
+      // floatingActionButton:
+      //     postProvider.currentPost != null
+      //         ? FloatingActionButton(
+      //           onPressed: () {},
+      //           backgroundColor: AppColors.black,
+      //           child: AppIcons.add(color: AppColors.white),
+      //         )
+      //         : null,
     );
   }
 }
@@ -190,39 +242,10 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               ),
               SizeHelper.height(),
             ],
-            CustomContainer(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: PrimaryBtn(
-                width: 90.w,
-                btnText: AppStrings.assessment,
-                onTap:
-                    () => {
-                      if (context.read<UserProvider>().isUserLoggedIn)
-                        {
-                          context.read<AssessmentProvider>().setPostId =
-                              post?.id?.toString() ?? "",
-                          push(
-                            context: context,
-                            widget: AssessmentScreen(),
-                            transition: FadeUpwardsPageTransitionsBuilder(),
-                          ),
-                        }
-                      else
-                        {
-                          push(
-                            context: context,
-                            widget: LoginScreen(),
-                            transition: ScaleFadePageTransitionsBuilder(),
-                          ),
-                          WidgetHelper.customSnackBar(
-                            context: context,
-                            title: AppStrings.pleaseLoginFirst,
-                            isError: true,
-                          ),
-                        },
-                    },
-              ),
-            ),
+            // CustomContainer(
+            //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+            //   child: ,
+            // ),
             SizeHelper.height(),
             MediaRender(
               heading: AppStrings.video,

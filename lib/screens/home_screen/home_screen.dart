@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
@@ -55,16 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(
-              onPressed:
-                  () => push(
-                    context: context,
-                    widget: NotificationScreen(),
-                    transition: ScaleFadePageTransitionsBuilder(),
-                  ),
-              icon: Icon(Icons.notifications),
-            ),
-            if (!userProvider.isUserLoggedIn)
+            if (!userProvider.isUserLoggedIn) ...[
               IconButton(
                 onPressed:
                     () => push(
@@ -74,6 +66,21 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                     ),
                 icon: Icon(Icons.login, color: AppColors.primary),
               ),
+            ] else ...[
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.stars_rounded, color: AppColors.primary),
+              ),
+              IconButton(
+                onPressed:
+                    () => push(
+                      context: context,
+                      widget: NotificationScreen(),
+                      transition: ScaleFadePageTransitionsBuilder(),
+                    ),
+                icon: Icon(Icons.notifications),
+              ),
+            ],
           ],
         ),
         body: AnimationLimiter(
@@ -102,11 +109,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizeHelper.height(),
 
                       /// search bar
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: SearchBar(leading: AppIcons.search),
-                      ),
-                      SizeHelper.height(height: 4.h),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      //   child: SearchBar(leading: AppIcons.search),
+                      // ),
+                      // SizeHelper.height(height: 4.h),
 
                       /// user score tracking
                       if (userProvider.isUserLoggedIn)
@@ -177,6 +184,17 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
             ),
           ),
         ),
+        floatingActionButton:
+            userProvider.isUserLoggedIn
+                ? FloatingActionButton.extended(
+                  backgroundColor: AppColors.primary,
+                  onPressed: () {},
+                  label: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: AppColors.white,
+                  ),
+                )
+                : null,
       ),
     );
   }

@@ -6,8 +6,8 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:sizer/sizer.dart';
-import '../../../app_const/app_strings.dart';
-import '../../../widgets/custom_text.dart';
+import '../../app_const/app_strings.dart';
+import '../../widgets/custom_text.dart';
 
 class ChipSelector extends StatefulWidget {
   const ChipSelector({super.key});
