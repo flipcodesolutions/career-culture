@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -137,6 +138,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                         /// set sign up provider to init
                         context.read<UserProvider>().setIsUserLoggedIn = false;
                         context.read<SignUpProvider>().refreshSignUpProvider();
+                        await FirebaseAuth.instance.signOut();
                         pushRemoveUntil(
                           context: context,
                           widget: LoginScreen(isToNavigateHome: true),

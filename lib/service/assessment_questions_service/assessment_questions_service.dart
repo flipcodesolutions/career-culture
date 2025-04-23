@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../utils/api_helper/api_helper.dart';
+import 'package:mime/mime.dart';
 
 class AssessmentQuestionsService {
   Future<AssessmentQuestionModel?> getAssessmentQuestionsByPostId({
@@ -60,24 +62,37 @@ class AssessmentQuestionsService {
       // Flatten it into form-fields
       for (var i = 0; i < replyList.length; i++) {
         final item = replyList[i];
+        final isMedia = item['type'] == 'audio' || item['type'] == 'video';
+
         request.fields['data[$i][questionId]'] = item['questionId'].toString();
         request.fields['data[$i][type]'] = item['type'];
-        request.fields['data[$i][answer]'] = item['answer'].toString();
 
-        // attach any files for this question
-        final files = (assessmentAnswer?.data?[i].selectedFiles ?? []);
-        for (var j = 0; j < files.length; j++) {
-          final file = files[j];
-          final bytes = await file.bytes;
-          request.files.add(
-            http.MultipartFile.fromBytes(
-              'data[$i][answer]', // <<< same key
-              bytes?.toList() ?? [],
-              filename: 'q${item['questionId']}_file_$j',
-            ),
-          );
+        if (!isMedia) {
+          // Only set 'answer' as a field for non-media types
+          request.fields['data[$i][answer]'] = item['answer'].toString();
+        }
+
+        // Attach file if it's a media type
+        if (isMedia) {
+          final files = (assessmentAnswer?.data?[i].selectedFiles ?? []);
+          for (var j = 0; j < files.length; j++) {
+            final file = files[j];
+            print('mime type for $j ==> ${lookupMimeType(file.path ?? "")} ');
+            final bytes = await file.bytes;
+            request.files.add(
+              http.MultipartFile.fromBytes(
+                'data[$i][answer]', // This must match Laravel's expectation
+                bytes?.toList() ?? [],
+                filename: 'q${item['questionId']}_file_$j',
+                contentType: MediaType.parse(
+                  lookupMimeType(file.path ?? "") ?? "",
+                ),
+              ),
+            );
+          }
         }
       }
+
       log(jsonEncode(request.fields));
       // send & handle response as before...
       final streamed = await request.send();

@@ -24,12 +24,14 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
       onTap:
           () => push(
             context: context,
-            widget: PostsScreen(chapterId: chaptersInfo.id ?? 0,chapterName: chaptersInfo.title ?? "",),
+            widget: PostsScreen(
+              chapterId: chaptersInfo.id ?? 0,
+              chapterName: chaptersInfo.title ?? "",
+            ),
             transition: ScaleFadePageTransitionsBuilder(),
           ),
       child: CustomContainer(
         width: 90.w,
-        height: 12.h,
         padding: EdgeInsets.all(AppSize.size10),
         margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
         borderRadius: BorderRadius.circular(AppSize.size10),
@@ -37,47 +39,58 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
         borderColor: AppColors.grey,
         borderWidth: 0.5,
         boxShadow: ShadowHelper.scoreContainer,
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 3,
-              child: CustomContainer(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSize.size10),
-                  child: CustomImageWithLoader(
-                    imageUrl: "${AppStrings.assetsUrl}${chaptersInfo.image}",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomContainer(
+                  alignment: Alignment.topRight,
+                  child: CustomAnimatedScore(
+                    score: "100",
+                    lastText: "Points",
+                    textStyle: TextStyleHelper.smallHeading,
                   ),
                 ),
-              ),
+              ],
             ),
-            SizeHelper.width(),
-            Expanded(
-              flex: 6,
-              child: CustomContainer(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: chaptersInfo.title ?? "",
-                      style: TextStyleHelper.mediumHeading,
+            Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: CustomContainer(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      child: CustomImageWithLoader(
+                        imageUrl:
+                            "${AppStrings.assetsUrl}${chaptersInfo.image}",
+                      ),
                     ),
-                    CustomText(text: chaptersInfo.description ?? ""),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: CustomContainer(
-                alignment: Alignment.topRight,
-                child: CustomAnimatedScore(
-                  score: "100",
-                  lastText: "Points",
-                  textStyle: TextStyleHelper.smallHeading,
+                SizeHelper.width(),
+                Expanded(
+                  flex: 6,
+                  child: CustomContainer(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: chaptersInfo.title ?? "",
+                          style: TextStyleHelper.mediumHeading,
+                          useOverflow: false,
+                        ),
+                        CustomText(text: chaptersInfo.description ?? ""),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

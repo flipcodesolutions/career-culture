@@ -12,6 +12,7 @@ class CustomGridWidget<T> extends StatelessWidget {
     this.isNotScroll = false,
     this.padding,
     this.gridDelegate,
+    this.childAspectRatio,
   });
   final bool isNotScroll;
   final int axisCount;
@@ -19,6 +20,7 @@ class CustomGridWidget<T> extends StatelessWidget {
   final Widget Function(T item, int index) itemBuilder; // Custom widget builder
   final EdgeInsetsGeometry? padding;
   final SliverGridDelegate? gridDelegate;
+  final double? childAspectRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class CustomGridWidget<T> extends StatelessWidget {
               crossAxisCount: axisCount,
               crossAxisSpacing: AppSize.size10,
               mainAxisSpacing: AppSize.size10,
-              childAspectRatio: 1,
+              childAspectRatio: childAspectRatio ?? 1,
             ),
         itemCount: data.length,
         itemBuilder:
