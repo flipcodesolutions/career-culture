@@ -92,7 +92,11 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               context
                                   .read<SignUpProvider>()
                                   .setIsUpdatingProfile = true;
-                              push(context: context, widget: SignUpScreen());
+                              push(
+                                context: context,
+                                widget: SignUpScreen(),
+                                transition: OpenUpwardsPageTransitionsBuilder(),
+                              );
                             },
                             titleText: AppStrings.profile,
                           ),

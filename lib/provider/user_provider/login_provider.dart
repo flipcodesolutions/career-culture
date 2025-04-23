@@ -134,7 +134,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         context.read<UserProvider>().setIsUserLoggedIn = true;
         pushRemoveUntil(
           context: context,
-          widget: LoginScreen(isToNavigateHome: true),
+          widget: MainScreen(setIndex: 0),
           transition: FadeForwardsPageTransitionsBuilder(),
         );
       }

@@ -72,10 +72,6 @@ class SendOtpService {
       );
       if (response.isNotEmpty) {
         UserModel model = UserModel.fromJson(response);
-        WidgetHelper.customSnackBar(
-          context: context,
-          title: model.message ?? "",
-        );
         return model;
       }
       return null;
