@@ -152,6 +152,9 @@ class AppStrings {
   static const enterReason = "Enter Reason";
   static const enterName = "Enter Name";
   static const enterContact = "Enter Contact";
+  static const products = "Products";
+  static const rupee = "₹";
+  static const buyNow = "Buy Now";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
