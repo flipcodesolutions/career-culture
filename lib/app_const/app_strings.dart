@@ -1,3 +1,5 @@
+import 'package:mindful_youth/models/score_model/score_board_model.dart';
+
 class AppStrings {
   //// important strings
   static const appName = "Career Culture";
@@ -155,6 +157,9 @@ class AppStrings {
   static const products = "Products";
   static const rupee = "₹";
   static const buyNow = "Buy Now";
+  static const today = "today";
+  static const weekly = "Weekly";
+  static const monthly = "Monthly";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
