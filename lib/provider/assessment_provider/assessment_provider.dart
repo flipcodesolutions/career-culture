@@ -1,13 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
-class AssessmentProvider extends ChangeNotifier {
+class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -156,5 +154,9 @@ class AssessmentProvider extends ChangeNotifier {
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
+    if (success) {
+      if (!context.mounted) return;
+      pop(context);
+    }
   }
 }

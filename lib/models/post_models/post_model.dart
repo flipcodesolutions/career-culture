@@ -36,6 +36,8 @@ class PostInfo {
   String? video;
   String? audio;
   String? isAnnouncement;
+  String? isOnWall;
+  int? points;
   String? status;
   List<Media>? media;
   bool? isForVideo;
@@ -49,6 +51,8 @@ class PostInfo {
     this.video,
     this.audio,
     this.isAnnouncement,
+    this.isOnWall,
+    this.points,
     this.status,
     this.media,
     this.isForImage,
@@ -78,6 +82,8 @@ class PostInfo {
     video = json['video'];
     audio = json['audio'];
     isAnnouncement = json['isAnnouncement'];
+    isAnnouncement = json['isOnWall'];
+    points = json['points'];
     status = json['status'];
     if (json['media'] != null) {
       media = <Media>[];
@@ -97,6 +103,8 @@ class PostInfo {
     data['video'] = this.video;
     data['audio'] = this.audio;
     data['isAnnouncement'] = this.isAnnouncement;
+    data['points'] = this.isAnnouncement;
+    data['isOnWall'] = this.isOnWall;
     data['status'] = this.status;
     if (this.media != null) {
       data['media'] = this.media!.map((v) => v.toJson()).toList();

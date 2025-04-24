@@ -44,19 +44,19 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomContainer(
-                  alignment: Alignment.topRight,
-                  child: CustomAnimatedScore(
-                    score: "100",
-                    lastText: "Points",
-                    textStyle: TextStyleHelper.smallHeading,
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     CustomContainer(
+            //       alignment: Alignment.topRight,
+            //       child: CustomAnimatedScore(
+            //         score: "${chaptersInfo.}",
+            //         lastText: "Points",
+            //         textStyle: TextStyleHelper.smallHeading,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

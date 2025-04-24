@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -10,6 +12,7 @@ import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../utils/api_helper/api_helper.dart';
 import 'package:mime/mime.dart';
+import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
 
 class AssessmentQuestionsService {
   Future<AssessmentQuestionModel?> getAssessmentQuestionsByPostId({
@@ -41,64 +44,57 @@ class AssessmentQuestionsService {
     required AssessmentQuestionModel? assessmentAnswer,
   }) async {
     try {
+      // Create the multipart request
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.postAssessmentQuestionsByPostId,
       );
-      // Build replyList as before
-      final replyList = <Map<String, dynamic>>[];
-      for (AssessmentQuestion question in assessmentAnswer?.data ?? []) {
-        replyList.add({
-          'questionId': question.id,
-          'type': question.type,
-          'answer':
-              (question.type == 'audio' ||
-                      question.type == 'video' ||
-                      question.type == 'video')
-                  ? 'string'
-                  : question.answer,
-        });
-      }
 
-      // Flatten it into form-fields
-      for (var i = 0; i < replyList.length; i++) {
-        final item = replyList[i];
-        final isMedia = item['type'] == 'audio' || item['type'] == 'video';
+      // Set authorization header once
+      final token = await SharedPrefs.getToken();
+      request.headers.addAll({'Authorization': 'Bearer $token'});
 
-        request.fields['data[$i][questionId]'] = item['questionId'].toString();
-        request.fields['data[$i][type]'] = item['type'];
+      final dataList = assessmentAnswer?.data ?? [];
 
-        if (!isMedia) {
-          // Only set 'answer' as a field for non-media types
-          request.fields['data[$i][answer]'] = item['answer'].toString();
-        }
+      for (var i = 0; i < dataList.length; i++) {
+        AssessmentQuestion question = dataList[i];
+        bool isMedia = ['audio', 'video', 'image'].contains(question.type);
 
-        // Attach file if it's a media type
+        // Add base fields
+        request.fields['data[$i][questionId]'] = question.id.toString();
+        request.fields['data[$i][type]'] = question.type ?? "";
+
+        // Add text-based answer
+        request.fields['data[$i][answer]'] = question.answer.toString();
+
         if (isMedia) {
-          final files = (assessmentAnswer?.data?[i].selectedFiles ?? []);
+          // Handle file-based answers
+          List<PlatformFile> files = question.selectedFiles ?? [];
+
           for (var j = 0; j < files.length; j++) {
-            final file = files[j];
-            print('mime type for $j ==> ${lookupMimeType(file.path ?? "")} ');
-            final bytes = await file.bytes;
+            File file = File(files[j].path ?? "");
+            String mimeType =
+                lookupMimeType(file.path) ?? 'application/octet-stream';
+
+            // Add media file to request
             request.files.add(
-              http.MultipartFile.fromBytes(
-                'data[$i][answer]', // This must match Laravel's expectation
-                bytes?.toList() ?? [],
-                filename: 'q${item['questionId']}_file_$j',
-                contentType: MediaType.parse(
-                  lookupMimeType(file.path ?? "") ?? "",
-                ),
+              await http.MultipartFile.fromPath(
+                question.type == "video"
+                    ? 'data[$i][video_files]'
+                    : 'data[$i][audio_files]', // This field name must match backend expectations
+                file.path,
+                contentType: MediaType.parse(mimeType),
               ),
             );
           }
         }
       }
 
-      log(jsonEncode(request.fields));
-      // send & handle response as before...
-      final streamed = await request.send();
+      // Send the request with timeout
+      final streamed = await request.send().timeout(
+        const Duration(seconds: 30),
+      );
       final resp = await http.Response.fromStream(streamed);
 
-      print(resp.body);
       if (streamed.statusCode == 200) {
         final jsonResponse = jsonDecode(resp.body);
         WidgetHelper.customSnackBar(
@@ -110,15 +106,15 @@ class AssessmentQuestionsService {
       } else {
         WidgetHelper.customSnackBar(
           context: context,
-          title: "${streamed.statusCode}",
+          title: "Error: ${streamed.statusCode}",
           isError: true,
         );
-        log("Error uploading assessment: ${streamed.statusCode}");
+        log("Upload error: ${streamed.statusCode} - ${resp.body}");
       }
 
       return false;
     } catch (e) {
-      kDebugMode ? log("error while uploading assessment answer => $e") : null;
+      if (kDebugMode) log("Error during assessment upload => $e");
       return false;
     }
   }

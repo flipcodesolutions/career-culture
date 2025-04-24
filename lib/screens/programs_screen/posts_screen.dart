@@ -27,6 +27,7 @@ import '../../models/post_models/post_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 import '../../widgets/custom_audio_player.dart';
 import '../../widgets/custom_image.dart';
+import '../../widgets/custom_score_with_animation.dart';
 import 'widgets/render_media_data.dart';
 
 class PostsScreen extends StatefulWidget {
@@ -90,6 +91,19 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                           child: CustomContainer(
                             child: Column(
                               children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomContainer(
+                                      alignment: Alignment.topRight,
+                                      child: CustomAnimatedScore(
+                                        score: "${post?.points}",
+                                        lastText: "Points",
+                                        textStyle: TextStyleHelper.smallHeading,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 ImageContainer(
                                   image:
                                       "${AppStrings.assetsUrl}${post?.image}",
@@ -131,7 +145,8 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
                 child: PrimaryBtn(
                   width: 90.w,
-                  btnText: AppStrings.assessment,
+                  btnText:
+                      "${AppStrings.assessment} (${postProvider.currentPost?.points ?? 0} Points)",
                   onTap:
                       () => {
                         if (context.read<UserProvider>().isUserLoggedIn)
