@@ -29,10 +29,10 @@ class ProductListPage extends StatelessWidget with NavigateHelper {
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1,
+            crossAxisCount: 2,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
-            childAspectRatio: 1,
+            childAspectRatio: 0.7,
           ),
           itemCount: products.length,
           itemBuilder: (context, index) {

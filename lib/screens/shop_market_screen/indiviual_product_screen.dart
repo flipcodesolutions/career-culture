@@ -57,11 +57,7 @@ class _ProductPageState extends State<ProductPage> {
                 title: CustomText(
                   text: widget.name,
                   style: TextStyleHelper.mediumHeading.copyWith(
-                    color:
-                        _collapsed
-                            ? AppColors
-                                .primary 
-                            : Colors.white,
+                    color: _collapsed ? AppColors.primary : Colors.white,
                   ),
                 ),
                 background: Stack(
@@ -104,27 +100,7 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                child: CustomText(
-                  text: widget.description,
-                  style: TextStyleHelper.smallText,
-                  useOverflow: false,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                child: CustomText(
-                  text: widget.description,
-                  style: TextStyleHelper.smallText,
-                  useOverflow: false,
-                ),
-              ),
-            ),
-            SliverToBoxAdapter(
+            SliverFillRemaining(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 child: CustomText(
