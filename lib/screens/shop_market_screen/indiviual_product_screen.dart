@@ -9,7 +9,7 @@ import '../../widgets/custom_image.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/primary_btn.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   final String name;
   final String description;
   final double price;
@@ -24,69 +24,118 @@ class ProductPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  bool _collapsed = false;
+  // match your expandedHeight:
+  final double _expandedHeight = 30.h;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        primary: true,
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 30.h,
-            pinned: true,
-            elevation: AppSize.size10,
-            backgroundColor: AppColors.white,
-            flexibleSpace: FlexibleSpaceBar(
-              title: CustomText(text: name, style: TextStyleHelper.mediumText),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CustomImageWithLoader(imageUrl: imageUrl),
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.black26],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (n) {
+          if (n.metrics.axis == Axis.vertical) {
+            final shouldCollapse =
+                n.metrics.pixels > (_expandedHeight - kToolbarHeight);
+            if (shouldCollapse != _collapsed) {
+              setState(() => _collapsed = shouldCollapse);
+            }
+          }
+          return false;
+        },
+        child: CustomScrollView(
+          primary: true,
+          slivers: [
+            SliverAppBar(
+              expandedHeight: _expandedHeight,
+              pinned: true,
+              elevation: AppSize.size10,
+              backgroundColor: AppColors.white,
+              flexibleSpace: FlexibleSpaceBar(
+                title: CustomText(
+                  text: widget.name,
+                  style: TextStyleHelper.mediumHeading.copyWith(
+                    color:
+                        _collapsed
+                            ? AppColors
+                                .primary 
+                            : Colors.white,
+                  ),
+                ),
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CustomImageWithLoader(imageUrl: widget.imageUrl),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.transparent, Colors.black26],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: name,
-                    useOverflow: false,
-                    style: TextStyleHelper.mediumHeading,
-                  ),
-                  SizeHelper.height(),
-                  CustomText(
-                    text: '\$${price.toStringAsFixed(2)}',
-                    style: TextStyleHelper.smallHeading.copyWith(
-                      color: AppColors.primary,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: widget.name,
+                      useOverflow: false,
+                      style: TextStyleHelper.mediumHeading,
                     ),
-                  ),
-                ],
+                    SizeHelper.height(),
+                    CustomText(
+                      text: '\$${widget.price.toStringAsFixed(2)}',
+                      style: TextStyleHelper.smallHeading.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-              child: CustomText(
-                text: description,
-                style: TextStyleHelper.smallText,
-                useOverflow: false,
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: CustomText(
+                  text: widget.description,
+                  style: TextStyleHelper.smallText,
+                  useOverflow: false,
+                ),
               ),
             ),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: CustomText(
+                  text: widget.description,
+                  style: TextStyleHelper.smallText,
+                  useOverflow: false,
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: CustomText(
+                  text: widget.description,
+                  style: TextStyleHelper.smallText,
+                  useOverflow: false,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
