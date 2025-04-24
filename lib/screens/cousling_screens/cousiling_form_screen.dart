@@ -6,6 +6,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../app_const/app_icons.dart';
@@ -51,6 +52,7 @@ class CousilingFormScreen extends StatelessWidget {
                   /// name
                   CustomTextFormField(
                     labelText: AppStrings.name,
+                    hintText: AppStrings.enterName,
                     maxLength: 100,
                     controller: TextEditingController(),
                     validator:
@@ -64,6 +66,7 @@ class CousilingFormScreen extends StatelessWidget {
                   /// email
                   CustomTextFormField(
                     labelText: AppStrings.email,
+                    hintText: AppStrings.enterEmail,
                     maxLength: 100,
                     controller: TextEditingController(),
                     validator:
@@ -77,6 +80,7 @@ class CousilingFormScreen extends StatelessWidget {
                   /// email
                   CustomTextFormField(
                     labelText: AppStrings.contactNo,
+                    hintText: AppStrings.enterContact,
                     maxLength: 10,
                     controller: TextEditingController(),
                     validator:
@@ -118,12 +122,37 @@ class CousilingFormScreen extends StatelessWidget {
                   SizeHelper.height(),
                   CustomDropDownWidget(
                     label: AppStrings.preferredModeOfCounseling,
-                    hintText: "select Mode",
+                    hintText: "Select Mode",
+                  ),
+                  SizeHelper.height(),
+
+                  /// email
+                  CustomTextFormField(
+                    labelText: AppStrings.reasonForCounseling,
+                    hintText: AppStrings.enterReason,
+                    minLines: 5,
+                    maxLines: 6,
+                    maxLength: 500,
+                    controller: TextEditingController(),
+                    validator:
+                        (value) => ValidatorHelper.validateValue(
+                          value: value,
+                          context: context,
+                        ),
                   ),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        child: PrimaryBtn(
+          btnText: AppStrings.submit,
+          onTap: () {
+            /// logic to
+          },
         ),
       ),
     );

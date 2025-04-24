@@ -22,20 +22,30 @@ class CustomDropDownWidget extends StatefulWidget {
 class _CustomDropDownWidgetState extends State<CustomDropDownWidget> {
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu(
-      width: widget.width ?? 90.w,
-      hintText: widget.hintText,
-      label: CustomText(
-        text: widget.label ?? "",
-        style: TextStyleHelper.mediumHeading.copyWith(color: AppColors.primary),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: BorderHelper.inputBorder,
-        errorBorder: BorderHelper.inputBorderError,
-        focusedBorder: BorderHelper.inputBorderFocused,
-        disabledBorder: BorderHelper.inputBorderDisabled,
-      ),
-      dropdownMenuEntries: [DropdownMenuEntry(value: "", label: "HI")],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.label?.isNotEmpty == true)
+          CustomText(
+            text: widget.label ?? "",
+            style: TextStyleHelper.smallHeading.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+        DropdownMenu(
+          width: widget.width ?? 90.w,
+          hintText: widget.hintText,
+          inputDecorationTheme: InputDecorationTheme(
+            border: BorderHelper.inputBorder,
+            errorBorder: BorderHelper.inputBorderError,
+            focusedBorder: BorderHelper.inputBorderFocused,
+            disabledBorder: BorderHelper.inputBorderDisabled,
+          ),
+          dropdownMenuEntries: [DropdownMenuEntry(value: "", label: "HI")],
+        ),
+      ],
     );
   }
 }

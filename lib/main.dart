@@ -141,6 +141,17 @@ class MyApp extends StatelessWidget {
                 checkColor: WidgetStatePropertyAll(AppColors.white),
                 overlayColor: WidgetStatePropertyAll(AppColors.lightPrimary),
               ),
+              dropdownMenuTheme: DropdownMenuThemeData(
+                textStyle: TextStyleHelper.smallHeading,
+                menuStyle: MenuStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    AppColors.lightPrimary,
+                  ),
+                  surfaceTintColor: WidgetStatePropertyAll(
+                    AppColors.lightPrimary,
+                  ),
+                ),
+              ),
             ),
             home: SplashScreen(),
           ),

@@ -148,6 +148,10 @@ class AppStrings {
   static const dateAndTimeFormate = "Date And Time Formate";
   static const dateAndTime = "Date & Time";
   static const preferredModeOfCounseling = "Preferred Mode Of Counseling";
+  static const reasonForCounseling = "Reason For Counseling";
+  static const enterReason = "Enter Reason";
+  static const enterName = "Enter Name";
+  static const enterContact = "Enter Contact";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
