@@ -59,10 +59,10 @@ class GoogleLoginHelper {
         return;
       }
 
-      WidgetHelper.customSnackBar(
-        context: context,
-        title: "Signed in as ${user.email}",
-      );
+      // WidgetHelper.customSnackBar(
+      //   context: context,
+      //   title: "Signed in as ${user.email}",
+      // );
 
       // if (context.mounted) {
       //   Navigator.of(context).push(

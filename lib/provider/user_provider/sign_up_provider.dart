@@ -167,6 +167,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   SentOtpModel? get mobileOtpModel => _mobileOtpModel;
   UserModel? _verifyMobileModel;
   UserModel? get verifyMobileModel => _verifyMobileModel;
+  UserModel? _verifyEmailModel;
+  UserModel? get verifyEmailModel => _verifyEmailModel;
 
   /// Main validation method for the second page
   Future<bool> validateSecondPage(BuildContext context) async {
@@ -254,9 +256,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                     if (value == null || value.isEmpty) {
                       return "Please enter OTP";
                     }
-                    if (value != _emailOtpModel?.data?.otp.toString()) {
-                      return AppStrings.otpDoesNotMatch;
-                    }
+                    // if (value != _emailOtpModel?.data?.otp.toString()) {
+                    //   return AppStrings.otpDoesNotMatch;
+                    // }
                     return null;
                   },
                 ),
@@ -272,9 +274,16 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                 PrimaryBtn(
                   width: 30.w,
                   btnText: AppStrings.verifyOtp,
-                  onTap: () {
+                  onTap: () async {
                     if (otpFormKey.currentState?.validate() == true) {
-                      Navigator.of(builderContext).pop(true);
+                      bool success = await verifyEmailOtp(
+                        context: context,
+                        email: email.text,
+                        otp: otpController.text,
+                      );
+                      if (success) {
+                        Navigator.of(builderContext).pop(true);
+                      }
                     }
                   },
                 ),
@@ -317,6 +326,35 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (_mobileOtpModel?.success == true) {
       return true;
     } else {
+      return false;
+    }
+  }
+
+  Future<bool> verifyEmailOtp({
+    required BuildContext context,
+    required String email,
+    required String otp,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    _verifyMobileModel = await otpService.verifyEmailOtp(
+      context: context,
+      email: email,
+      otp: otp,
+    );
+
+    _isLoading = false;
+    notifyListeners();
+    if (_verifyMobileModel?.success == true &&
+        _verifyMobileModel?.data?.isNewUser == true) {
+      return true;
+    } else {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.thisNumberIsTaken,
+        isError: true,
+      );
       return false;
     }
   }
@@ -577,9 +615,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     /// first page
     String name = await SharedPrefs.getSharedString(AppStrings.userName);
     print(name);
-    firstName.text = name.split(" ")[0];
-    lastName.text = name.split(" ")[1];
-    middleName.text = name.split(" ")[2];
+    List<String?> fullName = name.split(" ");
+    firstName.text = fullName[0] ?? "";
+    lastName.text = fullName[1] ?? "";
+    middleName.text = fullName[2] ?? "";
     birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,

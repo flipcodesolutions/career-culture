@@ -8,7 +8,6 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../app_const/app_icons.dart';
 import '../../app_const/app_strings.dart';
 import '../../utils/text_style_helper/text_style_helper.dart';

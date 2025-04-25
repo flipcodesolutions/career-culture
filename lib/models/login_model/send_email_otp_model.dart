@@ -1,14 +1,14 @@
 class SendEmailOtpModel {
   bool? success;
   String? message;
-  SendEmailOtpData? data;
+  SendEmailOtpModelData? data;
 
   SendEmailOtpModel({this.success, this.message, this.data});
 
   SendEmailOtpModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? new SendEmailOtpData.fromJson(json['data']) : null;
+    data = json['data'] != null ? new SendEmailOtpModelData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -22,18 +22,21 @@ class SendEmailOtpModel {
   }
 }
 
-class SendEmailOtpData {
-  int? otp;
+class SendEmailOtpModelData {
+  bool? isNewUser;
+  String? email;
 
-  SendEmailOtpData({this.otp});
+  SendEmailOtpModelData({this.isNewUser, this.email});
 
-  SendEmailOtpData.fromJson(Map<String, dynamic> json) {
-    otp = json['otp'];
+  SendEmailOtpModelData.fromJson(Map<String, dynamic> json) {
+    isNewUser = json['isNewUser'];
+    email = json['email'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['otp'] = this.otp;
+    data['isNewUser'] = this.isNewUser;
+    data['email'] = this.email;
     return data;
   }
 }

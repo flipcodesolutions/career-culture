@@ -208,25 +208,19 @@ class TopPlayerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isListTile) {
       return ListTile(
-        tileColor:
-            index == "0"
-                ? AppColors.secondary
-                : index == "1"
-                ? AppColors.lightPrimary
-                : index == "2"
-                ? AppColors.cream
-                : AppColors.white,
+        tileColor: AppColors.white,
         leading: CircleAvatarForScoreLeading(index: index, imageUrl: imageUrl),
         title: CustomText(text: name),
         trailing: Text("$score pts"),
       );
     }
     return CustomContainer(
-      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      margin: EdgeInsets.symmetric(horizontal: 2.5.w),
       child: Column(
         children: [
           CustomContainer(
             padding: EdgeInsets.only(top: 0),
+            width: isFirst ? 25.w : 20.w,
             borderWidth: 1,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(AppSize.size50),
@@ -239,11 +233,7 @@ class TopPlayerCard extends StatelessWidget {
                   radius: isFirst ? AppSize.size40 : AppSize.size30,
                 ),
                 SizeHelper.height(height: 1.h),
-                CustomText(
-                  text: name,
-                  style: TextStyleHelper.smallHeading,
-                  useOverflow: false,
-                ),
+                CustomText(text: name, style: TextStyleHelper.smallHeading),
                 CustomAnimatedScore(
                   score: score,
                   textStyle: TextStyleHelper.smallHeading,

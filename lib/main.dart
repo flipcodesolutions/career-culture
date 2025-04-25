@@ -145,14 +145,6 @@ class MyApp extends StatelessWidget {
               ),
               dropdownMenuTheme: DropdownMenuThemeData(
                 textStyle: TextStyleHelper.smallHeading,
-                menuStyle: MenuStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    AppColors.lightPrimary,
-                  ),
-                  surfaceTintColor: WidgetStatePropertyAll(
-                    AppColors.lightPrimary,
-                  ),
-                ),
               ),
             ),
             home: SplashScreen(),

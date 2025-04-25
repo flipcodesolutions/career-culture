@@ -57,6 +57,9 @@ class ApiHelper {
   /// verify otp
   static String verifyOtpOfMobile = "$baseUrl/verifyOtp";
 
+  /// verify otp
+  static String verifyOtpOfEmail = "$baseUrl/verifyEmailOtp";
+
   /// event participation
   static String eventParticipation = "$baseUrl/event-participation";
 

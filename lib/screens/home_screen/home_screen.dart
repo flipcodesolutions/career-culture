@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       userProvider.checkIfUserIsLoggedIn();
     }).then((_) {
       setState(() {});
-      if (!userProvider.isUserApproved) {
+      if (!userProvider.isUserApproved && userProvider.isUserLoggedIn) {
         WidgetHelper.customSnackBar(
           context: context,
           title: "Your are not Yet Approved",

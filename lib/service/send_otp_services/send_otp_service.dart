@@ -33,6 +33,29 @@ class SendOtpService {
     }
   }
 
+  /// verify mobile otp
+  Future<UserModel?> verifyEmailOtp({
+    required BuildContext context,
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.verifyOtpOfMobile,
+        context: context,
+        body: {"email": email, "otp": otp},
+      );
+      if (response.isNotEmpty) {
+        UserModel model = UserModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      log("error while verify mobile otp => $e");
+      return null;
+    }
+  }
+
   Future<SentOtpModel?> sendMobileOtp({
     required BuildContext context,
     required String contactNo,
