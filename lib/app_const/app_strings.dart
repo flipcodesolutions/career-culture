@@ -157,7 +157,7 @@ class AppStrings {
   static const products = "Products";
   static const rupee = "₹";
   static const buyNow = "Buy Now";
-  static const today = "today";
+  static const today = "Today";
   static const weekly = "Weekly";
   static const monthly = "Monthly";
 
@@ -189,4 +189,5 @@ class AppStrings {
   static const userNameOfCompanyOrBusiness = "userNameOfCompanyOrBusiness";
   static const userToken = "token";
   static const isNewUser = "isNewUser";
+  static const userApproved = "userApproved";
 }

@@ -9,6 +9,7 @@ import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_score_with_animation.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -33,6 +34,9 @@ class _ScoreboardPageState extends State<ScoreboardPage>
       ScoreBoardProvider scoreBoardProvider =
           context.read<ScoreBoardProvider>();
       scoreBoardProvider.getScoreBoard(context: context);
+      _tabController.addListener(() {
+        setState(() {});
+      });
     });
   }
 
@@ -74,6 +78,38 @@ class _ScoreboardPageState extends State<ScoreboardPage>
           ),
         ],
       ),
+      bottomNavigationBar: createUserScoreByTab(
+        tab: _tabController.index,
+        scoreProvider: scoreBoardProvider,
+      ),
+    );
+  }
+
+  Widget? createUserScoreByTab({
+    required int tab,
+    required ScoreBoardProvider? scoreProvider,
+  }) {
+    ScoreBoardModel? userData = scoreProvider?.userScore;
+    if (userData == null) return null;
+
+    final List<ScorePlayer>? userList =
+        {
+          0: userData.data?.today,
+          1: userData.data?.weekly,
+          2: userData.data?.monthly,
+        }[tab];
+
+    if (userList?.isEmpty ?? true) return null;
+
+    ScorePlayer player = userList!.first;
+    return CustomContainer(
+      backGroundColor: AppColors.lightWhite,
+      child: TopPlayerCard(
+        isListTile: true,
+        name: player.name ?? "",
+        score: player.totalPoints ?? "",
+        imageUrl: "${AppStrings.assetsUrl}${player.image ?? ""}",
+      ),
     );
   }
 }
@@ -83,6 +119,9 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
   final List<T>? score;
   @override
   Widget build(BuildContext context) {
+    if (score?.length == 0) {
+      return Center(child: NoDataFoundWidget());
+    }
     if ((score?.length ?? 0) < 3) {
       return CustomContainer(
         child: ListView(
@@ -134,23 +173,9 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
             itemBuilder: (context, index) {
               final player = score?[index + 3]; // Players after top 3
               return ListTile(
-                leading: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomText(
-                      text: (index + 4).toString(),
-                      style: TextStyleHelper.smallHeading.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizeHelper.width(),
-                    CustomImageWithLoader(
-                      errorIconSize: AppSize.size20,
-                      width: AppSize.size20,
-                      height: AppSize.size20,
-                      imageUrl: "${AppStrings.assetsUrl}${player?.image ?? ""}",
-                    ),
-                  ],
+                leading: CircleAvatarForScoreLeading(
+                  index: index.toString(),
+                  imageUrl: player?.image ?? "",
                 ),
                 title: CustomText(text: player?.name ?? ""),
                 trailing: Text("${player?.totalPoints} pts"),
@@ -183,24 +208,15 @@ class TopPlayerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isListTile) {
       return ListTile(
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText(
-              text: index ?? "",
-              style: TextStyleHelper.smallHeading.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            SizeHelper.width(),
-            CustomImageWithLoader(
-              errorIconSize: AppSize.size20,
-              width: AppSize.size20,
-              height: AppSize.size20,
-              imageUrl: "https://picsum.photos/536/354",
-            ),
-          ],
-        ),
+        tileColor:
+            index == "0"
+                ? AppColors.secondary
+                : index == "1"
+                ? AppColors.lightPrimary
+                : index == "2"
+                ? AppColors.cream
+                : AppColors.white,
+        leading: CircleAvatarForScoreLeading(index: index, imageUrl: imageUrl),
         title: CustomText(text: name),
         trailing: Text("$score pts"),
       );
@@ -223,7 +239,11 @@ class TopPlayerCard extends StatelessWidget {
                   radius: isFirst ? AppSize.size40 : AppSize.size30,
                 ),
                 SizeHelper.height(height: 1.h),
-                CustomText(text: name, style: TextStyleHelper.smallHeading),
+                CustomText(
+                  text: name,
+                  style: TextStyleHelper.smallHeading,
+                  useOverflow: false,
+                ),
                 CustomAnimatedScore(
                   score: score,
                   textStyle: TextStyleHelper.smallHeading,
@@ -233,6 +253,45 @@ class TopPlayerCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CircleAvatarForScoreLeading extends StatelessWidget {
+  const CircleAvatarForScoreLeading({
+    super.key,
+    this.index,
+    required this.imageUrl,
+  });
+
+  final String? index;
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomText(
+          text: index ?? "",
+          style: TextStyleHelper.smallHeading.copyWith(
+            color: AppColors.primary,
+          ),
+        ),
+        SizeHelper.width(),
+        CustomContainer(
+          shape: BoxShape.circle,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppSize.size20),
+            child: CustomImageWithLoader(
+              errorIconSize: AppSize.size20,
+              width: AppSize.size40,
+              height: AppSize.size40,
+              imageUrl: imageUrl,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

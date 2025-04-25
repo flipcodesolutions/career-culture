@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
@@ -8,6 +9,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,13 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       userProvider.checkIfUserIsLoggedIn();
     }).then((_) {
       setState(() {});
+      if (!userProvider.isUserApproved) {
+        WidgetHelper.customSnackBar(
+          context: context,
+          title: "Your are not Yet Approved",
+          isError: true,
+        );
+      }
     });
   }
 

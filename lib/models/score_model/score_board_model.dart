@@ -1,12 +1,12 @@
 class ScoreBoardModel {
-  bool? status;
+  bool? success;
   String? message;
   ScoreBoardModelData? data;
 
-  ScoreBoardModel({this.status, this.message, this.data});
+  ScoreBoardModel({this.success, this.message, this.data});
 
   ScoreBoardModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    success = json['success'];
     message = json['message'];
     data =
         json['data'] != null
@@ -16,7 +16,7 @@ class ScoreBoardModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
+    data['success'] = this.success;
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();

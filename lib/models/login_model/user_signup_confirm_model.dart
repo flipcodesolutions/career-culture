@@ -539,6 +539,11 @@ class UserModelData {
 
       await SharedPrefs.saveString(AppStrings.id, user?.id.toString() ?? '');
       _log(AppStrings.id, user?.id.toString() ?? '');
+      await SharedPrefs.saveString(
+        AppStrings.userApproved,
+        user?.isApproved.toString() ?? '',
+      );
+      _log(AppStrings.userApproved, user?.isApproved.toString() ?? '');
     }
 
     if (token != null) {
