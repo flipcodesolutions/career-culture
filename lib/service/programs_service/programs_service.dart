@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/programs/programs_model.dart';
 import 'package:mindful_youth/models/programs/single_program_model.dart';
+import 'package:mindful_youth/models/programs/user_progress_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 
@@ -65,6 +66,26 @@ class ProgramsService {
       kDebugMode
           ? log("error while getting sliders for home screen => $e")
           : null;
+      return null;
+    }
+  }
+
+  Future<UserProgressModel?> getUserProgress({
+    required BuildContext context,
+    String? pId,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: "${ApiHelper.getUserProgress}$pId",
+      );
+      if (response.isNotEmpty) {
+        UserProgressModel model = UserProgressModel.fromJson(response);
+        return model;
+      }
+      return null;
+    } catch (e) {
+      kDebugMode ? log("error while getting User Progress => $e") : null;
       return null;
     }
   }

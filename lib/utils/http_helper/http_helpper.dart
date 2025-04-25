@@ -99,6 +99,7 @@ class HttpHelper {
       var header = {'Authorization': 'Bearer $token'};
 
       var url = Uri.parse(uri);
+      log(uri);
       var response = await client.get(url, headers: headers ?? header);
 
       if (context.mounted) {
