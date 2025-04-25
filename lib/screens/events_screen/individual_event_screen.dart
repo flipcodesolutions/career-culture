@@ -183,10 +183,17 @@ class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
               btnText: AppStrings.submit,
               onTap:
                   _agreed
-                      ? () => eventProvider.eventParticipate(
-                        context: context,
-                        id: widget.id.toString(),
-                      )
+                      ? () =>
+                          context.read<UserProvider>().isUserApproved
+                              ? eventProvider.eventParticipate(
+                                context: context,
+                                id: widget.id.toString(),
+                              )
+                              : WidgetHelper.customSnackBar(
+                                context: context,
+                                title: AppStrings.yourAreNotApprovedYet,
+                                isError: true,
+                              )
                       : () => WidgetHelper.customSnackBar(
                         context: context,
                         title: AppStrings.mustAcceptTerms,

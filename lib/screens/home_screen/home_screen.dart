@@ -10,6 +10,7 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
@@ -40,13 +41,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       userProvider.checkIfUserIsLoggedIn();
     }).then((_) {
       setState(() {});
-      if (!userProvider.isUserApproved && userProvider.isUserLoggedIn) {
-        WidgetHelper.customSnackBar(
-          context: context,
-          title: "Your are not Yet Approved",
-          isError: true,
-        );
-      }
     });
   }
 
@@ -76,8 +70,29 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
               ),
             ] else ...[
               IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.stars_rounded, color: AppColors.primary),
+                onPressed:
+                    () => push(
+                      context: context,
+                      widget: ProductListPage(
+                        products: List.generate(
+                          5,
+                          (index) => Product(
+                            description:
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+                            imageUrl: "https://picsum.photos/536/354",
+                            name:
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                            price: 200,
+                          ),
+                        ),
+                      ),
+
+                      transition: OpenUpwardsPageTransitionsBuilder(),
+                    ),
+                icon: Icon(
+                  Icons.shopping_bag_outlined,
+                  color: AppColors.primary,
+                ),
               ),
               IconButton(
                 onPressed:
@@ -192,35 +207,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
             ),
           ),
         ),
-        floatingActionButton:
-            userProvider.isUserLoggedIn
-                ? FloatingActionButton.extended(
-                  backgroundColor: AppColors.primary,
-                  onPressed:
-                      () => push(
-                        context: context,
-                        widget: ProductListPage(
-                          products: List.generate(
-                            5,
-                            (index) => Product(
-                              description:
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                              imageUrl: "https://picsum.photos/536/354",
-                              name:
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                              price: 200,
-                            ),
-                          ),
-                        ),
-
-                        transition: OpenUpwardsPageTransitionsBuilder(),
-                      ),
-                  label: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: AppColors.white,
-                  ),
-                )
-                : null,
       ),
     );
   }

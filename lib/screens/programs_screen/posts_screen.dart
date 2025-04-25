@@ -147,32 +147,36 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                   width: 90.w,
                   btnText:
                       "${AppStrings.assessment} (${postProvider.currentPost?.points ?? 0} Points)",
-                  onTap:
-                      () => {
-                        if (context.read<UserProvider>().isUserLoggedIn)
-                          {
-                            context.read<AssessmentProvider>().setPostId =
-                                postProvider.currentPost?.id?.toString() ?? "",
-                            push(
-                              context: context,
-                              widget: AssessmentScreen(),
-                              transition: FadeUpwardsPageTransitionsBuilder(),
-                            ),
-                          }
-                        else
-                          {
-                            push(
-                              context: context,
-                              widget: LoginScreen(),
-                              transition: ScaleFadePageTransitionsBuilder(),
-                            ),
-                            WidgetHelper.customSnackBar(
-                              context: context,
-                              title: AppStrings.pleaseLoginFirst,
-                              isError: true,
-                            ),
-                          },
-                      },
+                  onTap: () {
+                    UserProvider userProvider = context.read<UserProvider>();
+                    if (userProvider.isUserLoggedIn) {
+                      context.read<AssessmentProvider>().setPostId =
+                          postProvider.currentPost?.id?.toString() ?? "";
+                      userProvider.isUserApproved
+                          ? push(
+                            context: context,
+                            widget: AssessmentScreen(),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          )
+                          : WidgetHelper.customSnackBar(
+                            context: context,
+                            title: AppStrings.yourAreNotApprovedYet,
+                            isError: true,
+                          );
+                    } else {
+                      push(
+                        context: context,
+                        widget: LoginScreen(),
+                        transition: ScaleFadePageTransitionsBuilder(),
+                      );
+                      WidgetHelper.customSnackBar(
+                        context: context,
+                        title: AppStrings.pleaseLoginFirst,
+                        isError: true,
+                      );
+                    }
+                    ;
+                  },
                 ),
               )
               : null,

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_score_with_animation.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_size.dart';
@@ -20,16 +23,24 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
   final ChaptersInfo chaptersInfo;
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = context.read<UserProvider>();
     return GestureDetector(
       onTap:
-          () => push(
-            context: context,
-            widget: PostsScreen(
-              chapterId: chaptersInfo.id ?? 0,
-              chapterName: chaptersInfo.title ?? "",
-            ),
-            transition: ScaleFadePageTransitionsBuilder(),
-          ),
+          () =>
+              userProvider.isUserApproved
+                  ? push(
+                    context: context,
+                    widget: PostsScreen(
+                      chapterId: chaptersInfo.id ?? 0,
+                      chapterName: chaptersInfo.title ?? "",
+                    ),
+                    transition: ScaleFadePageTransitionsBuilder(),
+                  )
+                  : WidgetHelper.customSnackBar(
+                    context: context,
+                    title: AppStrings.yourAreNotApprovedYet,
+                    isError: true,
+                  ),
       child: CustomContainer(
         width: 90.w,
         padding: EdgeInsets.all(AppSize.size10),
@@ -44,19 +55,6 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     CustomContainer(
-            //       alignment: Alignment.topRight,
-            //       child: CustomAnimatedScore(
-            //         score: "${chaptersInfo.}",
-            //         lastText: "Points",
-            //         textStyle: TextStyleHelper.smallHeading,
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

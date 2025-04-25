@@ -161,6 +161,7 @@ class AppStrings {
   static const weekly = "Weekly";
   static const monthly = "Monthly";
   static const failedToGetProgress = "Failed To Get Progress";
+  static const yourAreNotApprovedYet = "Your Are Not Approved Yet";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
