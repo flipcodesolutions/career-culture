@@ -174,7 +174,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
               final player = score?[index + 3]; // Players after top 3
               return ListTile(
                 leading: CircleAvatarForScoreLeading(
-                  index: index.toString(),
+                  index: "${(index + 4)}",
                   imageUrl: player?.image ?? "",
                 ),
                 title: CustomText(text: player?.name ?? ""),
