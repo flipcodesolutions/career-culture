@@ -161,12 +161,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       SizeHelper.height(),
 
                       /// progress
-                      ChapterProgressWidget(
-                        imageUrl: "https://picsum.photos/id/237/200/300",
-                        chapter: "Chapter 1:",
-                        description: "Analysis Thought Process.",
-                        progressPercent: 90,
-                      ),
+                      ChapterProgressWidget(),
 
                       SizeHelper.height(),
                       // SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),

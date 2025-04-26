@@ -83,7 +83,7 @@ class PostInfo {
     audio = json['audio'];
     isAnnouncement = json['isAnnouncement'];
     isAnnouncement = json['isOnWall'];
-    points = json['points'];
+    points = int.tryParse(json['points'].toString()) ?? 0;
     status = json['status'];
     if (json['media'] != null) {
       media = <Media>[];

@@ -10,6 +10,7 @@ import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
+import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/provider/score_board_provider/score_board_provider.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
@@ -51,6 +52,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => SignUpProvider()),
         ChangeNotifierProvider(create: (context) => ScoreBoardProvider()),
+        ChangeNotifierProvider(create: (context) => RecentActivityProvider()),
       ],
       child: const MyApp(),
     ),

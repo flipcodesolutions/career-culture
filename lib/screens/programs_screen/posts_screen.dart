@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
-import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
+import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
@@ -59,6 +59,8 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     PostProvider postProvider = context.watch<PostProvider>();
+    RecentActivityProvider recentActivityProvider =
+        context.watch<RecentActivityProvider>();
     return Scaffold(
       appBar: AppBar(
         /// if only one post
@@ -79,7 +81,10 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                     itemBuilder: (context, index) {
                       PostInfo? post = postProvider.postListModel?.data?[index];
                       return GestureDetector(
-                        onTap: () => postProvider.setPostInfo = post,
+                        onTap: () async {
+                          postProvider.setPostInfo = post;
+                          await recentActivityProvider.saveRecentActivity(post);
+                        },
                         child: CustomContainer(
                           margin: EdgeInsets.symmetric(
                             vertical: 0.5.h,

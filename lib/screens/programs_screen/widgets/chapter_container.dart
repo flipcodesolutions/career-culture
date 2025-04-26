@@ -23,24 +23,16 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
   final ChaptersInfo chaptersInfo;
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = context.read<UserProvider>();
     return GestureDetector(
       onTap:
-          () =>
-              userProvider.isUserApproved
-                  ? push(
-                    context: context,
-                    widget: PostsScreen(
-                      chapterId: chaptersInfo.id ?? 0,
-                      chapterName: chaptersInfo.title ?? "",
-                    ),
-                    transition: ScaleFadePageTransitionsBuilder(),
-                  )
-                  : WidgetHelper.customSnackBar(
-                    context: context,
-                    title: AppStrings.yourAreNotApprovedYet,
-                    isError: true,
-                  ),
+          () => push(
+            context: context,
+            widget: PostsScreen(
+              chapterId: chaptersInfo.id ?? 0,
+              chapterName: chaptersInfo.title ?? "",
+            ),
+            transition: ScaleFadePageTransitionsBuilder(),
+          ),
       child: CustomContainer(
         width: 90.w,
         padding: EdgeInsets.all(AppSize.size10),
