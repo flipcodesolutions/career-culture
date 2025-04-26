@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/provider/product_provider/product_provider.dart';
+import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:mindful_youth/widgets/no_data_found.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
@@ -11,13 +16,26 @@ import '../../widgets/custom_image.dart';
 import '../../widgets/custom_text.dart';
 import 'indiviual_product_screen.dart';
 
-class ProductListPage extends StatelessWidget with NavigateHelper {
-  final List<Product> products;
+class ProductListPage extends StatefulWidget {
+  const ProductListPage({super.key});
 
-  const ProductListPage({super.key, required this.products});
+  @override
+  State<ProductListPage> createState() => _ProductListPageState();
+}
+
+class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ProductProvider productProvider = context.read<ProductProvider>();
+      productProvider.getProductList(context: context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    ProductProvider productProvider = context.watch<ProductProvider>();
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -25,76 +43,108 @@ class ProductListPage extends StatelessWidget with NavigateHelper {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.7,
-          ),
-          itemCount: products.length,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return GestureDetector(
-              onTap:
-                  () => push(
-                    context: context,
-                    widget: ProductPage(
-                      name: product.name,
-                      description: product.description,
-                      price: product.price,
-                      imageUrl: product.imageUrl,
-                    ),
-                    transition: FadeUpwardsPageTransitionsBuilder(),
-                  ),
-              child: CustomContainer(
-                margin: EdgeInsets.symmetric(vertical: 1.h),
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                borderColor: AppColors.grey,
-                borderWidth: 0.3,
-                backGroundColor: AppColors.lightWhite,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(5),
-                        ),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          imageUrl: product.imageUrl,
-                        ),
+      body:
+          productProvider.isLoading
+              ? Center(child: CustomLoader())
+              : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: CustomRefreshIndicator(
+                  onRefresh:
+                      () async => await productProvider.getProductList(
+                        context: context,
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(AppSize.size10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: product.name,
-                            style: TextStyleHelper.mediumHeading,
+                  child:
+                      productProvider.productModel?.data?.product?.isNotEmpty ==
+                              true
+                          ? GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8,
+                                  childAspectRatio: 0.7,
+                                ),
+                            itemCount:
+                                productProvider
+                                    .productModel
+                                    ?.data
+                                    ?.product
+                                    ?.length ??
+                                0,
+                            itemBuilder: (context, index) {
+                              Product? product =
+                                  productProvider
+                                      .productModel
+                                      ?.data
+                                      ?.product?[index];
+                              return GestureDetector(
+                                onTap:
+                                    () => push(
+                                      context: context,
+                                      widget: ProductPage(product: product),
+                                      transition:
+                                          FadeUpwardsPageTransitionsBuilder(),
+                                    ),
+                                child: CustomContainer(
+                                  margin: EdgeInsets.symmetric(vertical: 1.h),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSize.size10,
+                                  ),
+                                  borderColor: AppColors.grey,
+                                  borderWidth: 0.3,
+                                  backGroundColor: AppColors.lightWhite,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Expanded(
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(5),
+                                          ),
+                                          child: CustomImageWithLoader(
+                                            showImageInPanel: false,
+                                            imageUrl:
+                                                "${AppStrings.assetsUrl}${product?.thumbnail}",
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(AppSize.size10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            CustomText(
+                                              text: product?.title ?? "",
+                                              style:
+                                                  TextStyleHelper.mediumHeading,
+                                            ),
+                                            CustomText(
+                                              text:
+                                                  '${AppStrings.rupee} ${product?.price}',
+                                              style: TextStyleHelper
+                                                  .smallHeading
+                                                  .copyWith(
+                                                    color: AppColors.primary,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                          : ListView(
+                            children: [
+                              Center(child: NoDataFoundWidget(height: 90.h)),
+                            ],
                           ),
-                          CustomText(
-                            text:
-                                '${AppStrings.rupee} ${product.price.toStringAsFixed(2)}',
-                            style: TextStyleHelper.smallHeading.copyWith(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            );
-          },
-        ),
-      ),
     );
   }
 }

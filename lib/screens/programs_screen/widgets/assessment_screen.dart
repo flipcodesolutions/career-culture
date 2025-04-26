@@ -121,14 +121,20 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
   }
 }
 
-class QuestionWidget<T> extends StatelessWidget {
+class QuestionWidget<T> extends StatefulWidget {
   final AssessmentQuestion question;
   QuestionWidget({super.key, required this.question});
+
+  @override
+  State<QuestionWidget<T>> createState() => _QuestionWidgetState<T>();
+}
+
+class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
   final TextEditingController answerController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
-    answerController.text = question.answer ?? "";
     return CustomContainer(
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
@@ -137,23 +143,25 @@ class QuestionWidget<T> extends StatelessWidget {
           children: [
             CustomText(
               useOverflow: false,
-              text: question.question ?? "",
+              text: widget.question.question ?? "",
               style: TextStyleHelper.mediumHeading,
               // textAlign: TextAlign.justify,
             ),
-            if (question.type == "checkbox") ...[
-              ...question.extractedOptions?.asMap().entries.map((entry) {
+            if (widget.question.type == "checkbox") ...[
+              ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value;
                     return CheckboxListTile(
                       activeColor: AppColors.primary,
-                      selected: entry.value == question.answer,
+                      selected: entry.value == widget.question.answer,
                       selectedTileColor: AppColors.lightWhite,
                       title: CustomText(text: option, useOverflow: false),
-                      value: question.answer?.contains(entry.value) ?? false,
+                      value:
+                          widget.question.answer?.contains(entry.value) ??
+                          false,
                       onChanged: (value) {
                         if (value != null) {
                           assessmentProvider.makeOptionSelection(
-                            questionId: question.id ?? -1,
+                            questionId: widget.question.id ?? -1,
                             selection: entry.value,
                           );
                         }
@@ -161,21 +169,21 @@ class QuestionWidget<T> extends StatelessWidget {
                     );
                   }) ??
                   [SizedBox.shrink()],
-            ] else if (question.type == "radio") ...[
-              ...question.extractedOptions?.asMap().entries.map((entry) {
+            ] else if (widget.question.type == "radio") ...[
+              ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value;
                     return RadioListTile<String>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       activeColor: AppColors.primary,
-                      selected: entry.value == question.answer,
+                      selected: entry.value == widget.question.answer,
                       selectedTileColor: AppColors.lightWhite,
                       title: CustomText(text: option, useOverflow: false),
                       value: entry.value,
-                      groupValue: question.answer,
+                      groupValue: widget.question.answer,
                       onChanged: (value) {
                         if (value != null) {
                           assessmentProvider.makeRadioSelection(
-                            questionId: question.id ?? -1,
+                            questionId: widget.question.id ?? -1,
                             selection: entry.value,
                           );
                         }
@@ -183,7 +191,7 @@ class QuestionWidget<T> extends StatelessWidget {
                     );
                   }) ??
                   [SizedBox.shrink()],
-            ] else if (question.type == "text") ...[
+            ] else if (widget.question.type == "text") ...[
               SizeHelper.height(height: 1.h),
               CustomTextFormField(
                 controller: answerController,
@@ -196,14 +204,14 @@ class QuestionWidget<T> extends StatelessWidget {
                   );
                   if (validate == null) {
                     assessmentProvider.textAreaAnswer(
-                      questionId: question.id ?? -1,
+                      questionId: widget.question.id ?? -1,
                       selection: answerController.text,
                     );
                   }
                   return validate;
                 },
               ),
-            ] else if (question.type == "textArea") ...[
+            ] else if (widget.question.type == "textArea") ...[
               SizeHelper.height(height: 1.h),
               CustomTextFormField(
                 controller: answerController,
@@ -217,23 +225,23 @@ class QuestionWidget<T> extends StatelessWidget {
                   );
                   if (validate == null) {
                     assessmentProvider.textAreaAnswer(
-                      questionId: question.id ?? -1,
+                      questionId: widget.question.id ?? -1,
                       selection: answerController.text,
                     );
                   }
                   return validate;
                 },
               ),
-            ] else if (question.type == "video") ...[
+            ] else if (widget.question.type == "video") ...[
               CustomFilePicker(
-                questionId: question.id ?? -1,
+                questionId: widget.question.id ?? -1,
                 allowMultiple: true,
                 allowedExtensions: ["mp4", "mkv", "webp"],
                 icon: AppIconsData.video,
               ),
-            ] else if (question.type == "audio") ...[
+            ] else if (widget.question.type == "audio") ...[
               CustomFilePicker(
-                questionId: question.id ?? -1,
+                questionId: widget.question.id ?? -1,
                 allowMultiple: true,
                 allowedExtensions: ["mp3", "ogg", "wav"],
                 icon: AppIconsData.audio,

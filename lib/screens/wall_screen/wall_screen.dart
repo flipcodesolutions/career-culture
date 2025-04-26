@@ -177,7 +177,7 @@ class FeedPostCard extends StatelessWidget {
 
           // ─── Divider ────────────────────────────
           SizeHelper.height(),
-          CustomText(text: post?.title ?? "not found"),
+          CustomText(text: post?.title ?? "not found", useOverflow: false),
           SizeHelper.height(),
           const Divider(height: 1),
 

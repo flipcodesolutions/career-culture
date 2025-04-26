@@ -72,4 +72,6 @@ class ApiHelper {
   static String getScoreBoard = "$baseUrl/userTopperList";
   ///
   static String getUserProgress = "$baseUrl/getoverallList/";
+  /// get products
+  static String getProducts = "$baseUrl/getproducts";
 }

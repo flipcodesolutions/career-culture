@@ -27,14 +27,16 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
       onTap: () async {
         PostProvider postProvider = context.read<PostProvider>();
         postProvider.setPostInfo = recentActivityProvider.recentPost;
-        push(
-          context: context,
-          widget: PostsScreen(
-            chapterId: recentActivityProvider.recentPost?.chapterId ?? 0,
-            chapterName: recentActivityProvider.recentPost?.title ?? "",
-          ),
-          transition: FadeForwardsPageTransitionsBuilder(),
-        );
+        recentActivityProvider.recentPost?.id != null
+            ? push(
+              context: context,
+              widget: PostsScreen(
+                chapterId: recentActivityProvider.recentPost?.chapterId ?? 0,
+                chapterName: recentActivityProvider.recentPost?.title ?? "",
+              ),
+              transition: FadeForwardsPageTransitionsBuilder(),
+            )
+            : null;
       },
       child: CustomContainer(
         width: 90.w,

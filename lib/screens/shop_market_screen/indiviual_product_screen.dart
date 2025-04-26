@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/models/product_model/product_model.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
@@ -10,18 +11,9 @@ import '../../widgets/custom_text.dart';
 import '../../widgets/primary_btn.dart';
 
 class ProductPage extends StatefulWidget {
-  final String name;
-  final String description;
-  final double price;
-  final String imageUrl;
+  final Product? product;
 
-  const ProductPage({
-    Key? key,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.imageUrl,
-  }) : super(key: key);
+  const ProductPage({super.key, required this.product});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -55,7 +47,7 @@ class _ProductPageState extends State<ProductPage> {
               backgroundColor: AppColors.white,
               flexibleSpace: FlexibleSpaceBar(
                 title: CustomText(
-                  text: widget.name,
+                  text: widget.product?.title ?? "",
                   style: TextStyleHelper.mediumHeading.copyWith(
                     color: _collapsed ? AppColors.primary : Colors.white,
                   ),
@@ -63,7 +55,10 @@ class _ProductPageState extends State<ProductPage> {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CustomImageWithLoader(imageUrl: widget.imageUrl),
+                    CustomImageWithLoader(
+                      imageUrl:
+                          "${AppStrings.assetsUrl}${widget.product?.thumbnail}",
+                    ),
                     const DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -85,13 +80,13 @@ class _ProductPageState extends State<ProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: widget.name,
+                      text: widget.product?.title ?? "",
                       useOverflow: false,
                       style: TextStyleHelper.mediumHeading,
                     ),
                     SizeHelper.height(),
                     CustomText(
-                      text: '\$${widget.price.toStringAsFixed(2)}',
+                      text: '${AppStrings.rupee} ${widget.product?.price}',
                       style: TextStyleHelper.smallHeading.copyWith(
                         color: AppColors.primary,
                       ),
@@ -104,7 +99,7 @@ class _ProductPageState extends State<ProductPage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 child: CustomText(
-                  text: widget.description,
+                  text: widget.product?.description ?? "",
                   style: TextStyleHelper.smallText,
                   useOverflow: false,
                 ),
