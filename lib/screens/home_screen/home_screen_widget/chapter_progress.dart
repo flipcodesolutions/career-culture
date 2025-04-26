@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -23,14 +24,18 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
     RecentActivityProvider recentActivityProvider =
         context.watch<RecentActivityProvider>();
     return GestureDetector(
-      onTap:
-          () => push(
-            context: context,
-            widget: PostsScreen(
-              chapterId: recentActivityProvider.recentPost?.chapterId ?? 0,
-              chapterName: recentActivityProvider.recentPost?.title ?? "",
-            ),
+      onTap: () async {
+        PostProvider postProvider = context.read<PostProvider>();
+        postProvider.setPostInfo = recentActivityProvider.recentPost;
+        push(
+          context: context,
+          widget: PostsScreen(
+            chapterId: recentActivityProvider.recentPost?.chapterId ?? 0,
+            chapterName: recentActivityProvider.recentPost?.title ?? "",
           ),
+          transition: FadeForwardsPageTransitionsBuilder(),
+        );
+      },
       child: CustomContainer(
         width: 90.w,
         height: recentActivityProvider.isRecentActivity() ? 15.h : 5.h,
