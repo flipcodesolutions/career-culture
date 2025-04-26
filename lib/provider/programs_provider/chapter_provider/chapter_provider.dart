@@ -3,6 +3,8 @@ import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/chapter_container.dart';
 import 'package:mindful_youth/service/chapter_service/chapter_service.dart';
 
+import '../../../models/programs/user_progress_model.dart';
+
 class ChapterProvider extends ChangeNotifier {
   /// if provider is Loading
   bool _isLoading = false;
@@ -31,14 +33,37 @@ class ChapterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ChapterContainer> renderChapterList() {
+  List<ChapterContainer> renderChapterList({
+    required UserProgressModel? userProgressModel,
+  }) {
     List<ChapterContainer> list = [];
     if (_chaptersModel?.data?.isEmpty == true) {
       return list;
     }
-    _chaptersModel?.data?.forEach(
-      (e) => list.add(ChapterContainer(chaptersInfo: e)),
-    );
+    for (int i = 1; i <= (_chaptersModel?.data?.length ?? 0); i++) {
+      list.add(
+        ChapterContainer(
+          chaptersInfo: _chaptersModel!.data![i - 1],
+          isOpen: canAccessChapter(
+            totalChapters: (_chaptersModel?.data?.length ?? 0),
+            totalAllMarks:
+                double.tryParse(
+                  userProgressModel?.data?.totalPossiblePoints.toString() ?? "",
+                ) ??
+                0,
+            correctPoints:
+                double.tryParse(
+                  userProgressModel?.data?.totalUserPoints.toString() ?? "",
+                ) ??
+                0,
+            requestedChapter: i,
+          ),
+        ),
+      );
+    }
+    // _chaptersModel?.data?.forEach(
+    //   (e) => list.add(ChapterContainer(chaptersInfo: e)),
+    // );
     return list;
   }
 
@@ -52,5 +77,32 @@ class ChapterProvider extends ChangeNotifier {
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// check if user can access the chapter requested
+  bool canAccessChapter({
+    required int totalChapters,
+    required double totalAllMarks,
+    required double correctPoints,
+    required int requestedChapter,
+  }) {
+    // invalid requests are always denied
+    if (requestedChapter < 1 || requestedChapter > totalChapters) {
+      return false;
+    }
+
+    // chapter 1 is always open
+    if (requestedChapter == 1) {
+      return true;
+    }
+
+    // compute per-chapter marks
+    final marksPerChapter = totalAllMarks / totalChapters;
+
+    // how many _whole_ chapters the user has fully completed
+    final completedChapters = (correctPoints / marksPerChapter).floor();
+
+    // to open chapter N, you must have completed N-1
+    return completedChapters >= (requestedChapter - 1);
   }
 }

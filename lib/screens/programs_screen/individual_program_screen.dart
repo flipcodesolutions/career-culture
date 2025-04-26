@@ -100,69 +100,54 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
                     ),
                     SizeHelper.height(),
                     if (programsProvider.userProgressModel?.data != null) ...[
-                      if (userProvider.isUserApproved) ...[
-                        CustomContainer(
-                          margin: EdgeInsets.symmetric(horizontal: 5.w),
-                          boxShadow: ShadowHelper.scoreContainer,
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          backGroundColor: AppColors.lightWhite,
-                          padding: EdgeInsets.all(AppSize.size10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomContainer(
-                                padding: EdgeInsets.only(left: AppSize.size10),
-                                child: AnimatedCircularProgress(
-                                  percentage: programsProvider.getPercentage(),
-                                  size: AppSize.size100,
-                                  duration: Duration(seconds: 2),
+                      CustomContainer(
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
+                        boxShadow: ShadowHelper.scoreContainer,
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        backGroundColor: AppColors.lightWhite,
+                        padding: EdgeInsets.all(AppSize.size10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomContainer(
+                              padding: EdgeInsets.only(left: AppSize.size10),
+                              child: AnimatedCircularProgress(
+                                percentage: programsProvider.getPercentage(),
+                                size: AppSize.size100,
+                                duration: Duration(seconds: 2),
+                              ),
+                            ),
+                            SizeHelper.width(),
+                            Expanded(
+                              child: CustomContainer(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: AppSize.size10,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomText(
+                                      text: "Overall Progress",
+                                      useOverflow: false,
+                                      style: TextStyleHelper.mediumHeading
+                                          .copyWith(color: AppColors.primary),
+                                    ),
+                                    CustomText(
+                                      text:
+                                          "Well Done,\nYou Have Reached Advance Level",
+                                      useOverflow: false,
+                                      style: TextStyleHelper.smallText,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizeHelper.width(),
-                              Expanded(
-                                child: CustomContainer(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: AppSize.size10,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomText(
-                                        text: "Overall Progress",
-                                        useOverflow: false,
-                                        style: TextStyleHelper.mediumHeading
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      CustomText(
-                                        text:
-                                            "Well Done,\nYou Have Reached Advance Level",
-                                        useOverflow: false,
-                                        style: TextStyleHelper.smallText,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ] else ...[
-                        CustomContainer(
-                          backGroundColor: AppColors.error.withOpacity(0.3),
-                          margin: EdgeInsets.symmetric(horizontal: 5.w),
-                          alignment: Alignment.center,
-                          borderColor: AppColors.error,
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          borderWidth: 0.3,
-                          height: 5.h,
-                          child: CustomText(
-                            text: AppStrings.yourAreNotApprovedYet,
-                          ),
-                        ),
-                      ],
+                      ),
+
                       SizeHelper.height(),
                     ] else ...[
                       CustomContainer(
@@ -176,7 +161,9 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
                     if (chapterProvider.isLoading) ...[
                       Center(child: CustomLoader()),
                     ] else ...[
-                      ...chapterProvider.renderChapterList(),
+                      ...chapterProvider.renderChapterList(
+                        userProgressModel: programsProvider.userProgressModel,
+                      ),
                     ],
                   ],
                 ),

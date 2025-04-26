@@ -19,20 +19,32 @@ import '../../../widgets/custom_text.dart';
 import '../posts_screen.dart';
 
 class ChapterContainer extends StatelessWidget with NavigateHelper {
-  const ChapterContainer({super.key, required this.chaptersInfo});
+  const ChapterContainer({
+    super.key,
+    required this.chaptersInfo,
+    required this.isOpen,
+  });
   final ChaptersInfo chaptersInfo;
+  final bool isOpen;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => push(
-            context: context,
-            widget: PostsScreen(
-              chapterId: chaptersInfo.id ?? 0,
-              chapterName: chaptersInfo.title ?? "",
-            ),
-            transition: ScaleFadePageTransitionsBuilder(),
-          ),
+          () =>
+              isOpen
+                  ? push(
+                    context: context,
+                    widget: PostsScreen(
+                      chapterId: chaptersInfo.id ?? 0,
+                      chapterName: chaptersInfo.title ?? "",
+                    ),
+                    transition: ScaleFadePageTransitionsBuilder(),
+                  )
+                  : WidgetHelper.customSnackBar(
+                    context: context,
+                    title: "Not Yet Open",
+                    isError: true,
+                  ),
       child: CustomContainer(
         width: 90.w,
         padding: EdgeInsets.all(AppSize.size10),
