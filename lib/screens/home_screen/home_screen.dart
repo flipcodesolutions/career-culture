@@ -147,51 +147,26 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                       /// user pashes
                       SliderRenderWidget(),
                       SizeHelper.height(),
-
-                      /// recent activity text
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: CustomText(
-                          text: AppStrings.recentActivity,
-                          style: TextStyleHelper.mediumHeading.copyWith(
-                            color: AppColors.primary,
+                      if (userProvider.isUserLoggedIn) ...[
+                        /// recent activity text
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: CustomText(
+                            text: AppStrings.recentActivity,
+                            style: TextStyleHelper.mediumHeading.copyWith(
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
-                      ),
+                        SizeHelper.height(),
+
+                        /// progress
+                        ChapterProgressWidget(),
+
+                        SizeHelper.height(),
+                      ],
+
                       SizeHelper.height(),
-
-                      /// progress
-                      ChapterProgressWidget(),
-
-                      SizeHelper.height(),
-                      // SliderRenderWidget(items: [SizedBox(), SizedBox(), SizedBox()]),
-                      SizeHelper.height(),
-
-                      /// recent activity text
-                      // Padding(
-                      //   padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      //   child: CustomText(
-                      //     text: AppStrings.suggestedBooks,
-                      //     style: TextStyleHelper.mediumHeading.copyWith(
-                      //       color: AppColors.primary,
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizeHelper.height(),
-                      // CustomGridWidget(
-                      //   isNotScroll: true,
-                      //   data: List<String>.generate(10, (index) => ""),
-                      //   itemBuilder:
-                      //       (item, index) => CustomContainer(
-                      //         backGroundColor: AppColors.cream,
-                      //         child: CustomImageWithLoader(
-                      //           imageUrl:
-                      //               "https://picsum.photos/id/1084/536/354?grayscale",
-                      //         ),
-                      //       ),
-
-                      //   axisCount: 3,
-                      // ),
                     ],
                   ),
                 ),

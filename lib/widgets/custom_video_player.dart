@@ -74,9 +74,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
           widget.showControls
               ? () => setState(() => _showOverlay = !_showOverlay)
               : null,
-      child: CustomContainer(
-        width: widget.width ?? 100.w,
-        height: widget.height ?? 40.h,
+      child: AspectRatio(
+        aspectRatio: _controller.value.aspectRatio,
         child:
             videoReady
                 ? Stack(
