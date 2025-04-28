@@ -53,6 +53,7 @@ class Convener {
   String? name;
   String? email;
   String? role;
+  String? city;
   String? isApproved;
   String? status;
 
@@ -63,12 +64,14 @@ class Convener {
     this.role,
     this.isApproved,
     this.status,
+    this.city
   });
 
   Convener.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     email = json['email'];
+    city = json['city'];
     role = json['role'];
     isApproved = json['isApproved'];
     status = json['status'];
@@ -79,6 +82,7 @@ class Convener {
     data['id'] = this.id;
     data['name'] = this.name;
     data['email'] = this.email;
+    data['city'] = this.city;
     data['role'] = this.role;
     data['isApproved'] = this.isApproved;
     data['status'] = this.status;

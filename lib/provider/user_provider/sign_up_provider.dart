@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/models/login_model/convener_list_model.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_request_model.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/service/get_conveners_service/get_conveners_service.dart';
 import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -66,6 +68,16 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       );
       isValid = false;
     }
+    if (selectedConvener == null ||
+        selectedConvener?.id == null ||
+        (selectedConvener?.name == "" || selectedConvener?.name == null)) {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.somethingWentWrong,
+        isError: true,
+      );
+      isValid = false;
+    }
 
     return isValid;
   }
@@ -74,6 +86,31 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   TextEditingController firstName = TextEditingController();
   TextEditingController middleName = TextEditingController();
   TextEditingController lastName = TextEditingController();
+
+  /// convener
+  /// Service and getter and setter
+  GetConvenersService convenersService = GetConvenersService();
+  ConvenerListModel? _convenerListModel;
+  ConvenerListModel? get convenerListModel => _convenerListModel;
+  Convener? _selectedConvener;
+  Convener? get selectedConvener => _selectedConvener;
+  set setConvener(Convener? convener) {
+    _selectedConvener = convener;
+    notifyListeners();
+  }
+
+  Future<void> getConveners({required BuildContext context}) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _convenerListModel = await convenersService.getConvenerList(
+      context: context,
+    );
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
+  }
 
   /// select your gender
   final AssessmentQuestion _genderQuestion = AssessmentQuestion(
@@ -538,6 +575,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.workingStatus =
         areYouWorking.answer?.toLowerCase() ?? "no";
     _signUpRequestModel.nameOfCompanyOrBusiness = companyOrBusiness.text;
+    _signUpRequestModel.convenerId = selectedConvener?.id;
     notifyListeners();
 
     /// set _isLoading true

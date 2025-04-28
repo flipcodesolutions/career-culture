@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:mindful_youth/models/login_model/convener_list_model.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_icons.dart';
+import '../../../app_const/app_size.dart';
 import '../../../app_const/app_strings.dart';
 import '../../../utils/method_helpers/size_helper.dart';
 import '../../../utils/method_helpers/validator_helper.dart';
@@ -15,8 +19,24 @@ import '../../../widgets/custom_text.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import 'sign_up.dart';
 
-class StartYourJourney extends StatelessWidget {
-  StartYourJourney({super.key});
+class StartYourJourney extends StatefulWidget {
+  const StartYourJourney({super.key});
+
+  @override
+  State<StartYourJourney> createState() => _StartYourJourneyState();
+}
+
+class _StartYourJourneyState extends State<StartYourJourney> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() {
+      SignUpProvider signUpProvider = context.read<SignUpProvider>();
+      signUpProvider.getConveners(context: context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
@@ -121,10 +141,13 @@ class StartYourJourney extends StatelessWidget {
                   ),
                   SizeHelper.height(),
 
-                  /// serachable drop down
+                  /// searchable convener drop down
                   CustomContainer(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child: CustomSearchableDropDown(),
+                    child:
+                        signUpProvider.isLoading
+                            ? Center(child: CustomLoader())
+                            : ConvenerDropDown(signUpProvider: signUpProvider),
                   ),
                   SizeHelper.height(),
                   RadioQuestionWidgetWithHeading(
@@ -157,6 +180,65 @@ class StartYourJourney extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ConvenerDropDown extends StatelessWidget {
+  const ConvenerDropDown({super.key, required this.signUpProvider});
+
+  final SignUpProvider signUpProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomSearchableDropDown<Convener>(
+      list: signUpProvider.convenerListModel?.data?.convener ?? [],
+      itemAsString: (p0) => p0.name ?? "",
+      onSaved: (p0) => signUpProvider.setConvener = p0,
+      itemBuilder:
+          (context, convener, isDisabled, isSelected) => CustomContainer(
+            padding: EdgeInsets.all(AppSize.size10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomText(
+                  text: convener.name ?? "",
+                  style: TextStyleHelper.smallHeading.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+                CustomText(text: convener.city ?? "Not Provided"),
+              ],
+            ),
+          ),
+      compareFn: (p0, p1) => p0.name?.contains(p1.name ?? "") ?? false,
+      dropdownBuilder:
+          (context, convener) =>
+              convener != null
+                  ? CustomContainer(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomText(
+                          text: convener.name ?? "",
+                          style: TextStyleHelper.smallHeading.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        CustomText(text: convener.city ?? "Not Provided"),
+                      ],
+                    ),
+                  )
+                  : SizedBox.shrink(),
+      validator:
+          (value) => ValidatorHelper.validateValue(
+            value: value?.name ?? "",
+            context: context,
+          ),
     );
   }
 }
