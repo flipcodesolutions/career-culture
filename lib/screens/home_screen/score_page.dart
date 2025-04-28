@@ -134,7 +134,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
               name: score![0].name ?? '',
               isFirst: index == 0,
               score: score![0].totalPoints ?? '0',
-              imageUrl: score![0].image ?? '',
+              imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
             ),
           ),
         ),
@@ -152,18 +152,18 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
               TopPlayerCard(
                 name: score![2].name ?? '',
                 score: score![2].totalPoints ?? '0',
-                imageUrl: score![2].image ?? '',
+                imageUrl: '${AppStrings.assetsUrl}${score![2].image}',
               ),
               TopPlayerCard(
                 name: score![0].name ?? '',
                 isFirst: true,
                 score: score![0].totalPoints ?? '0',
-                imageUrl: score![0].image ?? '',
+                imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
               ),
               TopPlayerCard(
                 name: score![1].name ?? '',
                 score: score![1].totalPoints ?? '0',
-                imageUrl: score![1].image ?? '',
+                imageUrl: '${AppStrings.assetsUrl}${score![1].image}',
               ),
             ],
           ),
@@ -284,5 +284,19 @@ class CircleAvatarForScoreLeading extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

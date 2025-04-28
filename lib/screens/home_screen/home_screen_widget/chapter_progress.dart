@@ -80,13 +80,24 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                             maxLines: 2,
                             style: TextStyleHelper.mediumHeading,
                           ),
-                          CustomText(
-                            text:
-                                recentActivityProvider
-                                    .recentPost
-                                    ?.description ??
-                                "",
-                            maxLines: 3,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: CustomText(
+                                  text:
+                                      recentActivityProvider
+                                          .recentPost
+                                          ?.description ??
+                                      "",
+                                  maxLines: 3,
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_right,
+                                color: AppColors.secondary,
+                              ),
+                            ],
                           ),
                         ],
                       ),
