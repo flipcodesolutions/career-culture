@@ -28,15 +28,10 @@ class CustomListWidget<T> extends StatelessWidget {
         itemBuilder:
             (context, index) => AnimationConfiguration.staggeredList(
               position: index,
-              child: ScaleAnimation(
-                duration: Duration(milliseconds: 300),
-                child: SlideAnimation(
-                  horizontalOffset: 10.w,
-                  duration: Duration(milliseconds: 300),
-                  child: FadeInAnimation(
-                    child: itemBuilder(data[index], index),
-                  ),
-                ),
+              child: SlideAnimation(
+                horizontalOffset: 50.w,
+                duration: Duration(milliseconds: 500),
+                child: FadeInAnimation(child: itemBuilder(data[index], index)),
               ),
             ), // Use passed builder
       ),

@@ -165,6 +165,13 @@ class AppStrings {
   static const noRecentActivity = "No Recent Activity";
   static const selectConvener = "Select Convener";
   static const searchHere = "Search Here ...";
+  static const needABoost = "Need A Boost ?";
+  static const counseling1 = "Counseling 1";
+  static const bookAfter25 = "Book After 25% Milestone.";
+  static const counseling2 = "Counseling 2";
+  static const bookAfter75 = "Book After 75% Milestone.";
+  static const takeAMomentToTalkWithUs =
+      "You’re doing great! Take a moment to talk with a counselor and get the advice you need to keep moving forward.";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

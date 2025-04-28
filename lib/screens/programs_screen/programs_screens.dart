@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
+import 'package:mindful_youth/widgets/custom_listview.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
-import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
@@ -83,35 +86,81 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            PrimaryBtn(
+                            // PrimaryBtn(
+                            //   width: 25.w,
+                            //   height: 4.h,
+                            //   // borderColor: ,
+                            //   backGroundColor:
+                            //       programsProvider.isGridView
+                            //           ? null
+                            //           : AppColors.white,
+                            //   btnText: AppStrings.allTopics,
+                            //   onTap: () async {
+                            //     programsProvider.setGridView =
+                            //         !programsProvider.isGridView;
+                            //     await chapterProvider.getAllChapters(
+                            //       context: context,
+                            //     );
+                            //   },
+                            Image.asset(
+                              AppImageStrings.gridIcon,
                               width: 25.w,
-                              height: 4.h,
-                              // borderColor: ,
-                              backGroundColor:
-                                  programsProvider.isGridView
-                                      ? null
-                                      : AppColors.white,
-                              btnText: AppStrings.allTopics,
-                              onTap: () async {
-                                programsProvider.setGridView =
-                                    !programsProvider.isGridView;
-                                await chapterProvider.getAllChapters(
-                                  context: context,
-                                );
-                              },
+                              height: 5.h,
                             ),
+                            // ),
+                            // CustomProgressBar(percentage: 50),
                           ],
                         ),
                       ),
                       if (!programsProvider.isGridView) ...[
                         Expanded(
-                          child: CustomGridWidget(
+                          child: CustomListWidget(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             data: <ProgramsInfo>[
                               ...programsProvider.programsModel?.data ?? [],
                             ],
                             itemBuilder:
                                 (item, index) => ProgramContainer(item: item),
+                          ),
+                        ),
+                        CustomContainer(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 2.h,
+                          ),
+                          boxShadow: ShadowHelper.scoreContainer,
+                          padding: EdgeInsets.all(AppSize.size10),
+                          backGroundColor: AppColors.lightWhite,
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          height: 38.h,
+                          width: 90.w,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomText(
+                                text: AppStrings.needABoost,
+                                style: TextStyleHelper.mediumHeading.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              SizeHelper.height(height: 1.h),
+                              CustomText(
+                                text: AppStrings.takeAMomentToTalkWithUs,
+                                useOverflow: false,
+                              ),
+                              SizeHelper.height(),
+                              CounselingOptions(
+                                description: AppStrings.bookAfter25,
+                                heading: AppStrings.counseling1,
+                              ),
+                              SizeHelper.height(),
+                              CounselingOptions(
+                                description: AppStrings.bookAfter75,
+                                heading: AppStrings.counseling2,
+                              ),
+                            ],
                           ),
                         ),
                       ] else ...[
@@ -203,6 +252,94 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                   child: ListView(children: [NoDataFoundWidget(height: 80.h)]),
                 ),
       ),
+    );
+  }
+}
+
+class CounselingOptions extends StatelessWidget {
+  const CounselingOptions({
+    super.key,
+    required this.description,
+    required this.heading,
+  });
+  final String heading;
+  final String description;
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      height: 10.h,
+      backGroundColor: AppColors.white,
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      padding: EdgeInsets.all(AppSize.size10),
+      boxShadow: ShadowHelper.scoreContainer,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(text: heading, style: TextStyleHelper.smallHeading),
+              SizeHelper.height(height: 1.h),
+              CustomText(text: description, style: TextStyleHelper.smallText),
+            ],
+          ),
+          CustomContainer(
+            padding: EdgeInsets.all(5),
+            width: 10.w,
+            child: Image.asset(AppImageStrings.arrowRight),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomProgressBar extends StatelessWidget {
+  final double percentage; // e.g., 60 for 60%
+
+  const CustomProgressBar({super.key, required this.percentage});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '${percentage.toInt()}%',
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Container(
+            height: 20,
+            width: 250,
+            decoration: BoxDecoration(
+              color: Colors.blue[100],
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: percentage / 100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Colors.lightBlueAccent, Colors.blue],
+                        ),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_size.dart';
 import '../../../app_const/app_strings.dart';
@@ -29,24 +31,22 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
             ),
           },
       child: CustomContainer(
-        backGroundColor: AppColors.cream,
+        boxShadow: ShadowHelper.scoreContainer,
+        margin: EdgeInsets.only(bottom: 1.h),
+        height: 10.h,
+        backGroundColor: AppColors.lightWhite,
         borderRadius: BorderRadius.circular(AppSize.size10),
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 3,
-              child: CustomContainer(
-                child: CustomLoaderImage(
-                  imageUrl: "${AppStrings.assetsUrl}${item.image}",
-                ),
+            CustomContainer(
+              child: CustomLoaderImage(
+                imageUrl: "${AppStrings.assetsUrl}${item.image}",
               ),
             ),
-            Expanded(
-              child: CustomText(
-                text: item.title ?? "",
-                style: TextStyleHelper.smallHeading,
-              ),
+            CustomText(
+              text: item.title ?? "",
+              style: TextStyleHelper.smallHeading,
             ),
           ],
         ),
