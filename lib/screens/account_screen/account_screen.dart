@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
 import 'package:mindful_youth/screens/cousling_screens/cousiling_form_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
@@ -132,7 +133,11 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// saved
                           ProfilePageListTiles(
                             leading: Icons.folder_special,
-                            onTap: () {},
+                            onTap:
+                                () => push(
+                                  context: context,
+                                  widget: ChipSelector(),
+                                ),
                             titleText: AppStrings.saved,
                           ),
 

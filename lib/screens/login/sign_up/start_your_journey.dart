@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
-import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_icons.dart';
@@ -12,6 +10,7 @@ import '../../../utils/method_helpers/validator_helper.dart';
 import '../../../utils/text_style_helper/text_style_helper.dart';
 import '../../../widgets/custom_container.dart';
 import '../../../widgets/custom_radio_question_widget_wtih_heading.dart';
+import '../../../widgets/custom_searchable_drop_down.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import 'sign_up.dart';
@@ -119,6 +118,13 @@ class StartYourJourney extends StatelessWidget {
                             context: context,
                           ),
                     ),
+                  ),
+                  SizeHelper.height(),
+
+                  /// serachable drop down
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomSearchableDropDown(),
                   ),
                   SizeHelper.height(),
                   RadioQuestionWidgetWithHeading(

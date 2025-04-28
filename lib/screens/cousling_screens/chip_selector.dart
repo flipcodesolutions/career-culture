@@ -31,7 +31,7 @@ class _ChipSelectorState extends State<ChipSelector> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: AnimationLimiter(

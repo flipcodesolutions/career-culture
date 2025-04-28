@@ -149,6 +149,9 @@ class MyApp extends StatelessWidget {
               ),
               dropdownMenuTheme: DropdownMenuThemeData(
                 textStyle: TextStyleHelper.smallHeading,
+                menuStyle: MenuStyle(
+                  backgroundColor: WidgetStatePropertyAll(AppColors.white),
+                ),
               ),
             ),
             home: SplashScreen(),

@@ -20,8 +20,8 @@ class CustomPinPut extends StatelessWidget {
     return Pinput(
       controller: controller,
       defaultPinTheme: PinTheme(
-        width: width ?? 20.w,
-        height: height ?? 10.h,
+        width: width ?? 15.w,
+        height: height ?? 8.h,
         decoration: BoxDecoration(
           color: AppColors.lightWhite,
           borderRadius: BorderRadius.circular(AppSize.size10),

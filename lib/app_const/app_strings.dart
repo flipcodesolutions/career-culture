@@ -92,7 +92,7 @@ class AppStrings {
   static const provideAnswers = "Provide Answers";
   static const giveAnswerOfTheseQuestions = "Give Answer Of These Questions!";
   static const whatWouldYouLikeToConcentrateOn =
-      "What Would You Like To Concentrate On ?";
+      "What Would You Like To Concentrate On ";
   static const youCanSelectMultipleOptions =
       "You Can Select Multiple Options ?";
   static const allTopics = "All Topics";
@@ -147,7 +147,7 @@ class AppStrings {
   static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
   static const agreeToTerms = "I agree to the terms Of This Event.";
   static const thisNumberIsTaken = "This Number Is Taken";
-  static const dateAndTimeFormate = "Date And Time Formate";
+  static const dateAndTimeFormate = "YYYY MM DD MM:HH";
   static const dateAndTime = "Date & Time";
   static const preferredModeOfCounseling = "Preferred Mode Of Counseling";
   static const reasonForCounseling = "Reason For Counseling";
@@ -163,6 +163,8 @@ class AppStrings {
   static const failedToGetProgress = "Failed To Get Progress";
   static const yourAreNotApprovedYet = "Your Are Not Approved Yet";
   static const noRecentActivity = "No Recent Activity";
+  static const selectConvener = "Select Convener";
+  static const searchHere = "Search Here ...";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

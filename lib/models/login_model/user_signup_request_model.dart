@@ -21,6 +21,7 @@ class UserSignUpRequestModel {
   String? workingStatus;
   String? nameOfCompanyOrBusiness;
   String? images = "String";
+  int? convenerId;
   List<PlatformFile> imageFile = [];
 
   UserSignUpRequestModel({
@@ -44,6 +45,7 @@ class UserSignUpRequestModel {
     this.workingStatus,
     this.nameOfCompanyOrBusiness,
     this.images,
+    this.convenerId,
     this.imageFile = const [],
   });
 
@@ -68,6 +70,7 @@ class UserSignUpRequestModel {
     workingStatus = json['workingStatus'];
     nameOfCompanyOrBusiness = json['nameOfCompanyOrBusiness'];
     images = json['images'];
+    convenerId = json['convener_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +95,7 @@ class UserSignUpRequestModel {
     data['workingStatus'] = this.workingStatus;
     data['nameOfCompanyOrBusiness'] = this.nameOfCompanyOrBusiness;
     data['images'] = this.images;
+    data['convener_id'] = this.convenerId;
     return data;
   }
 }
