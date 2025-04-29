@@ -174,6 +174,7 @@ class AppStrings {
       "You’re doing great! Take a moment to talk with a counselor and get the advice you need to keep moving forward.";
   static const continueTEXT = "Continue";
   static const mustSelectOneTopic = "Must Select One Topic";
+  static const mileStoneNotAchieved = "MileStone Not Achieved";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

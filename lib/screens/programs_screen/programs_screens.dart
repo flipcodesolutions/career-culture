@@ -10,6 +10,7 @@ import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_listview.dart';
@@ -156,11 +157,13 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                               CounselingOptions(
                                 description: AppStrings.bookAfter25,
                                 heading: AppStrings.counseling1,
+                                isOpen: programsProvider.getPercentage() > 25,
                               ),
                               SizeHelper.height(),
                               CounselingOptions(
                                 description: AppStrings.bookAfter75,
                                 heading: AppStrings.counseling2,
+                                isOpen: programsProvider.getPercentage() > 75,
                               ),
                             ],
                           ),
@@ -263,13 +266,23 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     super.key,
     required this.description,
     required this.heading,
+    required this.isOpen,
   });
   final String heading;
   final String description;
+  final bool isOpen;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => push(context: context, widget: ChipSelector()),
+      onTap:
+          () =>
+              isOpen
+                  ? push(context: context, widget: ChipSelector())
+                  : WidgetHelper.customSnackBar(
+                    context: context,
+                    title: AppStrings.mileStoneNotAchieved,
+                    isError: true,
+                  ),
       child: CustomContainer(
         height: 10.h,
         backGroundColor: AppColors.white,
@@ -317,10 +330,7 @@ class CustomProgressBar extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(
-          text: '${percentage.toInt()}%',
-          // style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-        ),
+        CustomText(text: '${percentage.toInt()}%'),
         SizeHelper.height(height: 1.h),
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
