@@ -78,7 +78,7 @@ class ProgramsService {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,
-        uri: "${ApiHelper.getUserProgress}$pId",
+        uri: "${ApiHelper.getUserProgress}${pId ?? ''}",
       );
       if (response.isNotEmpty) {
         UserProgressModel model = UserProgressModel.fromJson(response);

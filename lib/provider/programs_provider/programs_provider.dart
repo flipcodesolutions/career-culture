@@ -41,7 +41,7 @@ class ProgramsProvider extends ChangeNotifier {
   UserProgressModel? get userProgressModel => _userProgressModel;
   Future<void> getUserProgress({
     required BuildContext context,
-    required String pId,
+    String? pId,
   }) async {
     /// set _isLoading true
     _isLoading = true;

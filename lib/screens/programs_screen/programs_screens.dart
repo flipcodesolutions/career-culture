@@ -41,6 +41,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
     Future.microtask(() {
       ProgramsProvider programsProvider = context.read<ProgramsProvider>();
       programsProvider.getAllPrograms(context: context);
+      programsProvider.getUserProgress(context: context);
     });
   }
 
@@ -107,7 +108,9 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                               ),
                             ),
 
-                            CustomProgressBar(percentage: 50),
+                            CustomProgressBar(
+                              percentage: programsProvider.getPercentage(),
+                            ),
                           ],
                         ),
                       ),
