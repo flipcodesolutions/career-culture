@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/programs/programs_model.dart';
 import 'package:mindful_youth/models/programs/single_program_model.dart';
 import 'package:mindful_youth/models/programs/user_progress_model.dart';
+import 'package:mindful_youth/provider/home_screen_provider/user_over_all_score.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 
@@ -86,6 +87,25 @@ class ProgramsService {
       return null;
     } catch (e) {
       kDebugMode ? log("error while getting User Progress => $e") : null;
+      return null;
+    }
+  }
+
+  /// get user total score
+  Future<UserOverAllScoreModel?> getUserOverAllScore({
+    required BuildContext context,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getTotalScore,
+      );
+      if (response.isNotEmpty) {
+        return UserOverAllScoreModel.fromJson(response);
+      }
+      return null;
+    } catch (e) {
+      log("error while getting user overall score => $e");
       return null;
     }
   }

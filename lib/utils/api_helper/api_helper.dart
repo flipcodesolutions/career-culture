@@ -79,4 +79,7 @@ class ApiHelper {
 
   /// get convener
   static String getConvener = "$baseUrl/conveners-list";
+
+  /// get total score
+  static String getTotalScore = "$baseUrl/user_overall_list";
 }

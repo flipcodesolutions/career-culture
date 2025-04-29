@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
@@ -10,6 +11,7 @@ import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_tra
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -32,9 +34,11 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
+    HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     // TODO: implement initState
     super.initState();
     Future.microtask(() {
+      homeProvider.getUserOverAllScore(context: context);
       userProvider.checkIfUserIsLoggedIn();
     }).then((_) {
       setState(() {});
@@ -125,10 +129,17 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
 
                       /// user score tracking
                       if (userProvider.isUserLoggedIn)
-                        DashBoardUserScoreWidget(
-                          score: "5000",
-                          animationDuration: Duration(seconds: 3),
-                        ),
+                        homeScreenProvider.isLoading
+                            ? Center(child: CustomLoader())
+                            : DashBoardUserScoreWidget(
+                              score:
+                                  homeScreenProvider
+                                      .overAllScoreModel
+                                      ?.data
+                                      ?.totalPoints ??
+                                  "-",
+                              animationDuration: Duration(seconds: 3),
+                            ),
 
                       SizeHelper.height(),
 

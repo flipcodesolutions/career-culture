@@ -613,6 +613,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     middleName.clear();
     birthDate.clear();
     _genderQuestion.answer = "";
+    _selectedConvener = null;
 
     /// second page
     email.clear();
