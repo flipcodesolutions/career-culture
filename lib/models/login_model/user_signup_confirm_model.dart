@@ -469,6 +469,7 @@ class UserModel {
 class UserModelData {
   String? token;
   bool? isNewUser;
+  bool? isEmailVerified;
   String? contactNo;
   String? email;
   User? user;
@@ -478,6 +479,7 @@ class UserModelData {
   UserModelData.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     isNewUser = json['isNewUser'];
+    isEmailVerified = json['isEmailVerify'];
     contactNo = json['contactNo'];
     email = json['email'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
@@ -488,6 +490,7 @@ class UserModelData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['token'] = this.token;
     data['isNewUser'] = this.isNewUser;
+    data['isEmailVerify'] = this.isEmailVerified;
     data['contactNo'] = this.contactNo;
     data['email'] = this.email;
     if (this.user != null) {

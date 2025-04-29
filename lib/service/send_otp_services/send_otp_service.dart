@@ -41,7 +41,7 @@ class SendOtpService {
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
-        uri: ApiHelper.verifyOtpOfMobile,
+        uri: ApiHelper.verifyOtpOfEmail,
         context: context,
         body: {"email": email, "otp": otp},
       );

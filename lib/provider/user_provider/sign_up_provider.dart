@@ -68,9 +68,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       );
       isValid = false;
     }
-    if (selectedConvener == null ||
-        selectedConvener?.id == null ||
-        (selectedConvener?.name == "" || selectedConvener?.name == null)) {
+    if (_selectedConvener?.id == null || _selectedConvener?.name == null) {
       WidgetHelper.customSnackBar(
         context: context,
         title: AppStrings.somethingWentWrong,
@@ -293,9 +291,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                     if (value == null || value.isEmpty) {
                       return "Please enter OTP";
                     }
-                    // if (value != _emailOtpModel?.data?.otp.toString()) {
-                    //   return AppStrings.otpDoesNotMatch;
-                    // }
                     return null;
                   },
                 ),
@@ -384,7 +379,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = false;
     notifyListeners();
     if (_verifyMobileModel?.success == true &&
-        _verifyMobileModel?.data?.isNewUser == true) {
+        _verifyMobileModel?.data?.isEmailVerified == true) {
       return true;
     } else {
       WidgetHelper.customSnackBar(

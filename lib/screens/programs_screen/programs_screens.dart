@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
+import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -80,35 +81,33 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                           horizontal: 2.w,
                           vertical: 1.h,
                         ),
-                        // backGroundColor: AppColors.error,
-                        // height: 5.h,
+
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            // PrimaryBtn(
-                            //   width: 25.w,
-                            //   height: 4.h,
-                            //   // borderColor: ,
-                            //   backGroundColor:
-                            //       programsProvider.isGridView
-                            //           ? null
-                            //           : AppColors.white,
-                            //   btnText: AppStrings.allTopics,
-                            //   onTap: () async {
-                            //     programsProvider.setGridView =
-                            //         !programsProvider.isGridView;
-                            //     await chapterProvider.getAllChapters(
-                            //       context: context,
-                            //     );
-                            //   },
-                            Image.asset(
-                              AppImageStrings.gridIcon,
-                              width: 25.w,
-                              height: 5.h,
+                            InkWell(
+                              onTap: () async {
+                                programsProvider.setGridView =
+                                    !programsProvider.isGridView;
+                                await chapterProvider.getAllChapters(
+                                  context: context,
+                                );
+                              },
+                              child: CustomContainer(
+                                width: 8.w,
+                                height: 4.h,
+                                child: Image.asset(
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.fill,
+                                  programsProvider.isGridView
+                                      ? AppImageStrings.gridIcon
+                                      : AppImageStrings.gridOffIcon,
+                                ),
+                              ),
                             ),
-                            // ),
-                            // CustomProgressBar(percentage: 50),
+
+                            CustomProgressBar(percentage: 50),
                           ],
                         ),
                       ),
@@ -256,7 +255,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
   }
 }
 
-class CounselingOptions extends StatelessWidget {
+class CounselingOptions extends StatelessWidget with NavigateHelper {
   const CounselingOptions({
     super.key,
     required this.description,
@@ -266,71 +265,78 @@ class CounselingOptions extends StatelessWidget {
   final String description;
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      height: 10.h,
-      backGroundColor: AppColors.white,
-      borderRadius: BorderRadius.circular(AppSize.size10),
-      padding: EdgeInsets.all(AppSize.size10),
-      boxShadow: ShadowHelper.scoreContainer,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomText(text: heading, style: TextStyleHelper.smallHeading),
-              SizeHelper.height(height: 1.h),
-              CustomText(text: description, style: TextStyleHelper.smallText),
-            ],
-          ),
-          CustomContainer(
-            padding: EdgeInsets.all(5),
-            width: 10.w,
-            child: Image.asset(AppImageStrings.arrowRight),
-          ),
-        ],
+    return InkWell(
+      onTap: () => push(context: context, widget: ChipSelector()),
+      child: CustomContainer(
+        height: 10.h,
+        backGroundColor: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        padding: EdgeInsets.all(AppSize.size10),
+        boxShadow: ShadowHelper.scoreContainer,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(text: heading, style: TextStyleHelper.smallHeading),
+                SizeHelper.height(height: 1.h),
+                CustomText(text: description, style: TextStyleHelper.smallText),
+              ],
+            ),
+            CustomContainer(
+              padding: EdgeInsets.all(5),
+              width: 10.w,
+              child: Image.asset(AppImageStrings.arrowRight),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class CustomProgressBar extends StatelessWidget {
-  final double percentage; // e.g., 60 for 60%
+  final double percentage;
+  final double? height;
+  final double? width;
 
-  const CustomProgressBar({super.key, required this.percentage});
+  const CustomProgressBar({
+    super.key,
+    required this.percentage,
+    this.height,
+    this.width,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '${percentage.toInt()}%',
-          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        CustomText(
+          text: '${percentage.toInt()}%',
+          // style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 10),
+        SizeHelper.height(height: 1.h),
         ClipRRect(
           borderRadius: BorderRadius.circular(50),
-          child: Container(
-            height: 20,
-            width: 250,
-            decoration: BoxDecoration(
-              color: Colors.blue[100],
-              borderRadius: BorderRadius.circular(50),
-            ),
+          child: CustomContainer(
+            borderColor: AppColors.primary,
+            borderRadius: BorderRadius.circular(AppSize.size10),
+            height: height ?? 1.5.h,
+            width: width ?? 30.w,
+            backGroundColor: AppColors.lightPrimary,
             child: Stack(
               children: [
                 Positioned.fill(
                   child: FractionallySizedBox(
                     alignment: Alignment.centerLeft,
                     widthFactor: percentage / 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Colors.lightBlueAccent, Colors.blue],
-                        ),
-                        borderRadius: BorderRadius.circular(50),
+                    child: CustomContainer(
+                      backGroundColor: AppColors.primary,
+                      borderRadius: BorderRadius.horizontal(
+                        right: Radius.circular(AppSize.size10),
                       ),
                     ),
                   ),

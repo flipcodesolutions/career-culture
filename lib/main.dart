@@ -5,6 +5,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
+import 'package:mindful_youth/provider/counseling_provider/counseling_provider.dart';
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
@@ -55,6 +56,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ScoreBoardProvider()),
         ChangeNotifierProvider(create: (context) => RecentActivityProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => CounselingProvider()),
       ],
       child: const MyApp(),
     ),

@@ -194,7 +194,6 @@ class ConvenerDropDown extends StatelessWidget {
     return CustomSearchableDropDown<Convener>(
       list: signUpProvider.convenerListModel?.data?.convener ?? [],
       itemAsString: (p0) => p0.name ?? "",
-      onSaved: (p0) => signUpProvider.setConvener = p0,
       itemBuilder:
           (context, convener, isDisabled, isSelected) => CustomContainer(
             padding: EdgeInsets.all(AppSize.size10),
@@ -214,6 +213,8 @@ class ConvenerDropDown extends StatelessWidget {
             ),
           ),
       compareFn: (p0, p1) => p0.name?.contains(p1.name ?? "") ?? false,
+      onChanged: (p0) => signUpProvider.setConvener = p0,
+      selectedItem: signUpProvider.selectedConvener,
       dropdownBuilder:
           (context, convener) =>
               convener != null

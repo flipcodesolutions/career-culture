@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
+import 'package:mindful_youth/provider/counseling_provider/counseling_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_icons.dart';
 import '../../app_const/app_strings.dart';
@@ -19,6 +21,7 @@ class CousilingFormScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    CounselingProvider counselingProvider = context.watch<CounselingProvider>();
     return Scaffold(
       appBar: AppBar(
         title: CustomText(

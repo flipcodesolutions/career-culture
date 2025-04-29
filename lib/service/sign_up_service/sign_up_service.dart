@@ -54,6 +54,7 @@ class SignUpService {
       request.fields['degree'] = signUp.degree ?? "";
       request.fields['university'] = signUp.university ?? "";
       request.fields['workingStatus'] = signUp.workingStatus ?? "";
+      request.fields['convener_id'] = signUp.convenerId.toString();
       request.fields['nameOfCompanyOrBusiness'] =
           signUp.nameOfCompanyOrBusiness ?? "";
 
@@ -66,9 +67,7 @@ class SignUpService {
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
-        UserModel model = UserModel.fromJson(
-          jsonResponse,
-        );
+        UserModel model = UserModel.fromJson(jsonResponse);
         return model;
       } else {
         WidgetHelper.customSnackBar(
@@ -142,9 +141,7 @@ class SignUpService {
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
-        UserModel model = UserModel.fromJson(
-          jsonResponse,
-        );
+        UserModel model = UserModel.fromJson(jsonResponse);
         model.data?.token = token;
         return model;
       } else {
