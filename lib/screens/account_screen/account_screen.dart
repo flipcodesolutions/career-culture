@@ -81,7 +81,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             ),
                         children: [
                           /// profile circle avatar
-                          CustomProfileAvatar(onImagePicked: (bytes) {}),
+                          CustomProfileAvatar(),
                           SizeHelper.height(),
 
                           /// profile btn

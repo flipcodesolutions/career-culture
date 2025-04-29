@@ -40,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     Future.microtask(() {
       homeProvider.getUserOverAllScore(context: context);
       userProvider.checkIfUserIsLoggedIn();
+      userProvider.checkIfUserIsApproved();
     }).then((_) {
       setState(() {});
     });

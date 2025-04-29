@@ -82,4 +82,7 @@ class ApiHelper {
 
   /// get total score
   static String getTotalScore = "$baseUrl/user_overall_list";
+
+  /// get total score
+  static String uploadProfilePic = "$baseUrl/user/profile/update";
 }
