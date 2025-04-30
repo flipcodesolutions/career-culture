@@ -68,7 +68,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       );
       isValid = false;
     }
-    if (_selectedConvener?.id == null || _selectedConvener?.name == null) {
+    if (!_isUpdatingProfile
+        ? _selectedConvener?.id == null || _selectedConvener?.name == null
+        : false) {
       WidgetHelper.customSnackBar(
         context: context,
         title: AppStrings.somethingWentWrong,

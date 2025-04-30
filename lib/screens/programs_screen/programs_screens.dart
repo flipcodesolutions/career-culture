@@ -40,12 +40,12 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.microtask(() {
+    Future.microtask(() async {
       ProgramsProvider programsProvider = context.read<ProgramsProvider>();
       UserProvider userProvider = context.read<UserProvider>();
       programsProvider.getAllPrograms(context: context);
       userProvider.isUserLoggedIn
-          ? programsProvider.getUserProgress(context: context)
+          ? await programsProvider.getUserProgress(context: context)
           : null;
     });
   }

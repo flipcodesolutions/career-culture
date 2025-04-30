@@ -7,4 +7,5 @@ class AppImageStrings {
   static const String arrowRight = "assets/images/arrow_right.png";
   static const String gridIcon = "assets/images/grid_icon.png";
   static const String gridOffIcon = "assets/images/grid_off_icon.png";
+  static const String imageOnlyLogo = "assets/images/only_logo.png";
 }
