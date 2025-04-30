@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
-import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
@@ -12,6 +11,7 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_product_showcase.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../../provider/product_provider/product_provider.dart';
 import '../../widgets/custom_annoucement_slider.dart';
 import '../../widgets/custom_slider.dart';
 import '../../widgets/exit_app_dialogbox.dart';
@@ -39,12 +40,14 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     UserProvider userProvider = context.read<UserProvider>();
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     AllEventProvider eventProvider = context.read<AllEventProvider>();
+    ProductProvider productProvider = context.read<ProductProvider>();
     // TODO: implement initState
     super.initState();
     Future.microtask(() async {
       userProvider.checkIfUserIsLoggedIn();
       userProvider.checkIfUserIsApproved();
-      eventProvider.getAllEvents(context: context);
+      await productProvider.getProductList(context: context);
+      await eventProvider.getAllEvents(context: context);
       userProvider.isUserLoggedIn
           ? await homeProvider.getUserOverAllScore(context: context)
           : null;
@@ -57,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
+    AllEventProvider eventProvider = context.watch<AllEventProvider>();
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -194,8 +198,19 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                         ),
                       ),
                       SizeHelper.height(),
-                      CustomAnnouncementSlider(),
-
+                      CustomAnnouncementSlider(eventProvider: eventProvider),
+                      SizeHelper.height(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: CustomText(
+                          text: AppStrings.products,
+                          style: TextStyleHelper.mediumHeading.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                      SizeHelper.height(),
+                      ProductShowCase(),
                       SizeHelper.height(),
                     ],
                   ),

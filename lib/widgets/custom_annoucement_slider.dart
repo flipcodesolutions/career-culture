@@ -13,11 +13,10 @@ import 'custom_container.dart';
 import 'custom_image.dart';
 
 class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
-  const CustomAnnouncementSlider({super.key});
-
+  const CustomAnnouncementSlider({super.key, required this.eventProvider});
+  final AllEventProvider eventProvider;
   @override
   Widget build(BuildContext context) {
-    AllEventProvider eventProvider = context.read<AllEventProvider>();
     return eventProvider.isLoading
         ? Center(child: CustomLoader())
         : eventProvider.eventModel?.data?.isNotEmpty == true

@@ -77,65 +77,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                                       .productModel
                                       ?.data
                                       ?.product?[index];
-                              return GestureDetector(
-                                onTap:
-                                    () => push(
-                                      context: context,
-                                      widget: ProductPage(product: product),
-                                      transition:
-                                          FadeUpwardsPageTransitionsBuilder(),
-                                    ),
-                                child: CustomContainer(
-                                  margin: EdgeInsets.symmetric(vertical: 1.h),
-                                  borderRadius: BorderRadius.circular(
-                                    AppSize.size10,
-                                  ),
-                                  borderColor: AppColors.grey,
-                                  borderWidth: 0.3,
-                                  backGroundColor: AppColors.lightWhite,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Expanded(
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(5),
-                                          ),
-                                          child: CustomImageWithLoader(
-                                            showImageInPanel: false,
-                                            imageUrl:
-                                                "${AppStrings.assetsUrl}${product?.thumbnail}",
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(AppSize.size10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            CustomText(
-                                              text: product?.title ?? "",
-                                              style:
-                                                  TextStyleHelper.mediumHeading,
-                                            ),
-                                            CustomText(
-                                              text:
-                                                  '${AppStrings.rupee} ${product?.price}',
-                                              style: TextStyleHelper
-                                                  .smallHeading
-                                                  .copyWith(
-                                                    color: AppColors.primary,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                              return ProductCard(product: product);
                             },
                           )
                           : ListView(
@@ -145,6 +87,61 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                           ),
                 ),
               ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget with NavigateHelper {
+  const ProductCard({super.key, required this.product});
+  final Product? product;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap:
+          () => push(
+            context: context,
+            widget: ProductPage(product: product),
+            transition: FadeUpwardsPageTransitionsBuilder(),
+          ),
+      child: CustomContainer(
+        margin: EdgeInsets.symmetric(vertical: 1.h),
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        borderColor: AppColors.grey,
+        borderWidth: 0.3,
+        backGroundColor: AppColors.lightWhite,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(5)),
+                child: CustomImageWithLoader(
+                  showImageInPanel: false,
+                  imageUrl: "${AppStrings.assetsUrl}${product?.thumbnail}",
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(AppSize.size10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: product?.title ?? "",
+                    style: TextStyleHelper.mediumHeading,
+                  ),
+                  CustomText(
+                    text: '${AppStrings.rupee} ${product?.price}',
+                    style: TextStyleHelper.smallHeading.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
