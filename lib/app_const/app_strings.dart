@@ -27,6 +27,7 @@ class AppStrings {
   static const programs = "MindFul Youth A Certificate Program";
   static const yourScore = 'Your Score';
   static const recentActivity = "Recent Activity";
+  static const announceMent = "Announcement";
   static const suggestedBooks = "Suggested Books";
   static const scoreBoard = "Scoreboard";
   static const video = "Videos";
@@ -205,4 +206,5 @@ class AppStrings {
   static const userToken = "token";
   static const isNewUser = "isNewUser";
   static const userApproved = "userApproved";
+  static const userConvenerId = "userConvenerId";
 }

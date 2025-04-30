@@ -30,6 +30,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
   void initState() {
     ProgramsProvider programsProvider = context.read<ProgramsProvider>();
     ChapterProvider chapterProvider = context.read<ChapterProvider>();
+    UserProvider userProvider = context.read<UserProvider>();
     super.initState();
     Future.microtask(() {
       // / get chapter by id
@@ -37,10 +38,13 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
         context: context,
         id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
       );
-      programsProvider.getUserProgress(
-        context: context,
-        pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
-      );
+
+      userProvider.isUserLoggedIn
+          ? programsProvider.getUserProgress(
+            context: context,
+            pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
+          )
+          : null;
     });
   }
 
@@ -149,19 +153,21 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen> {
                       ),
 
                       SizeHelper.height(),
-                    ] else ...[
-                      CustomContainer(
-                        alignment: Alignment.center,
-                        child: CustomText(text: AppStrings.failedToGetProgress),
-                      ),
-                      SizeHelper.height(),
                     ],
+                    //  else ...[
+                    //   CustomContainer(
+                    //     alignment: Alignment.center,
+                    //     child: CustomText(text: AppStrings.failedToGetProgress),
+                    //   ),
+                    //   SizeHelper.height(),
+                    // ],
 
                     /// load if any chapter available
                     if (chapterProvider.isLoading) ...[
                       Center(child: CustomLoader()),
                     ] else ...[
                       ...chapterProvider.renderChapterList(
+                        isUserLoggedIn: userProvider.isUserLoggedIn,
                         userProgressModel: programsProvider.userProgressModel,
                       ),
                     ],

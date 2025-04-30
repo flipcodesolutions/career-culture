@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -41,8 +42,11 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
     super.initState();
     Future.microtask(() {
       ProgramsProvider programsProvider = context.read<ProgramsProvider>();
+      UserProvider userProvider = context.read<UserProvider>();
       programsProvider.getAllPrograms(context: context);
-      programsProvider.getUserProgress(context: context);
+      userProvider.isUserLoggedIn
+          ? programsProvider.getUserProgress(context: context)
+          : null;
     });
   }
 
@@ -50,6 +54,7 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
   Widget build(BuildContext context) {
     ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
     ChapterProvider chapterProvider = context.watch<ChapterProvider>();
+    UserProvider userProvider = context.watch<UserProvider>();
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -186,15 +191,20 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                                     itemBuilder:
                                         (item, index) => GestureDetector(
                                           onTap:
-                                              () => push(
-                                                context: context,
-                                                widget: PostsScreen(
-                                                  chapterId: item.id ?? -1,
-                                                  chapterName: item.title ?? "",
-                                                ),
-                                                transition:
-                                                    FadeUpwardsPageTransitionsBuilder(),
-                                              ),
+                                              () =>
+                                                  userProvider.isUserLoggedIn
+                                                      ? push(
+                                                        context: context,
+                                                        widget: PostsScreen(
+                                                          chapterId:
+                                                              item.id ?? -1,
+                                                          chapterName:
+                                                              item.title ?? "",
+                                                        ),
+                                                        transition:
+                                                            FadeUpwardsPageTransitionsBuilder(),
+                                                      )
+                                                      : null,
                                           child: CustomContainer(
                                             height: 50.h,
                                             backGroundColor:

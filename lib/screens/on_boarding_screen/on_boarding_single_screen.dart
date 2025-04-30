@@ -55,6 +55,7 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
               width: 80.w,
               height: 40.h,
               child: CustomImageWithLoader(
+                fit: BoxFit.contain,
                 imageUrl:
                     "${AppStrings.assetsUrl}${widget.onBoardingInfo.image}",
               ),

@@ -35,6 +35,7 @@ class ChapterProvider extends ChangeNotifier {
 
   List<ChapterContainer> renderChapterList({
     required UserProgressModel? userProgressModel,
+    required bool isUserLoggedIn,
   }) {
     List<ChapterContainer> list = [];
     if (_chaptersModel?.data?.isEmpty == true) {
@@ -44,20 +45,26 @@ class ChapterProvider extends ChangeNotifier {
       list.add(
         ChapterContainer(
           chaptersInfo: _chaptersModel!.data![i - 1],
-          isOpen: canAccessChapter(
-            totalChapters: (_chaptersModel?.data?.length ?? 0),
-            totalAllMarks:
-                double.tryParse(
-                  userProgressModel?.data?.totalPossiblePoints.toString() ?? "",
-                ) ??
-                0,
-            correctPoints:
-                double.tryParse(
-                  userProgressModel?.data?.totalUserPoints.toString() ?? "",
-                ) ??
-                0,
-            requestedChapter: i,
-          ),
+          isOpen:
+              isUserLoggedIn
+                  ? canAccessChapter(
+                    totalChapters: (_chaptersModel?.data?.length ?? 0),
+                    totalAllMarks:
+                        double.tryParse(
+                          userProgressModel?.data?.totalPossiblePoints
+                                  .toString() ??
+                              "",
+                        ) ??
+                        0,
+                    correctPoints:
+                        double.tryParse(
+                          userProgressModel?.data?.totalUserPoints.toString() ??
+                              "",
+                        ) ??
+                        0,
+                    requestedChapter: i,
+                  )
+                  : false,
         ),
       );
     }
