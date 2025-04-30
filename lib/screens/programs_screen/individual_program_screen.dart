@@ -167,13 +167,6 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
 
                         SizeHelper.height(),
                       ],
-                      //  else ...[
-                      //   CustomContainer(
-                      //     alignment: Alignment.center,
-                      //     child: CustomText(text: AppStrings.failedToGetProgress),
-                      //   ),
-                      //   SizeHelper.height(),
-                      // ],
 
                       /// load if any chapter available
                       if (chapterProvider.isLoading) ...[

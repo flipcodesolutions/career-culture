@@ -176,6 +176,7 @@ class AppStrings {
   static const continueTEXT = "Continue";
   static const mustSelectOneTopic = "Must Select One Topic";
   static const mileStoneNotAchieved = "MileStone Not Achieved";
+  static const notOpenYet = "Not Yet Open";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

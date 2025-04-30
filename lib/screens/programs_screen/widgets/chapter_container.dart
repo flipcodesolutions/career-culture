@@ -42,7 +42,7 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
                   )
                   : WidgetHelper.customSnackBar(
                     context: context,
-                    title: "Not Yet Open",
+                    title: AppStrings.notOpenYet,
                     isError: true,
                   ),
       child: CustomContainer(
