@@ -99,8 +99,13 @@ class ProductCard extends StatelessWidget with NavigateHelper {
   final Product? product;
   @override
   Widget build(BuildContext context) {
+    ProductProvider productProvider = context.watch<ProductProvider>();
     return GestureDetector(
       onTap: () {
+        productProvider.setOrder = CreateOrderModel(
+          price: product?.price,
+          qty: 1,
+        );
         push(
           context: context,
           widget: ProductPage(product: product),

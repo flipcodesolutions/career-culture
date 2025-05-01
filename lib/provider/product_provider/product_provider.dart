@@ -62,15 +62,16 @@ class ProductProvider extends ChangeNotifier {
       context: context,
       order: _orderModel,
     );
-    if (_confirmOrderModel?.success == true) {
+    if (_confirmOrderModel?.success == "success") {
       addressController.clear();
-      _orderModel = null;
+      _orderModel?.price = product?.price;
+      _orderModel?.qty = 1;
     }
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
-    return _confirmOrderModel?.success ?? false;
+    return _confirmOrderModel?.success == "success";
   }
 
   void changeQty({required bool add, required int price}) {

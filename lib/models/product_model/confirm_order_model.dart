@@ -1,12 +1,12 @@
 class ConfirmOrderModel {
-  bool? success;
+  String? success;
   String? message;
   ConfirmOrderModelData? data;
 
   ConfirmOrderModel({this.success, this.message, this.data});
 
   ConfirmOrderModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
+    success = json['status'];
     message = json['message'];
     data =
         json['data'] != null
@@ -16,7 +16,7 @@ class ConfirmOrderModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
+    data['status'] = this.success;
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();

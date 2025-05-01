@@ -4,6 +4,7 @@ import 'package:mindful_youth/provider/product_provider/product_provider.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
@@ -144,86 +145,7 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
                   () => showModalBottomSheet(
                     backgroundColor: AppColors.white,
                     context: context,
-                    builder:
-                        (context) => StatefulBuilder(
-                          builder:
-                              (context, setState) => Padding(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: CustomContainer(
-                                  padding: EdgeInsets.all(AppSize.size10),
-                                  child: SingleChildScrollView(
-                                    child: Form(
-                                      key: productProvider.formKey,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          /// text
-                                          CustomText(
-                                            text: widget.product?.title ?? "",
-                                            style: TextStyleHelper.mediumHeading
-                                                .copyWith(
-                                                  color: AppColors.primary,
-                                                ),
-                                          ),
-                                          SizeHelper.height(),
-
-                                          /// address
-                                          CustomTextFormField(
-                                            labelText: AppStrings.address,
-                                            hintText: AppStrings.address,
-                                            controller:
-                                                productProvider
-                                                    .addressController,
-                                            validator:
-                                                (value) =>
-                                                    ValidatorHelper.validateValue(
-                                                      value: value,
-                                                      context: context,
-                                                    ),
-                                          ),
-                                          SizeHelper.height(),
-
-                                          productProvider.isLoading
-                                              ? Center(child: CustomContainer())
-                                              : PrimaryBtn(
-                                                width: 90.w,
-                                                btnText:
-                                                    "${AppStrings.placeOrder} (${AppStrings.rupee} ${productProvider.orderModel?.price ?? ""})",
-                                                onTap: () async {
-                                                  if (productProvider
-                                                          .formKey
-                                                          .currentState
-                                                          ?.validate() ??
-                                                      false) {
-                                                    bool success =
-                                                        await productProvider
-                                                            .order(
-                                                              context: context,
-                                                              product:
-                                                                  widget
-                                                                      .product,
-                                                            );
-                                                    if (success) {
-                                                      setState(() {});
-                                                      if (context.mounted) {
-                                                        pop(context);
-                                                      }
-                                                    }
-                                                  }
-                                                },
-                                              ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                        ),
+                    builder: (context) => OrderSheet(product: widget.product),
                   ),
             ),
           ],
@@ -300,6 +222,75 @@ class QtyIncrementDecrement extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class OrderSheet extends StatelessWidget with NavigateHelper {
+  const OrderSheet({super.key, required this.product});
+  final Product? product;
+  @override
+  Widget build(BuildContext context) {
+    ProductProvider productProvider = context.watch<ProductProvider>();
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: CustomContainer(
+        padding: EdgeInsets.all(AppSize.size10),
+        child: SingleChildScrollView(
+          child: Form(
+            key: productProvider.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// text
+                CustomText(
+                  text: product?.title ?? "",
+                  style: TextStyleHelper.mediumHeading.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizeHelper.height(),
+
+                /// address
+                CustomTextFormField(
+                  labelText: AppStrings.address,
+                  hintText: AppStrings.address,
+                  controller: productProvider.addressController,
+                  validator:
+                      (value) => ValidatorHelper.validateValue(
+                        value: value,
+                        context: context,
+                      ),
+                ),
+                SizeHelper.height(),
+
+                productProvider.isLoading
+                    ? Center(child: CustomLoader())
+                    : PrimaryBtn(
+                      width: 90.w,
+                      btnText:
+                          "${AppStrings.placeOrder} (${AppStrings.rupee} ${productProvider.orderModel?.price ?? ""})",
+                      onTap: () async {
+                        if (productProvider.formKey.currentState?.validate() ??
+                            false) {
+                          bool success = await productProvider.order(
+                            context: context,
+                            product: product,
+                          );
+                          if (success) {
+                            pop(context);
+                          }
+                        }
+                      },
+                    ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
