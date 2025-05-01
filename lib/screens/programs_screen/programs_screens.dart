@@ -6,6 +6,7 @@ import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapte
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -193,18 +194,28 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                                           onTap:
                                               () =>
                                                   userProvider.isUserLoggedIn
-                                                      ? push(
-                                                        context: context,
-                                                        widget: PostsScreen(
-                                                          chapterId:
-                                                              item.id ?? -1,
-                                                          chapterName:
-                                                              item.title ?? "",
+                                                      ? checkIfChapterIsOpen(
+                                                            chapterProvider,
+                                                            programsProvider,
+                                                            index,
+                                                          )
+                                                          ? goToPost(
+                                                            context,
+                                                            item,
+                                                          )
+                                                          : WidgetHelper.customSnackBar(
+                                                            context: context,
+                                                            title:
+                                                                AppStrings
+                                                                    .notOpenYet,
+                                                            isError: true,
+                                                          )
+                                                      : {
+                                                        /// redirect if not logged in
+                                                        goToLoginPageWithWarning(
+                                                          context,
                                                         ),
-                                                        transition:
-                                                            FadeUpwardsPageTransitionsBuilder(),
-                                                      )
-                                                      : null,
+                                                      },
                                           child: CustomContainer(
                                             height: 50.h,
                                             backGroundColor:
@@ -267,6 +278,56 @@ class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
                   child: ListView(children: [NoDataFoundWidget(height: 80.h)]),
                 ),
       ),
+    );
+  }
+
+  bool checkIfChapterIsOpen(
+    ChapterProvider chapterProvider,
+    ProgramsProvider programsProvider,
+    int index,
+  ) {
+    return chapterProvider.canAccessChapter(
+      totalChapters: (chapterProvider.chaptersModel?.data?.length ?? 0),
+      totalAllMarks:
+          double.tryParse(
+            programsProvider.userProgressModel?.data?.totalPossiblePoints
+                    .toString() ??
+                "",
+          ) ??
+          0,
+      correctPoints:
+          double.tryParse(
+            programsProvider.userProgressModel?.data?.totalUserPoints
+                    .toString() ??
+                "",
+          ) ??
+          0,
+      requestedChapter: index + 1,
+    );
+  }
+
+  Future<void> goToPost(BuildContext context, ChaptersInfo item) {
+    return push(
+      context: context,
+      widget: PostsScreen(
+        chapterId: item.id ?? -1,
+        chapterName: item.title ?? "",
+      ),
+      transition: FadeUpwardsPageTransitionsBuilder(),
+    );
+  }
+
+  /// redirect to login page if not logged in
+  void goToLoginPageWithWarning(BuildContext context) {
+    push(
+      context: context,
+      widget: LoginScreen(isToNavigateHome: false),
+      transition: OpenUpwardsPageTransitionsBuilder(),
+    );
+    WidgetHelper.customSnackBar(
+      context: context,
+      title: AppStrings.pleaseLoginFirst,
+      isError: true,
     );
   }
 }
