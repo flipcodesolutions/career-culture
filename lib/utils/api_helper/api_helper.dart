@@ -85,4 +85,7 @@ class ApiHelper {
 
   /// get total score
   static String uploadProfilePic = "$baseUrl/user/profile/update";
+
+  /// create order
+  static String createOrder = "$baseUrl/order";
 }

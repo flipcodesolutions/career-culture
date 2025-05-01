@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mindful_youth/models/product_model/create_order_model.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
@@ -97,12 +100,13 @@ class ProductCard extends StatelessWidget with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => push(
-            context: context,
-            widget: ProductPage(product: product),
-            transition: FadeUpwardsPageTransitionsBuilder(),
-          ),
+      onTap: () {
+        push(
+          context: context,
+          widget: ProductPage(product: product),
+          transition: FadeUpwardsPageTransitionsBuilder(),
+        );
+      },
       child: CustomContainer(
         margin: EdgeInsets.symmetric(vertical: 1.h),
         borderRadius: BorderRadius.circular(AppSize.size10),

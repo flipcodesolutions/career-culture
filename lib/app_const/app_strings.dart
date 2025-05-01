@@ -177,6 +177,11 @@ class AppStrings {
   static const mustSelectOneTopic = "Must Select One Topic";
   static const mileStoneNotAchieved = "MileStone Not Achieved";
   static const notOpenYet = "Not Yet Open";
+  static const placeOrder = "Place Order";
+  static const cashOnDelivery = "Cash On Delivery";
+  static const payOnline = "Pay Online";
+  static const totalPrice = "Total Price";
+  static const qty = "Qty";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
