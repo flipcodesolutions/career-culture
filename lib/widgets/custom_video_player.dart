@@ -181,11 +181,11 @@ class FullScreenVideoPage extends StatefulWidget {
   final bool showControls;
   final bool showOnlyPlay;
   const FullScreenVideoPage({
-    Key? key,
+    super.key,
     required this.controller,
     required this.showControls,
     required this.showOnlyPlay,
-  }) : super(key: key);
+  });
 
   @override
   State<FullScreenVideoPage> createState() => _FullScreenVideoPageState();
@@ -218,7 +218,10 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage>
   void dispose() {
     widget.controller.removeListener(_updateState);
     // restore UI chrome & portrait
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
+    );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
