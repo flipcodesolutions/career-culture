@@ -241,13 +241,13 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     // 3) Contact #2 OTP (only if provided)
     if (contactNo2.text.isNotEmpty && !_isContactNo2Verified) {
-      final sent2 = await sendMobileOtp(
+      bool sent2 = await sendMobileOtp(
         context: context,
-        number: contactNo2.text, // ✅ correct number
+        number: contactNo2.text,
       );
       if (!sent2) return false;
 
-      final ok2 = await _showMobileOtpDialog(
+      bool ok2 = await _showMobileOtpDialog(
         context: context,
         title: AppStrings.verifyContactNo2WithOtp,
         contact: contactNo2.text,

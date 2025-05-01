@@ -87,8 +87,10 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                     SizeHelper.height(),
                     CustomTextFieldWithAnimatedIconForVerification(
                       maxLength: 10,
-                      isVerified: false,
-                      enabled: !signUpProvider.isContactNo2Verified,
+                      isVerified: signUpProvider.isContactNo2Verified,
+                      enabled:
+                          signUpProvider.contactNo2.text.isEmpty &&
+                          !signUpProvider.isContactNo2Verified,
                       label: AppStrings.contactNo2,
                       keyboard: TextInputType.number,
                       controller: signUpProvider.contactNo2,
