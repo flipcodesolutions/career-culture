@@ -37,6 +37,7 @@ class EventModel {
   String? startDate;
   String? endDate;
   String? amount;
+  String? contact;
   String? time;
   String? isAnnouncement;
   int? points;
@@ -53,6 +54,7 @@ class EventModel {
     this.startDate,
     this.endDate,
     this.amount,
+    this.contact,
     this.time,
     this.isAnnouncement,
     this.points,
@@ -70,6 +72,7 @@ class EventModel {
     startDate = json['startDate'];
     endDate = json['endDate'];
     amount = json['amount'];
+    contact = json['contact'];
     time = json['time'];
     isAnnouncement = json['isAnnouncement'];
     points = json['points'];
@@ -88,6 +91,7 @@ class EventModel {
     data['startDate'] = this.startDate;
     data['endDate'] = this.endDate;
     data['amount'] = this.amount;
+    data['contact'] = this.contact;
     data['time'] = this.time;
     data['isAnnouncement'] = this.isAnnouncement;
     data['points'] = this.points;

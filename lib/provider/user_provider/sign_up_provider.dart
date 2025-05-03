@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/get_conveners_service/get_conveners_service.dart';
 import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
-import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -26,6 +25,10 @@ import '../../service/sign_up_service/sign_up_service.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpProvider extends ChangeNotifier with NavigateHelper {
+  SignUpProvider() {
+    initControllerWithLocalStorage();
+  }
+
   /// if provider is Loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;

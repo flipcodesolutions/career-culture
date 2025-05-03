@@ -16,7 +16,6 @@ import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../app_const/app_strings.dart';
 import '../../models/all_events_model.dart/all_events_model.dart';
 
@@ -70,10 +69,18 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                   "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
               style: TextStyleHelper.smallHeading,
             ),
+            CustomText(
+              text: "Venue :- ${eventInfo.venue}",
+              style: TextStyleHelper.smallHeading,
+            ),
+            CustomText(
+              text: "Contact :- ${eventInfo.contact}",
+              style: TextStyleHelper.smallHeading,
+            ),
             if (eventInfo.amount?.isNotEmpty == true)
               CustomText(
                 text:
-                    "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                    "Amount:- ${eventInfo.registrationEndDate ?? "Not Found"}",
                 style: TextStyleHelper.smallHeading,
               ),
             SizeHelper.height(),
@@ -110,7 +117,6 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               },
             ),
             SizeHelper.height(),
-            CustomText(text: "Venue :- ${eventInfo.venue}"),
           ],
         ),
       ),

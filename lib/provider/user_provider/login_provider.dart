@@ -76,7 +76,6 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     );
     if (_loginResponseModel?.success == true) {
       if (_loginResponseModel?.data?.isNewUser == true) {
-        // if (!context.mounted) return;
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;
         signUpProvider.setIsContactNo1Verified = true;

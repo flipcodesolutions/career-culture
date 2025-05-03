@@ -94,6 +94,10 @@ class UserProvider extends ChangeNotifier {
         image: selectedImage,
       );
       if (_userProfileUploadModel?.success == true) {
+        await SharedPrefs.saveString(
+          AppStrings.images,
+          _userProfileUploadModel?.data?.imagePath ?? "",
+        );
         isUpdating = false;
         notifyListeners();
       }
