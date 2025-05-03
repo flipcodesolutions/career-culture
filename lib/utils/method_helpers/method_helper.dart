@@ -267,9 +267,13 @@ class MethodHelper {
     );
     if (date != null) {
       /// set the controller text in string like "1999-01-12"
-      return DateFormat('yyyy-MM-dd').format(date);
+      return formatDateInYyyyMmDd(date: date);
     } else {
       return "";
     }
+  }
+
+ static String formatDateInYyyyMmDd({required DateTime date}) {
+    return DateFormat('yyyy-MM-dd').format(date);
   }
 }

@@ -88,4 +88,6 @@ class ApiHelper {
 
   /// create order
   static String createOrder = "$baseUrl/order";
+  /// create order
+  static String orderList = "$baseUrl/user/orders";
 }

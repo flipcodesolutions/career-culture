@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/models/product_model/confirm_order_model.dart';
 import 'package:mindful_youth/models/product_model/create_order_model.dart';
+import 'package:mindful_youth/models/product_model/order_list_model.dart';
+import 'package:mindful_youth/service/product_service/orders_list_service.dart';
 import 'package:mindful_youth/service/product_service/product_service.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/product_model/product_model.dart';
-import '../../utils/navigation_helper/navigation_helper.dart';
 
 class ProductProvider extends ChangeNotifier {
   /// if provider is Loading
@@ -83,5 +84,22 @@ class ProductProvider extends ChangeNotifier {
       _orderModel?.price = (price * (_orderModel?.qty ?? 1)).toString();
       notifyListeners();
     }
+  }
+
+  //// order lists
+  /// Service and getter and setter
+  OrdersListService ordersListService = OrdersListService();
+  OrderListModel? _orderListModel;
+  OrderListModel? get orderListModel => _orderListModel;
+
+  Future<void> getOrderList({required BuildContext context}) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    _orderListModel = await ordersListService.getOrderList(context: context);
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mindful_youth/models/product_model/create_order_model.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
-import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
@@ -18,6 +16,7 @@ import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
 import '../../widgets/custom_text.dart';
 import 'indiviual_product_screen.dart';
+import 'order_list_screen.dart';
 
 class ProductListPage extends StatefulWidget {
   const ProductListPage({super.key});
@@ -45,6 +44,17 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
           text: AppStrings.products,
           style: TextStyleHelper.mediumHeading,
         ),
+        actions: [
+          IconButton(
+            onPressed:
+                () => push(
+                  context: context,
+                  widget: OrderListPage(),
+                  transition: FadeUpwardsPageTransitionsBuilder(),
+                ),
+            icon: Icon(Icons.list_alt, color: AppColors.primary),
+          ),
+        ],
       ),
       body:
           productProvider.isLoading
