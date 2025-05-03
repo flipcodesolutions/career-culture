@@ -37,13 +37,15 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           if (widget.onBoardingInfo.videoUrl != null &&
               widget.onBoardingInfo.videoUrl?.isNotEmpty == true)
             CustomContainer(
+              width: 90.w,
+              height: 25.h,
               child: VideoPlayerWidget(
                 videoUrl:
                     "${AppStrings.assetsUrl}${widget.onBoardingInfo.videoUrl}",
@@ -52,8 +54,9 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
           if (widget.onBoardingInfo.image != null &&
               widget.onBoardingInfo.image?.isNotEmpty == true)
             CustomContainer(
-              width: 80.w,
-              height: 40.h,
+              backGroundColor: AppColors.error,
+              width: 90.w,
+              height: 25.h,
               child: CustomImageWithLoader(
                 fit: BoxFit.contain,
                 imageUrl:
