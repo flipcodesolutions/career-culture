@@ -7,6 +7,8 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
+import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -43,7 +45,9 @@ class _OrderListPageState extends State<OrderListPage> {
         ),
       ),
       body:
-          productProvider.orderListModel?.data?.orders?.isNotEmpty == true
+          productProvider.isLoading
+              ? Center(child: CustomLoader())
+              : productProvider.orderListModel?.data?.orders?.isNotEmpty == true
               ? ListView.builder(
                 padding: const EdgeInsets.all(12),
                 itemCount:
@@ -54,7 +58,18 @@ class _OrderListPageState extends State<OrderListPage> {
                   return OrderCard(order: order);
                 },
               )
-              : const Center(child: NoDataFoundWidget()),
+              : CustomRefreshIndicator(
+                onRefresh:
+                    () async => productProvider.getOrderList(context: context),
+                child: ListView(
+                  children: [
+                    CustomContainer(
+                      height: 90.h,
+                      child: Center(child: NoDataFoundWidget()),
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 }
