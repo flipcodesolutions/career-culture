@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/provider/wall_provider/wall_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -38,6 +40,7 @@ class _WallScreenState extends State<WallScreen> {
   @override
   Widget build(BuildContext context) {
     WallProvider wallProvider = context.watch<WallProvider>();
+    UserProvider userProvider = context.watch<UserProvider>();
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -68,9 +71,18 @@ class _WallScreenState extends State<WallScreen> {
                           wallProvider.wallModel?.data?[index];
                       return FeedPostCard(
                         post: post,
-                        onLikePressed: () {
-                          /* toggle like */
-                        },
+                        onLikePressed:
+                            () =>
+                                userProvider.isUserLoggedIn
+                                    ? wallProvider.likePost(
+                                      context: context,
+                                      wallId: post?.id ?? -1,
+                                    )
+                                    : WidgetHelper.customSnackBar(
+                                      context: context,
+                                      title: AppStrings.pleaseLoginFirst,
+                                      isError: true,
+                                    ),
                         onSharePressed: () {
                           /* share sheet */
                         },

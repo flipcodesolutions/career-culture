@@ -36,6 +36,7 @@ class ApiHelper {
   /// wall
   static String getWallPosts({required String uId}) =>
       "$baseUrl/wall?user_id=$uId";
+  static String likeWallPost = "$baseUrl/wall/like";
 
   /// login
   static String login = "$baseUrl/login";

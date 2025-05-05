@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:mindful_youth/models/post_models/post_like_model.dart';
 import 'package:mindful_youth/service/post_service/post_service.dart';
 import '../../models/post_models/wall_model.dart';
 
@@ -37,5 +38,35 @@ class WallProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> likePost({
+    required BuildContext context,
+    required int wallId,
+  }) async {
+    PostLikeModel? success = await _postService.likePost(
+      context: context,
+      wallId: wallId,
+    );
+    if (success?.status == "success") {
+      int? index = _wallModel?.data?.indexWhere((e) => e.id == wallId);
+      if (index != -1) {
+        WallListModelData? temp = _wallModel?.data?[index ?? -1];
+        if (temp?.isMyFavourite == true) {
+          temp?.likeCount = (temp.likeCount ?? 1) - 1;
+          temp?.isMyFavourite = false;
+        } else {
+          temp?.likeCount = (temp.likeCount ?? 0) + 1;
+          temp?.isMyFavourite = false;
+        }
+        _wallModel?.data?[index ?? -1] = temp!;
+        notifyListeners();
+      }
+      notifyListeners();
+      return true;
+    } else {
+      notifyListeners();
+      return false;
+    }
   }
 }
