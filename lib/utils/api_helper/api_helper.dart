@@ -34,7 +34,8 @@ class ApiHelper {
   static String postAssessmentQuestionsByPostId = "$baseUrl/questions/reply";
 
   /// wall
-  static String getWallPosts = "$baseUrl/wall";
+  static String getWallPosts({required String uId}) =>
+      "$baseUrl/wall?user_id=$uId";
 
   /// login
   static String login = "$baseUrl/login";
@@ -88,6 +89,7 @@ class ApiHelper {
 
   /// create order
   static String createOrder = "$baseUrl/order";
+
   /// create order
   static String orderList = "$baseUrl/user/orders";
 }

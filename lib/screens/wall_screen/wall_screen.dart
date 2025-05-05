@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
-import 'package:mindful_youth/models/post_models/post_model.dart';
 import 'package:mindful_youth/provider/wall_provider/wall_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../../models/post_models/wall_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
@@ -60,16 +58,14 @@ class _WallScreenState extends State<WallScreen> {
         body:
             wallProvider.isLoading
                 ? Center(child: CustomLoader())
-                : wallProvider.wallPost.isNotEmpty == true
+                : wallProvider.wallModel?.data?.isNotEmpty == true
                 ? CustomRefreshIndicator(
                   onRefresh: () async => wallProvider.getWall(context: context),
                   child: ListView.builder(
-                    itemCount: wallProvider.wallPost.length,
+                    itemCount: wallProvider.wallModel?.data?.length ?? 0,
                     itemBuilder: (context, index) {
-                      PostInfo? post = wallProvider.wallPost[index];
-                      print(
-                        "this is in all title => ${post.title ?? "Not Found"}",
-                      );
+                      WallListModelData? post =
+                          wallProvider.wallModel?.data?[index];
                       return FeedPostCard(
                         post: post,
                         onLikePressed: () {
@@ -97,7 +93,7 @@ class _WallScreenState extends State<WallScreen> {
 }
 
 class FeedPostCard extends StatelessWidget {
-  final PostInfo? post;
+  final WallListModelData? post;
 
   /// Callbacks
   final VoidCallback? onMorePressed;
@@ -158,20 +154,12 @@ class FeedPostCard extends StatelessWidget {
             alignment: Alignment.center,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppSize.size10),
-              child:
-                  post?.isForVideo == true
-                      ? VideoPlayerWidget(
-                        autoPlay: false,
-                        showControls: true,
-                        showOnlyPlay: true,
-                        videoUrl: "${AppStrings.assetsUrl}${post?.video}",
-                      )
-                      : CustomImageWithLoader(
-                        showImageInPanel: false,
-                        fit: BoxFit.cover,
-                        width: 85.w,
-                        imageUrl: "${AppStrings.assetsUrl}${post?.image}",
-                      ),
+              child: CustomImageWithLoader(
+                showImageInPanel: false,
+                fit: BoxFit.cover,
+                width: 85.w,
+                imageUrl: "${AppStrings.assetsUrl}${post?.image}",
+              ),
             ),
           ),
 
@@ -188,8 +176,11 @@ class FeedPostCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _PostButton(
-                  icon: Icons.thumb_up_alt_outlined,
-                  label: '100',
+                  icon:
+                      post?.isMyFavourite == true
+                          ? Icons.thumb_up_alt
+                          : Icons.thumb_up_alt_outlined,
+                  label: "${post?.likeCount ?? 0}",
                   onTap: onLikePressed,
                 ),
                 _PostButton(
