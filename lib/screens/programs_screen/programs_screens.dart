@@ -359,7 +359,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
         backGroundColor: AppColors.white,
         borderRadius: BorderRadius.circular(AppSize.size10),
         padding: EdgeInsets.all(AppSize.size10),
-        boxShadow: ShadowHelper.scoreContainer,
+        // boxShadow: ShadowHelper.scoreContainer,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
@@ -55,11 +57,43 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       context: context,
       mobileNumber: mobileController.text,
     );
+    if (_otpModel?.success == true) {
+      initTimerOtpResend();
+    }
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
     return _otpModel?.success == true;
+  }
+
+  ///
+  int resendOtpSecond = 60;
+  Timer? resendOtpTimer;
+  void resendOtpLogic() {
+    if (resendOtpSecond > 0) {
+      resendOtpSecond--;
+      notifyListeners();
+    } else {
+      cancelTimerOtpResend();
+    }
+  }
+
+  /// cancel timer
+  void cancelTimerOtpResend() {
+    resendOtpTimer?.cancel();
+    notifyListeners();
+  }
+
+  /// init timer to count for 60sec
+  void initTimerOtpResend() {
+    resendOtpSecond = 60;
+    notifyListeners();
+    resendOtpTimer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) => resendOtpLogic(),
+    );
+    notifyListeners();
   }
 
   Future<void> verifyOtpToMobileNumber({
@@ -75,6 +109,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       otp: otpController.text,
     );
     if (_loginResponseModel?.success == true) {
+      cancelTimerOtpResend();
       if (_loginResponseModel?.data?.isNewUser == true) {
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;

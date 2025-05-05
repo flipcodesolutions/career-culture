@@ -101,7 +101,7 @@ class AppStrings {
   static const female = "Female";
   static const birthDate = "BirthDate";
   static const areYouWorking = "Are You Working ?";
-  static const participant = "Participant";
+  static const participate = "Participate";
   static const needProperDateFormate = "Please enter a valid date format !!";
   static const genderNeeded = "Gender not selected !!";
   static const mustSelectProfilePic = "Must Select Profile Pic !!";

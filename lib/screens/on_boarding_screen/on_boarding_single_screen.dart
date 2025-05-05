@@ -54,7 +54,7 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
           if (widget.onBoardingInfo.image != null &&
               widget.onBoardingInfo.image?.isNotEmpty == true)
             CustomContainer(
-              backGroundColor: AppColors.error,
+              // backGroundColor: AppColors.error,
               width: 90.w,
               height: 25.h,
               child: CustomImageWithLoader(

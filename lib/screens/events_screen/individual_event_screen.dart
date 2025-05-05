@@ -91,7 +91,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
             SizeHelper.height(),
             PrimaryBtn(
               width: 90.w,
-              btnText: AppStrings.participant,
+              btnText: AppStrings.participate,
               onTap: () {
                 if (userProvider.isUserLoggedIn) {
                   showDialog(

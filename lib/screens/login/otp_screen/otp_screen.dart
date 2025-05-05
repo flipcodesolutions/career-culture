@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -25,79 +27,111 @@ class _OtpScreen extends State<OtpScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     LoginProvider loginProvider = context.watch<LoginProvider>();
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: AnimationLimiter(
-          child: Column(
-            children: AnimationConfiguration.toStaggeredList(
-              duration: Duration(milliseconds: 350),
-              childAnimationBuilder:
-                  (widget) => SlideAnimation(
-                    duration: Duration(milliseconds: 350),
-                    horizontalOffset: 20.w,
-                    child: FadeInAnimation(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          loginProvider.cancelTimerOtpResend();
+          pop(context);
+        }
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: AnimationLimiter(
+            child: Column(
+              children: AnimationConfiguration.toStaggeredList(
+                duration: Duration(milliseconds: 350),
+                childAnimationBuilder:
+                    (widget) => SlideAnimation(
                       duration: Duration(milliseconds: 350),
-                      child: widget,
+                      horizontalOffset: 20.w,
+                      child: FadeInAnimation(
+                        duration: Duration(milliseconds: 350),
+                        child: widget,
+                      ),
                     ),
-                  ),
-              children: [
-                CustomContainer(
-                  padding: EdgeInsets.only(left: 5.w, right: 20.w),
-                  alignment: Alignment.centerLeft,
-                  height: 30.h,
-                  width: 100.w,
-                  backGroundColor: AppColors.primary,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomText(
-                        useOverflow: false,
-                        text: AppStrings.verifyOtp,
-                        style: TextStyleHelper.largeText.copyWith(
-                          color: AppColors.white,
-                          fontSize: 23.sp,
-                        ),
-                      ),
-                      SizeHelper.height(),
-                      CustomText(
-                        useOverflow: false,
-                        text: AppStrings.youWillReceiveOtpSoon,
-                        style: TextStyleHelper.smallText.copyWith(
-                          color: AppColors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizeHelper.height(height: 5.h),
-
-                /// otp input
-                CustomPinPut(controller: loginProvider.otpController),
-                SizeHelper.height(height: 5.h),
-                loginProvider.isLoading
-                    ? Center(child: CustomLoader())
-                    : PrimaryBtn(
-                      width: 90.w,
-                      textStyle: TextStyleHelper.mediumHeading,
-                      btnText: AppStrings.verifyOtp,
-                      onTap:
-                          () async => loginProvider.verifyOtpToMobileNumber(
-                            context: context,
-                            isNavigateHome: widget.isNavigateHome,
+                children: [
+                  CustomContainer(
+                    padding: EdgeInsets.only(left: 5.w, right: 20.w),
+                    alignment: Alignment.centerLeft,
+                    height: 30.h,
+                    width: 100.w,
+                    backGroundColor: AppColors.primary,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomText(
+                          useOverflow: false,
+                          text: AppStrings.verifyOtp,
+                          style: TextStyleHelper.largeText.copyWith(
+                            color: AppColors.white,
+                            fontSize: 23.sp,
                           ),
+                        ),
+                        SizeHelper.height(),
+                        CustomText(
+                          useOverflow: false,
+                          text: AppStrings.youWillReceiveOtpSoon,
+                          style: TextStyleHelper.smallText.copyWith(
+                            color: AppColors.white,
+                          ),
+                        ),
+                        SizeHelper.height(),
+                        CustomText(
+                          useOverflow: false,
+                          text:
+                              "+91 ******${loginProvider.mobileController.text.substring(6, 10)}",
+                          style: TextStyleHelper.smallText.copyWith(
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ],
                     ),
-              ],
+                  ),
+                  SizeHelper.height(height: 5.h),
+
+                  /// otp input
+                  CustomPinPut(controller: loginProvider.otpController),
+                  SizeHelper.height(height: 5.h),
+                  loginProvider.isLoading
+                      ? Center(child: CustomLoader())
+                      : PrimaryBtn(
+                        width: 90.w,
+                        textStyle: TextStyleHelper.mediumHeading,
+                        btnText:
+                            loginProvider.resendOtpSecond == 0
+                                ? AppStrings.resendOtp
+                                : AppStrings.verifyOtp,
+                        onTap:
+                            () async =>
+                                loginProvider.resendOtpSecond == 0
+                                    ? loginProvider.sentOtpToMobileNumber(
+                                      context: context,
+                                    )
+                                    : loginProvider.verifyOtpToMobileNumber(
+                                      context: context,
+                                      isNavigateHome: widget.isNavigateHome,
+                                    ),
+                      ),
+                  SizeHelper.height(),
+                  if (loginProvider.resendOtpSecond != 0)
+                    CustomText(
+                      text:
+                          "You Can Resend in ${loginProvider.resendOtpSecond} Seconds",
+                    ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Divider(
-        color: AppColors.primary,
-        thickness: 3,
-        endIndent: 30.w,
-        indent: 30.w,
+        bottomNavigationBar: Divider(
+          color: AppColors.primary,
+          thickness: 3,
+          endIndent: 30.w,
+          indent: 30.w,
+        ),
       ),
     );
   }

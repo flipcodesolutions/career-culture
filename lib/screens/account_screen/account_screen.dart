@@ -50,18 +50,18 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
             text: AppStrings.account,
             style: TextStyleHelper.mediumHeading,
           ),
-          actions: [
-            if (!userProvider.isUserLoggedIn)
-              IconButton(
-                onPressed:
-                    () => push(
-                      context: context,
-                      widget: LoginScreen(),
-                      transition: FadeUpwardsPageTransitionsBuilder(),
-                    ),
-                icon: Icon(Icons.login, color: AppColors.primary),
-              ),
-          ],
+          // actions: [
+          //   if (!userProvider.isUserLoggedIn)
+          //     IconButton(
+          //       onPressed:
+          //           () => push(
+          //             context: context,
+          //             widget: LoginScreen(),
+          //             transition: FadeUpwardsPageTransitionsBuilder(),
+          //           ),
+          //       icon: Icon(Icons.login, color: AppColors.primary),
+          //     ),
+          // ],
         ),
         body:
             userProvider.isUserLoggedIn
