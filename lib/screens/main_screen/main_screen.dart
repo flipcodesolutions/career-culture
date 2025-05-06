@@ -4,6 +4,7 @@ import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/home_screen/home_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/programs_screens.dart';
 import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:provider/provider.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../widgets/navigation_bar.dart';
@@ -20,9 +21,10 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.microtask(() {
+    Future.microtask(() async {
       context.read<HomeScreenProvider>().setNavigationIndex =
           widget.setIndex ?? 0;
+      await MethodHelper.getAndSendFcmTokenToBackend();
     });
   }
 
@@ -33,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
     EventsScreen(isMyEvents: false),
     AccountScreen(),
   ];
+  
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();

@@ -8,9 +8,6 @@ class UserTimeTrackingService {
     required BuildContext context,
     required Map<String, dynamic> logData,
   }) async {
-    log(
-      "here is what i am sending to backend in post =-> ${logData.toString()}",
-    );
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.screenTime,
@@ -18,7 +15,6 @@ class UserTimeTrackingService {
         body: logData,
       );
       if (response.isNotEmpty) {
-        log("======message after sending log ==> $response");
         return response['success'];
       }
       return false;

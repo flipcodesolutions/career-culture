@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -24,6 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'app_const/app_colors.dart';
 import 'provider/user_provider/user_provider.dart';
+import 'utils/notification_util/notification_util.dart';
 import 'utils/text_style_helper/text_style_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -32,6 +34,20 @@ void main() async {
   /// will wait until every thing is initialized
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  requestPermission();
+  // FirebaseMessaging.onBackgroundMessage(onBackGroundMessage);
+  // await FirebaseMessagingUtils.initNotifications();
+  // Register background handler (top-level function) before any Firebase Messaging usage:contentReference[oaicite:4]{index=4}
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  // Initialize our notification service
+  await NotificationService.instance.initialize();
+  // In some widget or app state initialization:
+  NotificationService.instance.initialize().then((_) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Handle navigation or other logic here
+      print('User tapped on notification: ${message.messageId}');
+    });
+  });
 
   /// this line will prevent app to rotate horizontally
   SystemChrome.setPreferredOrientations([
@@ -61,6 +77,22 @@ void main() async {
       child: const MyApp(),
     ),
   );
+}
+
+void requestPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+  } else {
+    print('User declined or has not accepted permission');
+  }
 }
 
 class MyApp extends StatelessWidget {

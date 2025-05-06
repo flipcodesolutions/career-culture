@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
@@ -273,7 +273,28 @@ class MethodHelper {
     }
   }
 
- static String formatDateInYyyyMmDd({required DateTime date}) {
+  //// formate date
+  static String formatDateInYyyyMmDd({required DateTime date}) {
     return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  /// get fcm token
+
+  static Future<void> getAndSendFcmTokenToBackend() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    try {
+      String? token = await messaging.getToken();
+
+      if (token != null) {
+        print("FCM Token: $token");
+
+        // Send token to your backend
+      } else {
+        print("Failed to get FCM token");
+      }
+    } catch (e) {
+      print("Error getting FCM token: $e");
+    }
   }
 }
