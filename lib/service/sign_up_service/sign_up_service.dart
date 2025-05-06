@@ -40,8 +40,8 @@ class SignUpService {
     request.fields['email'] = signUp.email ?? "";
     request.fields['is_email_verified'] = signUp.isEmailVerified ?? "";
     request.fields['is_contact_verified'] = signUp.isContactVerified ?? "";
-    request.fields['phone'] = signUp.phone ?? "";
-    // request.fields['contactNo1'] = signUp.contactNo1 ?? "";
+    // request.fields['phone'] = signUp.phone ?? "";
+    request.fields['contactNo1'] = signUp.contactNo1 ?? "";
     request.fields['contactNo2'] = signUp.contactNo2 ?? "";
     request.fields['gender'] = signUp.gender ?? "";
     request.fields['dateOfBirth'] = signUp.dateOfBirth ?? "";
@@ -116,8 +116,8 @@ class SignUpService {
       request.fields['email'] = signUp.email ?? "";
       request.fields['is_email_verified'] = signUp.isEmailVerified ?? "";
       request.fields['is_contact_verified'] = signUp.isContactVerified ?? "";
-      request.fields['phone'] = signUp.phone ?? "";
-      // request.fields['contactNo1'] = signUp.contactNo1 ?? "";
+      // request.fields['phone'] = signUp.phone ?? "";
+      request.fields['contactNo1'] = signUp.contactNo1 ?? "";
       request.fields['contactNo2'] = signUp.contactNo2 ?? "";
       request.fields['gender'] = signUp.gender ?? "";
       request.fields['dateOfBirth'] = signUp.dateOfBirth ?? "";

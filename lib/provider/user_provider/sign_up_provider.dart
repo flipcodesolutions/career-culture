@@ -560,7 +560,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.isEmailVerified = isEmailVerified ? "yes" : "no";
     _signUpRequestModel.isContactVerified = isEmailVerified ? "yes" : "no";
     // _signUpRequestModel.contactNo1 = contactNo1.text;
-    _signUpRequestModel.phone = contactNo1.text;
+    _signUpRequestModel.contactNo1 = contactNo1.text;
     _signUpRequestModel.contactNo2 = contactNo2.text;
     _signUpRequestModel.gender = genderQuestion.answer;
     _signUpRequestModel.dateOfBirth = birthDate.text;
