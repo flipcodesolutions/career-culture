@@ -5,6 +5,7 @@ import 'package:mindful_youth/provider/counseling_provider/counseling_provider.d
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
@@ -16,9 +17,26 @@ import '../../utils/text_style_helper/text_style_helper.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_drop_down.dart';
 
-class CousilingFormScreen extends StatelessWidget {
+class CousilingFormScreen extends StatefulWidget {
   CousilingFormScreen({super.key});
+
+  @override
+  State<CousilingFormScreen> createState() => _CousilingFormScreenState();
+}
+
+class _CousilingFormScreenState extends State<CousilingFormScreen>
+    with WidgetsBindingObserver, ScreenTracker<CousilingFormScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'Counseling_Form_Screen';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   Widget build(BuildContext context) {
     CounselingProvider counselingProvider = context.watch<CounselingProvider>();

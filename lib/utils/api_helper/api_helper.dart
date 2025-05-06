@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../environment_helper/environment_helper.dart';
 
 class ApiHelper {
@@ -93,4 +91,7 @@ class ApiHelper {
 
   /// create order
   static String orderList = "$baseUrl/user/orders";
+
+  /// create order
+  static String screenTime = "$baseUrl/screenTime";
 }

@@ -4,7 +4,6 @@ import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';

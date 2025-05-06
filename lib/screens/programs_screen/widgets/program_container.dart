@@ -26,7 +26,7 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
             programsProvider.setCurrentProgramInfo = item,
             push(
               context: context,
-              widget: IndividualProgramScreen(),
+              widget: IndividualProgramScreen(programName: item.title ?? "ProgramScreen",),
               transition: OpenUpwardsPageTransitionsBuilder(),
             ),
           },

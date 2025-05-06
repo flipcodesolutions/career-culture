@@ -7,6 +7,7 @@ import 'package:mindful_youth/provider/assessment_provider/assessment_provider.d
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_file_picker.dart';
@@ -21,13 +22,24 @@ import '../../../app_const/app_colors.dart';
 import '../../../models/assessment_question_model/assessment_question_model.dart';
 
 class AssessmentScreen extends StatefulWidget {
-  const AssessmentScreen({super.key});
-
+  const AssessmentScreen({super.key, required this.postNameAndId});
+  final String postNameAndId;
   @override
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
 
-class _AssessmentScreenState extends State<AssessmentScreen> {
+class _AssessmentScreenState extends State<AssessmentScreen>
+    with WidgetsBindingObserver, ScreenTracker<AssessmentScreen> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'Assessment_${widget.postNameAndId}';
+  @override
+  bool get debug => false; // Enable debug logs
   bool isMedia = false;
   @override
   void initState() {

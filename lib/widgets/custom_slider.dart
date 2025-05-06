@@ -52,7 +52,9 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
                             image;
                         push(
                           context: context,
-                          widget: IndividualProgramScreen(),
+                          widget: IndividualProgramScreen(
+                            programName: image.title ?? "programScreen",
+                          ),
                           transition: OpenUpwardsPageTransitionsBuilder(),
                         );
                       }

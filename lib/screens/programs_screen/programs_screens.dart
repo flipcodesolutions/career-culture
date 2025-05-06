@@ -5,7 +5,7 @@ import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
+import 'package:mindful_youth/screens/cousling_screens/cousiling_form_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -26,6 +26,7 @@ import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/programs/programs_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../../utils/user_screen_time/tracking_mixin.dart';
 import '../../widgets/custom_grid.dart';
 import 'widgets/program_container.dart';
 
@@ -36,7 +37,21 @@ class ProgramsScreens extends StatefulWidget {
   State<ProgramsScreens> createState() => _ProgramsScreensState();
 }
 
-class _ProgramsScreensState extends State<ProgramsScreens> with NavigateHelper {
+class _ProgramsScreensState extends State<ProgramsScreens>
+    with
+        NavigateHelper,
+        WidgetsBindingObserver,
+        ScreenTracker<ProgramsScreens> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'PostsScreen';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     // TODO: implement initState
@@ -348,7 +363,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
       onTap:
           () =>
               isOpen
-                  ? push(context: context, widget: ChipSelector())
+                  ? push(context: context, widget: CousilingFormScreen())
                   : WidgetHelper.customSnackBar(
                     context: context,
                     title: AppStrings.mileStoneNotAchieved,

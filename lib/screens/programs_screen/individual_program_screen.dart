@@ -16,18 +16,33 @@ import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../../utils/user_screen_time/tracking_mixin.dart';
 import '../../widgets/custom_animated_circular_progress.dart';
 import '../../widgets/custom_text.dart';
 
 class IndividualProgramScreen extends StatefulWidget {
-  const IndividualProgramScreen({super.key});
+  const IndividualProgramScreen({super.key, required this.programName});
+  final String programName;
   @override
   State<IndividualProgramScreen> createState() =>
       _IndividualProgramScreenState();
 }
 
 class _IndividualProgramScreenState extends State<IndividualProgramScreen>
-    with NavigateHelper {
+    with
+        NavigateHelper,
+        WidgetsBindingObserver,
+        ScreenTracker<IndividualProgramScreen> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => widget.programName;
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     ProgramsProvider programsProvider = context.read<ProgramsProvider>();

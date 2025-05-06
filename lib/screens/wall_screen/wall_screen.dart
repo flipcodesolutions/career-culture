@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/post_models/wall_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../../utils/user_screen_time/tracking_mixin.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
 
@@ -26,7 +27,18 @@ class WallScreen extends StatefulWidget {
   State<WallScreen> createState() => _WallScreenState();
 }
 
-class _WallScreenState extends State<WallScreen> {
+class _WallScreenState extends State<WallScreen>
+    with WidgetsBindingObserver, ScreenTracker<WallScreen> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'WallScreen';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     // TODO: implement initState

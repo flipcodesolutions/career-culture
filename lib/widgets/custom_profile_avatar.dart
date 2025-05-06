@@ -1,9 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -13,7 +11,6 @@ import '../app_const/app_strings.dart';
 import '../provider/user_provider/sign_up_provider.dart';
 import 'custom_container.dart';
 import 'custom_image.dart';
-import 'custom_text.dart';
 
 class CustomProfileAvatar extends StatefulWidget {
   const CustomProfileAvatar({super.key});

@@ -4,8 +4,6 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/cousling_screens/chip_selector.dart';
-import 'package:mindful_youth/screens/cousling_screens/cousiling_form_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
@@ -133,22 +131,22 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// saved
                           ProfilePageListTiles(
                             leading: Icons.folder_special,
-                            onTap:
-                                () => push(
-                                  context: context,
-                                  widget: ChipSelector(),
-                                ),
+                            onTap: () {},
+                            // () => push(
+                            //   context: context,
+                            //   widget: ChipSelector(),
+                            // ),
                             titleText: AppStrings.saved,
                           ),
 
                           /// refer
                           ProfilePageListTiles(
                             leading: Icons.share,
-                            onTap:
-                                () => push(
-                                  context: context,
-                                  widget: CousilingFormScreen(),
-                                ),
+                            onTap: () {},
+                            // () => push(
+                            //   context: context,
+                            //   widget: CousilingFormScreen(),
+                            // ),
                             titleText: AppStrings.refer,
                           ),
 

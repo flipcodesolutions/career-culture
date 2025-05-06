@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:provider/provider.dart';
-import '../../app_const/app_strings.dart';
 import '../../provider/user_provider/login_provider.dart';
-import '../../widgets/cutom_loader.dart';
 import '../widget_helper/widget_helper.dart';
 
 class GoogleLoginHelper {
@@ -27,7 +23,7 @@ class GoogleLoginHelper {
         return;
       }
       LoginProvider loginProvider = context.read<LoginProvider>();
-      UserProvider profileProvider = context.read<UserProvider>();
+      // UserProvider profileProvider = context.read<UserProvider>();
 
       ///
       final GoogleSignInAuthentication? googleAuth =

@@ -5,6 +5,7 @@ import 'package:mindful_youth/models/score_model/score_board_model.dart';
 import 'package:mindful_youth/provider/score_board_provider/score_board_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_score_with_animation.dart';
@@ -22,9 +23,18 @@ class ScoreboardPage extends StatefulWidget {
 }
 
 class _ScoreboardPageState extends State<ScoreboardPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver, ScreenTracker {
   late TabController _tabController;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
 
+  @override
+  String get screenName => 'ScoreBoardScreen';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     super.initState();

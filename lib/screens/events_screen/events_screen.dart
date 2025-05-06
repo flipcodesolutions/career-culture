@@ -7,6 +7,7 @@ import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_listview.dart';
@@ -26,7 +27,18 @@ class EventsScreen extends StatefulWidget {
   State<EventsScreen> createState() => _EventsScreenState();
 }
 
-class _EventsScreenState extends State<EventsScreen> with NavigateHelper {
+class _EventsScreenState extends State<EventsScreen>
+    with NavigateHelper, WidgetsBindingObserver, ScreenTracker<EventsScreen> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'EventsScreen';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     super.initState();

@@ -14,6 +14,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_video_player.dart';
@@ -42,7 +43,19 @@ class PostsScreen extends StatefulWidget {
   State<PostsScreen> createState() => _PostsScreenState();
 }
 
-class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
+class _PostsScreenState extends State<PostsScreen>
+    with NavigateHelper, WidgetsBindingObserver, ScreenTracker<PostsScreen> {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName =>
+      'ChapterScreen_${widget.chapterId}_${widget.chapterName}';
+  @override
+  bool get debug => false; // Enable debug logs
   @override
   void initState() {
     PostProvider postProvider = context.read<PostProvider>();
@@ -160,7 +173,10 @@ class _PostsScreenState extends State<PostsScreen> with NavigateHelper {
                       userProvider.isUserApproved
                           ? push(
                             context: context,
-                            widget: AssessmentScreen(),
+                            widget: AssessmentScreen(
+                              postNameAndId:
+                                  "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
+                            ),
                             transition: FadeUpwardsPageTransitionsBuilder(),
                           )
                           : WidgetHelper.customSnackBar(

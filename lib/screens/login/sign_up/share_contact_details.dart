@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_strings.dart';
-import '../../../provider/user_provider/user_provider.dart';
 import '../../../utils/method_helpers/validator_helper.dart';
 import '../../../widgets/custom_text_form_field.dart';
 
