@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/service/user_time_tracking_service/user_time_tracking_service.dart';
+import 'package:provider/provider.dart';
 
 class AnalyticsService {
   AnalyticsService._();
@@ -42,6 +45,9 @@ class AnalyticsService {
   UserTimeTrackingService userTimeTrackingService = UserTimeTrackingService();
 
   Future<void> flush({required BuildContext context}) async {
+    /// if user is not logged in 
+    if (!context.read<UserProvider>().isUserLoggedIn) return;
+    //// else  make call
     if (_activeScreen != null && screenLog["end_time"] != "") {
       bool success = await userTimeTrackingService.logUserTiming(
         context: context,
