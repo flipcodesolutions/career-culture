@@ -38,6 +38,7 @@ mixin ScreenTracker<T extends StatefulWidget>
     AnalyticsService.instance.logEvent(
       startTime: DateTime.now().toIso8601String(),
       screenName: screenName,
+      context: context,
     );
   }
 

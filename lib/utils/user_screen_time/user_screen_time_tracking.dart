@@ -13,34 +13,44 @@ class AnalyticsService {
     "module": "",
   };
 
-  void logEvent({
+  String? _activeScreen;
+
+  Future<void> logEvent({
     required String startTime,
-    // required String endTime,
     required String screenName,
-  }) {
-    final event = {
-      "start_time": startTime,
-      "end_time": "",
-      "module": screenName,
-    };
-    screenLog = event;
-    log(screenLog.toString());
+    required BuildContext context,
+  }) async {
+    // Flush previous log before starting a new one
+    if (_activeScreen != null && _activeScreen != screenName) {
+      exitLogEvent(endTime: DateTime.now().toIso8601String());
+      await flush(context: context); // Now flush with old screen data
+    }
+
+    _activeScreen = screenName;
+    screenLog = {"start_time": startTime, "end_time": "", "module": screenName};
+
+    log("STARTED: $screenLog");
   }
 
   void exitLogEvent({required String endTime}) {
-    screenLog['end_time'] = endTime;
-    log(screenLog.toString());
+    if (_activeScreen != null && screenLog["end_time"] == "") {
+      screenLog['end_time'] = endTime;
+      log("ENDED: $screenLog");
+    }
   }
 
   UserTimeTrackingService userTimeTrackingService = UserTimeTrackingService();
+
   Future<void> flush({required BuildContext context}) async {
-    // send _buffer to your API, then clear it
-    bool success = await userTimeTrackingService.logUserTiming(
-      context: context,
-      logData: screenLog,
-    );
-    if (success) {
-      screenLog = resetMap;
+    if (_activeScreen != null && screenLog["end_time"] != "") {
+      bool success = await userTimeTrackingService.logUserTiming(
+        context: context,
+        logData: screenLog,
+      );
+      if (success) {
+        _activeScreen = null;
+        screenLog = resetMap;
+      }
     }
   }
 }
