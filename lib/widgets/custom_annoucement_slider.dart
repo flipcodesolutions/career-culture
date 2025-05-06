@@ -29,7 +29,10 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
                         onTap: () {
                           push(
                             context: context,
-                            widget: IndividualEventScreen(eventInfo: image),
+                            widget: IndividualEventScreen(
+                              eventInfo: image,
+                              isMyEvents: false,
+                            ),
                             transition: FadeForwardsPageTransitionsBuilder(),
                           );
                         },

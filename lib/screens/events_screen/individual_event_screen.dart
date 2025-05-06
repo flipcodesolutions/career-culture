@@ -20,111 +20,129 @@ import '../../app_const/app_strings.dart';
 import '../../models/all_events_model.dart/all_events_model.dart';
 
 class IndividualEventScreen extends StatelessWidget with NavigateHelper {
-  const IndividualEventScreen({super.key, required this.eventInfo});
+  const IndividualEventScreen({
+    super.key,
+    required this.eventInfo,
+    required this.isMyEvents,
+  });
   final EventModel eventInfo;
+  final bool isMyEvents;
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(
-          text: eventInfo.title ?? "",
-          style: TextStyleHelper.mediumHeading,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          AllEventProvider eventProvider = context.read<AllEventProvider>();
+          isMyEvents
+              ? await eventProvider.getAllUserEvents(context: context)
+              : await eventProvider.getAllEvents(context: context);
+          pop(context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: CustomText(
+            text: eventInfo.title ?? "",
+            style: TextStyleHelper.mediumHeading,
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomContainer(
-              width: 90.w,
-              height: 30.h,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                child: CustomImageWithLoader(
-                  imageUrl: "${AppStrings.assetsUrl}${eventInfo.poster}",
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomContainer(
+                width: 90.w,
+                height: 30.h,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSize.size10),
+                  child: CustomImageWithLoader(
+                    imageUrl: "${AppStrings.assetsUrl}${eventInfo.poster}",
+                  ),
                 ),
               ),
-            ),
-            SizeHelper.height(),
-            CustomText(
-              text: "Time :- ${eventInfo.time}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            CustomText(
-              text:
-                  "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            CustomText(
-              text:
-                  "Start Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            CustomText(
-              text:
-                  "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            CustomText(
-              text: "Venue :- ${eventInfo.venue}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            CustomText(
-              text: "Contact :- ${eventInfo.contact}",
-              style: TextStyleHelper.smallHeading,
-            ),
-            if (eventInfo.amount?.isNotEmpty == true)
+              SizeHelper.height(),
               CustomText(
-                text:
-                    "Amount:- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                text: "Time :- ${eventInfo.time}",
                 style: TextStyleHelper.smallHeading,
               ),
-            SizeHelper.height(),
-            CustomText(
-              text: eventInfo.description ?? "No Description To Show ",
-              useOverflow: false,
-            ),
-            SizeHelper.height(),
-            PrimaryBtn(
-              width: 90.w,
-              btnText: AppStrings.participate,
-              onTap: () {
-                if (userProvider.isUserLoggedIn) {
-                  userProvider.isUserApproved
-                      ? showDialog(
-                        context: context,
-                        builder:
-                            (context) => ContestAgreementWidget(
-                              id: eventInfo.id.toString(),
-                              termsText: eventInfo.terms ?? "No Terms Found!!",
-                            ),
-                      )
-                      : WidgetHelper.customSnackBar(
-                        context: context,
-                        title: AppStrings.yourAreNotApprovedYet,
-                        isError: true,
-                      );
-                  ;
-                } else {
-                  push(
-                    context: context,
-                    widget: LoginScreen(),
-                    transition: ScaleFadePageTransitionsBuilder(),
-                  );
-                  WidgetHelper.customSnackBar(
-                    context: context,
-                    title: AppStrings.pleaseLoginFirst,
-                    isError: true,
-                  );
-                }
-              },
-            ),
-            SizeHelper.height(),
-          ],
+              CustomText(
+                text:
+                    "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                style: TextStyleHelper.smallHeading,
+              ),
+              CustomText(
+                text:
+                    "Start Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                style: TextStyleHelper.smallHeading,
+              ),
+              CustomText(
+                text:
+                    "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                style: TextStyleHelper.smallHeading,
+              ),
+              CustomText(
+                text: "Venue :- ${eventInfo.venue}",
+                style: TextStyleHelper.smallHeading,
+              ),
+              CustomText(
+                text: "Contact :- ${eventInfo.contact}",
+                style: TextStyleHelper.smallHeading,
+              ),
+              if (eventInfo.amount?.isNotEmpty == true)
+                CustomText(
+                  text:
+                      "Amount:- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                  style: TextStyleHelper.smallHeading,
+                ),
+              SizeHelper.height(),
+              CustomText(
+                text: eventInfo.description ?? "No Description To Show ",
+                useOverflow: false,
+              ),
+              SizeHelper.height(),
+              PrimaryBtn(
+                width: 90.w,
+                btnText: AppStrings.participate,
+                onTap: () {
+                  if (userProvider.isUserLoggedIn) {
+                    userProvider.isUserApproved
+                        ? showDialog(
+                          context: context,
+                          builder:
+                              (context) => ContestAgreementWidget(
+                                id: eventInfo.id.toString(),
+                                termsText:
+                                    eventInfo.terms ?? "No Terms Found!!",
+                              ),
+                        )
+                        : WidgetHelper.customSnackBar(
+                          context: context,
+                          title: AppStrings.yourAreNotApprovedYet,
+                          isError: true,
+                        );
+                    ;
+                  } else {
+                    push(
+                      context: context,
+                      widget: LoginScreen(),
+                      transition: ScaleFadePageTransitionsBuilder(),
+                    );
+                    WidgetHelper.customSnackBar(
+                      context: context,
+                      title: AppStrings.pleaseLoginFirst,
+                      isError: true,
+                    );
+                  }
+                },
+              ),
+              SizeHelper.height(),
+            ],
+          ),
         ),
       ),
     );

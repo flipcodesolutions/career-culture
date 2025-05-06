@@ -96,7 +96,7 @@ class _EventsScreenState extends State<EventsScreen>
                           onTap:
                               () => push(
                                 context: context,
-                                widget: IndividualEventScreen(eventInfo: item),
+                                widget: IndividualEventScreen(eventInfo: item,isMyEvents: widget.isMyEvents,),
                                 transition:
                                     FadeForwardsPageTransitionsBuilder(),
                               ),
