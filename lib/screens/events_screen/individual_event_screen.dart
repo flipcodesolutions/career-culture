@@ -94,14 +94,21 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               btnText: AppStrings.participate,
               onTap: () {
                 if (userProvider.isUserLoggedIn) {
-                  showDialog(
-                    context: context,
-                    builder:
-                        (context) => ContestAgreementWidget(
-                          id: eventInfo.id.toString(),
-                          termsText: eventInfo.terms ?? "No Terms Found!!",
-                        ),
-                  );
+                  userProvider.isUserApproved
+                      ? showDialog(
+                        context: context,
+                        builder:
+                            (context) => ContestAgreementWidget(
+                              id: eventInfo.id.toString(),
+                              termsText: eventInfo.terms ?? "No Terms Found!!",
+                            ),
+                      )
+                      : WidgetHelper.customSnackBar(
+                        context: context,
+                        title: AppStrings.yourAreNotApprovedYet,
+                        isError: true,
+                      );
+                  ;
                 } else {
                   push(
                     context: context,

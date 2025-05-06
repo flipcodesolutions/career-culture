@@ -5,7 +5,8 @@ class UserSignUpRequestModel {
   String? email;
   String? isEmailVerified;
   String? isContactVerified;
-  String? contactNo1;
+  String? phone;
+  // String? contactNo1;
   String? contactNo2;
   String? gender;
   String? dateOfBirth;
@@ -29,7 +30,8 @@ class UserSignUpRequestModel {
     this.email,
     this.isEmailVerified,
     this.isContactVerified,
-    this.contactNo1,
+    this.phone,
+    // this.contactNo1,
     this.contactNo2,
     this.gender,
     this.dateOfBirth,
@@ -54,7 +56,8 @@ class UserSignUpRequestModel {
     email = json['email'];
     isEmailVerified = json['is_email_verified'];
     isContactVerified = json['is_contact_verified'];
-    contactNo1 = json['contactNo1'];
+    phone = json['phone'];
+    // contactNo1 = json['contactNo1'];
     contactNo2 = json['contactNo2'];
     gender = json['gender'];
     dateOfBirth = json['dateOfBirth'];
@@ -79,7 +82,8 @@ class UserSignUpRequestModel {
     data['email'] = this.email;
     data['is_email_verified'] = this.isEmailVerified;
     data['is_contact_verified'] = this.isContactVerified;
-    data['contactNo1'] = this.contactNo1;
+    // data['contactNo1'] = this.contactNo1;
+    data['phone'] = this.phone;
     data['contactNo2'] = this.contactNo2;
     data['gender'] = this.gender;
     data['dateOfBirth'] = this.dateOfBirth;

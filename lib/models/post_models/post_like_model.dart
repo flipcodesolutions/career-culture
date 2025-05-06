@@ -1,17 +1,17 @@
 class PostLikeModel {
-  String? status;
+  bool? success;
   String? message;
 
-  PostLikeModel({this.status, this.message});
+  PostLikeModel({this.success, this.message});
 
   PostLikeModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    success = json['success'];
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
+    data['success'] = this.success;
     data['message'] = this.message;
     return data;
   }

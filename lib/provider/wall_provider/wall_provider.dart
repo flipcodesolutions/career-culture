@@ -40,33 +40,35 @@ class WallProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> likePost({
+  Future<void> likePost({
     required BuildContext context,
     required int wallId,
   }) async {
-    PostLikeModel? success = await _postService.likePost(
+    // 1) Call service
+    final PostLikeModel? success = await _postService.likePost(
       context: context,
       wallId: wallId,
     );
-    if (success?.status == "success") {
-      int? index = _wallModel?.data?.indexWhere((e) => e.id == wallId);
-      if (index != -1) {
-        WallListModelData? temp = _wallModel?.data?[index ?? -1];
-        if (temp?.isMyFavourite == true) {
-          temp?.likeCount = (temp.likeCount ?? 1) - 1;
-          temp?.isMyFavourite = false;
-        } else {
-          temp?.likeCount = (temp.likeCount ?? 0) + 1;
-          temp?.isMyFavourite = false;
-        }
-        _wallModel?.data?[index ?? -1] = temp!;
-        notifyListeners();
-      }
-      notifyListeners();
-      return true;
-    } else {
-      notifyListeners();
-      return false;
-    }
+
+    // 2) Bail out if not successful
+    if (success?.success != true) return;
+
+    List<WallListModelData>? list = _wallModel?.data;
+    if (list == null) return;
+
+    // 3) Find the index
+    final int idx = list.indexWhere((e) => e.id == wallId);
+    if (idx < 0) return;
+
+    // 4) Update in-place
+    final WallListModelData item = list[idx];
+    final bool wasFav = item.isMyFavourite ?? false;
+
+    item
+      ..isMyFavourite = !wasFav
+      ..likeCount = (item.likeCount ?? 0) + (wasFav ? -1 : 1);
+
+    // 5) Notify once
+    notifyListeners();
   }
 }
