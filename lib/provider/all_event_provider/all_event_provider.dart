@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
+import '../../app_const/app_strings.dart';
+import '../../models/all_events_model.dart/participant_confirmation_model.dart';
 import '../../service/all_event_service/all_event_service.dart';
 
 class AllEventProvider extends ChangeNotifier with NavigateHelper {
@@ -36,15 +38,14 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _eventModel = await eventService.eventParticipation(
-      context: context,
-      id: id,
-    );
-    WidgetHelper.customSnackBar(
-      context: context,
-      title: _eventModel?.message ?? "",
-      isError: _eventModel?.success != true,
-    );
+    EventParticipantConfirmation? confirmation = await eventService
+        .eventParticipation(context: context, id: id);
+    if (confirmation?.success == true) {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.participateDone,
+      );
+    }
     pop(context);
 
     /// set _isLoading false

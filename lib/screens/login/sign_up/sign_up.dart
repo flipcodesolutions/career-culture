@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,14 @@ import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_icons.dart';
 import '../../../app_const/app_size.dart';
 import '../../../app_const/app_strings.dart';
 import '../../../utils/method_helpers/method_helper.dart';
+import '../../../utils/widget_helper/widget_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -185,26 +188,51 @@ class CustomFilePickerV2 extends StatefulWidget {
 
 class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
   Future<void> pickFiles({required SignUpProvider signUpProvider}) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: widget.allowMultiple,
-      type: FileType.custom,
-      withData: true,
-      allowedExtensions:
-          widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
-    );
-
-    if (result != null) {
-      setState(() {
-        /// do after pick up
-        signUpProvider.signUpRequestModel.imageFile = result.files;
-      });
+    if (Platform.isAndroid) {
+      if (await Permission.storage.request().isGranted ||
+          await Permission.mediaLibrary.request().isGranted) {
+        try {
+          FilePickerResult? result = await FilePicker.platform.pickFiles(
+            allowMultiple: widget.allowMultiple,
+            type: FileType.custom,
+            withData: true,
+            allowedExtensions:
+                widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
+          );
+          if (result == null) {
+            WidgetHelper.customSnackBar(
+              context: context,
+              title: AppStrings.somethingWentWrong,
+              isError: true,
+            );
+          }
+          if (result != null) {
+            setState(() {
+              /// do after pick up
+              signUpProvider.signUpRequestModel.imageFile = result.files;
+            });
+          }
+        } catch (e) {
+          WidgetHelper.customSnackBar(
+            context: context,
+            title: e.toString(),
+            isError: true,
+          );
+        }
+      } else {
+        WidgetHelper.customSnackBar(
+          context: context,
+          title: "No Permission Found For This Action",
+          isError: true,
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}"); 
+    log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}");
     return GestureDetector(
       onTap: () => pickFiles(signUpProvider: signUpProvider),
       child:

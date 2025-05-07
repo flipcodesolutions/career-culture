@@ -181,6 +181,7 @@ class AppStrings {
   static const totalPrice = "Total Price";
   static const qty = "Qty";
   static const myOrders = "My Orders";
+  static const participateDone = "Participate Done";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
