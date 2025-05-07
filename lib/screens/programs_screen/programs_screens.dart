@@ -147,46 +147,48 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                 (item, index) => ProgramContainer(item: item),
                           ),
                         ),
-                        CustomContainer(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 5.w,
-                            vertical: 2.h,
-                          ),
-                          boxShadow: ShadowHelper.scoreContainer,
-                          padding: EdgeInsets.all(AppSize.size10),
-                          backGroundColor: AppColors.lightWhite,
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          height: 38.h,
-                          width: 90.w,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustomText(
-                                text: AppStrings.needABoost,
-                                style: TextStyleHelper.mediumHeading.copyWith(
-                                  color: AppColors.primary,
+                        IntrinsicHeight(
+                          child: CustomContainer(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 2.h,
+                            ),
+                            boxShadow: ShadowHelper.scoreContainer,
+                            padding: EdgeInsets.all(AppSize.size10),
+                            backGroundColor: AppColors.lightWhite,
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+
+                            width: 90.w,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CustomText(
+                                  text: AppStrings.needABoost,
+                                  style: TextStyleHelper.mediumHeading.copyWith(
+                                    color: AppColors.primary,
+                                  ),
                                 ),
-                              ),
-                              SizeHelper.height(height: 1.h),
-                              CustomText(
-                                text: AppStrings.takeAMomentToTalkWithUs,
-                                useOverflow: false,
-                              ),
-                              SizeHelper.height(),
-                              CounselingOptions(
-                                description: AppStrings.bookAfter25,
-                                heading: AppStrings.counseling1,
-                                isOpen: programsProvider.getPercentage() > 25,
-                              ),
-                              SizeHelper.height(),
-                              CounselingOptions(
-                                description: AppStrings.bookAfter75,
-                                heading: AppStrings.counseling2,
-                                isOpen: programsProvider.getPercentage() > 75,
-                              ),
-                            ],
+                                SizeHelper.height(height: 1.h),
+                                CustomText(
+                                  text: AppStrings.takeAMomentToTalkWithUs,
+                                  useOverflow: false,
+                                ),
+                                SizeHelper.height(),
+                                CounselingOptions(
+                                  description: AppStrings.bookAfter25,
+                                  heading: AppStrings.counseling1,
+                                  isOpen: programsProvider.getPercentage() > 25,
+                                ),
+                                SizeHelper.height(),
+                                CounselingOptions(
+                                  description: AppStrings.bookAfter75,
+                                  heading: AppStrings.counseling2,
+                                  isOpen: programsProvider.getPercentage() > 75,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ] else ...[
