@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
-import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -34,10 +34,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     });
   }
 
-  void redirectUserToHomeScreen() {
+  void redirectUserToLoginPage() {
     pushRemoveUntil(
       context: context,
-      widget: MainScreen(),
+      widget: LoginScreen(isToNavigateHome: true),
       transition: ZoomPageTransitionsBuilder(),
     );
   }
@@ -62,7 +62,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                   backGroundColor: AppColors.white,
                   borderColor: AppColors.white,
                   btnText: AppStrings.skip,
-                  onTap: () => redirectUserToHomeScreen(),
+                  onTap: () => redirectUserToLoginPage(),
                 ),
               ],
             ),
@@ -99,7 +99,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                       )
                       : PrimaryBtn(
                         btnText: AppStrings.letsBegin,
-                        onTap: () => redirectUserToHomeScreen(),
+                        onTap: () => redirectUserToLoginPage(),
                         textStyle: TextStyleHelper.mediumHeading,
                       ),
             ),
