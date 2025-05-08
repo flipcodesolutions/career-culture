@@ -7,6 +7,7 @@ import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../app_const/app_strings.dart';
+import '../models/product_model/product_model.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
 
@@ -20,25 +21,18 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
         ? Center(child: CustomLoader())
         : productProvider.productModel?.data?.product?.isNotEmpty == true
         ? CustomContainer(
-          
-          child: CarouselSlider(
-            items:
-                productProvider.productModel?.data?.product?.map((image) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: 5.w),
-                    child: ProductCard(product: image),
-                  );
-                }).toList(),
-            options: CarouselOptions(
-              enableInfiniteScroll: false,
-              viewportFraction: 1,
-              height: 25.h,
-              disableCenter: true,
-              autoPlay: true,
-              padEnds: true,
-            ),
+          height: 30.h,
+          child: ListView.builder(
+            padding: EdgeInsets.only(left: 5.w),
+            itemCount: productProvider.productModel?.data?.product?.length ?? 0,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              Product? product =
+                  productProvider.productModel?.data?.product?[index];
+              return ProductCard(product: product);
+            },
           ),
         )
-        : Center(child: NoDataFoundWidget(text: AppStrings.noProductsToShow,));
+        : Center(child: NoDataFoundWidget(text: AppStrings.noProductsToShow));
   }
 }

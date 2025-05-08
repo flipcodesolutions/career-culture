@@ -75,13 +75,9 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          userProvider.isUserLoggedIn
-              ? await programsProvider.getUserProgress(context: context).then((
-                _,
-              ) {
-                pop(context);
-              })
-              : null;
+          await programsProvider.getUserProgress(context: context).then((_) {
+            pop(context);
+          });
         }
       },
       child: Scaffold(

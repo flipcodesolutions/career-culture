@@ -29,6 +29,15 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// get product image list
+  List<String> getListImage({required Product? product}) {
+    return [
+      product?.thumbnail,
+      product?.image1,
+      product?.image2,
+    ].where((e) => e?.isNotEmpty == true && e != null).cast<String>().toList();
+  }
+
   /// create order
   TextEditingController addressController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();

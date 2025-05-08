@@ -95,7 +95,12 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                           )
                           : ListView(
                             children: [
-                              Center(child: NoDataFoundWidget(height: 90.h,text: AppStrings.noProductsToShow,)),
+                              Center(
+                                child: NoDataFoundWidget(
+                                  height: 90.h,
+                                  text: AppStrings.noProductsToShow,
+                                ),
+                              ),
                             ],
                           ),
                 ),

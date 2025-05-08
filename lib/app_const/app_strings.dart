@@ -123,8 +123,8 @@ class AppStrings {
   static const profile = "Profile";
   static const eventHistory = "Event History";
   static const programsHistory = "Programs History";
-  static const certificates = "certificates";
-  static const saved = "saved";
+  static const certificates = "Certificates";
+  static const saved = "Saved";
   static const refer = "Refer";
   static const bookCounselingAppointment = "Book Counseling Appointment";
   static const counselingAppointment = " Counseling Appointment";

@@ -63,18 +63,25 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CustomImageWithLoader(
-                      imageUrl:
-                          "${AppStrings.assetsUrl}${widget.product?.thumbnail}",
-                    ),
-                    const DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.transparent, Colors.black26],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                      ),
+                    PageView.builder(
+                      itemCount:
+                          productProvider
+                              .getListImage(product: widget.product)
+                              .length,
+                      itemBuilder:
+                          (context, index) => DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.transparent, Colors.black26],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            child: CustomImageWithLoader(
+                              imageUrl:
+                                  "${AppStrings.assetsUrl}${productProvider}",
+                            ),
+                          ),
                     ),
                   ],
                 ),
