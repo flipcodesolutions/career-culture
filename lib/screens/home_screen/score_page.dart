@@ -130,7 +130,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (score?.length == 0) {
-      return Center(child: NoDataFoundWidget());
+      return Center(child: NoDataFoundWidget(text: AppStrings.noScoresFound,));
     }
     if ((score?.length ?? 0) < 3) {
       return CustomContainer(

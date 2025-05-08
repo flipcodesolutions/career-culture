@@ -292,7 +292,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                       () async => await programsProvider.getAllPrograms(
                         context: context,
                       ),
-                  child: ListView(children: [NoDataFoundWidget(height: 80.h)]),
+                  child: ListView(children: [NoDataFoundWidget(height: 80.h,text: AppStrings.noProgramsFound,)]),
                 ),
       ),
     );

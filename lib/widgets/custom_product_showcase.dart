@@ -6,6 +6,7 @@ import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../app_const/app_strings.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
 
@@ -19,7 +20,7 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
         ? Center(child: CustomLoader())
         : productProvider.productModel?.data?.product?.isNotEmpty == true
         ? CustomContainer(
-          width: 40.w,
+          
           child: CarouselSlider(
             items:
                 productProvider.productModel?.data?.product?.map((image) {
@@ -38,6 +39,6 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
             ),
           ),
         )
-        : Center(child: NoDataFoundWidget());
+        : Center(child: NoDataFoundWidget(text: AppStrings.noProductsToShow,));
   }
 }

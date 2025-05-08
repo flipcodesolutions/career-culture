@@ -182,6 +182,15 @@ class AppStrings {
   static const qty = "Qty";
   static const myOrders = "My Orders";
   static const participateDone = "Participate Done";
+  static const noProductsToShow = "No Products To Show";
+  static const noEventsFound = "No Events Found";
+  static const noScoresFound = "No Scores Found";
+  static const noPostsFound = "No Posts Found";
+  static const noProgramsFound = "No Programs Found";
+  static const noQuestionsFound = "No Questions Found";
+  static const noOrdersFound = "No Orders Found";
+  static const noAnnouncementFound = "No Announcement Found";
+  static const noConvenerFound = "No Convener Found";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

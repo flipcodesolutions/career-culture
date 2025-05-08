@@ -11,11 +11,13 @@ class NoDataFoundWidget extends StatelessWidget {
     this.width,
     this.color,
     this.textStyle,
+    this.text,
   });
   final double? height;
   final double? width;
   final Color? color;
   final TextStyle? textStyle;
+  final String? text;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -25,7 +27,7 @@ class NoDataFoundWidget extends StatelessWidget {
       height: height ?? 10.h,
       // borderRadius: BorderRadius.circular(10),
       // backGroundColor: color ?? AppColors.grey.withOpacity(0.5),
-      child: CustomText(text: AppStrings.noDataFound),
+      child: CustomText(text: text ?? AppStrings.noDataFound),
     );
   }
 }

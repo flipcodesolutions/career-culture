@@ -104,7 +104,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                   ),
                 ),
               )
-              : Center(child: NoDataFoundWidget()),
+              : Center(child: NoDataFoundWidget(text: AppStrings.noQuestionsFound,)),
       bottomNavigationBar:
           isQuestions
               ? CustomContainer(

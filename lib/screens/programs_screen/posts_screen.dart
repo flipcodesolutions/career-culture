@@ -156,7 +156,14 @@ class _PostsScreenState extends State<PostsScreen>
                       );
                     },
                   )
-              : ListView(children: [NoDataFoundWidget(height: 80.h)]),
+              : ListView(
+                children: [
+                  NoDataFoundWidget(
+                    height: 80.h,
+                    text: AppStrings.noPostsFound,
+                  ),
+                ],
+              ),
       bottomNavigationBar:
           postProvider.currentPost != null
               ? Padding(

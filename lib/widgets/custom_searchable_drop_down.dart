@@ -45,7 +45,7 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
         itemBuilder: itemBuilder,
         emptyBuilder:
             (context, searchEntry) =>
-                CustomContainer(child: NoDataFoundWidget()),
+                CustomContainer(child: NoDataFoundWidget(text: AppStrings.noConvenerFound,)),
         showSearchBox: true, // <-- Enables search box
         searchFieldProps: TextFieldProps(
           decoration: inputDecoration(hintText: AppStrings.searchHere),

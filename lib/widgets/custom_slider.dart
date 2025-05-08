@@ -83,6 +83,6 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
             ),
           ),
         )
-        : Center(child: NoDataFoundWidget());
+        : Center(child: NoDataFoundWidget(text: AppStrings.noProgramsFound,));
   }
 }

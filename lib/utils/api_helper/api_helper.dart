@@ -94,4 +94,6 @@ class ApiHelper {
 
   /// create order
   static String screenTime = "$baseUrl/screenTime";
+  /// create order
+  static String sendFcmToken = "$baseUrl/fcm-token";
 }

@@ -62,6 +62,6 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
             ),
           ),
         )
-        : Center(child: NoDataFoundWidget());
+        : Center(child: NoDataFoundWidget(text: AppStrings.noAnnouncementFound,));
   }
 }

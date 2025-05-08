@@ -95,7 +95,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                           )
                           : ListView(
                             children: [
-                              Center(child: NoDataFoundWidget(height: 90.h)),
+                              Center(child: NoDataFoundWidget(height: 90.h,text: AppStrings.noProductsToShow,)),
                             ],
                           ),
                 ),
@@ -123,6 +123,7 @@ class ProductCard extends StatelessWidget with NavigateHelper {
         );
       },
       child: CustomContainer(
+        width: 40.w,
         margin: EdgeInsets.symmetric(vertical: 1.h),
         borderRadius: BorderRadius.circular(AppSize.size10),
         borderColor: AppColors.grey,

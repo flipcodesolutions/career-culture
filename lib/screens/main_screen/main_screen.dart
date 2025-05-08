@@ -24,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     Future.microtask(() async {
       context.read<HomeScreenProvider>().setNavigationIndex =
           widget.setIndex ?? 0;
-      await MethodHelper.getAndSendFcmTokenToBackend();
+      await MethodHelper.getAndSendFcmTokenToBackend(context: context);
     });
   }
 
@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
     EventsScreen(isMyEvents: false),
     AccountScreen(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();

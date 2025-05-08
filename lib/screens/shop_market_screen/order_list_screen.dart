@@ -65,7 +65,7 @@ class _OrderListPageState extends State<OrderListPage> {
                   children: [
                     CustomContainer(
                       height: 90.h,
-                      child: Center(child: NoDataFoundWidget()),
+                      child: Center(child: NoDataFoundWidget(text:AppStrings.noOrdersFound,)),
                     ),
                   ],
                 ),

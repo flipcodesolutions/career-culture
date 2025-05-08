@@ -108,7 +108,11 @@ class _WallScreenState extends State<WallScreen>
                 : CustomRefreshIndicator(
                   onRefresh: () async => wallProvider.getWall(context: context),
                   child: ListView(
-                    children: [Center(child: NoDataFoundWidget())],
+                    children: [
+                      Center(
+                        child: NoDataFoundWidget(text: AppStrings.noPostsFound),
+                      ),
+                    ],
                   ),
                 ),
       ),
