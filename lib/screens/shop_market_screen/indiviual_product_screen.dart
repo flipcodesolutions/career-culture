@@ -286,6 +286,7 @@ class OrderSheet extends StatelessWidget with NavigateHelper {
                           bool success = await productProvider.order(
                             context: context,
                             product: product,
+                            qty: productProvider.orderModel?.qty ?? 1,
                           );
                           if (success) {
                             pop(context);

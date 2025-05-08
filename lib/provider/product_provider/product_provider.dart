@@ -53,6 +53,7 @@ class ProductProvider extends ChangeNotifier {
   Future<bool> order({
     required BuildContext context,
     required Product? product,
+    required int qty
   }) async {
     /// set _isLoading true
     _isLoading = true;
@@ -64,7 +65,7 @@ class ProductProvider extends ChangeNotifier {
       paymentMode: AppStrings.cashOnDelivery,
       price: product?.price ?? "",
       productId: product?.id ?? -1,
-      qty: 1,
+      qty: qty,
       shippingAddress: addressController.text,
       transactionId: DateTime.now().toIso8601String(),
     );
