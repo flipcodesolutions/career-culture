@@ -65,7 +65,11 @@ class _OrderListPageState extends State<OrderListPage> {
                   children: [
                     CustomContainer(
                       height: 90.h,
-                      child: Center(child: NoDataFoundWidget(text:AppStrings.noOrdersFound,)),
+                      child: Center(
+                        child: NoDataFoundWidget(
+                          text: AppStrings.noOrdersFound,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -181,6 +185,8 @@ class _StatusBadge extends StatelessWidget {
         return AppColors.lightPrimary;
       case 'delivered':
         return AppColors.primary;
+      case 'approved':
+        return AppColors.lightPrimary;
       case 'cancelled':
         return AppColors.error;
       default:
