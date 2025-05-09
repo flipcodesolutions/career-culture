@@ -564,6 +564,7 @@ class User {
   int? id;
   String? name;
   String? email;
+  String? phone;
   String? emailVerifiedAt;
   String? isEmailVerified;
   String? isContactVerified;
@@ -578,6 +579,7 @@ class User {
     this.id,
     this.name,
     this.email,
+    this.phone,
     this.emailVerifiedAt,
     this.isEmailVerified,
     this.isContactVerified,
@@ -593,6 +595,7 @@ class User {
     id = json['id'];
     name = json['name'];
     email = json['email'];
+    phone = json['phone'];
     emailVerifiedAt = json['email_verified_at'];
     isEmailVerified = json['is_email_verified'];
     isContactVerified = json['is_contact_verified'];
@@ -659,6 +662,11 @@ class User {
         profile?.contactNo1 ?? '',
       );
       _log(AppStrings.userContactNo1, profile?.contactNo1 ?? '');
+      await SharedPrefs.saveString(
+        AppStrings.userContactNo1,
+        phone ?? '',
+      );
+      _log(AppStrings.userContactNo1, phone ?? '');
 
       await SharedPrefs.saveString(
         AppStrings.userContactNo2,

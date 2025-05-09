@@ -76,13 +76,11 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                 style: TextStyleHelper.smallHeading,
               ),
               CustomText(
-                text:
-                    "Start Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                text: "Start Date :- ${eventInfo.startDate ?? "Not Found"}",
                 style: TextStyleHelper.smallHeading,
               ),
               CustomText(
-                text:
-                    "End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                text: "End Date :- ${eventInfo.endDate ?? "Not Found"}",
                 style: TextStyleHelper.smallHeading,
               ),
               CustomText(
@@ -95,8 +93,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               ),
               if (eventInfo.amount?.isNotEmpty == true)
                 CustomText(
-                  text:
-                      "Amount:- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                  text: "Amount:- ${eventInfo.amount ?? "Not Found"}",
                   style: TextStyleHelper.smallHeading,
                 ),
               SizeHelper.height(),

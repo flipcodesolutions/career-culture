@@ -63,7 +63,7 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
                     "${AppStrings.assetsUrl}${widget.onBoardingInfo.image}",
               ),
             ),
-          SizeHelper.height(),
+          SizeHelper.height(height: 10.h),
           CustomText(
             text: widget.onBoardingInfo.title ?? "",
             useOverflow: false,
