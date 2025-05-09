@@ -129,7 +129,7 @@ class ProductCard extends StatelessWidget with NavigateHelper {
       },
       child: CustomContainer(
         width: 40.w,
-        margin: EdgeInsets.symmetric(vertical: 1.h),
+        margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
         borderRadius: BorderRadius.circular(AppSize.size10),
         borderColor: AppColors.grey,
         borderWidth: 0.3,

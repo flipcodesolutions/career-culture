@@ -23,7 +23,7 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
         ? CustomContainer(
           height: 30.h,
           child: ListView.builder(
-            padding: EdgeInsets.only(left: 5.w),
+            padding: EdgeInsets.only(left: 3.w),
             itemCount: productProvider.productModel?.data?.product?.length ?? 0,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
