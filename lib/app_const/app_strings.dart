@@ -174,7 +174,8 @@ class AppStrings {
   static const continueTEXT = "Continue";
   static const mustSelectOneTopic = "Must Select One Topic";
   static const mileStoneNotAchieved = "MileStone Not Achieved";
-  static const notOpenYet = "Not Yet Open";
+  static const notOpenYet =
+      "Access denied – complete previous chapter to proceed Not Yet Open !";
   static const placeOrder = "Place Order";
   static const cashOnDelivery = "Cash On Delivery";
   static const payOnline = "Pay Online";

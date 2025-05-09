@@ -153,7 +153,6 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                               horizontal: 5.w,
                               vertical: 2.h,
                             ),
-                            boxShadow: ShadowHelper.scoreContainer,
                             padding: EdgeInsets.all(AppSize.size10),
                             backGroundColor: AppColors.lightWhite,
                             borderRadius: BorderRadius.circular(AppSize.size10),
@@ -268,7 +267,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                                               (item.title?.length ??
                                                                           0) >
                                                                       50
-                                                                  ? "${item.title!.substring(0, 30)} ..."
+                                                                  ? "${item.title?.substring(0, 30)} ..."
                                                                   : item.title ??
                                                                       "",
                                                         ),
@@ -292,7 +291,14 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                       () async => await programsProvider.getAllPrograms(
                         context: context,
                       ),
-                  child: ListView(children: [NoDataFoundWidget(height: 80.h,text: AppStrings.noProgramsFound,)]),
+                  child: ListView(
+                    children: [
+                      NoDataFoundWidget(
+                        height: 80.h,
+                        text: AppStrings.noProgramsFound,
+                      ),
+                    ],
+                  ),
                 ),
       ),
     );
@@ -376,7 +382,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
         backGroundColor: AppColors.white,
         borderRadius: BorderRadius.circular(AppSize.size10),
         padding: EdgeInsets.all(AppSize.size10),
-        // boxShadow: ShadowHelper.scoreContainer,
+        boxShadow: ShadowHelper.scoreContainer,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
