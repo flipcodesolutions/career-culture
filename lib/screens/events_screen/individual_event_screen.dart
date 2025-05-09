@@ -67,41 +67,41 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               ),
               SizeHelper.height(),
               CustomText(
-                text: "Time :- ${eventInfo.time}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              CustomText(
-                text:
-                    "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              CustomText(
-                text: "Start Date :- ${eventInfo.startDate ?? "Not Found"}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              CustomText(
-                text: "End Date :- ${eventInfo.endDate ?? "Not Found"}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              CustomText(
-                text: "Venue :- ${eventInfo.venue}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              CustomText(
-                text: "Contact :- ${eventInfo.contact}",
-                style: TextStyleHelper.smallHeading,
-              ),
-              if (eventInfo.amount?.isNotEmpty == true)
-                CustomText(
-                  text: "Amount:- ${eventInfo.amount ?? "Not Found"}",
-                  style: TextStyleHelper.smallHeading,
-                ),
-              SizeHelper.height(),
-              CustomText(
                 text: eventInfo.description ?? "No Description To Show ",
                 useOverflow: false,
               ),
               SizeHelper.height(),
+              HeadingText(text: AppStrings.dateAndTime),
+              SizeHelper.height(height: 1.h),
+              paddedText(text: "Time :- ${eventInfo.time}"),
+              paddedText(
+                text:
+                    "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+              ),
+              paddedText(
+                text: "Start Date :- ${eventInfo.startDate ?? "Not Found"}",
+              ),
+              paddedText(
+                text: "End Date :- ${eventInfo.endDate ?? "Not Found"}",
+              ),
+
+              SizeHelper.height(),
+              HeadingText(text: AppStrings.location),
+              SizeHelper.height(height: 1.h),
+              paddedText(text: "Venue :- ${eventInfo.venue}"),
+              SizeHelper.height(),
+              HeadingText(text: AppStrings.contactInfo),
+              SizeHelper.height(height: 1.h),
+              paddedText(text: "Contact :- ${eventInfo.contact}"),
+              SizeHelper.height(height: 1.h),
+              if (eventInfo.amount?.isNotEmpty == true) ...[
+                HeadingText(text: AppStrings.registration),
+                paddedText(
+                  text:
+                      "${AppStrings.registration} Fee:- ${eventInfo.amount ?? "Not Found"}",
+                ),
+                SizeHelper.height(),
+              ],
               PrimaryBtn(
                 width: 90.w,
                 btnText: AppStrings.participate,
@@ -142,6 +142,31 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
           ),
         ),
       ),
+    );
+  }
+}
+
+class HeadingText extends StatelessWidget {
+  const HeadingText({super.key, required this.text});
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return CustomText(
+      text: text,
+      style: TextStyleHelper.mediumHeading.copyWith(color: AppColors.primary),
+    );
+  }
+}
+
+class paddedText extends StatelessWidget {
+  const paddedText({super.key, required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 3.w),
+      child: CustomText(text: "• $text", style: TextStyleHelper.smallHeading),
     );
   }
 }

@@ -90,13 +90,18 @@ class _EventsScreenState extends State<EventsScreen>
                       horizontal: 5.w,
                       vertical: 2.h,
                     ),
-                    data: eventProvider.eventModel?.data ?? <EventModel>[],
+                    data: eventProvider.getEventsByModel(
+                      isMyEvents: widget.isMyEvents,
+                    ),
                     itemBuilder:
                         (item, index) => GestureDetector(
                           onTap:
                               () => push(
                                 context: context,
-                                widget: IndividualEventScreen(eventInfo: item,isMyEvents: widget.isMyEvents,),
+                                widget: IndividualEventScreen(
+                                  eventInfo: item,
+                                  isMyEvents: widget.isMyEvents,
+                                ),
                                 transition:
                                     FadeForwardsPageTransitionsBuilder(),
                               ),
@@ -156,7 +161,9 @@ class _EventsScreenState extends State<EventsScreen>
                       CustomContainer(
                         alignment: Alignment.center,
                         height: 90.h,
-                        child: NoDataFoundWidget(text: AppStrings.noEventsFound,),
+                        child: NoDataFoundWidget(
+                          text: AppStrings.noEventsFound,
+                        ),
                       ),
                     ],
                   ),

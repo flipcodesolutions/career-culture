@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
+import 'package:mindful_youth/models/all_events_model.dart/user_participated_events.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../app_const/app_strings.dart';
@@ -15,6 +16,8 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
   AllEventService eventService = AllEventService();
   AllEventModel? _eventModel;
   AllEventModel? get eventModel => _eventModel;
+  MyEventsModel? _myEventsModel;
+  MyEventsModel? get myEventsModel => _myEventsModel;
 
   Future<void> getAllEvents({
     required BuildContext context,
@@ -61,10 +64,25 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _eventModel = await eventService.getAllUserEvents(context: context, id: id);
+    _myEventsModel = await eventService.getAllUserEvents(
+      context: context,
+      id: id,
+    );
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// get events by condition
+  List<EventModel> getEventsByModel({required bool isMyEvents}) {
+    return isMyEvents
+        ? _myEventsModel?.data
+                ?.where((e) => e.event != null)
+                .map((e) => e.event)
+                .cast<EventModel>()
+                .toList() ??
+            <EventModel>[]
+        : _eventModel?.data ?? <EventModel>[];
   }
 }

@@ -191,6 +191,9 @@ class AppStrings {
   static const noOrdersFound = "No Orders Found";
   static const noAnnouncementFound = "No Announcement Found";
   static const noConvenerFound = "No Convener Found";
+  static const location = "Location";
+  static const contactInfo = "Contact Information";
+  static const registration = "Registration";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

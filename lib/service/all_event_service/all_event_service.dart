@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
-
 import '../../models/all_events_model.dart/participant_confirmation_model.dart';
+import '../../models/all_events_model.dart/user_participated_events.dart';
 
 class AllEventService {
   Future<AllEventModel?> getAllEvents({
@@ -30,7 +30,7 @@ class AllEventService {
   }
 
   ///
-  Future<AllEventModel?> getAllUserEvents({
+  Future<MyEventsModel?> getAllUserEvents({
     required BuildContext context,
     required String id,
   }) async {
@@ -41,8 +41,7 @@ class AllEventService {
         uri: ApiHelper.myParticipation,
       );
       if (response.isNotEmpty) {
-        AllEventModel model = AllEventModel.fromJson(response);
-        return model;
+        return MyEventsModel.fromJson(response);
       }
       return null;
     } catch (e) {
@@ -63,7 +62,8 @@ class AllEventService {
       );
       if (response.isNotEmpty) {
         log(response.toString());
-        EventParticipantConfirmation model = EventParticipantConfirmation.fromJson(response);
+        EventParticipantConfirmation model =
+            EventParticipantConfirmation.fromJson(response);
         return model;
       }
       return null;
