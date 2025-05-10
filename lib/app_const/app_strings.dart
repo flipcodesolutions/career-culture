@@ -200,6 +200,12 @@ class AppStrings {
   static const accountIsDeleted = "Account Is Deleted Or Not Active";
   static const onlineMode = "Online Mode";
   static const offlineMode = "Offline Mode";
+  static const inviteFriends = 'Invite Friends';
+  static const inviteRequestSent = 'Invite Request Sent Successfully';
+  static const earnRewards =
+      'Earn rewards when your friends join using your code!';
+  static willGetThisMuchCoins({required String points}) =>
+      'On SuccessFull Invite You Will Get $points Points As Reward';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

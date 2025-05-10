@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../cousling_screens/cousiling_form_screen.dart';
+import '../refer_screen/refer_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -125,7 +126,13 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// certificates
                           ProfilePageListTiles(
                             leading: Icons.workspace_premium,
-                            onTap: () {},
+                            onTap:
+                                () => push(
+                                  context: context,
+                                  widget: CousilingFormScreen(),
+                                  transition:
+                                      OpenUpwardsPageTransitionsBuilder(),
+                                ),
                             titleText: AppStrings.certificates,
                           ),
 
@@ -147,8 +154,11 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             onTap:
                                 () => push(
                                   context: context,
-                                  widget: CousilingFormScreen(),
+                                  widget: ReferralPage(),
+                                  transition:
+                                      FadeUpwardsPageTransitionsBuilder(),
                                 ),
+
                             titleText: AppStrings.refer,
                           ),
 
