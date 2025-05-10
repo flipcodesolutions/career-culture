@@ -116,8 +116,11 @@ class OrderCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppSize.size10),
                   child: CustomImageWithLoader(
+                    width: 20.w,
+                    height: 10.h,
+                    fit: BoxFit.contain,
                     imageUrl:
-                        "${AppStrings.assessment}${order?.product?.thumbnail}",
+                        "${AppStrings.assetsUrl}${order?.product?.thumbnail}",
                   ),
                 ),
                 const SizedBox(width: 12),
