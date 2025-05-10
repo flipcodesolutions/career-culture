@@ -37,13 +37,14 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       UserProvider userProvider = context.read<UserProvider>();
       String token = await SharedPrefs.getToken();
       String status = await SharedPrefs.getSharedString(AppStrings.status);
-      if (status != "active") {
-        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-          context: context,
-        );
-        return;
-      } else if (token != "" && token.isNotEmpty) {
+      if (token != "" && token.isNotEmpty) {
         userProvider.setIsUserLoggedIn = true;
+        if (status != "active" && status != "") {
+          MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+            context: context,
+          );
+          return;
+        }
         pushRemoveUntil(
           context: context,
           widget: MainScreen(),
