@@ -198,6 +198,8 @@ class AppStrings {
   static const noFilePicked = "No File Picked";
   static const noPermissionFound = "No Permission Found For This Action";
   static const accountIsDeleted = "Account Is Deleted Or Not Active";
+  static const onlineMode = "Online Mode";
+  static const offlineMode = "Offline Mode";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

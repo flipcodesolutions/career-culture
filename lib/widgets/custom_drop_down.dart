@@ -4,6 +4,7 @@ import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
+import '../app_const/app_strings.dart';
 
 class CustomDropDownWidget extends StatefulWidget {
   const CustomDropDownWidget({
@@ -43,7 +44,16 @@ class _CustomDropDownWidgetState extends State<CustomDropDownWidget> {
             focusedBorder: BorderHelper.inputBorderFocused,
             disabledBorder: BorderHelper.inputBorderDisabled,
           ),
-          dropdownMenuEntries: [DropdownMenuEntry(value: "", label: "HI")],
+          dropdownMenuEntries: [
+            DropdownMenuEntry(
+              value: AppStrings.onlineMode,
+              label: AppStrings.onlineMode,
+            ),
+            DropdownMenuEntry(
+              value: AppStrings.offlineMode,
+              label: AppStrings.offlineMode,
+            ),
+          ],
         ),
       ],
     );

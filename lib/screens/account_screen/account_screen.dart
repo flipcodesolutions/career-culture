@@ -116,11 +116,11 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           ),
 
                           /// program history
-                          ProfilePageListTiles(
-                            leading: Icons.event_sharp,
-                            onTap: () {},
-                            titleText: AppStrings.programsHistory,
-                          ),
+                          // ProfilePageListTiles(
+                          //   leading: Icons.event_sharp,
+                          //   onTap: () {},
+                          //   titleText: AppStrings.programsHistory,
+                          // ),
 
                           /// certificates
                           ProfilePageListTiles(
@@ -130,15 +130,15 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           ),
 
                           /// saved
-                          ProfilePageListTiles(
-                            leading: Icons.folder_special,
-                            onTap: () {},
-                            // () => push(
-                            //   context: context,
-                            //   widget: ChipSelector(),
-                            // ),
-                            titleText: AppStrings.saved,
-                          ),
+                          // ProfilePageListTiles(
+                          //   leading: Icons.folder_special,
+                          //   onTap: () {},
+                          //   // () => push(
+                          //   //   context: context,
+                          //   //   widget: ChipSelector(),
+                          //   // ),
+                          //   titleText: AppStrings.saved,
+                          // ),
 
                           /// refer
                           ProfilePageListTiles(
