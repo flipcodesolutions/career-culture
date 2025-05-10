@@ -183,7 +183,6 @@ class FeedPostCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppSize.size10),
               child: CustomImageWithLoader(
-                showImageInPanel: false,
                 fit: BoxFit.cover,
                 width: 85.w,
                 imageUrl: "${AppStrings.assetsUrl}${post?.image}",

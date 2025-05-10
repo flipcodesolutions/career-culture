@@ -202,7 +202,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
           if (result == null) {
             WidgetHelper.customSnackBar(
               context: context,
-              title: AppStrings.somethingWentWrong,
+              title: AppStrings.noFilePicked,
               isError: true,
             );
           }
@@ -222,7 +222,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
       } else {
         WidgetHelper.customSnackBar(
           context: context,
-          title: "No Permission Found For This Action",
+          title: AppStrings.noPermissionFound,
           isError: true,
         );
       }
@@ -238,10 +238,16 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
       child:
           signUpProvider.isUpdatingProfile &&
                   signUpProvider.signUpRequestModel.imageFile.isEmpty
-              ? CustomImageWithLoader(
-                imageUrl:
-                    "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
-                showImageInPanel: false,
+              ? CustomContainer(
+                width: 90.w,
+                height: 15.h,
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                child: CustomImageWithLoader(
+                  imageUrl:
+                      "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                  showImageInPanel: false,
+                  fit: BoxFit.contain,
+                ),
               )
               : CustomContainer(
                 alignment: Alignment.center,

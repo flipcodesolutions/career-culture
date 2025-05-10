@@ -20,6 +20,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../cousling_screens/cousiling_form_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -142,11 +143,12 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// refer
                           ProfilePageListTiles(
                             leading: Icons.share,
-                            onTap: () {},
-                            // () => push(
-                            //   context: context,
-                            //   widget: CousilingFormScreen(),
-                            // ),
+                            // onTap: () {},
+                            onTap:
+                                () => push(
+                                  context: context,
+                                  widget: CousilingFormScreen(),
+                                ),
                             titleText: AppStrings.refer,
                           ),
 

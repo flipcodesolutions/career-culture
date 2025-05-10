@@ -12,6 +12,7 @@ import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart
 import 'package:provider/provider.dart';
 import '../../models/login_model/sent_otp_model.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
+import '../../utils/method_helpers/method_helper.dart';
 
 class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
@@ -120,7 +121,12 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         mobileController.clear();
         otpController.clear();
         _otpModel = null;
-
+        if (_loginResponseModel?.data?.user?.status != "active") {
+          MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+            context: context,
+          );
+          return;
+        }
         if (!context.mounted) return;
         context.read<UserProvider>().setIsUserLoggedIn = true;
         isNavigateHome
@@ -164,6 +170,12 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         signUpProvider.setIsEmailVerified = true;
         push(context: context, widget: SignUpScreen());
       } else {
+        if (_loginResponseModel?.data?.user?.status != "active") {
+          MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+            context: context,
+          );
+          return;
+        }
         if (!context.mounted) return;
         context.read<UserProvider>().setIsUserLoggedIn = true;
         pushRemoveUntil(

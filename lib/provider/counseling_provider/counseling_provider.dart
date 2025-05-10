@@ -8,34 +8,34 @@ class CounselingProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  /// selectable topics
-  final topics = [
-    "Depression",
-    "Coping with Addiction",
-    "Career Choice",
-    "Mindful Living",
-    "Motivation , self esteem and confidence.",
-    "Personal Values & Integrity",
-    "Overcoming Procrastination",
-    "other",
-  ];
+  // /// selectable topics
+  // final topics = [
+  //   "Depression",
+  //   "Coping with Addiction",
+  //   "Career Choice",
+  //   "Mindful Living",
+  //   "Motivation , self esteem and confidence.",
+  //   "Personal Values & Integrity",
+  //   "Overcoming Procrastination",
+  //   "other",
+  // ];
 
   /// selected topics
-  final List<String> selectedTopics = [];
+  // final List<String> selectedTopics = [];
 
   /// empty selection on delete
-  void emptySelectedTopics() {
-    selectedTopics.clear();
-    notifyListeners();
-  }
+  // void emptySelectedTopics() {
+  //   selectedTopics.clear();
+  //   notifyListeners();
+  // }
 
   /// check if at least one option
-  void validateTopicsAreSelected({required BuildContext context}) async {
-    if (selectedTopics.isEmpty) {
-      WidgetHelper.customSnackBar(
-        context: context,
-        title: AppStrings.mustSelectOneTopic,
-      );
-    }
-  }
+  // void validateTopicsAreSelected({required BuildContext context}) async {
+  //   if (selectedTopics.isEmpty) {
+  //     WidgetHelper.customSnackBar(
+  //       context: context,
+  //       title: AppStrings.mustSelectOneTopic,
+  //     );
+  //   }
+  // }
 }

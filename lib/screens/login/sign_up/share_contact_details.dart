@@ -88,7 +88,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                       maxLength: 10,
                       isVerified: signUpProvider.isContactNo2Verified,
                       enabled:
-                          signUpProvider.contactNo2.text.isEmpty &&
+                          signUpProvider.contactNo2.text.isEmpty ||
                           !signUpProvider.isContactNo2Verified,
                       label: AppStrings.contactNo2,
                       keyboard: TextInputType.number,

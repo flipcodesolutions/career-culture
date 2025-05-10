@@ -34,7 +34,7 @@ class SendOtpService {
   }
 
   /// verify mobile otp
-  Future<UserModel?> verifyEmailOtp({
+  Future<bool> verifyEmailOtp({
     required BuildContext context,
     required String email,
     required String otp,
@@ -46,13 +46,12 @@ class SendOtpService {
         body: {"email": email, "otp": otp},
       );
       if (response.isNotEmpty) {
-        UserModel model = UserModel.fromJson(response);
-        return model;
+        return response['data']['isEmailVerify'];
       }
-      return null;
+      return false;
     } catch (e) {
       log("error while verify mobile otp => $e");
-      return null;
+      return false;
     }
   }
 
@@ -82,7 +81,7 @@ class SendOtpService {
   }
 
   /// verify mobile otp
-  Future<UserModel?> verifyMobileOtp({
+  Future<bool> verifyMobileOtp({
     required BuildContext context,
     required String contactNo,
     required String otp,
@@ -94,13 +93,12 @@ class SendOtpService {
         body: {"contactNo": contactNo, "otp": otp},
       );
       if (response.isNotEmpty) {
-        UserModel model = UserModel.fromJson(response);
-        return model;
+        return response['data']['isNewUser'];
       }
-      return null;
+      return false;
     } catch (e) {
       log("error while verify mobile otp => $e");
-      return null;
+      return false;
     }
   }
 }

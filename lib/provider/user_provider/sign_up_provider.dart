@@ -205,8 +205,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   SendEmailOtpModel? get emailOtpModel => _emailOtpModel;
   SentOtpModel? _mobileOtpModel;
   SentOtpModel? get mobileOtpModel => _mobileOtpModel;
-  UserModel? _verifyMobileModel;
-  UserModel? get verifyMobileModel => _verifyMobileModel;
+  bool? _verifyMobile;
+  bool? get verifyMobile => _verifyMobile;
   UserModel? _verifyEmailModel;
   UserModel? get verifyEmailModel => _verifyEmailModel;
 
@@ -221,7 +221,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       final ok = await _showEmailOtpDialog(context);
       setIsEmailVerified = ok;
       _signUpRequestModel.isEmailVerified = ok ? 'yes' : 'no';
-      if (!ok) return false;
+      if (!ok) {
+        contactNo1.clear();
+        return false;
+      }
     }
 
     // 2) Contact #1 OTP
@@ -256,7 +259,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         contact: contactNo2.text,
       );
       setIsContactNo2Verified = ok2;
-      if (!ok2) return false;
+      if (!ok2) {
+        contactNo2.clear();
+        return false;
+      }
     }
 
     // 4) Final sanity‑check
@@ -375,7 +381,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
 
-    _verifyMobileModel = await otpService.verifyEmailOtp(
+    _verifyMobile = await otpService.verifyEmailOtp(
       context: context,
       email: email,
       otp: otp,
@@ -383,8 +389,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _isLoading = false;
     notifyListeners();
-    if (_verifyMobileModel?.success == true &&
-        _verifyMobileModel?.data?.isEmailVerified == true) {
+    if (_verifyMobile == true) {
       return true;
     } else {
       WidgetHelper.customSnackBar(
@@ -404,7 +409,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
 
-    _verifyMobileModel = await otpService.verifyMobileOtp(
+    _verifyMobile = await otpService.verifyMobileOtp(
       context: context,
       contactNo: contactNo,
       otp: otp,
@@ -412,8 +417,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _isLoading = false;
     notifyListeners();
-    if (_verifyMobileModel?.success == true &&
-        _verifyMobileModel?.data?.isNewUser == true) {
+    if (_verifyMobile == true) {
       return true;
     } else {
       WidgetHelper.customSnackBar(
@@ -487,6 +491,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                       );
                       if (success) {
                         Navigator.of(builderContext).pop(true);
+                      } else {
+                        Navigator.of(builderContext).pop(false);
                       }
                     }
                   },

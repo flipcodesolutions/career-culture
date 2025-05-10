@@ -5,14 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/service/fcm_token_service/fcm_token_service.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
+import '../widget_helper/widget_helper.dart';
 
-class MethodHelper {
+class MethodHelper with NavigateHelper {
   /// launch urls
   static Future<bool> launchUrlInBrowser({required String url}) async {
     final uri = Uri.tryParse(url);
@@ -262,6 +265,7 @@ class MethodHelper {
       firstDate: DateTime(1947),
       lastDate: DateTime(
         DateTime.now().year,
+        
         DateTime.now().month,
         DateTime.now().day,
       ),
@@ -299,5 +303,20 @@ class MethodHelper {
         fcmToken: token,
       );
     }
+  }
+
+  redirectDeletedOrInActiveUserToLoginPage({
+    required BuildContext context,
+  }) async {
+    pushRemoveUntil(
+      context: context,
+      widget: LoginScreen(isToNavigateHome: true),
+    );
+    await SharedPrefs.clearShared();
+    WidgetHelper.customSnackBar(
+      context: context,
+      title: AppStrings.accountIsDeleted,
+      isError: true,
+    );
   }
 }

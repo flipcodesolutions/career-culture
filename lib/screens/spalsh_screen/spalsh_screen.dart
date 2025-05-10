@@ -9,6 +9,8 @@ import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_image_strings.dart';
+import '../../app_const/app_strings.dart';
+import '../../utils/method_helpers/method_helper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,7 +36,13 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
     Future.delayed(Duration(seconds: time + time + time), () async {
       UserProvider userProvider = context.read<UserProvider>();
       String token = await SharedPrefs.getToken();
-      if (token != "" && token.isNotEmpty) {
+      String status = await SharedPrefs.getSharedString(AppStrings.status);
+      if (status != "active") {
+        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+          context: context,
+        );
+        return;
+      } else if (token != "" && token.isNotEmpty) {
         userProvider.setIsUserLoggedIn = true;
         pushRemoveUntil(
           context: context,

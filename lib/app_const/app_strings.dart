@@ -195,6 +195,9 @@ class AppStrings {
   static const location = "Location";
   static const contactInfo = "Contact Information";
   static const registration = "Registration";
+  static const noFilePicked = "No File Picked";
+  static const noPermissionFound = "No Permission Found For This Action";
+  static const accountIsDeleted = "Account Is Deleted Or Not Active";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
