@@ -5,6 +5,7 @@ import 'package:mindful_youth/models/product_model/create_order_model.dart';
 import 'package:mindful_youth/models/product_model/order_list_model.dart';
 import 'package:mindful_youth/service/product_service/orders_list_service.dart';
 import 'package:mindful_youth/service/product_service/product_service.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/product_model/product_model.dart';
 
@@ -46,6 +47,14 @@ class ProductProvider extends ChangeNotifier {
   set setOrder(CreateOrderModel order) {
     _orderModel = order;
     notifyListeners();
+    getAddressFromLocalStorage();
+  }
+
+  void getAddressFromLocalStorage() async {
+    String line1 = await SharedPrefs.getSharedString(AppStrings.addressLine1);
+    String line2 = await SharedPrefs.getSharedString(AppStrings.addressLine2);
+    addressController.text = "$line1 $line2";
+    notifyListeners();
   }
 
   ConfirmOrderModel? _confirmOrderModel;
@@ -53,7 +62,7 @@ class ProductProvider extends ChangeNotifier {
   Future<bool> order({
     required BuildContext context,
     required Product? product,
-    required int qty
+    required int qty,
   }) async {
     /// set _isLoading true
     _isLoading = true;
