@@ -8,6 +8,7 @@ import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -37,6 +38,18 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
   String get screenName => 'Counseling_Form_Screen';
   @override
   bool get debug => false; // Enable debug logs
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() async {
+      CounselingProvider counselingProvider =
+          context.read<CounselingProvider>();
+      await counselingProvider.getCounselignDatesAndSlots(context: context);
+      counselingProvider.initControllerFromLocalStorage();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     CounselingProvider counselingProvider = context.watch<CounselingProvider>();
@@ -74,7 +87,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
                     labelText: AppStrings.name,
                     hintText: AppStrings.enterName,
                     maxLength: 100,
-                    controller: TextEditingController(),
+                    controller: counselingProvider.nameController,
+                    enabled: counselingProvider.nameController.text.isEmpty,
                     validator:
                         (value) => ValidatorHelper.validateValue(
                           value: value,
@@ -88,7 +102,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
                     labelText: AppStrings.email,
                     hintText: AppStrings.enterEmail,
                     maxLength: 100,
-                    controller: TextEditingController(),
+                    controller: counselingProvider.emailController,
+                    enabled: counselingProvider.emailController.text.isEmpty,
                     validator:
                         (value) => ValidatorHelper.validateEmail(
                           value: value,
@@ -102,64 +117,77 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
                     labelText: AppStrings.contactNo,
                     hintText: AppStrings.enterContact,
                     maxLength: 10,
-                    controller: TextEditingController(),
+                    controller: counselingProvider.contactController,
+                    enabled: counselingProvider.contactController.text.isEmpty,
                     validator:
                         (value) => ValidatorHelper.validateValue(
                           value: value,
                           context: context,
                         ),
-                  ),
-                  SizeHelper.height(),
-                  CustomTextFormField(
-                    labelText: AppStrings.birthDate,
-                    hintText: AppStrings.dateFormate,
-                    maxLength: 10,
-                    suffix: CustomContainer(
-                      width: 10.w,
-                      child: GestureDetector(
-                        child: AppIcons.calender,
-                        onTap: () async {
-                          String s =
-                              await MethodHelper.selectBirthDateByDatePicker(
-                                context: context,
-                              );
-                        },
-                      ),
-                    ),
-                    keyboardType: TextInputType.numberWithOptions(),
-                    controller: TextEditingController(),
-                    validator:
-                        (value) => ValidatorHelper.validateDateFormate(
-                          value: value,
-                          context: context,
-                        ),
-                  ),
-                  SizeHelper.height(),
-                  DateTimePickerFormField(
-                    hintText: AppStrings.dateAndTimeFormate,
-                    labelText: AppStrings.dateAndTime,
                   ),
                   SizeHelper.height(),
                   CustomDropDownWidget(
                     label: AppStrings.preferredModeOfCounseling,
-                    hintText: "Select Mode",
+                    hintText: AppStrings.selectMode,
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(
+                        value: AppStrings.onlineMode,
+                        label: AppStrings.onlineMode,
+                      ),
+                      DropdownMenuEntry(
+                        value: AppStrings.offlineMode,
+                        label: AppStrings.offlineMode,
+                      ),
+                    ],
+                    onSelected:
+                        (pickedMode) => counselingProvider
+                            .selectModeForCounseling(pickedMode: pickedMode),
                   ),
                   SizeHelper.height(),
+                  counselingProvider.isLoading
+                      ? Center(child: CustomLoader())
+                      : CustomDropDownWidget(
+                        label: AppStrings.dateAndTime,
+                        hintText: AppStrings.selectDateForCounseling,
+                        dropdownMenuEntries:
+                            counselingProvider.getDatesForCounseling(),
+                        onSelected:
+                            (pickedDate) =>
+                                counselingProvider.selectDateForCounseling(
+                                  pickedDate: pickedDate,
+                                ),
+                      ),
+                  SizeHelper.height(),
+                  counselingProvider.isLoading
+                      ? Center(child: CustomLoader())
+                      : CustomDropDownWidget(
+                        label: AppStrings.availableSlots,
+                        hintText: AppStrings.selectSlot,
+                        onSelected:
+                            (pickedSlot) =>
+                                counselingProvider.selectSlotForCounseling(
+                                  pickedSlot: pickedSlot,
+                                ),
+                        dropdownMenuEntries:
+                            counselingProvider.getSlotsForCounseling(),
+                        enabled: counselingProvider.isDatePicked,
+                      ),
+                  SizeHelper.height(),
 
-                  /// email
-                  CustomTextFormField(
-                    labelText: AppStrings.reasonForCounseling,
-                    hintText: AppStrings.enterReason,
-                    minLines: 5,
-                    maxLines: 6,
-                    maxLength: 500,
-                    controller: TextEditingController(),
-                    validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
-                  ),
+                  // /// reason
+                  // CustomTextFormField(
+                  //   labelText: AppStrings.reasonForCounseling,
+                  //   hintText: AppStrings.enterReason,
+                  //   minLines: 5,
+                  //   maxLines: 6,
+                  //   maxLength: 500,
+                  //   controller: TextEditingController(),
+                  //   validator:
+                  //       (value) => ValidatorHelper.validateValue(
+                  //         value: value,
+                  //         context: context,
+                  //       ),
+                  // ),
                 ],
               ),
             ),
@@ -170,9 +198,10 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         child: PrimaryBtn(
           btnText: AppStrings.submit,
-          onTap: () {
-            /// logic to
-          },
+          onTap:
+              () => counselingProvider.createCounselingAppointment(
+                context: context,
+              ),
         ),
       ),
     );

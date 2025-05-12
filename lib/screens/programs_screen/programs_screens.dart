@@ -11,6 +11,7 @@ import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -370,8 +371,12 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     return InkWell(
       onTap:
           () =>
-              isOpen
-                  ? push(context: context, widget: CousilingFormScreen())
+              !isOpen
+                  ? push(
+                    context: context,
+                    widget: CousilingFormScreen(),
+                    transition: ScaleFadePageTransitionsBuilder(),
+                  )
                   : WidgetHelper.customSnackBar(
                     context: context,
                     title: AppStrings.mileStoneNotAchieved,

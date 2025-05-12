@@ -4,7 +4,6 @@ import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
-import '../app_const/app_strings.dart';
 
 class CustomDropDownWidget extends StatefulWidget {
   const CustomDropDownWidget({
@@ -12,10 +11,16 @@ class CustomDropDownWidget extends StatefulWidget {
     this.label,
     this.hintText,
     this.width,
+    required this.dropdownMenuEntries,
+    this.onSelected,
+    this.enabled = true,
   });
   final String? label;
   final String? hintText;
   final double? width;
+  final List<DropdownMenuEntry<String>> dropdownMenuEntries;
+  final void Function(String?)? onSelected;
+  final bool enabled;
   @override
   State<CustomDropDownWidget> createState() => _CustomDropDownWidgetState();
 }
@@ -44,16 +49,10 @@ class _CustomDropDownWidgetState extends State<CustomDropDownWidget> {
             focusedBorder: BorderHelper.inputBorderFocused,
             disabledBorder: BorderHelper.inputBorderDisabled,
           ),
-          dropdownMenuEntries: [
-            DropdownMenuEntry(
-              value: AppStrings.onlineMode,
-              label: AppStrings.onlineMode,
-            ),
-            DropdownMenuEntry(
-              value: AppStrings.offlineMode,
-              label: AppStrings.offlineMode,
-            ),
-          ],
+          dropdownMenuEntries: widget.dropdownMenuEntries,
+          onSelected: widget.onSelected,
+          enabled: widget.enabled,
+          menuHeight: 40.h,
         ),
       ],
     );

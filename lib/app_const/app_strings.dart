@@ -201,7 +201,13 @@ class AppStrings {
   static const onlineMode = "Online Mode";
   static const offlineMode = "Offline Mode";
   static const inviteFriends = 'Invite Friends';
+  static const selectMode = "Select Mode";
   static const inviteRequestSent = 'Invite Request Sent Successfully';
+  static const selectDateForCounseling = 'Select Date For Counseling';
+  static const noDateFound = 'No Dates Found';
+  static const noSlotsFound = 'No Slots Found';
+  static const selectSlot = 'Select Slot';
+  static const availableSlots = 'Available Slots';
   static const earnRewards =
       'Earn rewards when your friends join using your code!';
   static willGetThisMuchCoins({required String points}) =>

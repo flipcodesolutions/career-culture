@@ -25,13 +25,21 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
     super.initState();
     // Play Audio if available
     if (widget.onBoardingInfo.audioUrl != null &&
-        widget.onBoardingInfo.audioUrl!.isNotEmpty) {
+        widget.onBoardingInfo.audioUrl!.isNotEmpty &&
+        widget.onBoardingInfo.videoUrl?.isEmpty == true) {
       audioPlayer
           .setUrl("${AppStrings.assetsUrl}${widget.onBoardingInfo.audioUrl!}")
           .then((_) {
             audioPlayer.play();
           });
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    audioPlayer.dispose();
   }
 
   @override
@@ -42,7 +50,8 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           if (widget.onBoardingInfo.videoUrl != null &&
-              widget.onBoardingInfo.videoUrl?.isNotEmpty == true)
+              widget.onBoardingInfo.videoUrl?.isNotEmpty == true &&
+              widget.onBoardingInfo.image?.isEmpty == true)
             CustomContainer(
               width: 90.w,
               height: 25.h,
