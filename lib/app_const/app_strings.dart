@@ -9,6 +9,7 @@ class AppStrings {
       "https://career-culture.flipcodesolutions.com/uploads/";
 
   /// app strings
+  static const india = "India";
   static const confirmed = "Confirmed";
   static const noDataFound = "No Data Found !!";
   static const somethingWentWrong = "Something Went Wrong !!";
@@ -209,6 +210,8 @@ class AppStrings {
   static const selectSlot = 'Select Slot';
   static const availableSlots = 'Available Slots';
   static const noReferCodeFound = 'No Refer Code Found';
+  static const referCode = 'Refer Code';
+  static const enterReferCodeIfAny = 'Enter Refer Code... (If Any)';
   static const earnRewards =
       'Earn rewards when your friends join using your code!';
   static willGetThisMuchCoins({required String points}) =>

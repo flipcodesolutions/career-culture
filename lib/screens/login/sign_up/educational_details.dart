@@ -89,7 +89,7 @@ class EducationalDetails extends StatelessWidget {
                   ),
                   SizeHelper.height(),
                   if (signUpProvider.areYouWorking.answer?.toLowerCase() ==
-                      "yes")
+                      "yes") ...[
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
@@ -109,7 +109,32 @@ class EducationalDetails extends StatelessWidget {
                                     : null,
                       ),
                     ),
-                  SizeHelper.height(),
+                    SizeHelper.height(),
+                  ],
+                  if (!signUpProvider.isUpdatingProfile) ...[
+                    CustomContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: CustomTextFormField(
+                        maxLines: 5,
+                        labelText: AppStrings.referCode,
+                        hintText: AppStrings.enterReferCodeIfAny,
+                        controller: signUpProvider.referCode,
+                        keyboardType: TextInputType.numberWithOptions(),
+                        adaptiveTextSelectionToolbarChildren: [],
+                        maxLength: 6,
+                        validator:
+                            (value) =>
+                                signUpProvider.referCode.text.isNotEmpty
+                                    ? ValidatorHelper.validateMobileNumber(
+                                      value: value,
+                                      context: context,
+                                      lengthToCheck: 6,
+                                    )
+                                    : null,
+                      ),
+                    ),
+                    SizeHelper.height(),
+                  ],
                 ],
               ),
             ),

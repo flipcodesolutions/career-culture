@@ -23,6 +23,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool enabled;
   final void Function(String)? onChanged;
   final Widget? suffix;
+  final List<Widget>? adaptiveTextSelectionToolbarChildren;
   const CustomTextFormField({
     super.key,
     required this.controller,
@@ -44,6 +45,7 @@ class CustomTextFormField extends StatelessWidget {
     this.labelText,
     this.onChanged,
     this.suffix,
+    this.adaptiveTextSelectionToolbarChildren,
   });
 
   @override
@@ -51,6 +53,12 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       autocorrect: autocorrect,
       controller: controller,
+      contextMenuBuilder: (context, editableTextState) {
+        return AdaptiveTextSelectionToolbar(
+          anchors: editableTextState.contextMenuAnchors,
+          children: adaptiveTextSelectionToolbarChildren,
+        );
+      },
       buildCounter:
           (
             context, {

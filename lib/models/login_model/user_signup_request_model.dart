@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 class UserSignUpRequestModel {
   String? name;
   String? email;
+  String? referCode;
   String? isEmailVerified;
   String? isContactVerified;
   String? phone;
@@ -54,6 +55,7 @@ class UserSignUpRequestModel {
   UserSignUpRequestModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     email = json['email'];
+    referCode = json['referCode'];
     isEmailVerified = json['is_email_verified'];
     isContactVerified = json['is_contact_verified'];
     phone = json['phone'];
@@ -80,6 +82,7 @@ class UserSignUpRequestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
     data['email'] = this.email;
+    data['referCode'] = this.referCode;
     data['is_email_verified'] = this.isEmailVerified;
     data['is_contact_verified'] = this.isContactVerified;
     data['contactNo1'] = this.contactNo1;

@@ -514,6 +514,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   TextEditingController presentOrLastStudy = TextEditingController();
   TextEditingController collegeOrUniversity = TextEditingController();
   TextEditingController companyOrBusiness = TextEditingController();
+  TextEditingController referCode = TextEditingController();
   final AssessmentQuestion _areYouWorking = AssessmentQuestion(
     question: AppStrings.areYouWorking,
     extractedOptions: ["Yes", "No"],
@@ -574,7 +575,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.addressLine2 = address2.text;
     _signUpRequestModel.city = city.text;
     _signUpRequestModel.state = state.text;
-    _signUpRequestModel.country = country.text;
+    // _signUpRequestModel.country = country.text; // for now making india as default country
+    _signUpRequestModel.country = AppStrings.india;
     _signUpRequestModel.district = district.text;
     _signUpRequestModel.study = presentOrLastStudy.text;
     _signUpRequestModel.degree = presentOrLastStudy.text;
@@ -583,6 +585,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         areYouWorking.answer?.toLowerCase() ?? "no";
     _signUpRequestModel.nameOfCompanyOrBusiness = companyOrBusiness.text;
     _signUpRequestModel.convenerId = selectedConvener?.id;
+    _signUpRequestModel.referCode = referCode.text;
     notifyListeners();
 
     /// set _isLoading true

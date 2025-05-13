@@ -168,18 +168,20 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                       ),
                     ),
                     SizeHelper.height(),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.country,
-                        controller: signUpProvider.country,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
-                      ),
-                    ),
+
+                    /// hiding country field for now
+                    // CustomContainer(
+                    //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    //   child: CustomTextFormField(
+                    //     labelText: AppStrings.country,
+                    //     controller: signUpProvider.country,
+                    //     validator:
+                    //         (value) => ValidatorHelper.validateValue(
+                    //           value: value,
+                    //           context: context,
+                    //         ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

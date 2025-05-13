@@ -9,11 +9,12 @@ class ValidatorHelper with NavigateHelper {
   static String? validateMobileNumber({
     required String? value,
     required BuildContext context,
+    int? lengthToCheck = 10,
   }) {
     if (value?.isEmpty == true) {
       return AppStrings.numberRequired;
     }
-    if ((value?.length ?? 0) != 10) {
+    if ((value?.length ?? 0) != lengthToCheck) {
       return AppStrings.numberValidReq;
     }
     if (value?.contains(AppRegex.onlyDigitReg) == false) {

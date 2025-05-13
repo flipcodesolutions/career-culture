@@ -56,11 +56,13 @@ class SignUpService {
     request.fields['university'] = signUp.university ?? "";
     request.fields['workingStatus'] = signUp.workingStatus ?? "";
     request.fields['convener_id'] = signUp.convenerId.toString();
+    request.fields['referCode'] = signUp.referCode.toString();
     request.fields['nameOfCompanyOrBusiness'] =
         signUp.nameOfCompanyOrBusiness ?? "";
 
     final streamedResponse = await request.send();
     final data = await http.Response.fromStream(streamedResponse);
+    log(signUp.toJson().toString());
     if (streamedResponse.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(data.body);
       WidgetHelper.customSnackBar(
