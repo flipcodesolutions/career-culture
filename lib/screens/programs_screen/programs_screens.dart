@@ -157,7 +157,14 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                             padding: EdgeInsets.all(AppSize.size10),
                             backGroundColor: AppColors.lightWhite,
                             borderRadius: BorderRadius.circular(AppSize.size10),
-
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x000000).withOpacity(1),
+                                offset: Offset(0, 0),
+                                blurRadius: 15,
+                                spreadRadius: -9,
+                              ),
+                            ],
                             width: 90.w,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
