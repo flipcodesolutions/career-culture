@@ -129,8 +129,8 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
   final List<T>? score;
   @override
   Widget build(BuildContext context) {
-    if (score?.length == 0) {
-      return Center(child: NoDataFoundWidget(text: AppStrings.noScoresFound,));
+    if (score?.isEmpty == true) {
+      return Center(child: NoDataFoundWidget(text: AppStrings.noScoresFound));
     }
     if ((score?.length ?? 0) < 3) {
       return CustomContainer(
@@ -139,7 +139,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
           children: List.generate(
             score?.length ?? 0,
             (index) => TopPlayerCard(
-              index: index.toString(),
+              index: (index + 1).toString(),
               isListTile: true,
               name: score![0].name ?? '',
               isFirst: index == 0,

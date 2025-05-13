@@ -121,6 +121,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         mobileController.clear();
         otpController.clear();
         _otpModel = null;
+        notifyListeners();
         if (_loginResponseModel?.data?.user?.status != "active") {
           MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
             context: context,

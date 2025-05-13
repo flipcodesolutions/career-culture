@@ -5,7 +5,7 @@ import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
-class CustomDropDownWidget extends StatefulWidget {
+class CustomDropDownWidget<T> extends StatefulWidget {
   const CustomDropDownWidget({
     super.key,
     this.label,
@@ -14,18 +14,20 @@ class CustomDropDownWidget extends StatefulWidget {
     required this.dropdownMenuEntries,
     this.onSelected,
     this.enabled = true,
+    this.initialSelection
   });
   final String? label;
   final String? hintText;
   final double? width;
-  final List<DropdownMenuEntry<String>> dropdownMenuEntries;
-  final void Function(String?)? onSelected;
+  final List<DropdownMenuEntry<T>> dropdownMenuEntries;
+  final void Function(T?)? onSelected;
   final bool enabled;
+  final T? initialSelection;
   @override
   State<CustomDropDownWidget> createState() => _CustomDropDownWidgetState();
 }
 
-class _CustomDropDownWidgetState extends State<CustomDropDownWidget> {
+class _CustomDropDownWidgetState<T> extends State<CustomDropDownWidget<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,7 +42,8 @@ class _CustomDropDownWidgetState extends State<CustomDropDownWidget> {
               color: AppColors.primary,
             ),
           ),
-        DropdownMenu(
+        DropdownMenu<T>(
+          initialSelection: widget.initialSelection,
           width: widget.width ?? 90.w,
           hintText: widget.hintText,
           inputDecorationTheme: InputDecorationTheme(

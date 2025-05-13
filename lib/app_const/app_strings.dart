@@ -218,6 +218,8 @@ class AppStrings {
       'On SuccessFull Invite You Will Get $points Points As Reward';
   static const counselingAppointmentSubmitted =
       "Counseling Appointment Submitted";
+  static const noStateFound = 'No States Found';
+  static const noCitiesFound = 'No Cities Found';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

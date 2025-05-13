@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/app_const/app_states_and_city.dart';
 import 'package:mindful_youth/models/login_model/convener_list_model.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
@@ -159,6 +160,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// Second page form key
   GlobalKey<FormState> secondPageFormKey = GlobalKey<FormState>();
+  AppStatesAndCity statesAndCity = AppStatesAndCity();
 
   /// OTP verification form key is now local to the dialog function
   /// GlobalKey<FormState> verifyOtpFormKey = GlobalKey<FormState>(); // no longer needed globally
@@ -195,9 +197,68 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   /// address
   TextEditingController address1 = TextEditingController();
   TextEditingController address2 = TextEditingController();
-  TextEditingController city = TextEditingController();
-  TextEditingController state = TextEditingController();
+  // TextEditingController city = TextEditingController();
+  String city = "";
+
+  /// if provider is Loading
+  bool _cityLoader = false;
+  bool get cityLoader => _cityLoader;
+
+  /// get drop down list for states
+  void selectCity({required String citySelected}) {
+    city = citySelected;
+    notifyListeners();
+  }
+
+  List<DropdownMenuEntry<String>> availableCity() {
+    MapEntry<String, List<String>> stateWithCity = statesAndCity
+        .stateAndCity
+        .entries
+        .firstWhere(
+          (e) => e.key == state,
+          orElse:
+              () => MapEntry(AppStrings.noDataFound, <String>[
+                AppStrings.noCitiesFound,
+              ]),
+        );
+
+    return List<DropdownMenuEntry<String>>.generate(
+      stateWithCity.value.length,
+      (index) => DropdownMenuEntry(
+        value: stateWithCity.value.elementAt(index),
+        label: stateWithCity.value.elementAt(index),
+      ),
+    );
+  }
+
   TextEditingController country = TextEditingController();
+  // TextEditingController state = TextEditingController();
+  String state = "";
+
+  /// get drop down list for states
+  void selectState({required String stateSelected}) async {
+    /// set _isLoading true
+    _cityLoader = true;
+    notifyListeners();
+    state = stateSelected;
+    city = AppStrings.noCitiesFound;
+    await Future.delayed(Duration(milliseconds: 300));
+
+    /// set _isLoading false
+    _cityLoader = false;
+    notifyListeners();
+  }
+
+  List<DropdownMenuEntry<String>> availableStates() {
+    return List<DropdownMenuEntry<String>>.generate(
+      statesAndCity.stateAndCity.keys.length,
+      (index) => DropdownMenuEntry(
+        value: statesAndCity.stateAndCity.keys.elementAt(index),
+        label: statesAndCity.stateAndCity.keys.elementAt(index),
+      ),
+    );
+  }
+
   TextEditingController district = TextEditingController();
 
   SendOtpService otpService = SendOtpService();
@@ -214,17 +275,29 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   Future<bool> validateSecondPage(BuildContext context) async {
     final isValid = secondPageFormKey.currentState?.validate() ?? false;
     if (!isValid) return false;
-
+    if (state == "" || state == AppStrings.noStateFound) {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.noStateFound,
+        isError: true,
+      );
+      return false;
+    }
+    if (city == "" || city == AppStrings.noCitiesFound) {
+      WidgetHelper.customSnackBar(
+        context: context,
+        title: AppStrings.noCitiesFound,
+        isError: true,
+      );
+      return false;
+    }
     // 1) Email OTP
     if (!_isEmailVerified) {
       await sendEmailOtp(context: context);
       final ok = await _showEmailOtpDialog(context);
+      if (!ok) return false;
       setIsEmailVerified = ok;
       _signUpRequestModel.isEmailVerified = ok ? 'yes' : 'no';
-      if (!ok) {
-        contactNo1.clear();
-        return false;
-      }
     }
 
     // 2) Contact #1 OTP
@@ -240,9 +313,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         title: AppStrings.verifyContactNo1WithOtp,
         contact: contactNo1.text,
       );
+      if (!ok1) {
+        contactNo1.clear();
+        return false;
+      }
       setIsContactNo1Verified = ok1;
       _signUpRequestModel.isContactVerified = ok1 ? 'yes' : 'no';
-      if (!ok1) return false;
     }
 
     // 3) Contact #2 OTP (only if provided)
@@ -258,11 +334,11 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         title: AppStrings.verifyContactNo2WithOtp,
         contact: contactNo2.text,
       );
-      setIsContactNo2Verified = ok2;
       if (!ok2) {
         contactNo2.clear();
         return false;
       }
+      setIsContactNo2Verified = ok2;
     }
 
     // 4) Final sanity‑check
@@ -573,8 +649,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.dateOfBirth = birthDate.text;
     _signUpRequestModel.addressLine1 = address1.text;
     _signUpRequestModel.addressLine2 = address2.text;
-    _signUpRequestModel.city = city.text;
-    _signUpRequestModel.state = state.text;
+    // _signUpRequestModel.city = city.text;
+    _signUpRequestModel.city = city;
+    // _signUpRequestModel.state = state.text; instead using string to select state
+    _signUpRequestModel.state = state;
     // _signUpRequestModel.country = country.text; // for now making india as default country
     _signUpRequestModel.country = AppStrings.india;
     _signUpRequestModel.district = district.text;
@@ -639,9 +717,11 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     contactNo2Otp.clear();
     address1.clear();
     address2.clear();
-    city.clear();
+    // city.clear();
+    city = "";
     district.clear();
-    state.clear();
+    // state.clear();
+    state = "";
     country.clear();
     _isEmailVerified = false;
     _isContactNo1Verified = false;
@@ -700,8 +780,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // );
     address1.text = await SharedPrefs.getSharedString(AppStrings.addressLine1);
     address2.text = await SharedPrefs.getSharedString(AppStrings.addressLine2);
-    city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
-    state.text = await SharedPrefs.getSharedString(AppStrings.userState);
+    // city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
+    city = await SharedPrefs.getSharedString(AppStrings.userCity);
+    // state.text = await SharedPrefs.getSharedString(AppStrings.userState);
+    state = await SharedPrefs.getSharedString(AppStrings.userState);
     country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
     district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
 

@@ -5,7 +5,9 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_drop_down.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
@@ -131,35 +133,39 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                     SizeHelper.height(),
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.city,
-                        controller: signUpProvider.city,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
+                      child: CustomDropDownWidget<String>(
+                        initialSelection: signUpProvider.state,
+                        label: AppStrings.state,
+                        dropdownMenuEntries: signUpProvider.availableStates(),
+                        onSelected:
+                            (dynamic stateSelected) =>
+                                signUpProvider.selectState(
+                                  stateSelected: stateSelected as String,
+                                ),
                       ),
                     ),
+                    SizeHelper.height(),
+                    signUpProvider.cityLoader
+                        ? Center(child: CustomLoader())
+                        : CustomContainer(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: CustomDropDownWidget<String>(
+                            initialSelection: signUpProvider.city,
+                            label: AppStrings.city,
+                            onSelected:
+                                (dynamic citySelected) =>
+                                    signUpProvider.selectCity(
+                                      citySelected: citySelected as String,
+                                    ),
+                            dropdownMenuEntries: signUpProvider.availableCity(),
+                          ),
+                        ),
                     SizeHelper.height(),
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
                         labelText: AppStrings.district,
                         controller: signUpProvider.district,
-                        validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
-                      ),
-                    ),
-                    SizeHelper.height(),
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: CustomTextFormField(
-                        labelText: AppStrings.state,
-                        controller: signUpProvider.state,
                         validator:
                             (value) => ValidatorHelper.validateValue(
                               value: value,

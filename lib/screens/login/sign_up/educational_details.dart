@@ -111,7 +111,7 @@ class EducationalDetails extends StatelessWidget {
                     ),
                     SizeHelper.height(),
                   ],
-                  if (!signUpProvider.isUpdatingProfile) ...[
+                  if (signUpProvider.isUpdatingProfile) ...[
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
