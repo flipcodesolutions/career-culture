@@ -208,6 +208,7 @@ class AppStrings {
   static const noSlotsFound = 'No Slots Found';
   static const selectSlot = 'Select Slot';
   static const availableSlots = 'Available Slots';
+  static const noReferCodeFound = 'No Refer Code Found';
   static const earnRewards =
       'Earn rewards when your friends join using your code!';
   static willGetThisMuchCoins({required String points}) =>

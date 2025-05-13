@@ -103,4 +103,6 @@ class ApiHelper {
 
   /// create order
   static String createCounselingAppointment = "$baseUrl/appointment";
+  /// create order
+  static String referCode = "$baseUrl/";
 }

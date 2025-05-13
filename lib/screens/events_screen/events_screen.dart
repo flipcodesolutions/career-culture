@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
