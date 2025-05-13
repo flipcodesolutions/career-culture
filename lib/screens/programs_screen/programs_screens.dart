@@ -371,7 +371,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     return InkWell(
       onTap:
           () =>
-              !isOpen
+              isOpen
                   ? push(
                     context: context,
                     widget: CousilingFormScreen(),

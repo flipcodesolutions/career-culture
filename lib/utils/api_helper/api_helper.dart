@@ -100,4 +100,7 @@ class ApiHelper {
 
   /// create order
   static String getCounselingDatesAndSlots = "$baseUrl/slots";
+
+  /// create order
+  static String createCounselingAppointment = "$baseUrl/appointment";
 }

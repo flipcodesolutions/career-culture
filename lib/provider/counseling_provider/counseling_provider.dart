@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mindful_youth/models/counseling_model/counseling_models.dart';
 import 'package:mindful_youth/service/counseling_service/counseling_service.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../app_const/app_strings.dart';
 
-class CounselingProvider extends ChangeNotifier {
+class CounselingProvider extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -152,8 +150,29 @@ class CounselingProvider extends ChangeNotifier {
   void createCounselingAppointment({required BuildContext context}) async {
     if (!checkIfPicked()) {
       /// create counseling
+      /// set _isLoading true
+      _isLoading = true;
+      notifyListeners();
+      bool success = await counselingService.createCounselingAppointment(
+        context: context,
+        appointmentDate: pickedDate,
+        slot: pickedSlot,
+        mode: pickedMode,
+      );
+
+      /// set _isLoading false
+      _isLoading = false;
+      notifyListeners();
+      if (success) {
+        if (context.mounted) {
+          pop(context);
+          WidgetHelper.customSnackBar(
+            context: context,
+            title: AppStrings.counselingAppointmentSubmitted,
+          );
+        }
+      }
     } else {
-      // log("$_pickedDate  $_pickedMode $_pickedSlot");
       WidgetHelper.customSnackBar(
         context: context,
         title: AppStrings.somethingWentWrong,

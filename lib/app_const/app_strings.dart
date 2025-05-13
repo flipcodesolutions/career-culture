@@ -212,6 +212,8 @@ class AppStrings {
       'Earn rewards when your friends join using your code!';
   static willGetThisMuchCoins({required String points}) =>
       'On SuccessFull Invite You Will Get $points Points As Reward';
+  static const counselingAppointmentSubmitted =
+      "Counseling Appointment Submitted";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
