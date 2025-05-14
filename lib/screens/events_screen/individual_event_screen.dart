@@ -98,7 +98,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                 HeadingText(text: AppStrings.registration),
                 paddedText(
                   text:
-                      "${AppStrings.registration} Fee:- ${eventInfo.amount ?? "Not Found"}",
+                      "${AppStrings.registration} Fee:- ${eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
                 ),
                 SizeHelper.height(),
               ],
@@ -205,7 +205,7 @@ class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
         children: [
           // Terms and Conditions Text
           CustomText(text: widget.termsText),
-          const SizedBox(height: 10),
+          SizeHelper.height(),
 
           // Checkbox to agree
           Row(

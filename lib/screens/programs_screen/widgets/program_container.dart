@@ -26,7 +26,9 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
             programsProvider.setCurrentProgramInfo = item,
             push(
               context: context,
-              widget: IndividualProgramScreen(programName: item.title ?? "ProgramScreen",),
+              widget: IndividualProgramScreen(
+                programName: item.title ?? "ProgramScreen",
+              ),
               transition: OpenUpwardsPageTransitionsBuilder(),
             ),
           },
@@ -40,8 +42,13 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomContainer(
-              child: CustomLoaderImage(
-                imageUrl: "${AppStrings.assetsUrl}${item.image}",
+              margin: EdgeInsets.only(right: 5.w, left: 2.w),
+              shape: BoxShape.circle,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppSize.size40),
+                child: CustomImageWithLoader(
+                  imageUrl: "${AppStrings.assetsUrl}${item.image}",
+                ),
               ),
             ),
             CustomText(

@@ -44,6 +44,7 @@ class CustomImageWithLoader extends StatelessWidget {
                 context: context,
                 builder:
                     (context) => Dialog(
+                      backgroundColor: Colors.transparent,
                       child: InteractiveViewer(child: Image.network(imageUrl)),
                     ),
               ),
