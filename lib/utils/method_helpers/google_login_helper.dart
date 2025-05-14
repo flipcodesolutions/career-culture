@@ -9,6 +9,8 @@ class GoogleLoginHelper {
   static Future<void> signInWithGoogle({required BuildContext context}) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
+      // Optional: Force account selection each time
+      await googleSignIn.signOut();
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       /// if no account selected
