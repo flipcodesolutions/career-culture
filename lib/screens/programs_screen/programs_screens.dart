@@ -187,11 +187,25 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                   description: AppStrings.bookAfter25,
                                   heading: AppStrings.counseling1,
                                   isOpen: programsProvider.getPercentage() > 25,
+                                  isDone:
+                                      context
+                                          .read<HomeScreenProvider>()
+                                          .overAllScoreModel
+                                          ?.data
+                                          ?.counselingCount ==
+                                      "1",
                                 ),
                                 SizeHelper.height(),
                                 CounselingOptions(
                                   description: AppStrings.bookAfter75,
                                   heading: AppStrings.counseling2,
+                                  isDone:
+                                      context
+                                          .read<HomeScreenProvider>()
+                                          .overAllScoreModel
+                                          ?.data
+                                          ?.counselingCount ==
+                                      "2",
                                   isOpen: programsProvider.getPercentage() > 75,
                                 ),
                               ],
@@ -369,21 +383,29 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     required this.description,
     required this.heading,
     required this.isOpen,
+    required this.isDone,
   });
   final String heading;
   final String description;
   final bool isOpen;
+  final bool isDone;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap:
           () =>
               isOpen
-                  ? push(
-                    context: context,
-                    widget: CousilingFormScreen(),
-                    transition: ScaleFadePageTransitionsBuilder(),
-                  )
+                  ? isDone
+                      ? WidgetHelper.customSnackBar(
+                        context: context,
+                        title: AppStrings.counselingAppointmentDone,
+                        isError: true,
+                      )
+                      : push(
+                        context: context,
+                        widget: CousilingFormScreen(),
+                        transition: ScaleFadePageTransitionsBuilder(),
+                      )
                   : WidgetHelper.customSnackBar(
                     context: context,
                     title: AppStrings.mileStoneNotAchieved,

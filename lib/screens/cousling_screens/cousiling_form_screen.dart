@@ -126,47 +126,49 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
                         ),
                   ),
                   SizeHelper.height(),
-                  CustomDropDownWidget(
+                  CustomDropDownWidget<String>(
                     label: AppStrings.preferredModeOfCounseling,
                     hintText: AppStrings.selectMode,
-                    dropdownMenuEntries: [
-                      DropdownMenuEntry(
+                    dropdownMenuEntries: <DropdownMenuEntry<String>>[
+                      DropdownMenuEntry<String>(
                         value: AppStrings.onlineMode,
                         label: AppStrings.onlineMode,
                       ),
-                      DropdownMenuEntry(
+                      DropdownMenuEntry<String>(
                         value: AppStrings.offlineMode,
                         label: AppStrings.offlineMode,
                       ),
                     ],
                     onSelected:
-                        (pickedMode) => counselingProvider
-                            .selectModeForCounseling(pickedMode: pickedMode),
+                        (dynamic pickedMode) =>
+                            counselingProvider.selectModeForCounseling(
+                              pickedMode: pickedMode as String,
+                            ),
                   ),
                   SizeHelper.height(),
                   counselingProvider.isLoading
                       ? Center(child: CustomLoader())
-                      : CustomDropDownWidget(
+                      : CustomDropDownWidget<String>(
                         label: AppStrings.dateAndTime,
                         hintText: AppStrings.selectDateForCounseling,
                         dropdownMenuEntries:
                             counselingProvider.getDatesForCounseling(),
                         onSelected:
-                            (pickedDate) =>
+                            (dynamic pickedDate) =>
                                 counselingProvider.selectDateForCounseling(
-                                  pickedDate: pickedDate,
+                                  pickedDate: pickedDate as String,
                                 ),
                       ),
                   SizeHelper.height(),
                   counselingProvider.isLoading
                       ? Center(child: CustomLoader())
-                      : CustomDropDownWidget(
+                      : CustomDropDownWidget<String>(
                         label: AppStrings.availableSlots,
                         hintText: AppStrings.selectSlot,
                         onSelected:
-                            (pickedSlot) =>
+                            (dynamic pickedSlot) =>
                                 counselingProvider.selectSlotForCounseling(
-                                  pickedSlot: pickedSlot,
+                                  pickedSlot: pickedSlot as String,
                                 ),
                         dropdownMenuEntries:
                             counselingProvider.getSlotsForCounseling(),

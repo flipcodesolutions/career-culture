@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
@@ -123,7 +125,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     // Validation before making API call
     bool hasAllValidAnswers =
         _assessmentQuestions?.data?.every((q) {
-          final isMediaType = ['video', 'audio', 'image'].contains(q.type);
+          final isMediaType = ['audio', 'image'].contains(q.type);
           if (isMediaType) {
             return (q.selectedFiles?.isNotEmpty ?? false);
           } else {
@@ -144,7 +146,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-
+    log(_assessmentQuestions?.toJson().toString() ?? "");
     bool success = await assessmentQuestionsService
         .postAssessmentQuestionsByPostId(
           context: context,

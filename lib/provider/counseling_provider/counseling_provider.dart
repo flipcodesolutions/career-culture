@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/counseling_model/counseling_models.dart';
 import 'package:mindful_youth/service/counseling_service/counseling_service.dart';
@@ -139,6 +141,7 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
   void selectDateForCounseling({required String? pickedDate}) {
     _pickedDate = pickedDate ?? "";
     isDatePicked = _pickedDate.isNotEmpty == true;
+    log(isDatePicked.toString());
     notifyListeners();
   }
 

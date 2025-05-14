@@ -57,7 +57,7 @@ class AssessmentQuestionsService {
 
       for (var i = 0; i < dataList.length; i++) {
         AssessmentQuestion question = dataList[i];
-        bool isMedia = ['audio', 'video', 'image'].contains(question.type);
+        bool isMedia = ['audio', 'image'].contains(question.type);
 
         // Add base fields
         request.fields['data[$i][questionId]'] = question.id.toString();
@@ -78,9 +78,9 @@ class AssessmentQuestionsService {
             // Add media file to request
             request.files.add(
               await http.MultipartFile.fromPath(
-                question.type == "video"
-                    ? 'data[$i][video_files]'
-                    : 'data[$i][audio_files]', // This field name must match backend expectations
+                question.type == "audio"
+                    ? 'data[$i][audio_files]' // This field name must match backend expectations
+                    : 'data[$i][image_files]',
                 file.path,
                 contentType: MediaType.parse(mimeType),
               ),

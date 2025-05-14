@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -15,12 +16,14 @@ class CustomFilePicker extends StatefulWidget {
   final IconData? icon;
   final List<String>? allowedExtensions;
   final int questionId;
+  final int maxFileSizeBytes;
   const CustomFilePicker({
     super.key,
     this.allowMultiple = false,
     this.icon,
     this.allowedExtensions,
     required this.questionId,
+    this.maxFileSizeBytes = 5 * 1024 * 1024,
   });
 
   @override
@@ -40,14 +43,29 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
       allowedExtensions:
           widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
     );
-
-    if (result != null) {
-      setState(() {
-        _selectedFiles = result.files;
-      });
+    if (result == null) return;
+    // 1️⃣ separate into accepted vs oversized
+    final List<PlatformFile> oversized =
+        result.files.where((f) => f.size > widget.maxFileSizeBytes).toList();
+    final List<PlatformFile> accepted =
+        result.files.where((f) => f.size <= widget.maxFileSizeBytes).toList();
+    // 2️⃣ notify user about any too-large files
+    if (oversized.isNotEmpty) {
+      final names = oversized.map((f) => f.name).join(', ');
+      WidgetHelper.customSnackBar(
+        context: context,
+        title:
+            'These files exceed the '
+            '${(widget.maxFileSizeBytes / (1024 * 1024)).toStringAsFixed(1)} MB limit: $names',
+        isError: true,
+      );
+    }
+    // 3️⃣ update state & provider with only the accepted ones
+    if (accepted.isNotEmpty) {
+      setState(() => _selectedFiles = accepted);
       assessmentProvider.makeFilesSelection(
         questionId: widget.questionId,
-        selectedFiles: result.files,
+        selectedFiles: accepted,
       );
     }
   }

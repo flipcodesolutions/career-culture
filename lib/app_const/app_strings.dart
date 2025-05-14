@@ -220,6 +220,7 @@ class AppStrings {
       "Counseling Appointment Submitted";
   static const noStateFound = 'No States Found';
   static const noCitiesFound = 'No Cities Found';
+  static const counselingAppointmentDone = 'Counseling Appointment Done';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

@@ -104,7 +104,9 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                   ),
                 ),
               )
-              : Center(child: NoDataFoundWidget(text: AppStrings.noQuestionsFound,)),
+              : Center(
+                child: NoDataFoundWidget(text: AppStrings.noQuestionsFound),
+              ),
       bottomNavigationBar:
           isQuestions
               ? CustomContainer(
@@ -245,12 +247,31 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                 },
               ),
             ] else if (widget.question.type == "video") ...[
-              CustomFilePicker(
-                questionId: widget.question.id ?? -1,
-                allowMultiple: true,
-                allowedExtensions: ["mp4", "mkv", "webp"],
-                icon: AppIconsData.video,
+              SizeHelper.height(height: 1.h),
+              CustomTextFormField(
+                controller: answerController,
+                maxLines: 1,
+                maxLength: 200,
+                validator: (value) {
+                  final validate = ValidatorHelper.validateValue(
+                    value: value,
+                    context: context,
+                  );
+                  if (validate == null) {
+                    assessmentProvider.textAreaAnswer(
+                      questionId: widget.question.id ?? -1,
+                      selection: answerController.text,
+                    );
+                  }
+                  return validate;
+                },
               ),
+              // CustomFilePicker(
+              //   questionId: widget.question.id ?? -1,
+              //   allowMultiple: true,
+              //   allowedExtensions: ["mp4", "mkv", "webp"],
+              //   icon: AppIconsData.video,
+              // ),
             ] else if (widget.question.type == "audio") ...[
               CustomFilePicker(
                 questionId: widget.question.id ?? -1,

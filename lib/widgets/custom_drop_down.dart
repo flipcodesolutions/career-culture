@@ -14,7 +14,7 @@ class CustomDropDownWidget<T> extends StatefulWidget {
     required this.dropdownMenuEntries,
     this.onSelected,
     this.enabled = true,
-    this.initialSelection
+    this.initialSelection,
   });
   final String? label;
   final String? hintText;
