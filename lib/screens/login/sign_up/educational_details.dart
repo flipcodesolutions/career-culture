@@ -115,20 +115,19 @@ class EducationalDetails extends StatelessWidget {
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
-                        maxLines: 5,
                         labelText: AppStrings.referCode,
                         hintText: AppStrings.enterReferCodeIfAny,
                         controller: signUpProvider.referCode,
-                        keyboardType: TextInputType.numberWithOptions(),
+                        // keyboardType: TextInputType.numberWithOptions(),
                         adaptiveTextSelectionToolbarChildren: [],
                         maxLength: 6,
                         validator:
                             (value) =>
                                 signUpProvider.referCode.text.isNotEmpty
-                                    ? ValidatorHelper.validateMobileNumber(
+                                    ? ValidatorHelper.validateValue(
                                       value: value,
                                       context: context,
-                                      lengthToCheck: 6,
+                                      // lengthToCheck: 8,
                                     )
                                     : null,
                       ),

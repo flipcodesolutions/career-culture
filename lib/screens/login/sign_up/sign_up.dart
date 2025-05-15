@@ -130,6 +130,9 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
                     width: 90.w,
                     btnText: AppStrings.continue_,
                     onTap: () async {
+                      // log(
+                      //   "first ${signUpProvider.firstName.text} middle ${signUpProvider.middleName.text} last ${signUpProvider.lastName.text} birth ${signUpProvider.birthDate.text} convener ${signUpProvider.selectedConvener?.name} gender ${signUpProvider.genderQuestion.answer} image ${signUpProvider.signUpRequestModel.imageFile.length}",
+                      // );
                       int currentPage = userProvider.currentSignUpPageIndex;
 
                       bool isValid = false;

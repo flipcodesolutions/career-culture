@@ -175,7 +175,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                   CustomFilePickerV2(
                     allowMultiple: false,
                     allowedExtensions: ["jpg", "png", "jpeg"],
-                    icon: AppIconsData.audio,
+                    icon: AppIconsData.profile,
                   ),
                 ],
               ),
