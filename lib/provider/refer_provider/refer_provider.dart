@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/models/refer_code_model.dart/refer_code_model.dart';
 import 'package:mindful_youth/service/refer_service.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 
 class ReferProvider extends ChangeNotifier {
   /// if provider is Loading
@@ -19,6 +21,14 @@ class ReferProvider extends ChangeNotifier {
 
     /// set _isLoading false
     _isLoading = false;
+    notifyListeners();
+  }
+
+  void initReferCodeFromLocalStorage() async {
+    _referCodeModel = ReferCodeModel();
+    _referCodeModel?.data?.referCode = await SharedPrefs.getSharedString(
+      AppStrings.myReferralCode,
+    );
     notifyListeners();
   }
 }

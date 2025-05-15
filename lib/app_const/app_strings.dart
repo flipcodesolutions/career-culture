@@ -252,4 +252,5 @@ class AppStrings {
   static const isNewUser = "isNewUser";
   static const userApproved = "userApproved";
   static const userConvenerId = "userConvenerId";
+  static const myReferralCode = "myReferralCode";
 }

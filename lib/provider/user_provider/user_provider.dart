@@ -15,6 +15,144 @@ import '../../service/upload_profile_pic_service/upload_profile_pic_service.dart
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_text.dart';
 
+/// --------------------------------------------------
+/// USER PROVIDER
+/// --------------------------------------------------
+///
+/// [UserProvider] is a global state management class extending [ChangeNotifier].
+/// It handles user login state, approval state, sign-up navigation,
+/// image selection/upload for profile pictures, and loading state control.
+///
+/// --------------------------------------------------
+///
+/// CORE RESPONSIBILITIES:
+/// ✅ Manage user session state (logged in / approved)
+/// ✅ Track sign-up flow screen index
+/// ✅ Handle profile picture selection & uploading
+/// ✅ Notify listeners when relevant data changes
+///
+///
+/// --------------------------------------------------
+///
+/// STATE VARIABLES:
+///
+/// 🔄 `_isLoading`: A general-purpose loading flag (e.g., for uploads)
+/// 🧭 `_signUpSteps`: Screens shown in multi-step sign-up process
+/// 🔢 `_currentSignUpPageIndex`: Tracks current step in sign-up
+/// 🔐 `_isUserLoggedIn`: Indicates if user has a valid token
+/// ✅ `_isUserApproved`: Tracks user approval (e.g., verified by admin)
+/// 🖼️ `_imageBytes`, `_selectedImage`: Hold in-memory selected image data
+///
+///
+/// --------------------------------------------------
+///
+/// SIGN-UP STEP NAVIGATION:
+///
+/// - `signUpSteps`: A list of onboarding step widgets
+/// - `currentSignUpPageIndex`: The current step in the sign-up flow
+/// - `setCurrentSignupPageIndex`: Setter to move between steps (calls `notifyListeners`)
+///
+/// This allows multi-step sign-up navigation to update UI reactively.
+///
+///
+/// --------------------------------------------------
+///
+/// USER SESSION MANAGEMENT:
+///
+/// - `isUserLoggedIn`: Boolean to represent if a token is present
+/// - `isUserApproved`: Boolean to represent if user's status is `"yes"`
+///
+/// Methods:
+/// - `checkIfUserIsLoggedIn()`: Fetches token from `SharedPrefs`
+/// - `checkIfUserIsApproved()`: Checks approval status string from prefs
+///
+/// Both update internal booleans based on stored app data.
+///
+///
+/// --------------------------------------------------
+///
+/// PROFILE IMAGE HANDLING:
+///
+/// 🎯 Goal: Let the user pick an image from gallery/camera and upload it.
+///
+/// - `ImagePicker _picker`: Used to pick image
+/// - `imageBytes`: Uint8List representing selected image in memory
+/// - `selectedImage`: `XFile` object returned by picker
+///
+/// **Image Upload Flow:**
+/// 1. User taps to pick from camera or gallery
+/// 2. `pickImage()` handles selection, reads file, stores bytes
+/// 3. `uploadProfilePic()` sends the file to backend using `UploadProfilePicService`
+/// 4. If successful, it saves the uploaded image path in `SharedPrefs`
+///
+///
+/// --------------------------------------------------
+///
+/// UI HELPER:
+///
+/// - `showPickerOptions(context)`: Opens bottom sheet for image options
+/// - `_buildImageOption(...)`: Returns a styled picker button with icon + label
+///
+/// Used in profile setup/editing screens.
+///
+///
+/// --------------------------------------------------
+///
+/// LOADING STATE:
+///
+/// - `isUpdating`: Local state to track image upload activity
+/// - `_isLoading`: General loading flag (e.g., while calling API)
+/// - Multiple `notifyListeners()` are used to rebuild UI during updates
+///
+///
+/// --------------------------------------------------
+///
+/// DEPENDENCIES:
+/// - `SharedPrefs`: Utility for reading and saving local storage values
+/// - `UploadProfilePicService`: Abstraction to handle API call for image upload
+/// - `AppStrings`, `AppColors`, `AppSize`: Theming and constants
+/// - `CustomContainer`, `CustomText`: Reusable UI widgets
+///
+///
+/// --------------------------------------------------
+///
+/// FUTURE IMPROVEMENTS (Optional Suggestions):
+/// - Add error handling/logging for failed uploads or SharedPrefs calls
+/// - Generalize `_isLoading` into separate states (e.g., per action)
+/// - Allow image compression before upload for size optimization
+/// - Include family details, answers, etc. (as noted in comments)
+///
+///
+/// --------------------------------------------------
+///
+/// EXAMPLE USAGE IN WIDGET TREE:
+/// ```dart
+/// final userProvider = Provider.of<UserProvider>(context);
+/// if (userProvider.isUserLoggedIn) {
+///   // show home or dashboard
+/// }
+/// ```
+///
+/// For upload:
+/// ```dart
+/// userProvider.uploadProfilePic(context: context);
+/// ```
+///
+/// For picker:
+/// ```dart
+/// userProvider.showPickerOptions(context);
+/// ```
+///
+/// For onboarding:
+/// ```dart
+/// PageView(
+///   children: userProvider.signUpSteps,
+///   controller: pageController,
+///   onPageChanged: (index) {
+///     userProvider.setCurrentSignupPageIndex = index;
+///   },
+/// );
+/// ```
 class UserProvider extends ChangeNotifier {
   /// if provider is Loading
   bool _isLoading = false;

@@ -30,7 +30,8 @@ class _ReferralPageState extends State<ReferralPage> {
     super.initState();
     ReferProvider referProvider = context.read<ReferProvider>();
     Future.microtask(() async {
-      await referProvider.getReferCode(context: context);
+      // await referProvider.getReferCode(context: context);
+      referProvider.initReferCodeFromLocalStorage();
     });
   }
 
@@ -47,7 +48,7 @@ class _ReferralPageState extends State<ReferralPage> {
       body:
           referProvider.isLoading
               ? Center(child: CustomLoader())
-              : referProvider.referCodeModel?.success == true
+              : referProvider.referCodeModel?.data?.referCode != ""
               ? Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 child: Column(

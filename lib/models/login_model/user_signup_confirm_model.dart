@@ -441,6 +441,20 @@ import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
 //   }
 // }
 //////// user model v2
+
+/// This file defines the user-related models used in authentication or profile-related
+/// features of the application. It handles parsing user data from a backend response,
+/// converting it to Dart objects, saving relevant data to local storage using `SharedPrefs`,
+/// and serializing data back to JSON when needed.
+///
+///
+/// ---------------------------
+/// CLASS OVERVIEW
+/// ---------------------------
+
+/// UserModel
+/// - Top-level model for a user response.
+/// - Contains success status, message, and a nested UserModelData object.
 class UserModel {
   bool? success;
   String? message;
@@ -466,6 +480,11 @@ class UserModel {
   }
 }
 
+/// UserModelData
+/// - Represents the core data of the user such as token, email verification, contact details,
+///   and the User object.
+/// - Automatically saves certain user details and preferences to local storage
+///   on instantiation via `_saveUserStorage()`.
 class UserModelData {
   String? token;
   bool? isNewUser;
@@ -547,6 +566,11 @@ class UserModelData {
         user?.isApproved.toString() ?? '',
       );
       _log(AppStrings.userApproved, user?.isApproved.toString() ?? '');
+      await SharedPrefs.saveString(
+        AppStrings.myReferralCode,
+        user?.myReferralCode ?? '',
+      );
+      _log(AppStrings.myReferralCode, user?.myReferralCode ?? '');
     }
 
     if (token != null) {
@@ -560,6 +584,10 @@ class UserModelData {
   }
 }
 
+/// User
+/// - Represents detailed user information including ID, name, email, status flags,
+///   and nested models like `UserProfile` and `UserEducation`.
+/// - On creation, saves user profile and education data to local storage.
 class User {
   int? id;
   String? name;
@@ -572,6 +600,7 @@ class User {
   String? isApproved;
   String? otp;
   String? status;
+  String? myReferralCode;
   UserEducation? userEducation;
   UserProfile? profile;
 
@@ -587,6 +616,7 @@ class User {
     this.isApproved,
     this.otp,
     this.status,
+    this.myReferralCode,
     this.userEducation,
     this.profile,
   });
@@ -603,6 +633,7 @@ class User {
     isApproved = json['isApproved'];
     otp = json['otp'];
     status = json['status'];
+    myReferralCode = json['my_referral_code'];
     userEducation =
         json['user_education'] != null
             ? new UserEducation.fromJson(json['user_education'])
@@ -628,6 +659,7 @@ class User {
     data['isApproved'] = this.isApproved;
     data['otp'] = this.otp;
     data['status'] = this.status;
+    data['my_referral_code'] = this.status;
     if (this.userEducation != null) {
       data['user_education'] = this.userEducation!.toJson();
     }
@@ -662,10 +694,7 @@ class User {
         profile?.contactNo1 ?? '',
       );
       _log(AppStrings.userContactNo1, profile?.contactNo1 ?? '');
-      await SharedPrefs.saveString(
-        AppStrings.userContactNo1,
-        phone ?? '',
-      );
+      await SharedPrefs.saveString(AppStrings.userContactNo1, phone ?? '');
       _log(AppStrings.userContactNo1, phone ?? '');
 
       await SharedPrefs.saveString(
@@ -756,6 +785,9 @@ class User {
   }
 }
 
+/// UserEducation
+/// - Stores the user's education and work-related information.
+/// - Includes degree, university, and job/business-related info.
 class UserEducation {
   int? id;
   int? userId;
@@ -798,6 +830,10 @@ class UserEducation {
   }
 }
 
+/// UserProfile
+/// - Contains personal information such as gender, birth date, contact numbers,
+///   and address.
+/// - Used to display or store user identity in more detail.
 class UserProfile {
   int? id;
   int? userId;
@@ -863,3 +899,44 @@ class UserProfile {
     return data;
   }
 }
+
+/// ---------------------------
+/// KEY BEHAVIORS
+/// ---------------------------
+
+/// ✅ JSON Serialization/Deserialization:
+/// All classes implement `fromJson` and `toJson` methods to easily convert between
+/// JSON (usually received from the server) and Dart objects.
+
+/// ✅ Local Storage:
+/// - `UserModelData`, `User`, and nested objects automatically store specific
+///   fields to shared preferences (`SharedPrefs`) when instantiated.
+/// - These fields are typically essential for session management, verification states,
+///   and profile pre-filling.
+
+/// ✅ Logging:
+/// - Each class contains a `_log()` method controlled by a `_shouldPrint` flag
+///   that prints key-value pairs to the console for debugging purposes when saving to local storage.
+
+/// ---------------------------
+/// EXAMPLES
+/// ---------------------------
+/// Typical usage:
+/// ```dart
+/// final userModel = UserModel.fromJson(apiResponse);
+/// final token = userModel.data?.token;
+/// ```
+///
+/// Automatically saves user data on parsing:
+/// ```dart
+/// UserModelData.fromJson(json) // Triggers _saveUserStorage()
+/// ```
+
+/// ---------------------------
+/// DEPENDENCIES
+/// ---------------------------
+/// - SharedPrefs: Utility class used for saving key-value pairs.
+/// - AppStrings: A constant holder for all the keys used in shared preferences.
+///
+/// Note: Ensure these utilities (`SharedPrefs`, `AppStrings`) are implemented in your project
+/// for this model to function correctly.

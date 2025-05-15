@@ -97,6 +97,7 @@ class AssessmentQuestionsService {
 
       if (streamed.statusCode == 200) {
         final jsonResponse = jsonDecode(resp.body);
+        log("${jsonResponse}");
         WidgetHelper.customSnackBar(
           context: context,
           title: "${jsonResponse['message']}",
