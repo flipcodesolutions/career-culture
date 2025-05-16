@@ -40,6 +40,9 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
   }
 
   @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
+  @override
   String get screenName => widget.programName;
   @override
   bool get debug => false; // Enable debug logs
@@ -52,13 +55,13 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
     Future.microtask(() {
       // / get chapter by id
       chapterProvider.getChapterById(
-        context: context,
+        // context: context,
         id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
       );
 
       userProvider.isUserLoggedIn
           ? programsProvider.getUserProgress(
-            context: context,
+            // context: context,
             pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
           )
           : null;
@@ -75,7 +78,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          await programsProvider.getUserProgress(context: context).then((_) {
+          await programsProvider.getUserProgress().then((_) {
             pop(context);
           });
         }
@@ -93,7 +96,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                 : CustomRefreshIndicator(
                   onRefresh:
                       () async => await chapterProvider.getChapterById(
-                        context: context,
+                        // context: context,
                         id:
                             (programsProvider.currentProgramInfo?.id ?? 0)
                                 .toString(),

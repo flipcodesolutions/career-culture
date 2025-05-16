@@ -49,6 +49,9 @@ class _HomeScreenState extends State<HomeScreen>
   // @override
   // bool get debug => true;
   @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
+  @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
@@ -59,11 +62,10 @@ class _HomeScreenState extends State<HomeScreen>
     Future.microtask(() async {
       userProvider.checkIfUserIsLoggedIn();
       userProvider.checkIfUserIsApproved();
-      await productProvider.getProductList(context: context);
-      await eventProvider.getAllEvents(context: context);
-      userProvider.isUserLoggedIn
-          ? await homeProvider.getUserOverAllScore(context: context)
-          : null;
+      await productProvider.getProductList();
+      await eventProvider.getAllEvents();
+
+      await homeProvider.getUserOverAllScore();
     }).then((_) {
       setState(() {});
     });
@@ -133,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen>
         body: AnimationLimiter(
           child: CustomRefreshIndicator(
             onRefresh: () async {
-              await homeScreenProvider.getHomeScreenSlider(context: context);
+              await homeScreenProvider.getHomeScreenSlider();
             },
             child: ListView(
               shrinkWrap: true,

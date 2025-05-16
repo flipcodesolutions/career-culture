@@ -50,7 +50,9 @@ class _PostsScreenState extends State<PostsScreen>
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
   }
-
+@override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
   @override
   String get screenName =>
       'ChapterScreen_${widget.chapterId}_${widget.chapterName}';
@@ -63,7 +65,7 @@ class _PostsScreenState extends State<PostsScreen>
     super.initState();
     Future.microtask(() {
       postProvider.getPostById(
-        context: context,
+        // context: context,
         id: widget.chapterId.toString(),
       );
     });
@@ -187,7 +189,7 @@ class _PostsScreenState extends State<PostsScreen>
                             transition: FadeUpwardsPageTransitionsBuilder(),
                           )
                           : WidgetHelper.customSnackBar(
-                            context: context,
+                            // context: context,
                             title: AppStrings.yourAreNotApprovedYet,
                             isError: true,
                           );
@@ -198,7 +200,7 @@ class _PostsScreenState extends State<PostsScreen>
                         transition: ScaleFadePageTransitionsBuilder(),
                       );
                       WidgetHelper.customSnackBar(
-                        context: context,
+                        // context: context,
                         title: AppStrings.pleaseLoginFirst,
                         isError: true,
                       );
@@ -413,7 +415,7 @@ Future<void> launchUrl({
     print("failed");
     if (!context.mounted) return;
     WidgetHelper.customSnackBar(
-      context: context,
+      // context: context,
       title: "Could Not Launch This Url",
       isError: true,
     );

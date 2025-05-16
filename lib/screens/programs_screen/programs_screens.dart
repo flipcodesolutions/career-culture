@@ -50,6 +50,9 @@ class _ProgramsScreensState extends State<ProgramsScreens>
   }
 
   @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
+  @override
   String get screenName => 'PostsScreen';
   @override
   bool get debug => false; // Enable debug logs
@@ -57,12 +60,12 @@ class _ProgramsScreensState extends State<ProgramsScreens>
   void initState() {
     // TODO: implement initState
     super.initState();
+    ProgramsProvider programsProvider = context.read<ProgramsProvider>();
+    UserProvider userProvider = context.read<UserProvider>();
     Future.microtask(() async {
-      ProgramsProvider programsProvider = context.read<ProgramsProvider>();
-      UserProvider userProvider = context.read<UserProvider>();
-      programsProvider.getAllPrograms(context: context);
+      programsProvider.getAllPrograms();
       userProvider.isUserLoggedIn
-          ? await programsProvider.getUserProgress(context: context)
+          ? await programsProvider.getUserProgress()
           : null;
     });
   }
@@ -95,8 +98,8 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                 : programsProvider.programsModel?.data?.isNotEmpty == true
                 ? CustomRefreshIndicator(
                   onRefresh: () async {
-                    await programsProvider.getAllPrograms(context: context);
-                    await chapterProvider.getAllChapters(context: context);
+                    await programsProvider.getAllPrograms();
+                    await chapterProvider.getAllChapters();
                   },
                   child: Column(
                     children: [
@@ -115,7 +118,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                 programsProvider.setGridView =
                                     !programsProvider.isGridView;
                                 await chapterProvider.getAllChapters(
-                                  context: context,
+                                  // context: context,
                                 );
                               },
                               child: CustomContainer(
@@ -242,7 +245,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                                             item,
                                                           )
                                                           : WidgetHelper.customSnackBar(
-                                                            context: context,
+                                                            // context: context,
                                                             title:
                                                                 AppStrings
                                                                     .notOpenYet,
@@ -311,7 +314,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                 : CustomRefreshIndicator(
                   onRefresh:
                       () async => await programsProvider.getAllPrograms(
-                        context: context,
+                        // context: context,
                       ),
                   child: ListView(
                     children: [
@@ -370,7 +373,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
       transition: OpenUpwardsPageTransitionsBuilder(),
     );
     WidgetHelper.customSnackBar(
-      context: context,
+      // context: context,
       title: AppStrings.pleaseLoginFirst,
       isError: true,
     );
@@ -397,7 +400,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
               isOpen
                   ? isDone
                       ? WidgetHelper.customSnackBar(
-                        context: context,
+                        // context: context,
                         title: AppStrings.counselingAppointmentDone,
                         isError: true,
                       )
@@ -407,7 +410,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
                         transition: ScaleFadePageTransitionsBuilder(),
                       )
                   : WidgetHelper.customSnackBar(
-                    context: context,
+                    // context: context,
                     title: AppStrings.mileStoneNotAchieved,
                     isError: true,
                   ),

@@ -26,6 +26,10 @@ class CustomImageWithLoader extends StatelessWidget {
     final image = CachedNetworkImage(
       height: height,
       width: width,
+      memCacheHeight: height?.toInt(),
+      memCacheWidth: height?.toInt(),
+      maxWidthDiskCache: width?.toInt(),
+      maxHeightDiskCache: height?.toInt(),
       errorWidget:
           (context, url, error) => Icon(
             Icons.error_outline,

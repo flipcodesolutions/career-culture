@@ -27,10 +27,9 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
   void initState() {
     // TODO: implement initState
     super.initState();
+    HomeScreenProvider homeScreenProvider = context.read<HomeScreenProvider>();
     Future.microtask(() {
-      HomeScreenProvider homeScreenProvider =
-          context.read<HomeScreenProvider>();
-      homeScreenProvider.getHomeScreenSlider(context: context);
+      homeScreenProvider.getHomeScreenSlider();
     });
   }
 
@@ -83,6 +82,6 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
             ),
           ),
         )
-        : Center(child: NoDataFoundWidget(text: AppStrings.noProgramsFound,));
+        : Center(child: NoDataFoundWidget(text: AppStrings.noProgramsFound));
   }
 }

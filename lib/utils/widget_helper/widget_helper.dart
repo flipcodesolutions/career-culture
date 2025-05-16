@@ -36,7 +36,7 @@ mixin WidgetHelper {
 
   // show dialog
   static customSnackBar({
-    required BuildContext context,
+    // required BuildContext context,
     required String title,
     Color? color,
     bool? isError,
@@ -57,7 +57,7 @@ mixin WidgetHelper {
         alignment: Alignment.bottomCenter,
         style: ToastificationStyle.fillColored,
         dragToClose: true,
-        context: context, // optional if you use ToastificationWrapper
+        // context: context, // optional if you use ToastificationWrapper
         title: Text(title, style: TextStyle(color: AppColors.white)),
         autoCloseDuration: const Duration(seconds: 2),
       );
@@ -72,7 +72,7 @@ mixin WidgetHelper {
         style: ToastificationStyle.fillColored,
         showProgressBar: false,
         alignment: Alignment.bottomCenter,
-        context: context, // optional if you use ToastificationWrapper
+        // context: context, // optional if you use ToastificationWrapper
         title: Text(title),
         autoCloseDuration: const Duration(seconds: 2),
       );

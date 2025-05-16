@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/models/post_models/post_like_model.dart';
 import 'package:mindful_youth/models/post_models/post_model.dart';
@@ -11,12 +11,12 @@ import '../../models/post_models/wall_model.dart';
 
 class PostService {
   Future<PostListModel?> getPostById({
-    required BuildContext context,
+    // required BuildContext context,
     required String id,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        context: context,
+        // context: context,
         uri: ApiHelper.getPostById(id: id),
       );
       if (response.isNotEmpty) {
@@ -31,11 +31,13 @@ class PostService {
   }
 
   /// get wall post
-  Future<WallListModel?> getWallPosts({required BuildContext context}) async {
+  Future<WallListModel?> getWallPosts(
+    // {required BuildContext context}
+    ) async {
     try {
       String uId = await SharedPrefs.getSharedString(AppStrings.id);
       Map<String, dynamic> response = await HttpHelper.get(
-        context: context,
+        // context: context,
         uri: ApiHelper.getWallPosts(uId: uId),
       );
       if (response.isNotEmpty) {
@@ -50,13 +52,13 @@ class PostService {
 
   /// like a post
   Future<PostLikeModel?> likePost({
-    required BuildContext context,
+    // required BuildContext context,
     required int wallId,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.likeWallPost,
-        context: context,
+        // context: context,
         body: {"wall_id": wallId.toString()},
       );
       if (response.isNotEmpty) {

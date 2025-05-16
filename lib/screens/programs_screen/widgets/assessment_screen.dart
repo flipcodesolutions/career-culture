@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../models/assessment_question_model/assessment_question_model.dart';
+import '../../../provider/user_provider/user_provider.dart';
 
 class AssessmentScreen extends StatefulWidget {
   const AssessmentScreen({super.key, required this.postNameAndId});
@@ -40,14 +41,17 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   String get screenName => 'Assessment_${widget.postNameAndId}';
   @override
   bool get debug => false; // Enable debug logs
+  @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
   bool isMedia = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.microtask(() {
       AssessmentProvider assessmentProvider =
           context.read<AssessmentProvider>();
+    Future.microtask(() {
       assessmentProvider.getAssessmentQuestionsByPostId(context: context);
     });
   }
@@ -122,7 +126,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                       );
                     } else {
                       WidgetHelper.customSnackBar(
-                        context: context,
+                        // context: context,
                         title: "Validation Failed",
                         isError: true,
                       );

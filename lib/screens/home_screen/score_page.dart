@@ -14,6 +14,7 @@ import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../provider/user_provider/user_provider.dart';
 
 class ScoreboardPage extends StatefulWidget {
   const ScoreboardPage({super.key});
@@ -36,6 +37,9 @@ class _ScoreboardPageState extends State<ScoreboardPage>
   @override
   bool get debug => false; // Enable debug logs
   @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
+  @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
@@ -43,7 +47,7 @@ class _ScoreboardPageState extends State<ScoreboardPage>
     Future.microtask(() {
       ScoreBoardProvider scoreBoardProvider =
           context.read<ScoreBoardProvider>();
-      scoreBoardProvider.getScoreBoard(context: context);
+      scoreBoardProvider.getScoreBoard();
       _tabController.addListener(() {
         setState(() {});
       });

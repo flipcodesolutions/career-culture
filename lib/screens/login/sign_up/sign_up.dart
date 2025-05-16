@@ -204,7 +204,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
           );
           if (result == null) {
             WidgetHelper.customSnackBar(
-              context: context,
+              // context: context,
               title: AppStrings.noFilePicked,
               isError: true,
             );
@@ -217,14 +217,14 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
           }
         } catch (e) {
           WidgetHelper.customSnackBar(
-            context: context,
+            // context: context,
             title: e.toString(),
             isError: true,
           );
         }
       } else {
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: AppStrings.noPermissionFound,
           isError: true,
         );

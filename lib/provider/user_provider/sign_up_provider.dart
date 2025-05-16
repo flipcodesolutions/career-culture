@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -59,7 +58,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     if (genderQuestion.answer?.isEmpty ?? true) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.genderNeeded,
         isError: true,
       );
@@ -67,7 +66,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.mustSelectProfilePic,
         isError: true,
       );
@@ -77,7 +76,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         ? _selectedConvener?.id == null || _selectedConvener?.name == null
         : false) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.somethingWentWrong,
         isError: true,
       );
@@ -104,12 +103,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
-  Future<void> getConveners({required BuildContext context}) async {
+  Future<void> getConveners(
+    // {required BuildContext context}
+    ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _convenerListModel = await convenersService.getConvenerList(
-      context: context,
+      // context: context,
     );
 
     /// set _isLoading false
@@ -278,7 +279,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (!isValid) return false;
     if (state == "" || state == AppStrings.noStateFound) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.noStateFound,
         isError: true,
       );
@@ -286,7 +287,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     if (city == "" || city == AppStrings.noCitiesFound) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.noCitiesFound,
         isError: true,
       );
@@ -294,7 +295,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     // 1) Email OTP
     if (!_isEmailVerified) {
-      await sendEmailOtp(context: context);
+      await sendEmailOtp();
       final ok = await _showEmailOtpDialog(context);
       if (!ok) return false;
       setIsEmailVerified = ok;
@@ -304,7 +305,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // 2) Contact #1 OTP
     if (!_isContactNo1Verified) {
       final sent1 = await sendMobileOtp(
-        context: context,
+        // context: context,
         number: contactNo1.text,
       );
       if (!sent1) return false;
@@ -325,7 +326,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // 3) Contact #2 OTP (only if provided)
     if (contactNo2.text.isNotEmpty && !_isContactNo2Verified) {
       bool sent2 = await sendMobileOtp(
-        context: context,
+        // context: context,
         number: contactNo2.text,
       );
       if (!sent2) return false;
@@ -388,7 +389,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendEmailOtp(context: context);
+                    await sendEmailOtp();
                   },
                 ),
                 PrimaryBtn(
@@ -397,7 +398,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   onTap: () async {
                     if (otpFormKey.currentState?.validate() == true) {
                       bool success = await verifyEmailOtp(
-                        context: context,
+                        // context: context,
                         email: email.text,
                         otp: otpController.text,
                       );
@@ -416,12 +417,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   /// Method to send the OTP
-  Future<void> sendEmailOtp({required BuildContext context}) async {
+  Future<void> sendEmailOtp(
+    // {required BuildContext context}
+    ) async {
     _isLoading = true;
     notifyListeners();
 
     _emailOtpModel = await otpService.sendEmailOtp(
-      context: context,
+      // context: context,
       email: email.text,
     );
 
@@ -430,14 +433,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> sendMobileOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String number,
   }) async {
     _isLoading = true;
     notifyListeners();
 
     _mobileOtpModel = await otpService.sendMobileOtp(
-      context: context,
+      // context: context,
       contactNo: number,
     );
 
@@ -451,7 +454,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> verifyEmailOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String email,
     required String otp,
   }) async {
@@ -459,7 +462,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
 
     _verifyMobile = await otpService.verifyEmailOtp(
-      context: context,
+      // context: context,
       email: email,
       otp: otp,
     );
@@ -470,7 +473,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       return true;
     } else {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.thisNumberIsTaken,
         isError: true,
       );
@@ -479,7 +482,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> verifyMobileOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String contactNo,
     required String otp,
   }) async {
@@ -487,7 +490,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
 
     _verifyMobile = await otpService.verifyMobileOtp(
-      context: context,
+      // context: context,
       contactNo: contactNo,
       otp: otp,
     );
@@ -498,7 +501,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       return true;
     } else {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.thisNumberIsTaken,
         isError: true,
       );
@@ -553,7 +556,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendMobileOtp(context: context, number: contact);
+                    await sendMobileOtp( number: contact);
                   },
                 ),
                 PrimaryBtn(
@@ -562,7 +565,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   onTap: () async {
                     if (otpFormKey.currentState?.validate() == true) {
                       bool success = await verifyMobileOtp(
-                        context: context,
+                        // context: context,
                         contactNo: contact,
                         otp: otpController.text,
                       );
@@ -608,7 +611,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     if (_areYouWorking.answer?.isEmpty ?? true) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: AppStrings.mustGiveAllAnswer,
         isError: true,
       );

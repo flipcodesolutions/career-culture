@@ -22,9 +22,9 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement initState
     super.initState();
     Future.microtask(() async {
-      context.read<HomeScreenProvider>().setNavigationIndex =
-          widget.setIndex ?? 0;
-      await MethodHelper.getAndSendFcmTokenToBackend(context: context);
+    context.read<HomeScreenProvider>().setNavigationIndex =
+        widget.setIndex ?? 0;
+      await MethodHelper.getAndSendFcmTokenToBackend();
     });
   }
 

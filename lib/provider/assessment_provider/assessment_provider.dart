@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
@@ -33,7 +32,9 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _assessmentQuestions = await assessmentQuestionsService
-        .getAssessmentQuestionsByPostId(context: context, postId: _postId);
+        .getAssessmentQuestionsByPostId(
+          // context: context,
+           postId: _postId);
 
     /// set _isLoading false
     _isLoading = false;
@@ -119,9 +120,9 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     }
   }
 
-  Future<void> submitAssessmentQuestions({
-    required BuildContext context,
-  }) async {
+  Future<void> submitAssessmentQuestions(
+    {required BuildContext context,}
+  ) async {
     // Validation before making API call
     bool hasAllValidAnswers =
         _assessmentQuestions?.data?.every((q) {
@@ -136,7 +137,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
     if (!hasAllValidAnswers) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: "Please answer all questions and upload required files.",
         isError: true,
       );
@@ -149,7 +150,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     log(_assessmentQuestions?.toJson().toString() ?? "");
     bool success = await assessmentQuestionsService
         .postAssessmentQuestionsByPostId(
-          context: context,
+          // context: context,
           assessmentAnswer: _assessmentQuestions,
         );
 

@@ -17,12 +17,14 @@ class WallProvider extends ChangeNotifier {
   // List<PostInfo> get wallPost => _wallPost;
 
   /// Fetch wall data
-  Future<void> getWall({required BuildContext context}) async {
+  Future<void> getWall(
+    // {required BuildContext context}
+    ) async {
     _isLoading = true;
     notifyListeners();
 
     // try {
-    _wallModel = await _postService.getWallPosts(context: context);
+    _wallModel = await _postService.getWallPosts();
     // _wallPost.clear();
 
     // if (_wallModel?.success == true && _wallModel?.data != null) {
@@ -46,7 +48,7 @@ class WallProvider extends ChangeNotifier {
   }) async {
     // 1) Call service
     final PostLikeModel? success = await _postService.likePost(
-      context: context,
+      // context: context,
       wallId: wallId,
     );
 

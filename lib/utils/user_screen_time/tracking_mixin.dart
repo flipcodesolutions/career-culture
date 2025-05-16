@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../provider/user_provider/user_provider.dart';
 import 'user_screen_time_tracking.dart';
 
 mixin ScreenTracker<T extends StatefulWidget>
     on State<T>, WidgetsBindingObserver {
   String get screenName; // implement this in your State
   bool get debug => false; // override this in your widget if needed
-
+  UserProvider get userProvider; // get the user provider
   @override
   void initState() {
     super.initState();
@@ -38,7 +39,8 @@ mixin ScreenTracker<T extends StatefulWidget>
     AnalyticsService.instance.logEvent(
       startTime: DateTime.now().toIso8601String(),
       screenName: screenName,
-      context: context,
+      userProvider: userProvider,
+      // context: context,
     );
   }
 
@@ -47,7 +49,7 @@ mixin ScreenTracker<T extends StatefulWidget>
     AnalyticsService.instance.exitLogEvent(
       endTime: DateTime.now().toIso8601String(),
     );
-    await AnalyticsService.instance.flush(context: context);
+    await AnalyticsService.instance.flush(userProvider: userProvider);
   }
 }
 ///

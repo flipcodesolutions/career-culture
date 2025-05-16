@@ -36,8 +36,8 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
         if (!didPop) {
           AllEventProvider eventProvider = context.read<AllEventProvider>();
           isMyEvents
-              ? await eventProvider.getAllUserEvents(context: context)
-              : await eventProvider.getAllEvents(context: context);
+              ? await eventProvider.getAllUserEvents()
+              : await eventProvider.getAllEvents();
           pop(context);
         }
       },
@@ -118,7 +118,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                               ),
                         )
                         : WidgetHelper.customSnackBar(
-                          context: context,
+                          // context: context,
                           title: AppStrings.yourAreNotApprovedYet,
                           isError: true,
                         );
@@ -130,7 +130,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                       transition: ScaleFadePageTransitionsBuilder(),
                     );
                     WidgetHelper.customSnackBar(
-                      context: context,
+                      // context: context,
                       title: AppStrings.pleaseLoginFirst,
                       isError: true,
                     );
@@ -243,12 +243,12 @@ class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
                                 id: widget.id.toString(),
                               )
                               : WidgetHelper.customSnackBar(
-                                context: context,
+                                // context: context,
                                 title: AppStrings.yourAreNotApprovedYet,
                                 isError: true,
                               )
                       : () => WidgetHelper.customSnackBar(
-                        context: context,
+                        // context: context,
                         title: AppStrings.mustAcceptTerms,
                         isError: true,
                       ),

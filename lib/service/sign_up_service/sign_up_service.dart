@@ -66,7 +66,7 @@ class SignUpService {
     if (streamedResponse.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(data.body);
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: "${jsonResponse['message']}",
         isError: !jsonResponse['success'],
       );
@@ -74,7 +74,7 @@ class SignUpService {
       return model;
     } else {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: "${streamedResponse.statusCode}",
         isError: true,
       );
@@ -141,7 +141,7 @@ class SignUpService {
       if (streamedResponse.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(data.body);
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
@@ -150,7 +150,7 @@ class SignUpService {
         return model;
       } else {
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "${streamedResponse.statusCode}",
           isError: true,
         );

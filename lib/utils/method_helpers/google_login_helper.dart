@@ -17,7 +17,7 @@ class GoogleLoginHelper {
       if (googleUser == null) {
         if (context.mounted) {
           WidgetHelper.customSnackBar(
-            context: context,
+            // context: context,
             title: "Google Sign-In Failed",
             isError: true,
           );
@@ -32,7 +32,7 @@ class GoogleLoginHelper {
           await googleUser.authentication;
       if (googleAuth == null) {
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "Google Authentication failed",
           isError: true,
         );
@@ -50,7 +50,7 @@ class GoogleLoginHelper {
 
       if (user == null) {
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "Firebase Authentication failed",
           isError: true,
         );
@@ -99,7 +99,7 @@ class GoogleLoginHelper {
       // }
     } catch (e) {
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         title: "Error: ${e.toString()}",
         isError: true,
       );

@@ -36,6 +36,9 @@ class _WallScreenState extends State<WallScreen>
   }
 
   @override
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
+  @override
   String get screenName => 'WallScreen';
   @override
   bool get debug => false; // Enable debug logs
@@ -45,7 +48,7 @@ class _WallScreenState extends State<WallScreen>
     super.initState();
     WallProvider wallProvider = context.read<WallProvider>();
     Future.microtask(() {
-      wallProvider.getWall(context: context);
+      wallProvider.getWall();
     });
   }
 
@@ -75,7 +78,7 @@ class _WallScreenState extends State<WallScreen>
                 ? Center(child: CustomLoader())
                 : wallProvider.wallModel?.data?.isNotEmpty == true
                 ? CustomRefreshIndicator(
-                  onRefresh: () async => wallProvider.getWall(context: context),
+                  onRefresh: () async => wallProvider.getWall(),
                   child: ListView.builder(
                     itemCount: wallProvider.wallModel?.data?.length ?? 0,
                     itemBuilder: (context, index) {
@@ -91,7 +94,7 @@ class _WallScreenState extends State<WallScreen>
                                       wallId: post?.id ?? -1,
                                     )
                                     : WidgetHelper.customSnackBar(
-                                      context: context,
+                                      // context: context,
                                       title: AppStrings.pleaseLoginFirst,
                                       isError: true,
                                     ),
@@ -106,7 +109,7 @@ class _WallScreenState extends State<WallScreen>
                   ),
                 )
                 : CustomRefreshIndicator(
-                  onRefresh: () async => wallProvider.getWall(context: context),
+                  onRefresh: () async => wallProvider.getWall(),
                   child: ListView(
                     children: [
                       Center(

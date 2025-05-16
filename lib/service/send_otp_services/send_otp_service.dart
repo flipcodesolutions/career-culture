@@ -1,27 +1,27 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
-import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
+// import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 
 class SendOtpService {
   Future<SendEmailOtpModel?> sendEmailOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String email,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.sendEmailOtp,
-        context: context,
+        // context: context,
         body: {"email": email},
       );
       if (response.isNotEmpty) {
         SendEmailOtpModel model = SendEmailOtpModel.fromJson(response);
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: model.message ?? "",
         );
         return model;
@@ -35,14 +35,14 @@ class SendOtpService {
 
   /// verify mobile otp
   Future<bool> verifyEmailOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String email,
     required String otp,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.verifyOtpOfEmail,
-        context: context,
+        // context: context,
         body: {"email": email, "otp": otp},
       );
       if (response.isNotEmpty) {
@@ -56,19 +56,19 @@ class SendOtpService {
   }
 
   Future<SentOtpModel?> sendMobileOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String contactNo,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.sentOtpToMobile,
-        context: context,
+        // context: context,
         body: {"contactNo": contactNo},
       );
       if (response.isNotEmpty) {
         SentOtpModel model = SentOtpModel.fromJson(response);
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: model.message ?? "",
         );
         return model;
@@ -82,14 +82,14 @@ class SendOtpService {
 
   /// verify mobile otp
   Future<bool> verifyMobileOtp({
-    required BuildContext context,
+    // required BuildContext context,
     required String contactNo,
     required String otp,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.verifyOtpOfMobile,
-        context: context,
+        // context: context,
         body: {"contactNo": contactNo, "otp": otp},
       );
       if (response.isNotEmpty) {

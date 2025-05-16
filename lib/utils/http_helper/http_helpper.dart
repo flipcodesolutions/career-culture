@@ -16,10 +16,10 @@ class HttpHelper {
   // Generalized response handler
   static Future<Map<String, dynamic>> processResponse({
     required Response response,
-    required BuildContext context,
+    // required BuildContext context,
   }) async {
     try {
-      if (!context.mounted) return {};
+      // if (!context.mounted) return {};
       if (isDebugMode) {
         log(response.body);
       }
@@ -29,7 +29,7 @@ class HttpHelper {
       if (response.statusCode == 500) {
         WidgetHelper.customSnackBar(
           isError: true,
-          context: context,
+          // context: context,
           title: "Internal Server Error (500)",
           color: AppColors.error,
         );
@@ -40,14 +40,14 @@ class HttpHelper {
       if (response.statusCode == 401) {
         WidgetHelper.customSnackBar(
           isError: true,
-          context: context,
+          // context: context,
           title: "Session expired. Please log in again.",
           color: AppColors.error,
         );
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-          (route) => false,
-        );
+        // Navigator.of(context).pushAndRemoveUntil(
+        //   MaterialPageRoute(builder: (context) => LoginScreen()),
+        //   (route) => false,
+        // );
         return {}; // Empty map since user is logged out
       }
 
@@ -56,7 +56,7 @@ class HttpHelper {
         if (data.containsKey('success') && !data['success']) {
           WidgetHelper.customSnackBar(
             isError: true,
-            context: context,
+            // context: context,
             title: data['message'] ?? "Something went wrong",
             color: AppColors.error,
           );
@@ -68,7 +68,7 @@ class HttpHelper {
       // Handle unexpected errors
       WidgetHelper.customSnackBar(
         isError: true,
-        context: context,
+        // context: context,
         title: "Unexpected Error",
         color: AppColors.error,
       );
@@ -80,7 +80,7 @@ class HttpHelper {
       ;
       WidgetHelper.customSnackBar(
         isError: true,
-        context: context,
+        // context: context,
         title: "Something went wrong",
         color: AppColors.error,
       );
@@ -90,7 +90,7 @@ class HttpHelper {
 
   // GET method
   static Future<Map<String, dynamic>> get({
-    required BuildContext context,
+    // required BuildContext context,
     required String uri,
     Map<String, String>? headers,
   }) async {
@@ -102,16 +102,18 @@ class HttpHelper {
       log(uri);
       var response = await client.get(url, headers: headers ?? header);
 
-      if (context.mounted) {
-        return processResponse(response: response, context: context);
-      }
+      // if (context.mounted) {
+        return processResponse(response: response,
+        //  context: context
+        );
+      // }
     } catch (e) {
       if (isDebugMode) {
         log("GET request error: $e");
       }
-      if (!context.mounted) return {};
+      // if (!context.mounted) return {};
       WidgetHelper.customSnackBar(
-        context: context,
+        // context: context,
         isError: true,
         title: "Something went wrong!",
         color: AppColors.error,
@@ -125,7 +127,7 @@ class HttpHelper {
     required String uri,
     Object? body,
     Map<String, String>? headers,
-    required BuildContext context,
+    // required BuildContext context,
     Encoding? encoding,
   }) async {
     try {
@@ -143,8 +145,10 @@ class HttpHelper {
         log('post ===> ${response.statusCode} && ${response.body}');
       }
 
-      if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      // if (!context.mounted) return {};
+      return processResponse(response: response, 
+      // context: context
+      );
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
     }
@@ -156,7 +160,7 @@ class HttpHelper {
     required String uri,
     Object? body,
     Map<String, String>? headers,
-    required BuildContext context,
+    // required BuildContext context,
     Encoding? encoding,
   }) async {
     try {
@@ -171,8 +175,10 @@ class HttpHelper {
         encoding: encoding,
       );
 
-      if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      // if (!context.mounted) return {};
+      return processResponse(response: response, 
+      // context: context
+      );
     } catch (e) {
       if (isDebugMode) {
         log("PUT request error: $e");
@@ -183,7 +189,7 @@ class HttpHelper {
 
   // DELETE method
   static Future<Map<String, dynamic>> delete({
-    required BuildContext context,
+    // required BuildContext context,
     required String uri,
     Object? body,
     Map<String, String>? headers,
@@ -199,8 +205,10 @@ class HttpHelper {
         body: body,
       );
 
-      if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      // if (!context.mounted) return {};
+      return processResponse(response: response,
+      //  context: context
+       );
     } catch (e) {
       if (isDebugMode) {
         log("DELETE request error: $e");

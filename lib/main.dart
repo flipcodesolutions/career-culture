@@ -24,6 +24,7 @@ import 'package:mindful_youth/utils/app_theme/app_theme_helper.dart';
 import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:toastification/toastification.dart';
 import 'app_const/app_colors.dart';
 import 'provider/user_provider/user_provider.dart';
 import 'utils/notification_util/notification_util.dart';
@@ -76,14 +77,16 @@ void main() async {
         ChangeNotifierProvider(create: (context) => CounselingProvider()),
         ChangeNotifierProvider(create: (context) => ReferProvider()),
       ],
-      child: const MyApp(),
+      child: ToastificationWrapper(child: const MyApp()),
     ),
   );
 }
 
 void requestPermission() async {
+  /// to get notification permission from user when app is opening for the first
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  ///
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     badge: true,

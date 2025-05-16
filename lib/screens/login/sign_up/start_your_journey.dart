@@ -31,9 +31,9 @@ class _StartYourJourneyState extends State<StartYourJourney> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.microtask(() {
       SignUpProvider signUpProvider = context.read<SignUpProvider>();
-      signUpProvider.getConveners(context: context);
+    Future.microtask(() {
+      signUpProvider.getConveners();
     });
   }
 

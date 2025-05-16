@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/chapter_container.dart';
 import 'package:mindful_youth/service/chapter_service/chapter_service.dart';
-
 import '../../../models/programs/user_progress_model.dart';
 
 class ChapterProvider extends ChangeNotifier {
@@ -16,7 +15,7 @@ class ChapterProvider extends ChangeNotifier {
   ChaptersModel? get chaptersModel => _chaptersModel;
 
   Future<void> getChapterById({
-    required BuildContext context,
+    // required BuildContext context,
     required String id,
   }) async {
     /// set _isLoading true
@@ -24,7 +23,7 @@ class ChapterProvider extends ChangeNotifier {
     notifyListeners();
     _chaptersModel = null;
     _chaptersModel = await chapterService.getChapterById(
-      context: context,
+      // context: context,
       id: id,
     );
 
@@ -74,12 +73,14 @@ class ChapterProvider extends ChangeNotifier {
     return list;
   }
 
-  Future<void> getAllChapters({required BuildContext context}) async {
+  Future<void> getAllChapters(
+    // {required BuildContext context}
+    ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _chaptersModel = null;
-    _chaptersModel = await chapterService.getAllChapters(context: context);
+    _chaptersModel = await chapterService.getAllChapters();
 
     /// set _isLoading false
     _isLoading = false;

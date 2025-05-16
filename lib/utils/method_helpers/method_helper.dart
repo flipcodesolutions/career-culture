@@ -285,20 +285,21 @@ class MethodHelper with NavigateHelper {
 
   /// get fcm token
 
-  static Future<void> getAndSendFcmTokenToBackend({
-    required BuildContext context,
-  }) async {
+  static Future<void> getAndSendFcmTokenToBackend(
+    // {required BuildContext context,}
+  ) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     String? token = await messaging.getToken();
     String uId = await SharedPrefs.getSharedString(AppStrings.userId);
     print("user Id: $uId");
 
-    if (token != null && context.mounted && uId != "") {
+    // if (token != null && context.mounted && uId != "") {
+    if (token != null && uId != "") {
       print("FCM Token: $token");
       FcmTokenService fcmTokenService = FcmTokenService();
       await fcmTokenService.sendFcmTokenWithUId(
-        context: context,
+        // context: context,
         uId: uId,
         fcmToken: token,
       );
@@ -314,7 +315,7 @@ class MethodHelper with NavigateHelper {
     );
     await SharedPrefs.clearShared();
     WidgetHelper.customSnackBar(
-      context: context,
+      // context: context,
       title: AppStrings.accountIsDeleted,
       isError: true,
     );

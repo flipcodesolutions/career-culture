@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
@@ -9,13 +9,13 @@ import '../../models/all_events_model.dart/user_participated_events.dart';
 
 class AllEventService {
   Future<AllEventModel?> getAllEvents({
-    required BuildContext context,
+    // required BuildContext context,
     required String id,
   }) async {
     try {
       log(ApiHelper.getAllEvents(id: id));
       Map<String, dynamic> response = await HttpHelper.get(
-        context: context,
+        // context: context,
         uri: ApiHelper.getAllEvents(id: id),
       );
       if (response.isNotEmpty) {
@@ -31,13 +31,13 @@ class AllEventService {
 
   ///
   Future<MyEventsModel?> getAllUserEvents({
-    required BuildContext context,
+    // required BuildContext context,
     required String id,
   }) async {
     try {
       log(ApiHelper.getAllEvents(id: id));
       Map<String, dynamic> response = await HttpHelper.get(
-        context: context,
+        // context: context,
         uri: ApiHelper.myParticipation,
       );
       if (response.isNotEmpty) {
@@ -51,12 +51,12 @@ class AllEventService {
   }
 
   Future<EventParticipantConfirmation?> eventParticipation({
-    required BuildContext context,
+    // required BuildContext context,
     required String id,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
-        context: context,
+        // context: context,
         uri: ApiHelper.eventParticipation,
         body: {"eventId": id},
       );

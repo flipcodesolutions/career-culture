@@ -26,17 +26,19 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// mobile number controller
   final TextEditingController mobileController = TextEditingController();
   Future<bool> login({
-    required BuildContext context,
+    // required BuildContext context,
     required String emailOrPassword,
     required String password,
+    required UserProvider userProvider
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.loginUser(
-      context: context,
+      // context: context,
       emailOrPassword: emailOrPassword,
       password: password,
+      userProvider: userProvider
     );
 
     /// set _isLoading false
@@ -50,12 +52,14 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   SentOtpModel? _otpModel;
   SentOtpModel? get otpModel => _otpModel;
   TextEditingController otpController = TextEditingController();
-  Future<bool> sentOtpToMobileNumber({required BuildContext context}) async {
+  Future<bool> sentOtpToMobileNumber(
+    // {required BuildContext context}
+    ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _otpModel = await loginService.sentOtpToMobile(
-      context: context,
+      // context: context,
       mobileNumber: mobileController.text,
     );
     if (_otpModel?.success == true) {
@@ -83,6 +87,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// cancel timer
   void cancelTimerOtpResend() {
     resendOtpTimer?.cancel();
+    resendOtpSecond = 0;
     notifyListeners();
   }
 
@@ -105,12 +110,16 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.verifyOtpOfMobile(
-      context: context,
+      // context: context,
       mobileNumber: mobileController.text,
       otp: otpController.text,
     );
     if (_loginResponseModel?.success == true) {
       cancelTimerOtpResend();
+      mobileController.clear();
+      otpController.clear();
+      _otpModel = null;
+      notifyListeners();
       if (_loginResponseModel?.data?.isNewUser == true) {
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;
@@ -118,10 +127,6 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         signUpProvider.setIsUpdatingProfile = false;
         push(context: context, widget: SignUpScreen());
       } else {
-        mobileController.clear();
-        otpController.clear();
-        _otpModel = null;
-        notifyListeners();
         if (_loginResponseModel?.data?.user?.status != "active") {
           MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
             context: context,
@@ -154,7 +159,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.checkEmailExit(
-      context: context,
+      // context: context,
       email: email,
     );
 
@@ -196,7 +201,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    bool success = await loginService.deleteUser(context: context, uId: uId);
+    bool success = await loginService.deleteUser( uId: uId);
 
     /// set _isLoading false
     _isLoading = false;

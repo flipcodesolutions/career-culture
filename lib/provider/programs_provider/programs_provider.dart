@@ -29,10 +29,12 @@ class ProgramsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllPrograms({required BuildContext context}) async {
+  Future<void> getAllPrograms(
+    // {required BuildContext context}
+    ) async {
     _isLoading = true;
     notifyListeners();
-    _programsModel = await programsService.getAllPrograms(context: context);
+    _programsModel = await programsService.getAllPrograms();
     _isLoading = false;
     notifyListeners();
   }
@@ -40,14 +42,14 @@ class ProgramsProvider extends ChangeNotifier {
   UserProgressModel? _userProgressModel;
   UserProgressModel? get userProgressModel => _userProgressModel;
   Future<void> getUserProgress({
-    required BuildContext context,
+    // required BuildContext context,
     String? pId,
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _userProgressModel = await programsService.getUserProgress(
-      context: context,
+      // context: context,
       pId: pId,
     );
 

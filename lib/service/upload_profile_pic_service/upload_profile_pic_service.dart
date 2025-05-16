@@ -37,7 +37,7 @@ class UploadProfilePicService {
       if (streamedResponse.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(data.body);
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
@@ -51,7 +51,7 @@ class UploadProfilePicService {
         return model;
       } else {
         WidgetHelper.customSnackBar(
-          context: context,
+          // context: context,
           title: "${streamedResponse.statusCode}",
           isError: true,
         );

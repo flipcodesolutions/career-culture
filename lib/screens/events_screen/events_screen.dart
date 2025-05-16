@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../../provider/user_provider/user_provider.dart';
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key, required this.isMyEvents});
@@ -37,15 +38,16 @@ class _EventsScreenState extends State<EventsScreen>
   @override
   String get screenName => 'EventsScreen';
   @override
-  bool get debug => false; // Enable debug logs
+  // TODO: implement userProvider
+  UserProvider get userProvider => context.read<UserProvider>();
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       AllEventProvider eventProvider = context.read<AllEventProvider>();
       widget.isMyEvents
-          ? eventProvider.getAllUserEvents(context: context)
-          : eventProvider.getAllEvents(context: context);
+          ? eventProvider.getAllUserEvents()
+          : eventProvider.getAllEvents();
     });
   }
 
@@ -79,10 +81,8 @@ class _EventsScreenState extends State<EventsScreen>
                       () async =>
                           widget.isMyEvents
                               ? await eventProvider.getAllUserEvents(
-                                context: context,
                               )
                               : await eventProvider.getAllEvents(
-                                context: context,
                               ),
                   child: CustomListWidget(
                     padding: EdgeInsets.symmetric(
@@ -150,10 +150,8 @@ class _EventsScreenState extends State<EventsScreen>
                       () async =>
                           widget.isMyEvents
                               ? await eventProvider.getAllUserEvents(
-                                context: context,
                               )
                               : await eventProvider.getAllEvents(
-                                context: context,
                               ),
                   child: ListView(
                     children: [

@@ -21,12 +21,14 @@ class OnBoardingProvider extends ChangeNotifier {
   OnBoardingModel? _onBoardingModel;
   OnBoardingModel? get onBoardingModel => _onBoardingModel;
 
-  Future<void> getOnBoarding({required BuildContext context}) async {
-    if (!context.mounted) return;
+  Future<void> getOnBoarding(
+    // {required BuildContext context}
+    ) async {
+    // if (!context.mounted) return;
     _isLoading = true;
     notifyListeners();
 
-    _onBoardingModel = await onBoardingService.getOnBoardings(context: context);
+    _onBoardingModel = await onBoardingService.getOnBoardings();
     _isLoading = false;
     notifyListeners();
   }

@@ -217,7 +217,7 @@ class ShareButton extends StatelessWidget {
         );
         if (refer.status == ShareResultStatus.success) {
           WidgetHelper.customSnackBar(
-            context: context,
+            // context: context,
             title: AppStrings.inviteRequestSent,
           );
         }
