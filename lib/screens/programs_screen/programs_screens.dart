@@ -49,9 +49,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     super.didChangeAppLifecycleState(state);
   }
 
-  @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
+
   @override
   String get screenName => 'PostsScreen';
   @override
@@ -196,7 +194,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                           .overAllScoreModel
                                           ?.data
                                           ?.counselingCount ==
-                                      "1",
+                                      1,
                                 ),
                                 SizeHelper.height(),
                                 CounselingOptions(
@@ -208,7 +206,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                           .overAllScoreModel
                                           ?.data
                                           ?.counselingCount ==
-                                      "2",
+                                      2,
                                   isOpen: programsProvider.getPercentage() > 75,
                                 ),
                               ],

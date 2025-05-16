@@ -49,9 +49,6 @@ class _HomeScreenState extends State<HomeScreen>
   // @override
   // bool get debug => true;
   @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
-  @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();

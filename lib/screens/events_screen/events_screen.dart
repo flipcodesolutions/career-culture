@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
-import '../../provider/user_provider/user_provider.dart';
+
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key, required this.isMyEvents});
@@ -37,9 +37,6 @@ class _EventsScreenState extends State<EventsScreen>
 
   @override
   String get screenName => 'EventsScreen';
-  @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
   @override
   void initState() {
     super.initState();

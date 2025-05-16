@@ -30,7 +30,7 @@ class UserOverAllScoreModelData {
   String? name;
   String? image;
   String? totalPoints;
-  String? counselingCount;
+  int? counselingCount;
 
   UserOverAllScoreModelData({
     this.userId,

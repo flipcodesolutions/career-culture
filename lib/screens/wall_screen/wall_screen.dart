@@ -35,9 +35,7 @@ class _WallScreenState extends State<WallScreen>
     super.didChangeAppLifecycleState(state);
   }
 
-  @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
+
   @override
   String get screenName => 'WallScreen';
   @override

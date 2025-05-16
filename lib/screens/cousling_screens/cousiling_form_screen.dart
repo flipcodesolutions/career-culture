@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/provider/counseling_provider/counseling_provider.dart';
-import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 // import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
@@ -39,9 +38,6 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
   String get screenName => 'Counseling_Form_Screen';
   @override
   bool get debug => false; // Enable debug logs
-  @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
   @override
   void initState() {
     // TODO: implement initState

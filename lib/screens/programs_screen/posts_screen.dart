@@ -50,9 +50,7 @@ class _PostsScreenState extends State<PostsScreen>
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
   }
-@override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
+
   @override
   String get screenName =>
       'ChapterScreen_${widget.chapterId}_${widget.chapterName}';

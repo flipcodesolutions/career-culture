@@ -39,9 +39,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
     super.didChangeAppLifecycleState(state);
   }
 
-  @override
-  // TODO: implement userProvider
-  UserProvider get userProvider => context.read<UserProvider>();
+
   @override
   String get screenName => widget.programName;
   @override
