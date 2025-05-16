@@ -79,40 +79,75 @@ class _CustomProfileAvatarState extends State<CustomProfileAvatar> {
                                 ),
                       ),
                     ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap:
-                              () =>
-                                  userProvider.isUpdating
-                                      ? userProvider.uploadProfilePic(
-                                        context: context,
-                                      )
-                                      : userProvider.showPickerOptions(context),
-                          child: CustomContainer(
-                            width: AppSize.size40,
-                            height: AppSize.size40,
-                            shape: BoxShape.circle,
-                            backGroundColor: AppColors.white,
-                            child: Icon(
-                              userProvider.isUpdating
-                                  ? Icons.done
-                                  : Icons.camera_alt,
-                              size: 20,
-                              color:
-                                  userProvider.isUpdating
-                                      ? AppColors.primary
-                                      : AppColors.secondary,
-                            ),
-                          ),
-                        ),
-                      ),
+                    ProfileCircleActionBtn(userProvider: userProvider),
+                    ProfileCircleActionBtn(
+                      userProvider: userProvider,
+                      isCancelBtn: true,
                     ),
                   ],
                 ),
+      ),
+    );
+  }
+}
+
+class ProfileCircleActionBtn extends StatelessWidget {
+  const ProfileCircleActionBtn({
+    super.key,
+    required this.userProvider,
+    this.isCancelBtn = false,
+  });
+
+  final UserProvider userProvider;
+  final bool isCancelBtn;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isCancelBtn && userProvider.isUpdating) {
+      return Positioned(
+        left: 0,
+        top: 0,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () => userProvider.setIsUpdatingPic = false,
+            child: CustomContainer(
+              width: AppSize.size40,
+              height: AppSize.size40,
+              shape: BoxShape.circle,
+              backGroundColor: AppColors.white,
+              child: Icon(Icons.cancel, size: 20, color: AppColors.error),
+            ),
+          ),
+        ),
+      );
+    }
+    return Positioned(
+      right: 0,
+      bottom: 0,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: GestureDetector(
+          onTap:
+              () =>
+                  userProvider.isUpdating
+                      ? userProvider.uploadProfilePic(context: context)
+                      : userProvider.showPickerOptions(context),
+          child: CustomContainer(
+            width: AppSize.size40,
+            height: AppSize.size40,
+            shape: BoxShape.circle,
+            backGroundColor: AppColors.white,
+            child: Icon(
+              userProvider.isUpdating ? Icons.done : Icons.camera_alt,
+              size: 20,
+              color:
+                  userProvider.isUpdating
+                      ? AppColors.primary
+                      : AppColors.secondary,
+            ),
+          ),
+        ),
       ),
     );
   }

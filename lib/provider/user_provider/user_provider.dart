@@ -211,6 +211,11 @@ class UserProvider extends ChangeNotifier {
 
   //////// choose and upload new user pic
   bool isUpdating = false;
+  set setIsUpdatingPic(bool value) {
+    _imageBytes = null;
+    isUpdating = value;
+    notifyListeners();
+  }
 
   final ImagePicker _picker = ImagePicker();
   Uint8List? _imageBytes;
