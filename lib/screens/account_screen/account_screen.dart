@@ -174,6 +174,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             leading: Icons.delete_forever,
                             color: AppColors.error,
                             onTap: () async {
+                              
                               String uId = await SharedPrefs.getSharedString(
                                 AppStrings.id,
                               );

@@ -73,32 +73,44 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               SizeHelper.height(),
               HeadingText(text: AppStrings.dateAndTime),
               SizeHelper.height(height: 1.h),
-              paddedText(text: "Time :- ${eventInfo.time}"),
               paddedText(
-                text:
-                    "Registration End Date :- ${eventInfo.registrationEndDate ?? "Not Found"}",
+                heading: "Time :- ",
+                text: eventInfo.time ?? "Not Found",
               ),
               paddedText(
-                text: "Start Date :- ${eventInfo.startDate ?? "Not Found"}",
+                heading: "Registration End Date :- ",
+                text: eventInfo.registrationEndDate ?? "Not Found",
               ),
               paddedText(
-                text: "End Date :- ${eventInfo.endDate ?? "Not Found"}",
+                heading: "Start Date :- ",
+                text: eventInfo.startDate ?? "Not Found",
+              ),
+              paddedText(
+                heading: "End Date :- ",
+                text: eventInfo.endDate ?? "Not Found",
               ),
 
               SizeHelper.height(),
               HeadingText(text: AppStrings.location),
               SizeHelper.height(height: 1.h),
-              paddedText(text: "Venue :- ${eventInfo.venue}"),
+              paddedText(
+                heading: "Venue :- ",
+                text: eventInfo.venue ?? "Not Provided",
+              ),
               SizeHelper.height(),
               HeadingText(text: AppStrings.contactInfo),
               SizeHelper.height(height: 1.h),
-              paddedText(text: "Contact :- ${eventInfo.contact}"),
+              paddedText(
+                heading: "Contact :- ",
+                text: eventInfo.contact ?? "Not Provided",
+              ),
               SizeHelper.height(height: 1.h),
               if (eventInfo.amount?.isNotEmpty == true) ...[
                 HeadingText(text: AppStrings.registration),
                 paddedText(
+                  heading: "${AppStrings.registration} Fee:- ",
                   text:
-                      "${AppStrings.registration} Fee:- ${eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
+                      "${eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
                 ),
                 SizeHelper.height(),
               ],
@@ -148,6 +160,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
 
 class HeadingText extends StatelessWidget {
   const HeadingText({super.key, required this.text});
+
   final String text;
   @override
   Widget build(BuildContext context) {
@@ -159,14 +172,29 @@ class HeadingText extends StatelessWidget {
 }
 
 class paddedText extends StatelessWidget {
-  const paddedText({super.key, required this.text});
+  const paddedText({super.key, required this.text, required this.heading});
   final String text;
-
+  final String heading;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 3.w),
-      child: CustomText(text: "• $text", style: TextStyleHelper.smallHeading),
+      child: RichText(
+        text: TextSpan(
+          text: "• $heading",
+          style: TextStyleHelper.smallHeading.copyWith(color: AppColors.black),
+          children: <TextSpan>[
+            TextSpan(
+              text: text,
+              style: TextStyleHelper.smallText.copyWith(
+                color: AppColors.black,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+      //  CustomText(text: "• $text", style: TextStyleHelper.smallHeading),
     );
   }
 }
