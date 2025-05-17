@@ -35,19 +35,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with NavigateHelper, WidgetsBindingObserver, ScreenTracker<HomeScreen> {
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
-  String get screenName => 'HomeScreen';
-  // Enable debug logs
-  // @override
-  // bool get debug => true;
+class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
@@ -61,10 +49,7 @@ class _HomeScreenState extends State<HomeScreen>
       userProvider.checkIfUserIsApproved();
       await productProvider.getProductList();
       await eventProvider.getAllEvents();
-
       await homeProvider.getUserOverAllScore();
-    }).then((_) {
-      setState(() {});
     });
   }
 

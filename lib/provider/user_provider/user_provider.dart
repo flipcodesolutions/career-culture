@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/models/user_profile_upload_model/user_profile_upload_model.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
 import 'package:mindful_youth/screens/login/sign_up/start_your_journey.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:provider/provider.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
 import '../../screens/login/sign_up/educational_details.dart';
@@ -346,5 +348,19 @@ class UserProvider extends ChangeNotifier {
         ],
       ),
     );
+  }
+
+  void initProfilePicFromLocalStorage({required BuildContext context}) async {
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    context
+        .read<SignUpProvider>()
+        .signUpRequestModel
+        .images = await SharedPrefs.getSharedString(AppStrings.images);
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
   }
 }

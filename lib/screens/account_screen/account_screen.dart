@@ -33,6 +33,16 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserProvider userProvider = context.read<UserProvider>();
+    Future.microtask(() async {
+      userProvider.initProfilePicFromLocalStorage(context: context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
     return PopScope(
@@ -174,7 +184,6 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             leading: Icons.delete_forever,
                             color: AppColors.error,
                             onTap: () async {
-                              
                               String uId = await SharedPrefs.getSharedString(
                                 AppStrings.id,
                               );

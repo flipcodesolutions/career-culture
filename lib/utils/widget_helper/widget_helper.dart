@@ -53,7 +53,7 @@ mixin WidgetHelper {
         // primaryColor: ColorHelper.kPrimary,
         closeButtonShowType: CloseButtonShowType.none,
         type: ToastificationType.error,
-        showProgressBar: false,
+        showProgressBar: true,
         alignment: Alignment.bottomCenter,
         style: ToastificationStyle.fillColored,
         dragToClose: true,
@@ -70,7 +70,7 @@ mixin WidgetHelper {
         closeButtonShowType: CloseButtonShowType.none,
         type: ToastificationType.success,
         style: ToastificationStyle.fillColored,
-        showProgressBar: false,
+        showProgressBar: true,
         alignment: Alignment.bottomCenter,
         // context: context, // optional if you use ToastificationWrapper
         title: Text(title),

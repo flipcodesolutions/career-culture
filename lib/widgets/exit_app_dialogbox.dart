@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
@@ -132,8 +131,8 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                         if (!context.mounted) return;
 
                         /// set home screen to 0 index
-                        context.read<HomeScreenProvider>().setNavigationIndex =
-                            0;
+                        // context.read<HomeScreenProvider>().setNavigationIndex =
+                        //     0;
 
                         /// set sign up provider to init
                         context.read<UserProvider>().setIsUserLoggedIn = false;

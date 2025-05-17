@@ -70,7 +70,12 @@ class _CustomProfileAvatarState extends State<CustomProfileAvatar> {
                                   icon: AppIconsData.profile,
                                   errorIconSize: AppSize.size100,
                                   imageUrl:
-                                      "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                                      signUpProvider
+                                                  .signUpRequestModel
+                                                  .images !=
+                                              null
+                                          ? "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}"
+                                          : "",
                                 ),
                       ),
                     ),
