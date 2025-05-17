@@ -102,7 +102,7 @@ class ReferralCodeCard extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomText(text: "hello", style: TextStyleHelper.mediumHeading),
+            CustomText(text: referCode, style: TextStyleHelper.mediumHeading),
             SizeHelper.width(width: AppSize.size10),
             InkWell(
               onTap: () {
