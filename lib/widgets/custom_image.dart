@@ -14,6 +14,7 @@ class CustomImageWithLoader extends StatelessWidget {
     this.fit,
     this.errorIconSize,
     this.showImageInPanel = true,
+    this.icon,
   });
   final String imageUrl;
   final double? width;
@@ -21,6 +22,7 @@ class CustomImageWithLoader extends StatelessWidget {
   final BoxFit? fit;
   final double? errorIconSize;
   final bool showImageInPanel;
+  final IconData? icon;
   @override
   Widget build(BuildContext context) {
     final image = CachedNetworkImage(
@@ -32,7 +34,7 @@ class CustomImageWithLoader extends StatelessWidget {
       // maxHeightDiskCache: height?.toInt(),
       errorWidget:
           (context, url, error) => Icon(
-            Icons.error_outline,
+            icon ?? Icons.error_outline,
             color: AppColors.primary,
             size: errorIconSize ?? AppSize.size50,
           ),

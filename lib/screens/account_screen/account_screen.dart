@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/provider/refer_provider/refer_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
@@ -151,13 +152,20 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           ProfilePageListTiles(
                             leading: Icons.share,
                             // onTap: () {},
-                            onTap:
-                                () => push(
-                                  context: context,
-                                  widget: ReferralPage(),
-                                  transition:
-                                      FadeUpwardsPageTransitionsBuilder(),
+                            onTap: () async {
+                              String referCode =
+                                  await context
+                                      .read<ReferProvider>()
+                                      .initReferCodeFromLocalStorage();
+                              push(
+                                context: context,
+                                widget: ReferralPage(
+                                  points: "100",
+                                  referCode: referCode,
                                 ),
+                                transition: FadeUpwardsPageTransitionsBuilder(),
+                              );
+                            },
 
                             titleText: AppStrings.refer,
                           ),

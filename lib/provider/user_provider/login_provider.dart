@@ -116,10 +116,6 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     );
     if (_loginResponseModel?.success == true) {
       cancelTimerOtpResend();
-      mobileController.clear();
-      otpController.clear();
-      _otpModel = null;
-      notifyListeners();
       if (_loginResponseModel?.data?.isNewUser == true) {
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
         signUpProvider.contactNo1.text = mobileController.text;
@@ -127,12 +123,12 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         signUpProvider.setIsUpdatingProfile = false;
         push(context: context, widget: SignUpScreen());
       } else {
-        if (_loginResponseModel?.data?.user?.status != "active") {
-          MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-            context: context,
-          );
-          return;
-        }
+        // if (_loginResponseModel?.data?.user?.status != "active") {
+        //   MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+        //     context: context,
+        //   );
+        //   return;
+        // }
         if (!context.mounted) return;
         context.read<UserProvider>().setIsUserLoggedIn = true;
         isNavigateHome
@@ -143,6 +139,10 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
             )
             : {pop(context), pop(context)};
       }
+      mobileController.clear();
+      otpController.clear();
+      _otpModel = null;
+      notifyListeners();
     }
 
     /// set _isLoading false

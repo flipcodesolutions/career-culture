@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,8 @@ class _CustomProfileAvatarState extends State<CustomProfileAvatar> {
                     CustomContainer(
                       width: AppSize.size100 + AppSize.size50,
                       height: AppSize.size100 + AppSize.size50,
+                      borderColor: AppColors.black,
+                      borderWidth: 0.3,
                       shape: BoxShape.circle,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppSize.size100),
@@ -64,18 +67,10 @@ class _CustomProfileAvatarState extends State<CustomProfileAvatar> {
                                 )
                                 : CustomImageWithLoader(
                                   fit: BoxFit.cover,
+                                  icon: AppIconsData.profile,
+                                  errorIconSize: AppSize.size100,
                                   imageUrl:
-                                      (signUpProvider
-                                                      .signUpRequestModel
-                                                      .images ==
-                                                  null ||
-                                              signUpProvider
-                                                      .signUpRequestModel
-                                                      .images
-                                                      ?.isEmpty ==
-                                                  true)
-                                          ? "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?t=st=1744778069~exp=1744781669~hmac=a88a2dbd6225ce1f2caf1382b814e2cf2f547172d909e75a5e8bc978d5d8ff03&w=826"
-                                          : "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                                      "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
                                 ),
                       ),
                     ),

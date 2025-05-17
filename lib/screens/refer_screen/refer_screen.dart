@@ -1,43 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
-import 'package:mindful_youth/provider/refer_provider/refer_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
-import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
-import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_size.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ReferralPage extends StatefulWidget {
-  const ReferralPage({super.key});
-
-  @override
-  State<ReferralPage> createState() => _ReferralPageState();
-}
-
-class _ReferralPageState extends State<ReferralPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    ReferProvider referProvider = context.read<ReferProvider>();
-    Future.microtask(() async {
-      // await referProvider.getReferCode(context: context);
-      referProvider.initReferCodeFromLocalStorage();
-    });
-  }
-
+class ReferralPage extends StatelessWidget {
+  const ReferralPage({
+    super.key,
+    required this.referCode,
+    required this.points,
+  });
+  final String referCode;
+  final String points;
   @override
   Widget build(BuildContext context) {
-    ReferProvider referProvider = context.watch<ReferProvider>();
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -45,48 +29,21 @@ class _ReferralPageState extends State<ReferralPage> {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body:
-          referProvider.isLoading
-              ? Center(child: CustomLoader())
-              : referProvider.referCodeModel?.data?.referCode != ""
-              ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ReferralHeader(),
-                    SizedBox(height: 24),
-                    ReferralCodeCard(
-                      referCode:
-                          referProvider.referCodeModel?.data?.referCode ??
-                          AppStrings.noReferCodeFound,
-                    ),
-                    SizedBox(height: 24),
-                    BenefitsList(
-                      points: referProvider.referCodeModel?.data?.points ?? "0",
-                    ),
-                    Spacer(),
-                    ShareButton(
-                      referCode:
-                          referProvider.referCodeModel?.data?.referCode ??
-                          AppStrings.noReferCodeFound,
-                    ),
-                  ],
-                ),
-              )
-              : CustomRefreshIndicator(
-                onRefresh:
-                    () async =>
-                        await referProvider.getReferCode(context: context),
-                child: ListView(
-                  children: [
-                    SizeHelper.height(height: 40.h),
-                    Center(
-                      child: CustomText(text: AppStrings.somethingWentWrong),
-                    ),
-                  ],
-                ),
-              ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ReferralHeader(),
+            SizedBox(height: 24),
+            ReferralCodeCard(referCode: referCode),
+            SizedBox(height: 24),
+            BenefitsList(points: points),
+            Spacer(),
+            ShareButton(referCode: referCode),
+          ],
+        ),
+      ),
     );
   }
 }
