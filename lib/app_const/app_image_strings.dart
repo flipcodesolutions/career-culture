@@ -8,4 +8,5 @@ class AppImageStrings {
   static const String gridIcon = "assets/images/grid_icon.png";
   static const String gridOffIcon = "assets/images/grid_off_icon.png";
   static const String imageOnlyLogo = "assets/images/only_logo.png";
+  static const String referPage = "assets/images/refer_image.png";
 }

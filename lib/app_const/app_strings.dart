@@ -221,6 +221,7 @@ class AppStrings {
   static const noStateFound = 'No States Found';
   static const noCitiesFound = 'No Cities Found';
   static const counselingAppointmentDone = 'Counseling Appointment Done';
+  static const referCodeCopied = 'Refer Code Copied';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

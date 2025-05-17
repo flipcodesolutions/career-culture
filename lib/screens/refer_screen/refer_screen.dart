@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -11,6 +12,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_size.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart'; // For Clipboard
 
 class ReferralPage extends StatelessWidget {
   const ReferralPage({
@@ -34,6 +36,14 @@ class ReferralPage extends StatelessWidget {
         child: Column(
           // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            CustomContainer(
+              width: 100.w,
+              height: 30.h,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(AppImageStrings.referPage),
+              ),
+            ),
             ReferralHeader(),
             SizedBox(height: 24),
             ReferralCodeCard(referCode: referCode),
@@ -89,9 +99,18 @@ class ReferralCodeCard extends StatelessWidget {
           vertical: AppSize.size10,
           horizontal: AppSize.size20,
         ),
-        child: Column(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SelectableText(referCode, style: TextStyleHelper.mediumHeading),
+            CustomText(text: "hello", style: TextStyleHelper.mediumHeading),
+            SizeHelper.width(width: AppSize.size10),
+            InkWell(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: referCode));
+                WidgetHelper.customSnackBar(title: AppStrings.referCodeCopied);
+              },
+              child: Icon(Icons.copy, size: AppSize.size20),
+            ),
           ],
         ),
       ),
