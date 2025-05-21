@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -45,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
   double _scale = 0;
   double _opacity = 0.0;
   int time = 1;
+  StreamSubscription? _sub;
 
   /// --------------------------------------
   /// SCENARIO HANDLING (What it does and when)
@@ -78,38 +82,70 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 100), () {
-      setState(() {
-        _scale = 1.0;
-        _opacity = 1.0;
-      });
-    });
+    _handleIncomingLinks();
+  }
 
-    Future.delayed(Duration(seconds: time + time + time), () async {
-      UserProvider userProvider = context.read<UserProvider>();
-      String token = await SharedPrefs.getToken();
-      String status = await SharedPrefs.getSharedString(AppStrings.status);
-      if (token != "" && token.isNotEmpty) {
-        userProvider.setIsUserLoggedIn = true;
-        if (status != "active" && status != "") {
-          MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-            context: context,
-          );
-          return;
-        }
-        pushRemoveUntil(
-          context: context,
-          widget: MainScreen(),
-          transition: FadeForwardsPageTransitionsBuilder(),
-        );
+  void _handleIncomingLinks() async {
+    try {
+      final AppLinks appLinks = AppLinks(); // AppLinks is singleton
+      // Listen when the app is already running
+      appLinks.uriLinkStream.listen((uri) {
+        _handleDeepLink(uri);
+      });
+      // Handle initial link when app is launched
+      final Uri? initialUri = await appLinks.getInitialLink();
+      if (initialUri != null) {
+        _handleDeepLink(initialUri);
       } else {
-        pushRemoveUntil(
-          context: context,
-          widget: OnBoardingScreen(),
-          transition: FadeForwardsPageTransitionsBuilder(),
-        );
+        Future.delayed(Duration(milliseconds: 100), () {
+          setState(() {
+            _scale = 1.0;
+            _opacity = 1.0;
+          });
+        });
+
+        Future.delayed(Duration(seconds: time + time + time), () async {
+          UserProvider userProvider = context.read<UserProvider>();
+          String token = await SharedPrefs.getToken();
+          String status = await SharedPrefs.getSharedString(AppStrings.status);
+          if (token != "" && token.isNotEmpty) {
+            userProvider.setIsUserLoggedIn = true;
+            if (status != "active" && status != "") {
+              MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+                context: context,
+              );
+              return;
+            }
+            pushRemoveUntil(
+              context: context,
+              widget: MainScreen(),
+              transition: FadeForwardsPageTransitionsBuilder(),
+            );
+          } else {
+            pushRemoveUntil(
+              context: context,
+              widget: OnBoardingScreen(),
+              transition: FadeForwardsPageTransitionsBuilder(),
+            );
+          }
+        });
       }
-    });
+    } catch (e) {
+      // Handle error
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    // Example: https://career-culture.flipcodesolutions.com/uploads/my-post-slug
+    if (uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'uploads') {
+      final String slug = uri.pathSegments[1];
+      WidgetHelper.customSnackBar(title: slug);
+      // Navigate to the post page and pass the slug
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => IndividualWallPostScreen()),
+      );
+    }
   }
 
   @override

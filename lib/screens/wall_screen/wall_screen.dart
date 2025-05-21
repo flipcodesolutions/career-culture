@@ -4,8 +4,10 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/provider/wall_provider/wall_provider.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
@@ -13,6 +15,7 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/post_models/wall_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
@@ -28,13 +31,12 @@ class WallScreen extends StatefulWidget {
 }
 
 class _WallScreenState extends State<WallScreen>
-    with WidgetsBindingObserver, ScreenTracker<WallScreen> {
+    with WidgetsBindingObserver, ScreenTracker<WallScreen>, NavigateHelper {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
   }
-
 
   @override
   String get screenName => 'WallScreen';
@@ -83,6 +85,12 @@ class _WallScreenState extends State<WallScreen>
                       WallListModelData? post =
                           wallProvider.wallModel?.data?[index];
                       return FeedPostCard(
+                        onTap:
+                            () => push(
+                              context: context,
+                              widget: IndividualWallPostScreen(),
+                              transition: FadeUpwardsPageTransitionsBuilder(),
+                            ),
                         post: post,
                         onLikePressed:
                             () =>
@@ -96,8 +104,20 @@ class _WallScreenState extends State<WallScreen>
                                       title: AppStrings.pleaseLoginFirst,
                                       isError: true,
                                     ),
-                        onSharePressed: () {
-                          /* share sheet */
+                        onSharePressed: () async {
+                          /// share post
+                          ShareResult refer = await SharePlus.instance.share(
+                            ShareParams(
+                              uri: Uri.parse("${AppStrings.assetsUrl}slug"),
+                              title: 'Hey! Check out This Amazing Post',
+                            ),
+                          );
+                          if (refer.status == ShareResultStatus.success) {
+                            WidgetHelper.customSnackBar(
+                              // context: context,
+                              title: AppStrings.inviteRequestSent,
+                            );
+                          }
                         },
                         onMorePressed: () {
                           /* show menu */
@@ -129,7 +149,7 @@ class FeedPostCard extends StatelessWidget {
   final VoidCallback? onLikePressed;
   final VoidCallback? onCommentPressed;
   final VoidCallback? onSharePressed;
-
+  final void Function()? onTap;
   const FeedPostCard({
     super.key,
     required this.post,
@@ -137,6 +157,7 @@ class FeedPostCard extends StatelessWidget {
     this.onLikePressed,
     this.onCommentPressed,
     this.onSharePressed,
+    required this.onTap,
   });
 
   @override
@@ -179,14 +200,18 @@ class FeedPostCard extends StatelessWidget {
           // ),
 
           // ─── Body ───────────────────────────────
-          CustomContainer(
-            alignment: Alignment.center,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppSize.size10),
-              child: CustomImageWithLoader(
-                fit: BoxFit.cover,
-                width: 85.w,
-                imageUrl: "${AppStrings.assetsUrl}${post?.image}",
+          InkWell(
+            onTap: onTap,
+            child: CustomContainer(
+              alignment: Alignment.center,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                child: CustomImageWithLoader(
+                  showImageInPanel: false,
+                  fit: BoxFit.cover,
+                  width: 85.w,
+                  imageUrl: "${AppStrings.assetsUrl}${post?.image}",
+                ),
               ),
             ),
           ),
