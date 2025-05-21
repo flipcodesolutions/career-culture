@@ -24,19 +24,22 @@ class AppStrings {
   static const letsBegin = "Let's Begin";
   static const skip = "Skip";
   static const programs = "MindFul Youth A Certificate Program";
-  static const yourScore = 'Your Score';
+  static const yourCoins = 'Your Coins';
   static const recentActivity = "Recent Activity";
   static const announceMent = "Announcement";
   static const suggestedBooks = "Suggested Books";
   static const scoreBoard = "Scoreboard";
-  static const video = "Videos";
-  static const articles = "Articles";
-  static const audio = "Audios";
+  static const video = "$recommended Videos";
+  static const mustListen = "Must Listen";
+  static const mustWatch = "Must Watch";
+  static const articles = "$recommended Articles";
+  static const audio = "$recommended Audios";
   static const assessment = "Assessment";
   static const submit = "Submit";
   static const notifications = "Notifications";
   static const eventActivity = "Event Activity";
-  static const recommendedBooks = "Recommended Books";
+  static const recommended = "Recommended";
+  static const recommendedBooks = "$recommended Books";
   static const aspectForYourMentalWellBeing =
       "Aspect For Your Mental Well Being";
   static const wall = "Wall";
@@ -165,7 +168,7 @@ class AppStrings {
   static const noRecentActivity = "No Recent Activity";
   static const selectConvener = "Select Convener";
   static const searchHere = "Search Here ...";
-  static const needABoost = "Need A Boost ?";
+  static const bookAnAppointment = "Book an appointment.";
   static const counseling1 = "Counseling 1";
   static const bookAfter25 = "Book After 25% Milestone.";
   static const counseling2 = "Counseling 2";

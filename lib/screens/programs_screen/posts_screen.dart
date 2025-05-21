@@ -123,6 +123,7 @@ class _PostsScreenState extends State<PostsScreen>
                                   ],
                                 ),
                                 ImageContainer(
+                                  
                                   image:
                                       "${AppStrings.assetsUrl}${post?.image}",
                                   showImageInPanel: false,
@@ -264,6 +265,8 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
             ),
             SizeHelper.height(),
             if (post?.video?.isNotEmpty == true) ...[
+              HeadingTextWidget(heading: AppStrings.mustWatch),
+              SizeHelper.height(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: CustomContainer(
@@ -281,6 +284,8 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               SizeHelper.height(),
             ],
             if (post?.audio?.isNotEmpty == true) ...[
+              HeadingTextWidget(heading: AppStrings.mustListen),
+              SizeHelper.height(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
                 child: CustomAudioPlayer(
@@ -399,6 +404,23 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HeadingTextWidget extends StatelessWidget {
+  const HeadingTextWidget({super.key, required this.heading});
+  final String heading;
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      width: 100.w,
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      backGroundColor: AppColors.lightWhite,
+      child: CustomText(
+        text: heading,
+        style: TextStyleHelper.smallHeading.copyWith(color: AppColors.primary),
       ),
     );
   }

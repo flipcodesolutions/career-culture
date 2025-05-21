@@ -9,6 +9,7 @@ import 'package:mindful_youth/screens/notification_screen/notification_screen.da
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -36,6 +37,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
+  String? userId;
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
@@ -50,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       await productProvider.getProductList();
       await eventProvider.getAllEvents();
       await homeProvider.getUserOverAllScore();
+      userId = await SharedPrefs.getSharedString(AppStrings.userId);
     });
   }
 
@@ -151,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                         homeScreenProvider.isLoading
                             ? Center(child: CustomLoader())
                             : DashBoardUserScoreWidget(
+                              userId: userId ?? "",
                               score:
                                   homeScreenProvider
                                       .overAllScoreModel

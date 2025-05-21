@@ -39,7 +39,6 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
     super.didChangeAppLifecycleState(state);
   }
 
-
   @override
   String get screenName => widget.programName;
   @override
@@ -205,21 +204,30 @@ class ImageContainer extends StatelessWidget {
     super.key,
     required this.image,
     required this.showImageInPanel,
+    this.fit,
   });
   final bool showImageInPanel;
   final String image;
-
+  final BoxFit? fit;
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      margin: EdgeInsets.symmetric(horizontal: 5.w),
-      height: 30.h,
-      width: 90.w,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppSize.size20),
-        child: CustomImageWithLoader(
-          imageUrl: image,
-          showImageInPanel: showImageInPanel,
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: CustomContainer(
+        backGroundColor: AppColors.lightWhite,
+        borderColor: AppColors.black,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        borderWidth: 0.2,
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
+        // height: 30.h,
+        // width: 90.w,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSize.size20),
+          child: CustomImageWithLoader(
+            imageUrl: image,
+            showImageInPanel: showImageInPanel,
+            fit: fit ?? BoxFit.contain,
+          ),
         ),
       ),
     );

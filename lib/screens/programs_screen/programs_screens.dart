@@ -49,7 +49,6 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     super.didChangeAppLifecycleState(state);
   }
 
-
   @override
   String get screenName => 'PostsScreen';
   @override
@@ -173,7 +172,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 CustomText(
-                                  text: AppStrings.needABoost,
+                                  text: AppStrings.bookAnAppointment,
                                   style: TextStyleHelper.mediumHeading.copyWith(
                                     color: AppColors.primary,
                                   ),

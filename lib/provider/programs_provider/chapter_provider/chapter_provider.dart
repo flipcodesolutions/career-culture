@@ -75,7 +75,7 @@ class ChapterProvider extends ChangeNotifier {
 
   Future<void> getAllChapters(
     // {required BuildContext context}
-    ) async {
+  ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
@@ -87,7 +87,6 @@ class ChapterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// check if user can access the chapter requested
   bool canAccessChapter({
     required int totalChapters,
     required double totalAllMarks,
@@ -104,10 +103,20 @@ class ChapterProvider extends ChangeNotifier {
       return true;
     }
 
-    // compute per-chapter marks
+    // prevent division by zero or invalid values
+    if (totalChapters <= 0 || totalAllMarks <= 0) {
+      return false;
+    }
+
     final marksPerChapter = totalAllMarks / totalChapters;
 
-    // how many _whole_ chapters the user has fully completed
+    // prevent further math issues
+    if (marksPerChapter.isNaN ||
+        marksPerChapter.isInfinite ||
+        marksPerChapter <= 0) {
+      return false;
+    }
+
     final completedChapters = (correctPoints / marksPerChapter).floor();
 
     // to open chapter N, you must have completed N-1
