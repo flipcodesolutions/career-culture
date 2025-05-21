@@ -23,11 +23,13 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
     this.scoreMessage,
     this.animationDuration = const Duration(seconds: 3),
     required this.userId,
+    required this.onTap,
   });
   final String score;
   final String? scoreMessage;
   final Duration animationDuration;
   final String userId;
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
@@ -55,12 +57,16 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
                 shape: BoxShape.circle,
                 child:
                     signUpProvider.signUpRequestModel.images?.isNotEmpty == true
-                        ? CustomImageWithLoader(
-                          fit: BoxFit.contain,
-                          width: 15.w,
-                          height: 8.h,
-                          imageUrl:
-                              "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                        ? InkWell(
+                          onTap: onTap,
+                          child: CustomImageWithLoader(
+                            showImageInPanel: false,
+                            fit: BoxFit.contain,
+                            width: 15.w,
+                            height: 8.h,
+                            imageUrl:
+                                "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                          ),
                         )
                         : Icon(
                           Icons.star_rate_rounded,

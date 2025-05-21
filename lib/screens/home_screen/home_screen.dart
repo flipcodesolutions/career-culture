@@ -11,7 +11,6 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_product_showcase.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
@@ -154,6 +153,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                         homeScreenProvider.isLoading
                             ? Center(child: CustomLoader())
                             : DashBoardUserScoreWidget(
+                              onTap:
+                                  () =>
+                                      homeScreenProvider.setNavigationIndex = 4,
                               userId: userId ?? "",
                               score:
                                   homeScreenProvider
