@@ -222,7 +222,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3,
-                                          childAspectRatio: 1 / 1.3,
+                                          // childAspectRatio: 1 / 1.3,
                                         ),
                                     data:
                                         chapterProvider.chaptersModel?.data ??
@@ -268,17 +268,21 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                                   mainAxisSize:
                                                       MainAxisSize.min,
                                                   children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            AppSize.size10,
-                                                          ),
-                                                      child: CustomImageWithLoader(
-                                                        showImageInPanel: false,
-                                                        width: 33.w,
-                                                        height: 15.h,
-                                                        imageUrl:
-                                                            "${AppStrings.assetsUrl}${item.image}",
+                                                    AspectRatio(
+                                                      aspectRatio: 16 / 9,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              AppSize.size10,
+                                                            ),
+                                                        child: CustomImageWithLoader(
+                                                          showImageInPanel:
+                                                              false,
+                                                          width: 33.w,
+                                                          height: 15.h,
+                                                          imageUrl:
+                                                              "${AppStrings.assetsUrl}${item.image}",
+                                                        ),
                                                       ),
                                                     ),
                                                     Expanded(
