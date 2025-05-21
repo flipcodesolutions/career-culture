@@ -8,6 +8,7 @@ import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
+import 'package:mindful_youth/screens/shop_market_screen/products_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
@@ -180,6 +181,20 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             titleText: AppStrings.refer,
                           ),
 
+                          /// refer
+                          ProfilePageListTiles(
+                            leading: Icons.shopping_bag_outlined,
+                            // onTap: () {},
+                            onTap: () async {
+                              push(
+                                context: context,
+                                widget: ProductListPage(),
+                                transition: FadeUpwardsPageTransitionsBuilder(),
+                              );
+                            },
+
+                            titleText: AppStrings.products,
+                          ),
                           ProfilePageListTiles(
                             leading: Icons.delete_forever,
                             color: AppColors.error,

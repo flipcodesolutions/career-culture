@@ -29,7 +29,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
   @override
   void initState() {
     super.initState();
-      ProductProvider productProvider = context.read<ProductProvider>();
+    ProductProvider productProvider = context.read<ProductProvider>();
     Future.microtask(() {
       productProvider.getProductList();
     });
