@@ -6,11 +6,12 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:sizer/sizer.dart';
 
 class IndividualWallPostScreen extends StatelessWidget {
-  const IndividualWallPostScreen({super.key});
+  final String? slug;
+  const IndividualWallPostScreen({super.key ,this.slug});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: CustomText(text: "$slug"),),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

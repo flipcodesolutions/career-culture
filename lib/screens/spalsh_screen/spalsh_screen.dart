@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
@@ -47,120 +48,117 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
   double _scale = 0;
   double _opacity = 0.0;
-  int time = 1;
-  StreamSubscription? _sub;
+  final int _animationDelay = 1;
+  StreamSubscription<Uri>? _deepLinkSub;
 
-  /// --------------------------------------
-  /// SCENARIO HANDLING (What it does and when)
-  /// --------------------------------------
-  ///
-  /// ✅ **Initial Animation (Branding/Intro):**
-  /// - On `initState`, it triggers animation by changing `_scale` and `_opacity` after 100ms.
-  /// - The animation uses [AnimatedScale] and `AnimatedOpacity` for smooth entrance.
-  ///
-  /// ✅ **User Auth Check (After Animation Delay):**
-  /// - After 3 seconds (`time + time + time`), it performs:
-  ///   - Fetching the `token` from shared preferences.
-  ///   - Checking the `status` of the user (active/deactivated).
-  ///
-  ///
-  /// --------------------------------------
-  /// NAVIGATION LOGIC:
-  /// --------------------------------------
-  ///
-  /// 🔒 Case 1: **User is logged in (token exists)**
-  /// - Mark user as logged in via [UserProvider] .
-  /// - If user status is **not 'active'** (e.g., suspended or deleted):
-  ///     - Redirects to login via `MethodHelper.redirectDeletedOrInActiveUserToLoginPage()`
-  /// - If user is valid and active:
-  ///     - Navigate to `MainScreen` using `pushRemoveUntil()` (clears navigation stack).
-  ///
-  /// 🆕 Case 2: **User is NOT logged in**
-  /// - Navigate to `OnBoardingScreen` to begin the new-user flow.
-  ///
-  ///
   @override
   void initState() {
     super.initState();
-    _handleIncomingLinks();
+    _initSplashSequence();
   }
 
-  void _handleIncomingLinks() async {
-    try {
-      final AppLinks appLinks = AppLinks(); // AppLinks is singleton
-      // Listen when the app is already running
-      appLinks.uriLinkStream.listen((uri) {
-        _handleDeepLink(uri);
-      });
-      // Handle initial link when app is launched
-      final Uri? initialUri = await appLinks.getInitialLink();
-      if (initialUri != null) {
-        _handleDeepLink(initialUri);
-      } else {
-        Future.delayed(Duration(milliseconds: 100), () {
-          setState(() {
-            _scale = 1.0;
-            _opacity = 1.0;
-          });
-        });
+  Future<void> _initSplashSequence() async {
+    await _startIntroAnimation();
+    await _handleInitialDeepLink();
+  }
 
-        Future.delayed(Duration(seconds: time + time + time), () async {
-          UserProvider userProvider = context.read<UserProvider>();
-          String token = await SharedPrefs.getToken();
-          String status = await SharedPrefs.getSharedString(AppStrings.status);
-          if (token != "" && token.isNotEmpty) {
-            userProvider.setIsUserLoggedIn = true;
-            if (status != "active" && status != "") {
-              MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-                context: context,
-              );
-              return;
-            }
-            pushRemoveUntil(
-              context: context,
-              widget: MainScreen(),
-              transition: FadeForwardsPageTransitionsBuilder(),
-            );
-          } else {
-            pushRemoveUntil(
-              context: context,
-              widget: OnBoardingScreen(),
-              transition: FadeForwardsPageTransitionsBuilder(),
-            );
-          }
-        });
+  Future<void> _startIntroAnimation() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (!mounted) return;
+    setState(() {
+      _scale = 1.0;
+      _opacity = 1.0;
+    });
+    await Future.delayed(Duration(seconds: _animationDelay * 3));
+  }
+
+  Future<void> _handleInitialDeepLink() async {
+    final appLinks = AppLinks();
+    final Uri? initialUri = await appLinks.getInitialLink();
+
+    if (initialUri != null) {
+      _handleDeepLink(initialUri);
+      return;
+    } else {
+      await _handleAuthAndNavigate(isFromLink: false);
+    }
+
+    _deepLinkSub = appLinks.uriLinkStream.listen(
+      (event) {
+        _handleDeepLink(event);
+      },
+      onError: (err) {
+        _handleAuthAndNavigate(isFromLink: false);
+      },
+    );
+  }
+
+  Future<void> _handleAuthAndNavigate({
+    required bool isFromLink,
+    String? slug,
+  }) async {
+    final userProvider = context.read<UserProvider>();
+    final token = await SharedPrefs.getToken();
+    final status = await SharedPrefs.getSharedString(AppStrings.status);
+
+    if (token.isNotEmpty) {
+      userProvider.setIsUserLoggedIn = true;
+
+      if (status != "active") {
+        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+          context: context,
+        );
+        return;
       }
-    } catch (e) {
-      // Handle error
+
+      pushRemoveUntil(
+        context: context,
+        widget: MainScreen(),
+        transition: FadeForwardsPageTransitionsBuilder(),
+      );
+
+      if (isFromLink && slug?.isNotEmpty == true) {
+        push(context: context, widget: IndividualWallPostScreen(slug: slug!));
+      }
+    } else {
+      pushRemoveUntil(
+        context: context,
+        widget: OnBoardingScreen(),
+        transition: FadeForwardsPageTransitionsBuilder(),
+      );
     }
   }
 
   void _handleDeepLink(Uri uri) {
-    // Example: https://career-culture.flipcodesolutions.com/uploads/my-post-slug
-    if (uri.pathSegments.length >= 2 && uri.pathSegments[0] == 'uploads') {
+    WidgetHelper.customSnackBar(title: "Deep link: $uri");
+
+    if (uri.pathSegments.length >= 2 && uri.pathSegments.first == 'uploads') {
       final String slug = uri.pathSegments[1];
-      WidgetHelper.customSnackBar(title: slug);
-      // Navigate to the post page and pass the slug
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => IndividualWallPostScreen()),
-      );
+      _handleAuthAndNavigate(isFromLink: true, slug: slug);
+    } else {
+      _handleAuthAndNavigate(isFromLink: false);
     }
+  }
+
+  @override
+  void dispose() {
+    _deepLinkSub?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomAnimatedContainer(
-        duration: Duration(seconds: time),
+        duration: Duration(seconds: _animationDelay),
         width: 100.w,
         height: 100.h,
         child: Center(
           child: AnimatedOpacity(
-            duration: Duration(seconds: time + time),
+            duration: Duration(seconds: _animationDelay * 2),
             opacity: _opacity,
             child: AnimatedScale(
-              duration: Duration(seconds: time),
+              duration: Duration(seconds: _animationDelay),
               scale: _scale,
               curve: Curves.decelerate,
               child: Image.asset(AppImageStrings.splashScreen, width: 60.w),
