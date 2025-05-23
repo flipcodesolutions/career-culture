@@ -503,6 +503,8 @@ class UserModelData {
     email = json['email'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     _saveUserStorage();
+    _saveUserProfileToLocalStorage();
+    _saveUserEducationToLocalStorage();
   }
 
   Map<String, dynamic> toJson() {
@@ -531,9 +533,14 @@ class UserModelData {
     if (user != null) {
       await SharedPrefs.saveString(AppStrings.userName, user?.name ?? '');
       _log(AppStrings.userName, user?.name ?? '');
-
+      await SharedPrefs.saveString(
+        AppStrings.userId,
+        user?.id.toString() ?? "",
+      );
       await SharedPrefs.saveString(AppStrings.userEmail, user?.email ?? '');
       _log(AppStrings.userEmail, user?.email ?? '');
+      await SharedPrefs.saveString(AppStrings.phone, user?.phone ?? '');
+      _log(AppStrings.phone, user?.phone ?? '');
 
       await SharedPrefs.saveString(
         AppStrings.isEmailVerified,
@@ -580,6 +587,124 @@ class UserModelData {
     if (isNewUser != null) {
       await SharedPrefs.saveBool(AppStrings.isNewUser, isNewUser!);
       _log(AppStrings.isNewUser, isNewUser.toString());
+    }
+  }
+
+  void _saveUserProfileToLocalStorage() async {
+    if (user?.profile != null) {
+      await SharedPrefs.saveString(
+        AppStrings.images,
+        user?.profile?.images ?? '',
+      );
+      _log(AppStrings.images, user?.profile?.images ?? '');
+
+      // await SharedPrefs.saveString(
+      //   AppStrings.userId,
+      //   user?.profile?.userId.toString() ?? '',
+      // );
+      // _log(AppStrings.userId, user?.profile?.userId.toString() ?? '');
+
+      // await SharedPrefs.saveString(
+      //   AppStrings.userContactNo1,
+      //   user?.profile?.contactNo1 ?? '',
+      // );
+      // _log(AppStrings.userContactNo1, user?.profile?.contactNo1 ?? '');
+      await SharedPrefs.saveString(
+        AppStrings.userContactNo1,
+        user?.phone ?? '',
+      );
+      _log(AppStrings.userContactNo1, user?.phone ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userContactNo2,
+        user?.profile?.contactNo2 ?? '',
+      );
+      _log(AppStrings.userContactNo2, user?.profile?.contactNo2 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userGender,
+        user?.profile?.gender ?? '',
+      );
+      _log(AppStrings.userGender, user?.profile?.gender ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.dateOfBirth,
+        user?.profile?.dateOfBirth ?? '',
+      );
+      _log(AppStrings.dateOfBirth, user?.profile?.dateOfBirth ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.addressLine1,
+        user?.profile?.addressLine1 ?? '',
+      );
+      _log(AppStrings.addressLine1, user?.profile?.addressLine1 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.addressLine2,
+        user?.profile?.addressLine2 ?? '',
+      );
+      _log(AppStrings.addressLine2, user?.profile?.addressLine2 ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userCity,
+        user?.profile?.city ?? '',
+      );
+      _log(AppStrings.userCity, user?.profile?.city ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userState,
+        user?.profile?.state ?? '',
+      );
+      _log(AppStrings.userState, user?.profile?.state ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userCountry,
+        user?.profile?.country ?? '',
+      );
+      _log(AppStrings.userCountry, user?.profile?.country ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userDistrict,
+        user?.profile?.district ?? '',
+      );
+      _log(AppStrings.userDistrict, user?.profile?.district ?? '');
+    }
+  }
+
+  void _saveUserEducationToLocalStorage() async {
+    if (user?.userEducation != null) {
+      await SharedPrefs.saveString(
+        AppStrings.study,
+        user?.userEducation?.study ?? '',
+      );
+      _log(AppStrings.study, user?.userEducation?.study ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.degree,
+        user?.userEducation?.degree ?? '',
+      );
+      _log(AppStrings.degree, user?.userEducation?.degree ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.university,
+        user?.userEducation?.university ?? '',
+      );
+      _log(AppStrings.university, user?.userEducation?.university ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.workingStatus,
+        user?.userEducation?.workingStatus ?? '',
+      );
+      _log(AppStrings.workingStatus, user?.userEducation?.workingStatus ?? '');
+
+      await SharedPrefs.saveString(
+        AppStrings.userNameOfCompanyOrBusiness,
+        user?.userEducation?.nameOfCompanyOrBusiness ?? '',
+      );
+      _log(
+        AppStrings.userNameOfCompanyOrBusiness,
+        user?.userEducation?.nameOfCompanyOrBusiness ?? '',
+      );
     }
   }
 }
@@ -642,9 +767,6 @@ class User {
         json['profile'] != null
             ? new UserProfile.fromJson(json['profile'])
             : null;
-
-    _saveUserProfileToLocalStorage();
-    _saveUserEducationToLocalStorage();
   }
 
   Map<String, dynamic> toJson() {
@@ -675,112 +797,6 @@ class User {
   void _log(String key, String value) {
     if (_shouldPrint) {
       print("$key ======> $value");
-    }
-  }
-
-  void _saveUserProfileToLocalStorage() async {
-    if (profile != null) {
-      await SharedPrefs.saveString(AppStrings.images, profile?.images ?? '');
-      _log(AppStrings.images, profile?.images ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userId,
-        profile?.userId.toString() ?? '',
-      );
-      _log(AppStrings.userId, profile?.userId.toString() ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userContactNo1,
-        profile?.contactNo1 ?? '',
-      );
-      _log(AppStrings.userContactNo1, profile?.contactNo1 ?? '');
-      await SharedPrefs.saveString(AppStrings.userContactNo1, phone ?? '');
-      _log(AppStrings.userContactNo1, phone ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userContactNo2,
-        profile?.contactNo2 ?? '',
-      );
-      _log(AppStrings.userContactNo2, profile?.contactNo2 ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userGender,
-        profile?.gender ?? '',
-      );
-      _log(AppStrings.userGender, profile?.gender ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.dateOfBirth,
-        profile?.dateOfBirth ?? '',
-      );
-      _log(AppStrings.dateOfBirth, profile?.dateOfBirth ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.addressLine1,
-        profile?.addressLine1 ?? '',
-      );
-      _log(AppStrings.addressLine1, profile?.addressLine1 ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.addressLine2,
-        profile?.addressLine2 ?? '',
-      );
-      _log(AppStrings.addressLine2, profile?.addressLine2 ?? '');
-
-      await SharedPrefs.saveString(AppStrings.userCity, profile?.city ?? '');
-      _log(AppStrings.userCity, profile?.city ?? '');
-
-      await SharedPrefs.saveString(AppStrings.userState, profile?.state ?? '');
-      _log(AppStrings.userState, profile?.state ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userCountry,
-        profile?.country ?? '',
-      );
-      _log(AppStrings.userCountry, profile?.country ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userDistrict,
-        profile?.district ?? '',
-      );
-      _log(AppStrings.userDistrict, profile?.district ?? '');
-    }
-  }
-
-  void _saveUserEducationToLocalStorage() async {
-    if (userEducation != null) {
-      await SharedPrefs.saveString(
-        AppStrings.study,
-        userEducation?.study ?? '',
-      );
-      _log(AppStrings.study, userEducation?.study ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.degree,
-        userEducation?.degree ?? '',
-      );
-      _log(AppStrings.degree, userEducation?.degree ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.university,
-        userEducation?.university ?? '',
-      );
-      _log(AppStrings.university, userEducation?.university ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.workingStatus,
-        userEducation?.workingStatus ?? '',
-      );
-      _log(AppStrings.workingStatus, userEducation?.workingStatus ?? '');
-
-      await SharedPrefs.saveString(
-        AppStrings.userNameOfCompanyOrBusiness,
-        userEducation?.nameOfCompanyOrBusiness ?? '',
-      );
-      _log(
-        AppStrings.userNameOfCompanyOrBusiness,
-        userEducation?.nameOfCompanyOrBusiness ?? '',
-      );
     }
   }
 }
@@ -839,7 +855,7 @@ class UserProfile {
   int? userId;
   String? gender;
   String? dateOfBirth;
-  String? contactNo1;
+  // String? contactNo1;
   String? contactNo2;
   String? addressLine1;
   String? addressLine2;
@@ -854,7 +870,7 @@ class UserProfile {
     this.userId,
     this.gender,
     this.dateOfBirth,
-    this.contactNo1,
+    // this.contactNo1,
     this.contactNo2,
     this.addressLine1,
     this.addressLine2,
@@ -870,7 +886,7 @@ class UserProfile {
     userId = json['user_id'];
     gender = json['gender'];
     dateOfBirth = json['dateOfBirth'];
-    contactNo1 = json['contactNo1'];
+    // contactNo1 = json['contactNo1'];
     contactNo2 = json['contactNo2'];
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
@@ -887,7 +903,7 @@ class UserProfile {
     data['user_id'] = this.userId;
     data['gender'] = this.gender;
     data['dateOfBirth'] = this.dateOfBirth;
-    data['contactNo1'] = this.contactNo1;
+    // data['contactNo1'] = this.contactNo1;
     data['contactNo2'] = this.contactNo2;
     data['addressLine1'] = this.addressLine1;
     data['addressLine2'] = this.addressLine2;

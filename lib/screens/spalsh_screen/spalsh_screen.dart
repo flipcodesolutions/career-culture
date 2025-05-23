@@ -130,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
   }
 
   void _handleDeepLink(Uri uri) {
-    WidgetHelper.customSnackBar(title: "Deep link: $uri");
+    // WidgetHelper.customSnackBar(title: "Deep link: $uri");
 
     if (uri.pathSegments.length >= 2 && uri.pathSegments.first == 'uploads') {
       final String slug = uri.pathSegments[1];

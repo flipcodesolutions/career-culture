@@ -782,73 +782,195 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
+  // Future<void> initControllerWithLocalStorage() async {
+  //   _signUpRequestModel.imageFile = [];
+  //   _signUpRequestModel.images = await SharedPrefs.getSharedString(
+  //     AppStrings.images,
+  //   );
+
+  //   /// first page
+  //   String name = await SharedPrefs.getSharedString(AppStrings.userName);
+  //   print(name);
+  //   List<String> parts = name.trim().split(
+  //     RegExp(r'\s+'),
+  //   ); // Splits by any whitespace
+
+  //   if (parts.length == 1) {
+  //     firstName.text = parts[0];
+  //     middleName.text = '';
+  //     lastName.text = '';
+  //   } else if (parts.length == 2) {
+  //     firstName.text = parts[0];
+  //     middleName.text = '';
+  //     lastName.text = parts[1];
+  //   } else {
+  //     // For 3 or more parts, treat first as firstName, last as lastName, rest as middleName
+  //     firstName.text = parts.first;
+  //     lastName.text = parts.last;
+  //     middleName.text = parts.sublist(1, parts.length - 1).join(' ');
+  //   }
+  //   birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
+  //   _lastLength = birthDate.text.length;
+  //   _genderQuestion.answer = await SharedPrefs.getSharedString(
+  //     AppStrings.userGender,
+  //   );
+  //   _signUpConfirmModel
+  //       ?.data
+  //       ?.user
+  //       ?.profile
+  //       ?.images = await SharedPrefs.getSharedString(AppStrings.images);
+
+  //   /// second page
+  //   email.text = await SharedPrefs.getSharedString(AppStrings.userEmail);
+  //   String emailCheck = await SharedPrefs.getSharedString(
+  //     AppStrings.isEmailVerified,
+  //   );
+  //   setIsEmailVerified = emailCheck == "yes";
+  //   contactNo1.text = await SharedPrefs.getSharedString(
+  //     AppStrings.userContactNo1,
+  //   );
+  //   String contact1Check = await SharedPrefs.getSharedString(
+  //     AppStrings.isContactVerified,
+  //   );
+  //   setIsContactNo1Verified = contact1Check == "yes";
+
+  //   contactNo2.text = await SharedPrefs.getSharedString(
+  //     AppStrings.userContactNo2,
+  //   );
+  //   // setIsContactNo2Verified = await SharedPrefs.getSharedBool(
+  //   //   AppStrings.isContactVerified,
+  //   // );
+  //   address1.text = await SharedPrefs.getSharedString(AppStrings.addressLine1);
+  //   address2.text = await SharedPrefs.getSharedString(AppStrings.addressLine2);
+  //   // city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
+  //   city = await SharedPrefs.getSharedString(AppStrings.userCity);
+  //   // state.text = await SharedPrefs.getSharedString(AppStrings.userState);
+  //   state = await SharedPrefs.getSharedString(AppStrings.userState);
+  //   country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
+  //   district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
+
+  //   /// third page
+  //   presentOrLastStudy.text = await SharedPrefs.getSharedString(
+  //     AppStrings.study,
+  //   );
+  //   collegeOrUniversity.text = await SharedPrefs.getSharedString(
+  //     AppStrings.university,
+  //   );
+  //   areYouWorking.answer =
+  //       await SharedPrefs.getSharedString(AppStrings.workingStatus) == "yes"
+  //           ? "Yes"
+  //           : "No";
+  //   companyOrBusiness.text = await SharedPrefs.getSharedString(
+  //     AppStrings.userNameOfCompanyOrBusiness,
+  //   );
+  //   notifyListeners();
+  // }
   Future<void> initControllerWithLocalStorage() async {
+    // print('\n🔄 Initializing SignUpProvider from local storage...');
+
+    // Reset image file
     _signUpRequestModel.imageFile = [];
     _signUpRequestModel.images = await SharedPrefs.getSharedString(
       AppStrings.images,
     );
+    _signUpConfirmModel?.data?.user?.profile?.images =
+        _signUpRequestModel.images;
+    // print('📷 Loaded images: ${_signUpRequestModel.images}');
 
-    /// first page
+    /// ------------------------ FIRST PAGE ------------------------
     String name = await SharedPrefs.getSharedString(AppStrings.userName);
-    print(name);
-    List<String?> fullName = name.split(" ");
-    firstName.text = fullName[0] ?? "";
-    lastName.text = fullName[1] ?? "";
-    middleName.text = fullName[2] ?? "";
+    // print('🧑 Full name from storage: "$name"');
+
+    List<String> parts = name.trim().split(RegExp(r'\s+'));
+    // print('🔍 Name parts: $parts');
+
+    if (parts.length == 1) {
+      firstName.text = parts[0];
+      middleName.text = '';
+      lastName.text = '';
+    } else if (parts.length == 2) {
+      firstName.text = parts[0];
+      middleName.text = '';
+      lastName.text = parts[1];
+    } else {
+      firstName.text = parts.first;
+      middleName.text = parts.sublist(1, parts.length - 1).join(' ');
+      lastName.text = parts.last;
+    }
+
+    // print('✅ First Name: ${firstName.text}');
+    // print('✅ Middle Name: ${middleName.text}');
+    // print('✅ Last Name: ${lastName.text}');
+
     birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
     _lastLength = birthDate.text.length;
+    // print('📅 Date of Birth: ${birthDate.text}');
+
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,
     );
-    _signUpConfirmModel
-        ?.data
-        ?.user
-        ?.profile
-        ?.images = await SharedPrefs.getSharedString(AppStrings.images);
+    // print('🚻 Gender: ${_genderQuestion.answer}');
 
-    /// second page
+    /// ------------------------ SECOND PAGE ------------------------
     email.text = await SharedPrefs.getSharedString(AppStrings.userEmail);
     String emailCheck = await SharedPrefs.getSharedString(
       AppStrings.isEmailVerified,
     );
     setIsEmailVerified = emailCheck == "yes";
-    contactNo1.text = await SharedPrefs.getSharedString(
-      AppStrings.userContactNo1,
-    );
+    // print('📧 Email: ${email.text} | Verified: $isEmailVerified');
+
+    contactNo1.text = await SharedPrefs.getSharedString(AppStrings.phone);
     String contact1Check = await SharedPrefs.getSharedString(
       AppStrings.isContactVerified,
     );
     setIsContactNo1Verified = contact1Check == "yes";
+    // print(
+    //   '📞 Contact No. 1: ${contactNo1.text} | Verified: $isContactNo1Verified',
+    // );
 
     contactNo2.text = await SharedPrefs.getSharedString(
       AppStrings.userContactNo2,
     );
-    // setIsContactNo2Verified = await SharedPrefs.getSharedBool(
-    //   AppStrings.isContactVerified,
+    // print(
+    //   '📞 Contact No. 2: ${contactNo2.text} | Verified: $isContactNo2Verified',
     // );
+
     address1.text = await SharedPrefs.getSharedString(AppStrings.addressLine1);
     address2.text = await SharedPrefs.getSharedString(AppStrings.addressLine2);
-    // city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
     city = await SharedPrefs.getSharedString(AppStrings.userCity);
-    // state.text = await SharedPrefs.getSharedString(AppStrings.userState);
     state = await SharedPrefs.getSharedString(AppStrings.userState);
     country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
     district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
 
-    /// third page
+    // print('🏠 Address:');
+    // print('  Line 1: ${address1.text}');
+    // print('  Line 2: ${address2.text}');
+    // print('  City: $city');
+    // print('  State: $state');
+    // print('  District: ${district.text}');
+    // print('  Country: ${country.text}');
+
+    /// ------------------------ THIRD PAGE ------------------------
     presentOrLastStudy.text = await SharedPrefs.getSharedString(
       AppStrings.study,
     );
     collegeOrUniversity.text = await SharedPrefs.getSharedString(
       AppStrings.university,
     );
-    areYouWorking.answer =
-        await SharedPrefs.getSharedString(AppStrings.workingStatus) == "yes"
-            ? "Yes"
-            : "No";
+    String workingStatus = await SharedPrefs.getSharedString(
+      AppStrings.workingStatus,
+    );
+    areYouWorking.answer = workingStatus == "yes" ? "Yes" : "No";
     companyOrBusiness.text = await SharedPrefs.getSharedString(
       AppStrings.userNameOfCompanyOrBusiness,
     );
+
+    // print('🎓 Study: ${presentOrLastStudy.text}');
+    // print('🏫 University: ${collegeOrUniversity.text}');
+    // print('💼 Working: ${areYouWorking.answer}');
+    // print('🏢 Company/Business: ${companyOrBusiness.text}');
+
+    // print('✅ Initialization complete.');
     notifyListeners();
   }
 }

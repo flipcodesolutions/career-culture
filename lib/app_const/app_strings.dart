@@ -238,6 +238,7 @@ class AppStrings {
   static const id = "id";
   static const images = "images";
   static const userId = "userId";
+  static const phone = "phone";
   static const userContactNo1 = "userContactNo1";
   static const userContactNo2 = "userContactNo2";
   static const userGender = "userGender";
