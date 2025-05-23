@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
@@ -104,14 +105,69 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                       ),
             ),
           )
-          : Scaffold(
-            body: Center(
-              child: CustomText(
-                text: AppStrings.somethingWentWrong,
-                style: TextStyleHelper.mediumHeading,
-              ),
-            ),
-          );
+          : RedirectToLoginScreen();
     }
+  }
+}
+
+class RedirectToLoginScreen extends StatefulWidget {
+  const RedirectToLoginScreen({super.key});
+
+  @override
+  State<RedirectToLoginScreen> createState() => _RedirectToLoginScreenState();
+}
+
+class _RedirectToLoginScreenState extends State<RedirectToLoginScreen> {
+  late Timer _timer;
+  int _secondsLeft = 5;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // start countdown + redirect
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsLeft == 1) {
+        timer.cancel();
+        if (!mounted) return;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => const LoginScreen(isToNavigateHome: true),
+          ),
+        );
+      } else {
+        setState(() => _secondsLeft--);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 80, color: Colors.red.shade700),
+            const SizedBox(height: 16),
+            CustomText(
+              text: AppStrings.somethingWentWrong,
+              style: TextStyleHelper.mediumText,
+            ),
+            const SizedBox(height: 8),
+            CustomText(
+              text: 'Redirecting to login in $_secondsLeft s',
+              style: TextStyleHelper.mediumText,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
