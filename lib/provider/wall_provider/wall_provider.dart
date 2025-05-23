@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mindful_youth/models/post_models/post_like_model.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/service/post_service/post_service.dart';
 import '../../models/post_models/wall_model.dart';
 
@@ -19,7 +20,7 @@ class WallProvider extends ChangeNotifier {
   /// Fetch wall data
   Future<void> getWall(
     // {required BuildContext context}
-    ) async {
+  ) async {
     _isLoading = true;
     notifyListeners();
 
@@ -72,5 +73,23 @@ class WallProvider extends ChangeNotifier {
 
     // 5) Notify once
     notifyListeners();
+  }
+
+  /// get the slug from launch so it can be passed to backend and get the post data to create [IndividualWallPostScreen]
+  /// will use the instance of [WallListModelData]
+  WallListModelData? _slugWallPost;
+  WallListModelData? get slugWallPost => _slugWallPost;
+  Future<void> getWallPostBySlug({required String? slug}) async {
+    /// if slug
+    if (slug?.isNotEmpty == true && slug != null) {
+      /// set _isLoading true
+      _isLoading = true;
+      notifyListeners();
+      _slugWallPost = await _postService.getWallPostBySlug(slug: slug);
+
+      /// set _isLoading false
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

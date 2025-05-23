@@ -18,6 +18,7 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/pin_put_widget.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
@@ -105,7 +106,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   Future<void> getConveners(
     // {required BuildContext context}
-    ) async {
+  ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
@@ -131,6 +132,26 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// user birth date
   TextEditingController birthDate = TextEditingController();
+  int _lastLength = 0;
+
+  void addHyphen() {
+    final text = birthDate.text;
+    final selectionIndex = birthDate.selection.baseOffset;
+
+    if (text.length > _lastLength) {
+      // Typing forward
+      if (text.length == 4 || text.length == 7) {
+        birthDate.text = '$text-';
+        birthDate.selection = TextSelection.fromPosition(
+          TextPosition(offset: birthDate.text.length),
+        );
+      }
+    }
+
+    _lastLength = birthDate.text.length;
+    notifyListeners();
+  }
+
   void selectBirthDateByDatePicker({required BuildContext context}) async {
     DateTime? initialDate;
     try {
@@ -372,18 +393,27 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
               ),
               content: Form(
                 key: otpFormKey,
-                child: CustomTextFormField(
-                  labelText: AppStrings.otp,
-                  controller: otpController,
-                  keyboardType: TextInputType.numberWithOptions(),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter OTP";
-                    }
-                    return null;
-                  },
+                child: CustomContainer(
+                  height: AppSize.size100,
+                  child: CustomPinPut(
+                    controller: otpController,
+                    height: AppSize.size70,
+                    width: AppSize.size80,
+                  ),
                 ),
+                //  CustomTextFormField(
+                //   labelText: AppStrings.otp,
+                //   controller: otpController,
+                //   keyboardType: TextInputType.numberWithOptions(),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return "Please enter OTP";
+                //     }
+                //     return null;
+                //   },
+                // ),
               ),
+              actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
                 PrimaryBtn(
                   width: 30.w,
@@ -419,7 +449,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   /// Method to send the OTP
   Future<void> sendEmailOtp(
     // {required BuildContext context}
-    ) async {
+  ) async {
     _isLoading = true;
     notifyListeners();
 
@@ -556,7 +586,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendMobileOtp( number: contact);
+                    await sendMobileOtp(number: contact);
                   },
                 ),
                 PrimaryBtn(
@@ -711,6 +741,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     birthDate.clear();
     _genderQuestion.answer = "";
     _selectedConvener = null;
+    _convenerListModel = null;
+
+    /// reset form keys
+    firstPageFormKey.currentState?.reset();
+    secondPageFormKey.currentState?.reset();
+    thirdPageFormKey.currentState?.reset();
 
     /// second page
     email.clear();
@@ -729,13 +765,20 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     country.clear();
     _isEmailVerified = false;
     _isContactNo1Verified = false;
+    _isContactNo2Verified = false;
     _emailOtpModel = null;
+    _mobileOtpModel = null;
+    _signUpConfirmModel = null;
+    _verifyMobile = false;
 
     /// third page
     presentOrLastStudy.clear();
     collegeOrUniversity.clear();
     _areYouWorking.answer = "";
     companyOrBusiness.clear();
+
+    /// important
+    _isUpdatingProfile = false;
     notifyListeners();
   }
 
@@ -753,6 +796,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     lastName.text = fullName[1] ?? "";
     middleName.text = fullName[2] ?? "";
     birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
+    _lastLength = birthDate.text.length;
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,
     );

@@ -58,6 +58,12 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         text: AppStrings.shareContactDetailsToContinue,
                         style: TextStyleHelper.smallText,
                       ),
+                    ] else ...[
+                      SizeHelper.height(height: 5.h),
+                      CustomText(
+                        text: AppStrings.contactDetails,
+                        style: TextStyleHelper.largeHeading,
+                      ),
                     ],
                     SizeHelper.height(height: 5.h),
                     CustomTextFieldWithAnimatedIconForVerification(

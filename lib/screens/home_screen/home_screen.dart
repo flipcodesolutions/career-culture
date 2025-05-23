@@ -3,8 +3,10 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -43,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     AllEventProvider eventProvider = context.read<AllEventProvider>();
     ProductProvider productProvider = context.read<ProductProvider>();
+    SignUpProvider signUpProvider = context.read<SignUpProvider>();
     // TODO: implement initState
     super.initState();
     Future.microtask(() async {
@@ -52,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       await eventProvider.getAllEvents();
       await homeProvider.getUserOverAllScore();
       userId = await SharedPrefs.getSharedString(AppStrings.userId);
+      await signUpProvider.initControllerWithLocalStorage();
     });
   }
 

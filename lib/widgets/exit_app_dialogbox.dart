@@ -85,6 +85,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
 
   @override
   Widget build(BuildContext context) {
+    LoginProvider loginProvider = context.watch<LoginProvider>();
     return Dialog(
       backgroundColor: AppColors.white,
       child: CustomContainer(
@@ -138,6 +139,10 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                         context.read<UserProvider>().setIsUserLoggedIn = false;
                         context.read<SignUpProvider>().refreshSignUpProvider();
                         await FirebaseAuth.instance.signOut();
+                        loginProvider.mobileController.clear();
+                        loginProvider.otpController.clear();
+                        loginProvider.sentOtpModel = null;
+                        loginProvider.setLoginResponseModel = null;
                         pushRemoveUntil(
                           context: context,
                           widget: LoginScreen(isToNavigateHome: true),

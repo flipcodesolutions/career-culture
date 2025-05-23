@@ -198,6 +198,7 @@ class AppStrings {
   static const noConvenerFound = "No Convener Found";
   static const location = "Location";
   static const contactInfo = "Contact Information";
+  static const contactDetails = "Contact Details";
   static const registration = "Registration";
   static const noFilePicked = "No File Picked";
   static const noPermissionFound = "No Permission Found For This Action";

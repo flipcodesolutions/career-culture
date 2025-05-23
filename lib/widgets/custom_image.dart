@@ -34,7 +34,7 @@ class CustomImageWithLoader extends StatelessWidget {
       // maxHeightDiskCache: height?.toInt(),
       errorWidget:
           (context, url, error) => Icon(
-            icon ?? Icons.error_outline,
+            icon ?? Icons.broken_image,
             color: AppColors.primary,
             size: errorIconSize ?? AppSize.size50,
           ),

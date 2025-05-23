@@ -3,15 +3,26 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
-class IndividualWallPostScreen extends StatelessWidget {
+import '../../provider/wall_provider/wall_provider.dart';
+
+class IndividualWallPostScreen extends StatefulWidget {
   final String? slug;
-  const IndividualWallPostScreen({super.key ,this.slug});
+  const IndividualWallPostScreen({super.key, this.slug});
+
+  @override
+  State<IndividualWallPostScreen> createState() =>
+      _IndividualWallPostScreenState();
+}
+
+class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
   @override
   Widget build(BuildContext context) {
+    WallProvider wallProvider = context.watch<WallProvider>();
     return Scaffold(
-      appBar: AppBar(title: CustomText(text: "$slug"),),
+      appBar: AppBar(title: CustomText(text: "${widget.slug}")),
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

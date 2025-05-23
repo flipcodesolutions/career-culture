@@ -33,7 +33,7 @@ class PostService {
   /// get wall post
   Future<WallListModel?> getWallPosts(
     // {required BuildContext context}
-    ) async {
+  ) async {
     try {
       String uId = await SharedPrefs.getSharedString(AppStrings.id);
       Map<String, dynamic> response = await HttpHelper.get(
@@ -68,6 +68,21 @@ class PostService {
       return null;
     } catch (e) {
       log("error while liking wall post $wallId => $e");
+      return null;
+    }
+  }
+
+  Future<WallListModelData?> getWallPostBySlug({required String slug}) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.post(
+        uri: ApiHelper.getWallPostBySlug,
+        body: {"slug": slug},
+      );
+      if (response.isNotEmpty) {
+        return WallListModelData.fromJson(response['data']);
+      }
+    } catch (e) {
+      log("error while getting wall post by slug => $e");
       return null;
     }
   }

@@ -1,3 +1,6 @@
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
+import 'package:mindful_youth/service/post_service/post_service.dart';
+
 import '../environment_helper/environment_helper.dart';
 
 class ApiHelper {
@@ -35,6 +38,8 @@ class ApiHelper {
   static String getWallPosts({required String uId}) =>
       "$baseUrl/wall?user_id=$uId";
   static String likeWallPost = "$baseUrl/wall/like";
+  /// using this at [PostService] for [IndividualWallPostScreen]
+  static String getWallPostBySlug = "$baseUrl/wall/by-slug";
 
   /// login
   static String login = "$baseUrl/login";

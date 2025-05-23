@@ -22,6 +22,10 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   LoginService loginService = LoginService();
   UserModel? _loginResponseModel;
   UserModel? get loginResponseModel => _loginResponseModel;
+  set setLoginResponseModel(UserModel? userModel) {
+    _loginResponseModel = userModel;
+    notifyListeners();
+  }
 
   /// mobile number controller
   final TextEditingController mobileController = TextEditingController();
@@ -29,7 +33,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     // required BuildContext context,
     required String emailOrPassword,
     required String password,
-    required UserProvider userProvider
+    required UserProvider userProvider,
   }) async {
     /// set _isLoading true
     _isLoading = true;
@@ -38,7 +42,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       // context: context,
       emailOrPassword: emailOrPassword,
       password: password,
-      userProvider: userProvider
+      userProvider: userProvider,
     );
 
     /// set _isLoading false
@@ -51,10 +55,15 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// sent otp to mobile number
   SentOtpModel? _otpModel;
   SentOtpModel? get otpModel => _otpModel;
+  set sentOtpModel(SentOtpModel? otpModel) {
+    _otpModel = otpModel;
+    notifyListeners();
+  }
+
   TextEditingController otpController = TextEditingController();
   Future<bool> sentOtpToMobileNumber(
     // {required BuildContext context}
-    ) async {
+  ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
@@ -139,7 +148,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
             )
             : {pop(context), pop(context)};
       }
-      mobileController.clear();
+      // mobileController.clear();
       otpController.clear();
       _otpModel = null;
       notifyListeners();
@@ -201,7 +210,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    bool success = await loginService.deleteUser( uId: uId);
+    bool success = await loginService.deleteUser(uId: uId);
 
     /// set _isLoading false
     _isLoading = false;
@@ -216,6 +225,10 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
         widget: LoginScreen(isToNavigateHome: true),
         transition: FadeForwardsPageTransitionsBuilder(),
       );
+      mobileController.clear();
+      otpController.clear();
+      _loginResponseModel = null;
+      sentOtpModel = null;
     }
   }
 }

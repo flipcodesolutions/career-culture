@@ -45,11 +45,13 @@ class EducationalDetails extends StatelessWidget {
                     style: TextStyleHelper.largeHeading,
                   ),
                   SizeHelper.height(height: 3.h),
-                  CustomText(
-                    text: AppStrings.shareYourEducationalDetails,
-                    style: TextStyleHelper.smallText,
-                  ),
-                  SizeHelper.height(height: 5.h),
+                  if (!signUpProvider.isUpdatingProfile)
+                    CustomText(
+                      text: AppStrings.shareYourEducationalDetails,
+                      style: TextStyleHelper.smallText,
+                    ),
+                  if (!signUpProvider.isUpdatingProfile)
+                    SizeHelper.height(height: 5.h),
                   CustomContainer(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(

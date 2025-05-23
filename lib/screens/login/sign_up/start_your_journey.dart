@@ -31,7 +31,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
   void initState() {
     // TODO: implement initState
     super.initState();
-      SignUpProvider signUpProvider = context.read<SignUpProvider>();
+    SignUpProvider signUpProvider = context.read<SignUpProvider>();
     Future.microtask(() {
       signUpProvider.getConveners();
     });
@@ -70,7 +70,8 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                   CustomText(
                     text:
                         signUpProvider.isUpdatingProfile
-                            ? AppStrings.onlyChangeWhatYouMust
+                            // ? AppStrings.onlyChangeWhatYouMust
+                            ? ""
                             : AppStrings.createAnAccountToJoinUS,
                     style: TextStyleHelper.smallText,
                   ),
@@ -119,6 +120,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                     child: CustomTextFormField(
                       labelText: AppStrings.birthDate,
                       hintText: AppStrings.dateFormate,
+                      onChanged: (value) => signUpProvider.addHyphen(),
                       maxLength: 10,
                       suffix: CustomContainer(
                         width: 10.w,
