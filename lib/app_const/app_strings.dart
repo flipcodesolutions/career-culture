@@ -7,6 +7,8 @@ class AppStrings {
   static const sliderUrl = "";
   static const assetsUrl =
       "https://career-culture.flipcodesolutions.com/uploads/";
+  static const wallPostShareUrl =
+      "https://career-culture.flipcodesolutions.com/wall/";
 
   /// app strings
   static const india = "India";

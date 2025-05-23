@@ -31,6 +31,7 @@ class WallListModelData {
   int? id;
   String? title;
   String? description;
+  String? slug;
   String? image;
   String? status;
   String? createdAt;
@@ -41,6 +42,7 @@ class WallListModelData {
   WallListModelData({
     this.id,
     this.title,
+    this.slug,
     this.description,
     this.image,
     this.status,
@@ -53,6 +55,7 @@ class WallListModelData {
   WallListModelData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
+    slug = json['slug'];
     description = json['description'];
     image = json['image'];
     status = json['status'];
@@ -66,6 +69,7 @@ class WallListModelData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['title'] = this.title;
+    data['slug'] = this.slug;
     data['description'] = this.description;
     data['image'] = this.image;
     data['status'] = this.status;

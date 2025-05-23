@@ -6,12 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
 import 'package:mindful_youth/service/fcm_token_service/fcm_token_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
+import '../../provider/wall_provider/wall_provider.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
 import '../widget_helper/widget_helper.dart';
 
@@ -265,7 +269,7 @@ class MethodHelper with NavigateHelper {
       firstDate: DateTime(1947),
       lastDate: DateTime(
         DateTime.now().year,
-        
+
         DateTime.now().month,
         DateTime.now().day,
       ),
@@ -319,5 +323,37 @@ class MethodHelper with NavigateHelper {
       title: AppStrings.accountIsDeleted,
       isError: true,
     );
+  }
+
+  /// this method is used in [WallScreen] and [IndividualWallPostScreen] to implement share functionality of wall posts
+  static void shareWallPost({required String slug}) async {
+    /// share post
+    ShareResult refer = await SharePlus.instance.share(
+      ShareParams(
+        uri: Uri.parse("${AppStrings.wallPostShareUrl}$slug"),
+        title: 'Hey! Check out This Amazing Post',
+      ),
+    );
+    if (refer.status == ShareResultStatus.success) {
+      WidgetHelper.customSnackBar(
+        // context: context,
+        title: AppStrings.inviteRequestSent,
+      );
+    }
+  }
+
+  ///
+  static void likeWallPost({
+    required bool isLiked,
+    required WallProvider wallProvider,
+    required int postId,
+  }) {
+    isLiked
+        ? wallProvider.likePost(wallId: postId)
+        : WidgetHelper.customSnackBar(
+          // context: context,
+          title: AppStrings.pleaseLoginFirst,
+          isError: true,
+        );
   }
 }

@@ -9,16 +9,15 @@ import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:sizer/sizer.dart';
 import '../../models/post_models/wall_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
+import '../../utils/method_helpers/method_helper.dart';
 import '../../utils/user_screen_time/tracking_mixin.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_image.dart';
@@ -85,40 +84,29 @@ class _WallScreenState extends State<WallScreen>
                       WallListModelData? post =
                           wallProvider.wallModel?.data?[index];
                       return FeedPostCard(
-                        onTap:
-                            () => push(
-                              context: context,
-                              widget: IndividualWallPostScreen(),
-                              transition: FadeUpwardsPageTransitionsBuilder(),
+                        onTap: () {
+                          wallProvider.initWallPostSlugFromWallScreen(
+                            post: post,
+                          );
+                          push(
+                            context: context,
+                            widget: IndividualWallPostScreen(
+                              isFromWallScreen: true,
                             ),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          );
+                        },
                         post: post,
                         onLikePressed:
-                            () =>
-                                userProvider.isUserLoggedIn
-                                    ? wallProvider.likePost(
-                                      context: context,
-                                      wallId: post?.id ?? -1,
-                                    )
-                                    : WidgetHelper.customSnackBar(
-                                      // context: context,
-                                      title: AppStrings.pleaseLoginFirst,
-                                      isError: true,
-                                    ),
-                        onSharePressed: () async {
-                          /// share post
-                          ShareResult refer = await SharePlus.instance.share(
-                            ShareParams(
-                              uri: Uri.parse("${AppStrings.assetsUrl}slug"),
-                              title: 'Hey! Check out This Amazing Post',
+                            () async => MethodHelper.likeWallPost(
+                              isLiked: userProvider.isUserLoggedIn,
+                              wallProvider: wallProvider,
+                              postId: post?.id ?? -1,
                             ),
-                          );
-                          if (refer.status == ShareResultStatus.success) {
-                            WidgetHelper.customSnackBar(
-                              // context: context,
-                              title: AppStrings.inviteRequestSent,
-                            );
-                          }
-                        },
+                        onSharePressed:
+                            () async => MethodHelper.shareWallPost(
+                              slug: post?.slug ?? "",
+                            ),
                         onMorePressed: () {
                           /* show menu */
                         },
@@ -228,7 +216,7 @@ class FeedPostCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _PostButton(
+                PostButton(
                   icon:
                       post?.isMyFavourite == true
                           ? Icons.thumb_up_alt
@@ -236,7 +224,7 @@ class FeedPostCard extends StatelessWidget {
                   label: "${post?.likeCount ?? 0}",
                   onTap: onLikePressed,
                 ),
-                _PostButton(
+                PostButton(
                   icon: Icons.share_outlined,
                   label: "",
                   onTap: onSharePressed,
@@ -250,17 +238,18 @@ class FeedPostCard extends StatelessWidget {
   }
 }
 
-class _PostButton extends StatelessWidget {
+class PostButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
-
-  const _PostButton({
-    Key? key,
+  final Color? iconColor;
+  const PostButton({
+    super.key,
     required this.icon,
     required this.label,
+    this.iconColor,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +261,7 @@ class _PostButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: theme.iconTheme.color),
+            Icon(icon, size: 20, color: iconColor ?? theme.iconTheme.color),
             const SizedBox(width: 6),
             Text(label),
           ],

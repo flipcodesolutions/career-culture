@@ -118,7 +118,13 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       );
 
       if (isFromLink && slug?.isNotEmpty == true) {
-        push(context: context, widget: IndividualWallPostScreen(slug: slug!));
+        push(
+          context: context,
+          widget: IndividualWallPostScreen(
+            slug: slug ?? "",
+            isFromWallScreen: false,
+          ),
+        );
       }
     } else {
       pushRemoveUntil(

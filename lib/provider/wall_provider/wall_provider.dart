@@ -44,7 +44,7 @@ class WallProvider extends ChangeNotifier {
   }
 
   Future<void> likePost({
-    required BuildContext context,
+    // required BuildContext context,
     required int wallId,
   }) async {
     // 1) Call service
@@ -79,6 +79,10 @@ class WallProvider extends ChangeNotifier {
   /// will use the instance of [WallListModelData]
   WallListModelData? _slugWallPost;
   WallListModelData? get slugWallPost => _slugWallPost;
+  void initWallPostSlugFromWallScreen({required WallListModelData? post}) {
+    _slugWallPost = post;
+  }
+
   Future<void> getWallPostBySlug({required String? slug}) async {
     /// if slug
     if (slug?.isNotEmpty == true && slug != null) {

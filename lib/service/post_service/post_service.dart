@@ -81,6 +81,7 @@ class PostService {
       if (response.isNotEmpty) {
         return WallListModelData.fromJson(response['data']);
       }
+      return null;
     } catch (e) {
       log("error while getting wall post by slug => $e");
       return null;
