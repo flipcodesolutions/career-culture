@@ -27,9 +27,10 @@ import '../../service/sign_up_service/sign_up_service.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 
 class SignUpProvider extends ChangeNotifier with NavigateHelper {
-  SignUpProvider() {
-    initControllerWithLocalStorage();
-  }
+  // SignUpProvider() {
+  //   initControllerWithLocalStorage();
+  //   WidgetHelper.customSnackBar(title: "sign up provider invoked init");
+  // }
 
   /// if provider is Loading
   bool _isLoading = false;
