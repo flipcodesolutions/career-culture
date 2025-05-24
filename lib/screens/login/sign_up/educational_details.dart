@@ -55,10 +55,25 @@ class EducationalDetails extends StatelessWidget {
                   CustomContainer(
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
-                      maxLines: 5,
-                      hintText: AppStrings.nameOfDegree,
-                      labelText: AppStrings.presentORLastStudy,
-                      controller: signUpProvider.presentOrLastStudy,
+                      maxLength: 50,
+                      hintText: AppStrings.nameOfPresentStudy,
+                      labelText: AppStrings.presentStudy,
+                      controller: signUpProvider.presentStudy,
+                      validator:
+                          (value) => ValidatorHelper.validateValue(
+                            value: value,
+                            context: context,
+                          ),
+                    ),
+                  ),
+                  SizeHelper.height(),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: CustomTextFormField(
+                      maxLength: 50,
+                      hintText: AppStrings.nameOfLastStudy,
+                      labelText: AppStrings.lastStudy,
+                      controller: signUpProvider.lastStudy,
                       validator:
                           (value) => ValidatorHelper.validateValue(
                             value: value,

@@ -629,7 +629,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   ///
   /// =========================================================================
   GlobalKey<FormState> thirdPageFormKey = GlobalKey<FormState>();
-  TextEditingController presentOrLastStudy = TextEditingController();
+  TextEditingController presentStudy = TextEditingController();
+  TextEditingController lastStudy = TextEditingController();
   TextEditingController collegeOrUniversity = TextEditingController();
   TextEditingController companyOrBusiness = TextEditingController();
   TextEditingController referCode = TextEditingController();
@@ -698,8 +699,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // _signUpRequestModel.country = country.text; // for now making india as default country
     _signUpRequestModel.country = AppStrings.india;
     _signUpRequestModel.district = district.text;
-    _signUpRequestModel.study = presentOrLastStudy.text;
-    _signUpRequestModel.degree = presentOrLastStudy.text;
+    _signUpRequestModel.study = presentStudy.text;
+    _signUpRequestModel.degree = lastStudy.text;
     _signUpRequestModel.university = collegeOrUniversity.text;
     _signUpRequestModel.workingStatus =
         areYouWorking.answer?.toLowerCase() ?? "no";
@@ -780,7 +781,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _verifyMobile = false;
 
     /// third page
-    presentOrLastStudy.clear();
+    presentStudy.clear();
+    lastStudy.clear();
     collegeOrUniversity.clear();
     _areYouWorking.answer = "";
     companyOrBusiness.clear();
@@ -959,9 +961,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // print('  Country: ${country.text}');
 
     /// ------------------------ THIRD PAGE ------------------------
-    presentOrLastStudy.text = await SharedPrefs.getSharedString(
-      AppStrings.study,
-    );
+    presentStudy.text = await SharedPrefs.getSharedString(AppStrings.study);
+    lastStudy.text = await SharedPrefs.getSharedString(AppStrings.degree);
     collegeOrUniversity.text = await SharedPrefs.getSharedString(
       AppStrings.university,
     );

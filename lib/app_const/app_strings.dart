@@ -73,8 +73,10 @@ class AppStrings {
   static const contactNo = "Contact";
   static const contactNo1 = "Contact No 1";
   static const contactNo2 = "Contact No 2";
-  static const presentORLastStudy = "Present / Last Study";
-  static const nameOfDegree = "Name Of Degree";
+  static const presentStudy = "Study - Ongoing Degree/Course";
+  static const nameOfPresentStudy = "Enter Ongoing Degree or Course";
+  static const lastStudy = "Degree - Completed Degree/Course";
+  static const nameOfLastStudy = "Enter Completed Degree or Course";
   static const collegeOrUniversity = "College / University";
   static const nameOfCollegeOrUniversity = "Name Of College Or University";
   static const companyOrBusiness = "Company / Business Name";
