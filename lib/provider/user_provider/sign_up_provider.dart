@@ -244,14 +244,16 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                 AppStrings.noCitiesFound,
               ]),
         );
-
-    return List<DropdownMenuEntry<String>>.generate(
-      stateWithCity.value.length,
-      (index) => DropdownMenuEntry(
-        value: stateWithCity.value.elementAt(index),
-        label: stateWithCity.value.elementAt(index),
-      ),
-    );
+    List<DropdownMenuEntry<String>> cities =
+        List<DropdownMenuEntry<String>>.generate(
+          stateWithCity.value.length,
+          (index) => DropdownMenuEntry(
+            value: stateWithCity.value.elementAt(index),
+            label: stateWithCity.value.elementAt(index),
+          ),
+        );
+    cities.sort((a, b) => a.label.compareTo(b.label));
+    return cities;
   }
 
   TextEditingController country = TextEditingController();
@@ -273,13 +275,19 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   List<DropdownMenuEntry<String>> availableStates() {
-    return List<DropdownMenuEntry<String>>.generate(
-      statesAndCity.stateAndCity.keys.length,
-      (index) => DropdownMenuEntry(
-        value: statesAndCity.stateAndCity.keys.elementAt(index),
-        label: statesAndCity.stateAndCity.keys.elementAt(index),
-      ),
-    );
+    List<DropdownMenuEntry<String>> states =
+        List<DropdownMenuEntry<String>>.generate(
+          statesAndCity.stateAndCity.keys.length,
+          (index) => DropdownMenuEntry(
+            value: statesAndCity.stateAndCity.keys.elementAt(index),
+            label: statesAndCity.stateAndCity.keys.elementAt(index),
+          ),
+        );
+
+    // Sort alphabetically by label
+    states.sort((a, b) => a.label.compareTo(b.label));
+
+    return states;
   }
 
   TextEditingController district = TextEditingController();
