@@ -530,6 +530,9 @@ class UserModelData {
   }
 
   void _saveUserStorage() async {
+    if (email != null) {
+      await SharedPrefs.saveString(AppStrings.userEmail, email ?? "");
+    }
     if (user != null) {
       await SharedPrefs.saveString(AppStrings.userName, user?.name ?? '');
       _log(AppStrings.userName, user?.name ?? '');
@@ -537,8 +540,8 @@ class UserModelData {
         AppStrings.userId,
         user?.id.toString() ?? "",
       );
-      await SharedPrefs.saveString(AppStrings.userEmail, user?.email ?? '');
-      _log(AppStrings.userEmail, user?.email ?? '');
+      await SharedPrefs.saveString(AppStrings.userEmail, user?.email ?? "");
+      _log(AppStrings.userEmail, user?.email ?? email ?? "");
       await SharedPrefs.saveString(AppStrings.phone, user?.phone ?? '');
       _log(AppStrings.phone, user?.phone ?? '');
 

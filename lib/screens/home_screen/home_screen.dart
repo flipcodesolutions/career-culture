@@ -39,13 +39,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
   String? userId;
+  String? userName;
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     AllEventProvider eventProvider = context.read<AllEventProvider>();
     ProductProvider productProvider = context.read<ProductProvider>();
-    SignUpProvider signUpProvider = context.read<SignUpProvider>();
     // TODO: implement initState
     super.initState();
     Future.microtask(() async {
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       await eventProvider.getAllEvents();
       await homeProvider.getUserOverAllScore();
       userId = await SharedPrefs.getSharedString(AppStrings.userId);
-      await signUpProvider.initControllerWithLocalStorage();
+      userName = await SharedPrefs.getSharedString(AppStrings.userName);
     });
   }
 
@@ -161,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                                   () =>
                                       homeScreenProvider.setNavigationIndex = 4,
                               userId: userId ?? "",
+                              userName: userName ?? "",
                               score:
                                   homeScreenProvider
                                       .overAllScoreModel

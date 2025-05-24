@@ -23,12 +23,14 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
     this.scoreMessage,
     this.animationDuration = const Duration(seconds: 3),
     required this.userId,
+    required this.userName,
     required this.onTap,
   });
   final String score;
   final String? scoreMessage;
   final Duration animationDuration;
   final String userId;
+  final String userName;
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: signUpProvider.firstName.text,
+                      text: userName,
                       style: TextStyleHelper.smallHeading.copyWith(
                         color: AppColors.primary,
                       ),
