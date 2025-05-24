@@ -21,7 +21,6 @@ import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../models/assessment_question_model/assessment_question_model.dart';
 
-
 class AssessmentScreen extends StatefulWidget {
   const AssessmentScreen({super.key, required this.postNameAndId});
   final String postNameAndId;
@@ -47,8 +46,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
-      AssessmentProvider assessmentProvider =
-          context.read<AssessmentProvider>();
+    AssessmentProvider assessmentProvider = context.read<AssessmentProvider>();
     Future.microtask(() {
       assessmentProvider.getAssessmentQuestionsByPostId(context: context);
     });
@@ -159,13 +157,13 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
           children: [
             CustomText(
               useOverflow: false,
-              text: widget.question.question ?? "",
+              text: widget.question.question?.trim() ?? "",
               style: TextStyleHelper.mediumHeading,
               // textAlign: TextAlign.justify,
             ),
             if (widget.question.type == "checkbox") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
-                    String option = entry.value;
+                    String option = entry.value.trim();
                     return CheckboxListTile(
                       activeColor: AppColors.primary,
                       selected: entry.value == widget.question.answer,
@@ -187,7 +185,7 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                   [SizedBox.shrink()],
             ] else if (widget.question.type == "radio") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
-                    String option = entry.value;
+                    String option = entry.value.trim();
                     return RadioListTile<String>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       activeColor: AppColors.primary,

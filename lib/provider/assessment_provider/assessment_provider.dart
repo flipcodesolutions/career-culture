@@ -34,7 +34,16 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     _assessmentQuestions = await assessmentQuestionsService
         .getAssessmentQuestionsByPostId(
           // context: context,
-           postId: _postId);
+          postId: _postId,
+        );
+    // _assessmentQuestions?.data?.forEach((e) {
+    //   e.question?.trim();
+    //   e.answer?.trim();
+    //   e.options?.trim();
+    //   e.extractedOptions?.forEach((e) {
+    //     e.trim();
+    //   });
+    // });
 
     /// set _isLoading false
     _isLoading = false;
@@ -120,9 +129,9 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     }
   }
 
-  Future<void> submitAssessmentQuestions(
-    {required BuildContext context,}
-  ) async {
+  Future<void> submitAssessmentQuestions({
+    required BuildContext context,
+  }) async {
     // Validation before making API call
     bool hasAllValidAnswers =
         _assessmentQuestions?.data?.every((q) {
