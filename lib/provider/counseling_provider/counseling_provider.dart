@@ -57,8 +57,8 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _counselingDatesAndSlots = await counselingService
-        .getSlotsAndDateForCounseling();
+    _counselingDatesAndSlots =
+        await counselingService.getSlotsAndDateForCounseling();
 
     /// set _isLoading false
     _isLoading = false;
@@ -102,6 +102,7 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
         dates.add(e.date ?? "");
       }
     });
+    dates.sort();
     return dates.isNotEmpty
         ? List.generate(
           dates.length,
@@ -120,6 +121,7 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
         slots.add(e.time ?? "");
       }
     });
+    slots.sort();
     return slots.isNotEmpty
         ? List.generate(
           slots.length,

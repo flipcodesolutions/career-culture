@@ -99,6 +99,7 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
                                     isLiked: true,
                                     wallProvider: wallProvider,
                                     postId: wallProvider.slugWallPost?.id ?? -1,
+                                    isFromWallScreen: widget.isFromWallScreen
                                   ),
                               icon:
                                   wallProvider.slugWallPost?.isMyFavourite ==

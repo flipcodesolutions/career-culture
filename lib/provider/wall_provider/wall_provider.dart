@@ -44,35 +44,35 @@ class WallProvider extends ChangeNotifier {
   }
 
   Future<void> likePost({
-    // required BuildContext context,
     required int wallId,
+    required bool isFromWallScreen,
   }) async {
-    // 1) Call service
-    final PostLikeModel? success = await _postService.likePost(
-      // context: context,
-      wallId: wallId,
-    );
+    // 1. Call the service
+    final PostLikeModel? response = await _postService.likePost(wallId: wallId);
+    if (response?.success != true) return;
 
-    // 2) Bail out if not successful
-    if (success?.success != true) return;
+    // 2. Update the wall list item
+    final list = _wallModel?.data;
+    final index = list?.indexWhere((e) => e.id == wallId) ?? -1;
+    if (index >= 0 && list != null) {
+      _toggleLike(list[index]);
+    }
 
-    List<WallListModelData>? list = _wallModel?.data;
-    if (list == null) return;
+    // // 3. Update the slug post if it's the same post
+    if (_slugWallPost?.id == wallId && !isFromWallScreen) {
+      _toggleLike(_slugWallPost);
+    }
 
-    // 3) Find the index
-    final int idx = list.indexWhere((e) => e.id == wallId);
-    if (idx < 0) return;
-
-    // 4) Update in-place
-    final WallListModelData item = list[idx];
-    final bool wasFav = item.isMyFavourite ?? false;
-
-    item
-      ..isMyFavourite = !wasFav
-      ..likeCount = (item.likeCount ?? 0) + (wasFav ? -1 : 1);
-
-    // 5) Notify once
+    // 4. Notify UI
     notifyListeners();
+  }
+
+  /// Helper to toggle like state and count
+  void _toggleLike(WallListModelData? post) {
+    final wasFav = post?.isMyFavourite ?? false;
+    post
+      ?..isMyFavourite = !wasFav
+      ..likeCount = (post.likeCount ?? 0) + (wasFav ? -1 : 1);
   }
 
   /// get the slug from launch so it can be passed to backend and get the post data to create [IndividualWallPostScreen]

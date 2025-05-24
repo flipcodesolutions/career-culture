@@ -347,9 +347,10 @@ class MethodHelper with NavigateHelper {
     required bool isLiked,
     required WallProvider wallProvider,
     required int postId,
+    required bool isFromWallScreen
   }) {
     isLiked
-        ? wallProvider.likePost(wallId: postId)
+        ? wallProvider.likePost(wallId: postId,isFromWallScreen: isFromWallScreen)
         : WidgetHelper.customSnackBar(
           // context: context,
           title: AppStrings.pleaseLoginFirst,

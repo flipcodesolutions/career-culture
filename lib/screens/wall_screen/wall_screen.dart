@@ -102,6 +102,7 @@ class _WallScreenState extends State<WallScreen>
                               isLiked: userProvider.isUserLoggedIn,
                               wallProvider: wallProvider,
                               postId: post?.id ?? -1,
+                              isFromWallScreen: true
                             ),
                         onSharePressed:
                             () async => MethodHelper.shareWallPost(
