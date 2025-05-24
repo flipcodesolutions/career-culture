@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
+import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -96,6 +97,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                             }
                             return QuestionWidget(
                               question: item ?? AssessmentQuestion(),
+                              questionIndex: index + 1,
                             );
                           },
                         ),
@@ -137,7 +139,12 @@ class _AssessmentScreenState extends State<AssessmentScreen>
 
 class QuestionWidget<T> extends StatefulWidget {
   final AssessmentQuestion question;
-  QuestionWidget({super.key, required this.question});
+  final int questionIndex;
+  QuestionWidget({
+    super.key,
+    required this.question,
+    required this.questionIndex,
+  });
 
   @override
   State<QuestionWidget<T>> createState() => _QuestionWidgetState<T>();
@@ -157,18 +164,23 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
           children: [
             CustomText(
               useOverflow: false,
-              text: widget.question.question?.trim() ?? "",
-              style: TextStyleHelper.mediumHeading,
+              text:
+                  "${widget.questionIndex}. ${widget.question.question?.trim()}",
+              style: TextStyleHelper.smallHeading,
               // textAlign: TextAlign.justify,
             ),
             if (widget.question.type == "checkbox") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
                     return CheckboxListTile(
+                      dense: true,
                       activeColor: AppColors.primary,
                       selected: entry.value == widget.question.answer,
                       selectedTileColor: AppColors.lightWhite,
-                      title: CustomText(text: option, useOverflow: false),
+                      title: CustomText(
+                        text: "${entry.key + 1}. $option",
+                        useOverflow: false,
+                      ),
                       value:
                           widget.question.answer?.contains(entry.value) ??
                           false,
@@ -187,11 +199,16 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
                     return RadioListTile<String>(
+                      dense: true,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       controlAffinity: ListTileControlAffinity.trailing,
                       activeColor: AppColors.primary,
                       selected: entry.value == widget.question.answer,
                       selectedTileColor: AppColors.lightWhite,
-                      title: CustomText(text: option, useOverflow: false),
+                      title: CustomText(
+                        text: "${entry.key + 1}. $option",
+                        useOverflow: false,
+                      ),
                       value: entry.value,
                       groupValue: widget.question.answer,
                       onChanged: (value) {
@@ -209,6 +226,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               SizeHelper.height(height: 1.h),
               CustomTextFormField(
                 controller: answerController,
+                decoration: BorderHelper.containerLikeTextField(
+                  hintText: AppStrings.yourAnswer,
+                ),
                 maxLines: 1,
                 maxLength: 200,
                 validator: (value) {
@@ -229,6 +249,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               SizeHelper.height(height: 1.h),
               CustomTextFormField(
                 controller: answerController,
+                decoration: BorderHelper.containerLikeTextField(
+                  hintText: AppStrings.yourAnswer,
+                ),
                 minLines: 5,
                 maxLines: 5,
                 maxLength: 500,
@@ -250,6 +273,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               SizeHelper.height(height: 1.h),
               CustomTextFormField(
                 controller: answerController,
+                decoration: BorderHelper.containerLikeTextField(
+                  hintText: AppStrings.yourVideoUrl,
+                ),
                 maxLines: 1,
                 maxLength: 200,
                 validator: (value) {

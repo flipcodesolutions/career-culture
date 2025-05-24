@@ -43,4 +43,43 @@ class BorderHelper {
     hintStyle: TextStyleHelper.smallText,
     errorStyle: TextStyle(color: AppColors.error), // Error text style
   );
+
+  /// ✅ Rounded, no-border container-style text field
+  static InputDecoration containerLikeTextField({
+    required String hintText,
+    Widget? suffix,
+    Color fillColor = const Color(0xFFF5F5F5), // light grey background
+    EdgeInsets contentPadding = const EdgeInsets.symmetric(
+      horizontal: 12,
+      vertical: 14,
+    ),
+    double borderRadius = 12.0,
+  }) => InputDecoration(
+    hintText: hintText,
+    suffixIcon: suffix,
+    filled: true,
+    fillColor: fillColor,
+    contentPadding: contentPadding,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide.none, // No visible border
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide.none,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide.none,
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide.none,
+    ),
+    disabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide.none,
+    ),
+    hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.grey),
+  );
 }

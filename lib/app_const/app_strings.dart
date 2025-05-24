@@ -230,6 +230,8 @@ class AppStrings {
   static const noCitiesFound = 'No Cities Found';
   static const counselingAppointmentDone = 'Counseling Appointment Done';
   static const referCodeCopied = 'Refer Code Copied';
+  static const yourAnswer = 'Your Answer ...';
+  static const yourVideoUrl = 'Your Video Url ...';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
