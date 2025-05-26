@@ -138,13 +138,14 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           /// certificates
                           ProfilePageListTiles(
                             leading: Icons.workspace_premium,
-                            onTap: () {},
-                            // () => push(
-                            //   context: context,
-                            //   widget: CousilingFormScreen(),
-                            //   transition:
-                            //       OpenUpwardsPageTransitionsBuilder(),
-                            // ),
+                            onTap:
+                                //  () {},
+                                () => push(
+                                  context: context,
+                                  widget: CousilingFormScreen(),
+                                  transition:
+                                      OpenUpwardsPageTransitionsBuilder(),
+                                ),
                             titleText: AppStrings.certificates,
                           ),
 

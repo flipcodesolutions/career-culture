@@ -32,25 +32,14 @@ class Data {
   String? date;
   String? time;
   String? status;
-  Null? createdAt;
-  Null? updatedAt;
 
-  Data({
-    this.id,
-    this.date,
-    this.time,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
-  });
+  Data({this.id, this.date, this.time, this.status});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     date = json['date'];
     time = json['time'];
     status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -59,8 +48,6 @@ class Data {
     data['date'] = this.date;
     data['time'] = this.time;
     data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
     return data;
   }
 }
