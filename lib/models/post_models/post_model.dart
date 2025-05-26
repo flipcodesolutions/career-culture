@@ -1,3 +1,7 @@
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
+
+import '../../app_const/app_strings.dart';
+
 class PostListModel {
   bool? success;
   String? message;
@@ -42,6 +46,8 @@ class PostInfo {
   List<Media>? media;
   bool? isForVideo;
   bool? isForImage;
+  bool? isAssessmentDone;
+  String? assessmentStatus;
   PostInfo({
     this.id,
     this.chapterId,
@@ -57,6 +63,8 @@ class PostInfo {
     this.media,
     this.isForImage,
     this.isForVideo,
+    this.isAssessmentDone,
+    this.assessmentStatus,
   });
 
   PostInfo copyWith({
@@ -74,6 +82,8 @@ class PostInfo {
     List<Media>? media,
     bool? isForImage,
     bool? isForVideo,
+    bool? isAssessmentDone,
+    String? assessmentStatus,
   }) {
     return PostInfo(
       id: id ?? this.id,
@@ -90,6 +100,8 @@ class PostInfo {
       video: video ?? this.video,
       isForImage: isForImage ?? this.isForImage,
       isForVideo: isForVideo ?? this.isForVideo,
+      isAssessmentDone: isAssessmentDone ?? this.isAssessmentDone,
+      assessmentStatus: assessmentStatus ?? this.assessmentStatus,
     );
   }
 
@@ -111,6 +123,8 @@ class PostInfo {
         media!.add(new Media.fromJson(v));
       });
     }
+    isAssessmentDone = json['assessment'];
+    assessmentStatus = json['assessmentStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -129,7 +143,27 @@ class PostInfo {
     if (this.media != null) {
       data['media'] = this.media!.map((v) => v.toJson()).toList();
     }
+    data['assessment'] = isAssessmentDone;
+    data['assessmentStatus'] = assessmentStatus;
     return data;
+  }
+
+  void handleWhatToShowIfAssessmentHasSubmittedAlready() {
+    if (assessmentStatus == null) {
+      WidgetHelper.customSnackBar(
+        title: AppStrings.somethingWentWrong,
+        isError: true,
+      );
+    } else {
+      assessmentStatus?.toLowerCase() == "Approved".toLowerCase()
+          ? WidgetHelper.customSnackBar(
+            title: AppStrings.yourAssessmentIsDoneAlready,
+          )
+          : WidgetHelper.customSnackBar(
+            title: AppStrings.yourAssessmentIsUnderReview,
+            isError: true,
+          );
+    }
   }
 }
 

@@ -4,15 +4,12 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
-import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -123,7 +120,6 @@ class _PostsScreenState extends State<PostsScreen>
                                   ],
                                 ),
                                 ImageContainer(
-                                  
                                   image:
                                       "${AppStrings.assetsUrl}${post?.image}",
                                   showImageInPanel: false,
@@ -174,37 +170,19 @@ class _PostsScreenState extends State<PostsScreen>
                   btnText:
                       "${AppStrings.assessment} (${postProvider.currentPost?.points ?? 0} Points)",
                   onTap: () {
-                    UserProvider userProvider = context.read<UserProvider>();
-                    if (userProvider.isUserLoggedIn) {
-                      context.read<AssessmentProvider>().setPostId =
-                          postProvider.currentPost?.id?.toString() ?? "";
-                      userProvider.isUserApproved
-                          ? push(
-                            context: context,
-                            widget: AssessmentScreen(
-                              postNameAndId:
-                                  "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
-                            ),
-                            transition: FadeUpwardsPageTransitionsBuilder(),
-                          )
-                          : WidgetHelper.customSnackBar(
-                            // context: context,
-                            title: AppStrings.yourAreNotApprovedYet,
-                            isError: true,
-                          );
-                    } else {
-                      push(
-                        context: context,
-                        widget: LoginScreen(),
-                        transition: ScaleFadePageTransitionsBuilder(),
-                      );
-                      WidgetHelper.customSnackBar(
-                        // context: context,
-                        title: AppStrings.pleaseLoginFirst,
-                        isError: true,
-                      );
-                    }
-                    ;
+                    context.read<AssessmentProvider>().setPostId =
+                        postProvider.currentPost?.id?.toString() ?? "";
+                    postProvider.currentPost?.isAssessmentDone != true
+                        ? push(
+                          context: context,
+                          widget: AssessmentScreen(
+                            postNameAndId:
+                                "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
+                          ),
+                          transition: FadeUpwardsPageTransitionsBuilder(),
+                        )
+                        : postProvider.currentPost
+                            ?.handleWhatToShowIfAssessmentHasSubmittedAlready();
                   },
                 ),
               )

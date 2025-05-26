@@ -169,6 +169,8 @@ class AppStrings {
   static const monthly = "Monthly";
   static const failedToGetProgress = "Failed To Get Progress";
   static const yourAreNotApprovedYet = "Your Are Not Approved Yet";
+  static const yourAssessmentIsDoneAlready = "Your Assessment Is Done Already";
+  static const yourAssessmentIsUnderReview = "Your Assessment Is Under Review";
   static const noRecentActivity = "No Recent Activity";
   static const selectConvener = "Select Convener";
   static const searchHere = "Search Here ...";
