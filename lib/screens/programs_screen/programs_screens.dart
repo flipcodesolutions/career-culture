@@ -504,6 +504,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
             CustomContainer(
               padding: EdgeInsets.all(5),
               width: 10.w,
+              height: 4.h,
               child: Image.asset(AppImageStrings.arrowRight),
             ),
           ],
