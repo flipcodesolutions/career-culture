@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:mindful_youth/utils/method_helpers/gradient_helper.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_icons.dart';
 
@@ -23,4 +25,11 @@ class ListHelper {
         .values
         .toList();
   }
+
+  /// programs gradient helper list
+  static List<Gradient> programListGradient = [
+    GradientHelper.bodyGradient,
+    GradientHelper.mindGradient,
+    GradientHelper.soulGradient,
+  ];
 }

@@ -5,7 +5,7 @@ import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/widgets/custom_image.dart';
+import 'package:mindful_youth/widgets/custom_profile_pic_circle.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -55,26 +55,11 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
           children: [
             Expanded(
               flex: 3,
-              child: CustomContainer(
-                shape: BoxShape.circle,
-                child:
-                    signUpProvider.signUpRequestModel.images?.isNotEmpty == true
-                        ? InkWell(
-                          onTap: onTap,
-                          child: CustomImageWithLoader(
-                            showImageInPanel: false,
-                            fit: BoxFit.contain,
-                            width: 15.w,
-                            height: 8.h,
-                            imageUrl:
-                                "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
-                          ),
-                        )
-                        : Icon(
-                          Icons.star_rate_rounded,
-                          size: AppSize.size40,
-                          color: AppColors.secondary,
-                        ),
+              child: CustomUserProfilePicCircle(
+                isPhotoString:
+                    signUpProvider.signUpRequestModel.images?.isNotEmpty ==
+                    true,
+                photoLink: signUpProvider.signUpRequestModel.images,
               ),
             ),
             Expanded(

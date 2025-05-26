@@ -4,10 +4,12 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
+import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/cousling_screens/cousiling_form_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
+import 'package:mindful_youth/utils/list_helper/list_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -29,6 +31,7 @@ import '../../models/programs/programs_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../utils/user_screen_time/tracking_mixin.dart';
 import '../../widgets/custom_grid.dart';
+import '../../widgets/custom_profile_pic_circle.dart';
 import 'widgets/program_container.dart';
 
 class ProgramsScreens extends StatefulWidget {
@@ -72,6 +75,12 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
     ChapterProvider chapterProvider = context.watch<ChapterProvider>();
     UserProvider userProvider = context.watch<UserProvider>();
+    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
+    HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
+    final int counselingCount =
+        homeProvider.overAllScoreModel?.data?.counselingCount ?? 0;
+    final bool isFirstOpen = programsProvider.getPercentage() > 25;
+    final bool isSecondOpen = programsProvider.getPercentage() > 75;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -84,7 +93,30 @@ class _ProgramsScreensState extends State<ProgramsScreens>
       },
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            InkWell(
+              onTap: () async {
+                programsProvider.setGridView = !programsProvider.isGridView;
+                await chapterProvider.getAllChapters(
+                  // context: context,
+                );
+              },
+              child: CustomContainer(
+                width: 8.w,
+                height: 4.h,
+                margin: EdgeInsets.only(right: 3.w),
+                child: Image.asset(
+                  alignment: Alignment.center,
+                  fit: BoxFit.fill,
+                  programsProvider.isGridView
+                      ? AppImageStrings.gridIcon
+                      : AppImageStrings.gridOffIcon,
+                ),
+              ),
+            ),
+          ],
           title: CustomText(
+            textAlign: TextAlign.center,
             text: AppStrings.programs,
             style: TextStyleHelper.mediumHeading,
           ),
@@ -101,38 +133,47 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                   child: Column(
                     children: [
                       CustomContainer(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        backGroundColor: AppColors.lightWhite,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 2.h,
+                        ),
                         padding: EdgeInsets.symmetric(
                           horizontal: 2.w,
                           vertical: 1.h,
                         ),
 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            InkWell(
-                              onTap: () async {
-                                programsProvider.setGridView =
-                                    !programsProvider.isGridView;
-                                await chapterProvider.getAllChapters(
-                                  // context: context,
-                                );
-                              },
-                              child: CustomContainer(
-                                width: 8.w,
-                                height: 4.h,
-                                child: Image.asset(
-                                  alignment: Alignment.center,
-                                  fit: BoxFit.fill,
-                                  programsProvider.isGridView
-                                      ? AppImageStrings.gridIcon
-                                      : AppImageStrings.gridOffIcon,
-                                ),
-                              ),
+                            CustomText(
+                              text: "Hello , abc",
+                              style: TextStyleHelper.smallHeading,
                             ),
+                            SizeHelper.height(height: 1.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CustomUserProfilePicCircle(
+                                  isPhotoString:
+                                      signUpProvider
+                                          .signUpRequestModel
+                                          .images
+                                          ?.isNotEmpty ==
+                                      true,
+                                  photoLink:
+                                      signUpProvider.signUpRequestModel.images,
+                                ),
 
-                            CustomProgressBar(
-                              percentage: programsProvider.getPercentage(),
+                                CustomProgressBar(
+                                  width: 60.w,
+                                  percentage: programsProvider.getPercentage(),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -145,72 +186,19 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                               ...programsProvider.programsModel?.data ?? [],
                             ],
                             itemBuilder:
-                                (item, index) => ProgramContainer(item: item),
+                                (item, index) => ProgramContainer(
+                                  item: item,
+                                  gradient: ListHelper.programListGradient
+                                      .elementAt(index),
+                                ),
                           ),
                         ),
-                        IntrinsicHeight(
-                          child: CustomContainer(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 5.w,
-                              vertical: 2.h,
-                            ),
-                            padding: EdgeInsets.all(AppSize.size10),
-                            backGroundColor: AppColors.lightWhite,
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x000000).withOpacity(1),
-                                offset: Offset(0, 0),
-                                blurRadius: 15,
-                                spreadRadius: -9,
-                              ),
-                            ],
-                            width: 90.w,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomText(
-                                  text: AppStrings.bookAnAppointment,
-                                  style: TextStyleHelper.mediumHeading.copyWith(
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                SizeHelper.height(height: 1.h),
-                                CustomText(
-                                  text: AppStrings.takeAMomentToTalkWithUs,
-                                  useOverflow: false,
-                                ),
-                                SizeHelper.height(),
-                                CounselingOptions(
-                                  description: AppStrings.bookAfter25,
-                                  heading: AppStrings.counseling1,
-                                  isOpen: programsProvider.getPercentage() > 25,
-                                  isDone:
-                                      context
-                                          .read<HomeScreenProvider>()
-                                          .overAllScoreModel
-                                          ?.data
-                                          ?.counselingCount ==
-                                      1,
-                                ),
-                                SizeHelper.height(),
-                                CounselingOptions(
-                                  description: AppStrings.bookAfter75,
-                                  heading: AppStrings.counseling2,
-                                  isDone:
-                                      context
-                                          .read<HomeScreenProvider>()
-                                          .overAllScoreModel
-                                          ?.data
-                                          ?.counselingCount ==
-                                      2,
-                                  isOpen: programsProvider.getPercentage() > 75,
-                                ),
-                              ],
-                            ),
-                          ),
+
+                        /// this the counseling container that will now show only not completed counseling sessions,
+                        CounselingContainer(
+                          counselingCount: counselingCount,
+                          isFirstOpen: isFirstOpen,
+                          isSecondOpen: isSecondOpen,
                         ),
                       ] else ...[
                         Expanded(
@@ -381,6 +369,88 @@ class _ProgramsScreensState extends State<ProgramsScreens>
   }
 }
 
+class CounselingContainer extends StatelessWidget {
+  const CounselingContainer({
+    super.key,
+    required this.counselingCount,
+    required this.isFirstOpen,
+    required this.isSecondOpen,
+  });
+
+  final int counselingCount;
+  final bool isFirstOpen;
+  final bool isSecondOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicHeight(
+      child: CustomContainer(
+        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        padding: EdgeInsets.all(AppSize.size10),
+        backGroundColor: AppColors.lightWhite,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x000000).withOpacity(1),
+            offset: Offset(0, 0),
+            blurRadius: 15,
+            spreadRadius: -9,
+          ),
+        ],
+        width: 90.w,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomText(
+              text: AppStrings.bookAnAppointment,
+              style: TextStyleHelper.mediumHeading.copyWith(
+                color: AppColors.primary,
+              ),
+            ),
+            SizeHelper.height(height: 1.h),
+            CustomText(
+              text: AppStrings.takeAMomentToTalkWithUs,
+              useOverflow: false,
+            ),
+            SizeHelper.height(),
+            if (counselingCount == 0) ...[
+              CounselingOptions(
+                description: AppStrings.bookAfter25,
+                heading: AppStrings.counseling1,
+                isOpen: isFirstOpen,
+                isDone: counselingCount == 1,
+              ),
+              SizeHelper.height(),
+            ],
+            if (counselingCount == 1) ...[
+              CounselingOptions(
+                description: AppStrings.bookAfter75,
+                heading: AppStrings.counseling2,
+                isOpen: isSecondOpen,
+                isDone: counselingCount == 1,
+              ),
+            ],
+            if (counselingCount != 0 && counselingCount != 1)
+              CustomContainer(
+                backGroundColor: AppColors.white,
+                boxShadow: ShadowHelper.scoreContainer,
+                height: 4.h,
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                alignment: Alignment.center,
+                child: CustomText(
+                  text: "All Counseling is Done",
+                  style: TextStyleHelper.smallHeading,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CounselingOptions extends StatelessWidget with NavigateHelper {
   const CounselingOptions({
     super.key,
@@ -461,34 +531,40 @@ class CustomProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomText(text: '${percentage.toInt()}%'),
-        SizeHelper.height(height: 1.h),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: CustomContainer(
-            borderColor: AppColors.primary,
-            borderRadius: BorderRadius.circular(AppSize.size10),
-            height: height ?? 1.5.h,
-            width: width ?? 30.w,
-            backGroundColor: AppColors.lightPrimary,
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: percentage / 100,
-                    child: CustomContainer(
-                      backGroundColor: AppColors.primary,
-                      borderRadius: BorderRadius.horizontal(
-                        right: Radius.circular(AppSize.size10),
+        CustomText(text: AppStrings.yourAllOverProgress),
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: CustomContainer(
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                height: height ?? 1.h,
+                width: width ?? 30.w,
+                backGroundColor: AppColors.grey,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: FractionallySizedBox(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: percentage / 100,
+                        child: CustomContainer(
+                          backGroundColor: AppColors.secondary,
+                          borderRadius: BorderRadius.horizontal(
+                            right: Radius.circular(AppSize.size10),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            SizeHelper.width(width: 2.w),
+            CustomText(text: '${percentage.toInt()}%'),
+          ],
         ),
       ],
     );

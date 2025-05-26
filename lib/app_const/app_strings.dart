@@ -25,7 +25,7 @@ class AppStrings {
   static const next = "Next";
   static const letsBegin = "Let's Begin";
   static const skip = "Skip";
-  static const programs = "MindFul Youth A Certificate Program";
+  static const programs = "MindFul Youth \nA Certificate Program";
   static const yourCoins = 'Your Coins';
   static const recentActivity = "Recent Activity";
   static const announceMent = "Announcement";
@@ -232,6 +232,7 @@ class AppStrings {
   static const referCodeCopied = 'Refer Code Copied';
   static const yourAnswer = 'Your Answer ...';
   static const yourVideoUrl = 'Your Video Url ...';
+  static const yourAllOverProgress = 'Your All Over Progress';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

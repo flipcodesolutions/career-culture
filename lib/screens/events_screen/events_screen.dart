@@ -66,7 +66,7 @@ class _EventsScreenState extends State<EventsScreen>
           title: CustomText(
             text: AppStrings.eventActivity,
             style: TextStyleHelper.mediumHeading,
-          ),
+          )
         ),
         body:
             eventProvider.isLoading

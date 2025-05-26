@@ -11,4 +11,13 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color grey = Colors.grey;
   static const Color black = Colors.black;
+  /// body gradient color
+  static const Color body1 = Color(0xffFBDBDB);
+  static const Color body2 = Color(0xffCAE4FF);
+  /// mind gradient color
+  static const Color mind1 = Color(0xffEBEBEB);
+  static const Color mind2 = Color(0xffC1FFB7);
+  /// soul gradient color
+  static const Color soul1 = Color(0xffF3F2E2);
+  static const Color soul2 = Color(0xffFFD798);
 }

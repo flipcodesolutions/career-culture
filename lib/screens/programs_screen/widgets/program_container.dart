@@ -15,8 +15,9 @@ import '../../../widgets/custom_image.dart';
 import '../../../widgets/custom_text.dart';
 
 class ProgramContainer extends StatelessWidget with NavigateHelper {
-  const ProgramContainer({super.key, required this.item});
+  const ProgramContainer({super.key, required this.item,this.gradient});
   final ProgramsInfo item;
+  final Gradient? gradient;
   @override
   Widget build(BuildContext context) {
     ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
@@ -38,6 +39,7 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
         height: 10.h,
         backGroundColor: AppColors.lightWhite,
         borderRadius: BorderRadius.circular(AppSize.size10),
+        gradient: gradient,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
