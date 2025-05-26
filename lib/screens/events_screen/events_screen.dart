@@ -19,7 +19,6 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 
-
 class EventsScreen extends StatefulWidget {
   const EventsScreen({super.key, required this.isMyEvents});
   final bool isMyEvents;
@@ -72,15 +71,16 @@ class _EventsScreenState extends State<EventsScreen>
         body:
             eventProvider.isLoading
                 ? Center(child: CustomLoader())
-                : eventProvider.eventModel?.data?.isNotEmpty == true
+                : eventProvider
+                        .getEventsByModel(isMyEvents: widget.isMyEvents)
+                        .isNotEmpty ==
+                    true
                 ? CustomRefreshIndicator(
                   onRefresh:
                       () async =>
                           widget.isMyEvents
-                              ? await eventProvider.getAllUserEvents(
-                              )
-                              : await eventProvider.getAllEvents(
-                              ),
+                              ? await eventProvider.getAllUserEvents()
+                              : await eventProvider.getAllEvents(),
                   child: CustomListWidget(
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
@@ -146,10 +146,8 @@ class _EventsScreenState extends State<EventsScreen>
                   onRefresh:
                       () async =>
                           widget.isMyEvents
-                              ? await eventProvider.getAllUserEvents(
-                              )
-                              : await eventProvider.getAllEvents(
-                              ),
+                              ? await eventProvider.getAllUserEvents()
+                              : await eventProvider.getAllEvents(),
                   child: ListView(
                     children: [
                       CustomContainer(
