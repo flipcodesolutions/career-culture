@@ -24,22 +24,33 @@ class CustomUserProfilePicCircle extends StatelessWidget {
       shape: BoxShape.circle,
       child:
           isPhotoString
-              ? ClipRRect(
-                borderRadius: BorderRadius.circular(AppSize.size40),
-                child: CustomImageWithLoader(
-                  errorIconSize: AppSize.size30,
-                  showImageInPanel: false,
-                  fit: BoxFit.cover,
-                  width: 15.w,
-                  height: 8.h,
-                  imageUrl: "${AppStrings.assetsUrl}$photoLink",
-                ),
-              )
+              ? RoundImageInContainer(photoLink: photoLink)
               : Icon(
                 Icons.star_rate_rounded,
                 size: AppSize.size40,
                 color: AppColors.secondary,
               ),
+    );
+  }
+}
+
+class RoundImageInContainer extends StatelessWidget {
+  const RoundImageInContainer({super.key, required this.photoLink});
+
+  final String? photoLink;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSize.size40),
+      child: CustomImageWithLoader(
+        errorIconSize: AppSize.size30,
+        showImageInPanel: false,
+        fit: BoxFit.cover,
+        width: 15.w,
+        height: 7.h,
+        imageUrl: "${AppStrings.assetsUrl}$photoLink",
+      ),
     );
   }
 }

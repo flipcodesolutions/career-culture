@@ -1,7 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
+import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:sizer/sizer.dart';
@@ -37,15 +41,45 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
                           );
                         },
                         child: CustomContainer(
+                          boxShadow: ShadowHelper.scoreContainer,
+                          backGroundColor: AppColors.white,
+                          borderColor: AppColors.grey,
+                          borderWidth: 0.2,
                           borderRadius: BorderRadius.circular(AppSize.size10),
-                          margin: EdgeInsets.symmetric(horizontal: 5.w),
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 1.h,
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(AppSize.size10),
-                            child: CustomImageWithLoader(
-                              showImageInPanel: false,
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  "${AppStrings.assetsUrl}${image.poster}",
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: CustomImageWithLoader(
+                                    showImageInPanel: false,
+                                    fit: BoxFit.cover,
+                                    imageUrl:
+                                        "${AppStrings.assetsUrl}${image.poster}",
+                                  ),
+                                ),
+                                CustomContainer(
+                                  padding: EdgeInsets.only(top: 0.3.h),
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: AppColors.grey,
+                                      width: 0.2,
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: CustomText(
+                                    text: image.title ?? "",
+                                    style: TextStyleHelper.smallHeading
+                                        .copyWith(color: AppColors.primary),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -55,7 +89,7 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
             options: CarouselOptions(
               enableInfiniteScroll: false,
               viewportFraction: 1,
-              height: 25.h,
+              height: 29.h,
               disableCenter: true,
               autoPlay: true,
               padEnds: true,

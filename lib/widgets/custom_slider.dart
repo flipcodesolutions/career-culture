@@ -1,18 +1,21 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_profile_pic_circle.dart';
+import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../models/programs/programs_model.dart';
 import '../provider/programs_provider/programs_provider.dart';
 import '../provider/user_provider/user_provider.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
-import 'custom_image.dart';
 
 class SliderRenderWidget extends StatefulWidget {
   const SliderRenderWidget({super.key});
@@ -41,46 +44,116 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
         ? Center(child: CustomLoader())
         : homeScreenProvider.sliderModel?.data?.isNotEmpty == true
         ? CustomContainer(
-          child: CarouselSlider(
-            items:
-                homeScreenProvider.sliderModel?.data?.map((image) {
-                  return GestureDetector(
+          margin: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () => homeScreenProvider.setNavigationIndex = 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomText(
+                      text: AppStrings.program,
+                      style: TextStyleHelper.mediumHeading.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    Icon(Icons.keyboard_arrow_right),
+                  ],
+                ),
+              ),
+              SizeHelper.height(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                  homeScreenProvider.sliderModel?.data?.length ?? 0,
+                  (index) => InkWell(
                     onTap: () {
                       if (userProvider.isUserLoggedIn) {
                         context.read<ProgramsProvider>().setCurrentProgramInfo =
-                            image;
+                            homeScreenProvider.sliderModel?.data?.elementAt(
+                              index,
+                            ) ??
+                            ProgramsInfo();
                         push(
                           context: context,
                           widget: IndividualProgramScreen(
-                            programName: image.title ?? "programScreen",
+                            programName:
+                                homeScreenProvider.sliderModel?.data
+                                    ?.elementAt(index)
+                                    .title ??
+                                "programScreen",
                           ),
                           transition: OpenUpwardsPageTransitionsBuilder(),
                         );
                       }
                     },
                     child: CustomContainer(
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      margin: EdgeInsets.symmetric(horizontal: 5.w),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          fit: BoxFit.cover,
-                          imageUrl: "${AppStrings.assetsUrl}${image.image}",
-                        ),
+                      width: 28.w,
+                      child: Column(
+                        children: [
+                          RoundImageInContainer(
+                            photoLink:
+                                homeScreenProvider.sliderModel?.data
+                                    ?.elementAt(index)
+                                    .image,
+                          ),
+                          SizeHelper.height(),
+                          CustomText(
+                            text:
+                                homeScreenProvider.sliderModel?.data
+                                    ?.elementAt(index)
+                                    .title ??
+                                "-",
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                }).toList(),
-            options: CarouselOptions(
-              enableInfiniteScroll: false,
-              viewportFraction: 1,
-              height: 25.h,
-              disableCenter: true,
-              autoPlay: true,
-              padEnds: true,
-            ),
+                  ),
+                ),
+              ),
+            ],
           ),
+          // CarouselSlider(
+          //   items:
+          //       homeScreenProvider.sliderModel?.data?.map((image) {
+          //         return GestureDetector(
+          //           onTap: () {
+          //             if (userProvider.isUserLoggedIn) {
+          //               context.read<ProgramsProvider>().setCurrentProgramInfo =
+          //                   image;
+          //               push(
+          //                 context: context,
+          //                 widget: IndividualProgramScreen(
+          //                   programName: image.title ?? "programScreen",
+          //                 ),
+          //                 transition: OpenUpwardsPageTransitionsBuilder(),
+          //               );
+          //             }
+          //           },
+          //           child: CustomContainer(
+          //             borderRadius: BorderRadius.circular(AppSize.size10),
+          //             margin: EdgeInsets.symmetric(horizontal: 5.w),
+          //             child: ClipRRect(
+          //               borderRadius: BorderRadius.circular(AppSize.size10),
+          //               child: CustomImageWithLoader(
+          //                 showImageInPanel: false,
+          //                 fit: BoxFit.cover,
+          //                 imageUrl: "${AppStrings.assetsUrl}${image.image}",
+          //               ),
+          //             ),
+          //           ),
+          //         );
+          //       }).toList(),
+          //   options: CarouselOptions(
+          //     enableInfiniteScroll: false,
+          //     viewportFraction: 1,
+          //     height: 25.h,
+          //     disableCenter: true,
+          //     autoPlay: true,
+          //     padEnds: true,
+          //   ),
+          // ),
         )
         : Center(child: NoDataFoundWidget(text: AppStrings.noProgramsFound));
   }

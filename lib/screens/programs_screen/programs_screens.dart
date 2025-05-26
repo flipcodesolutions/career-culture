@@ -23,6 +23,7 @@ import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
+import 'package:mindful_youth/widgets/user_name_and_userid.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
@@ -149,10 +150,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: "Hello , abc",
-                              style: TextStyleHelper.smallHeading,
-                            ),
+                            UserNameAndUIdRow(),
                             SizeHelper.height(height: 1.h),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -387,7 +385,7 @@ class CounselingContainer extends StatelessWidget {
       child: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         padding: EdgeInsets.all(AppSize.size10),
-        backGroundColor: AppColors.lightWhite,
+        backGroundColor: AppColors.counselingBox,
         borderRadius: BorderRadius.circular(AppSize.size10),
         boxShadow: [
           BoxShadow(
