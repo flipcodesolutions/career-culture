@@ -31,7 +31,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
     super.initState();
     ProductProvider productProvider = context.read<ProductProvider>();
     Future.microtask(() {
-      productProvider.getProductList();
+      productProvider.getProductList(context: context);
     });
   }
 
@@ -64,7 +64,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                 child: CustomRefreshIndicator(
                   onRefresh:
                       () async => await productProvider.getProductList(
-                        // context: context,
+                        context: context,
                       ),
                   child:
                       productProvider.productModel?.data?.product?.isNotEmpty ==

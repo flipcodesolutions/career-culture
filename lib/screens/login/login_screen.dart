@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                               onTap: () async {
                                 if (formKey.currentState?.validate() == true) {
                                   bool success = await loginProvider
-                                      .sentOtpToMobileNumber();
+                                      .sentOtpToMobileNumber(context: context);
                                   if (success) {
                                     push(
                                       context: context,

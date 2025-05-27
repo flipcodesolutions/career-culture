@@ -52,6 +52,7 @@ mixin ScreenTracker<T extends StatefulWidget>
     if (debug) debugPrint("[$screenName] logScreenOpen at ${DateTime.now()}");
     if (_userProvider != null) {
       AnalyticsService.instance.logEvent(
+        context: context,
         startTime: DateTime.now().toIso8601String(),
         screenName: screenName,
         userProvider: _userProvider ?? UserProvider(),
@@ -66,6 +67,7 @@ mixin ScreenTracker<T extends StatefulWidget>
     );
     if (_userProvider != null) {
       await AnalyticsService.instance.flush(
+        context: context,
         userProvider: _userProvider ?? UserProvider(),
       );
     }

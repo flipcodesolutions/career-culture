@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
@@ -52,13 +53,13 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
     Future.microtask(() {
       // / get chapter by id
       chapterProvider.getChapterById(
-        // context: context,
+        context: context,
         id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
       );
 
       userProvider.isUserLoggedIn
           ? programsProvider.getUserProgress(
-            // context: context,
+            context: context,
             pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
           )
           : null;
@@ -75,7 +76,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          await programsProvider.getUserProgress().then((_) {
+          await programsProvider.getUserProgress(context: context).then((_) {
             pop(context);
           });
         }
@@ -93,7 +94,7 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                 : CustomRefreshIndicator(
                   onRefresh:
                       () async => await chapterProvider.getChapterById(
-                        // context: context,
+                        context: context,
                         id:
                             (programsProvider.currentProgramInfo?.id ?? 0)
                                 .toString(),
@@ -108,10 +109,11 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                       SizeHelper.height(),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: CustomText(
-                          text: program?.description ?? "",
-                          useOverflow: false,
-                        ),
+                        child: Html(data: program?.description ?? ""),
+                        //  CustomText(
+                        //   text: program?.description ?? "",
+                        //   useOverflow: false,
+                        // ),
                       ),
                       SizeHelper.height(),
                       ////

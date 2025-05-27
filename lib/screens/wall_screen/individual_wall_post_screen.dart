@@ -36,7 +36,7 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
     super.initState();
     Future.microtask(() async {
       if (!widget.isFromWallScreen) {
-        await wallProvider.getWallPostBySlug(slug: widget.slug);
+        await wallProvider.getWallPostBySlug(slug: widget.slug,context: context);
       }
     });
   }
@@ -70,7 +70,7 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
                   ? CustomRefreshIndicator(
                     onRefresh:
                         () async =>
-                            wallProvider.getWallPostBySlug(slug: widget.slug),
+                            wallProvider.getWallPostBySlug(slug: widget.slug,context: context),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -96,6 +96,7 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
                             child: PostButton(
                               onTap:
                                   () async => MethodHelper.likeWallPost(
+                                    context: context,
                                     isLiked: true,
                                     wallProvider: wallProvider,
                                     postId: wallProvider.slugWallPost?.id ?? -1,

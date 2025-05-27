@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/programs/programs_model.dart';
 import 'package:mindful_youth/models/programs/single_program_model.dart';
 import 'package:mindful_youth/models/programs/user_progress_model.dart';
@@ -11,11 +11,11 @@ import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 class ProgramsService {
   /// get all programs
   Future<ProgramsModel?> getAllPrograms(
-    // {required BuildContext context}
+    {required BuildContext context}
     ) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: ApiHelper.programs,
       );
       if (response.isNotEmpty) {
@@ -31,12 +31,12 @@ class ProgramsService {
 
   /// get single programs by id
   Future<SingleProgramModel?> getProgramsById({
-    // required BuildContext context,
+    required BuildContext context,
     required String id,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: ApiHelper.programById(id: id),
       );
       if (response.isNotEmpty) {
@@ -53,11 +53,11 @@ class ProgramsService {
   /// get home screen sliders
   /// get single programs by id
   Future<ProgramsModel?> getHomeScreenSliders(
-    // {required BuildContext context,}
+    {required BuildContext context,}
   ) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: ApiHelper.sliders,
       );
       if (response.isNotEmpty) {
@@ -74,12 +74,12 @@ class ProgramsService {
   }
 
   Future<UserProgressModel?> getUserProgress({
-    // required BuildContext context,
+    required BuildContext context,
     String? pId,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: "${ApiHelper.getUserProgress}${pId ?? ''}",
       );
       if (response.isNotEmpty) {
@@ -95,11 +95,11 @@ class ProgramsService {
 
   /// get user total score
   Future<UserOverAllScoreModel?> getUserOverAllScore(
-    // {required BuildContext context,}
+    {required BuildContext context,}
     ) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: ApiHelper.getTotalScore,
       );
       if (response.isNotEmpty) {

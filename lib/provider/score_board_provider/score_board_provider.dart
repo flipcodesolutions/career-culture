@@ -15,13 +15,11 @@ class ScoreBoardProvider extends ChangeNotifier {
   ScoreBoardModel? _userScore;
   ScoreBoardModel? get userScore => _userScore;
 
-  Future<void> getScoreBoard(
-    // {required BuildContext context}
-  ) async {
+  Future<void> getScoreBoard({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _scoreBoardModel = await scoreBoardService.getScoreBoard();
+    _scoreBoardModel = await scoreBoardService.getScoreBoard(context: context);
     if (_scoreBoardModel?.success == true) {
       String id = await SharedPrefs.getSharedString(AppStrings.id);
       print("got this id to check ===> $id");

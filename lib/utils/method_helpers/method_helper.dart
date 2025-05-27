@@ -290,7 +290,7 @@ class MethodHelper with NavigateHelper {
   /// get fcm token
 
   static Future<void> getAndSendFcmTokenToBackend(
-    // {required BuildContext context,}
+    {required BuildContext context,}
   ) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -303,7 +303,7 @@ class MethodHelper with NavigateHelper {
       print("FCM Token: $token");
       FcmTokenService fcmTokenService = FcmTokenService();
       await fcmTokenService.sendFcmTokenWithUId(
-        // context: context,
+        context: context,
         uId: uId,
         fcmToken: token,
       );
@@ -347,10 +347,11 @@ class MethodHelper with NavigateHelper {
     required bool isLiked,
     required WallProvider wallProvider,
     required int postId,
-    required bool isFromWallScreen
+    required bool isFromWallScreen,
+    required BuildContext context,
   }) {
     isLiked
-        ? wallProvider.likePost(wallId: postId,isFromWallScreen: isFromWallScreen)
+        ? wallProvider.likePost(wallId: postId,isFromWallScreen: isFromWallScreen,context: context)
         : WidgetHelper.customSnackBar(
           // context: context,
           title: AppStrings.pleaseLoginFirst,

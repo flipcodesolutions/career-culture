@@ -44,15 +44,16 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
         fit: FlexFit.tight,
         itemBuilder: itemBuilder,
         emptyBuilder:
-            (context, searchEntry) =>
-                CustomContainer(child: NoDataFoundWidget(text: AppStrings.noConvenerFound,)),
+            (context, searchEntry) => CustomContainer(
+              child: NoDataFoundWidget(text: AppStrings.noCoordinatorFound),
+            ),
         showSearchBox: true, // <-- Enables search box
         searchFieldProps: TextFieldProps(
           decoration: inputDecoration(hintText: AppStrings.searchHere),
         ),
       ),
       decoratorProps: DropDownDecoratorProps(
-        decoration: inputDecoration(labelText: AppStrings.selectConvener),
+        decoration: inputDecoration(labelText: AppStrings.selectCoordinator),
       ),
       dropdownBuilder: dropdownBuilder,
       validator: validator,

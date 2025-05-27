@@ -52,13 +52,13 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
 
   /// get dates and slots for counseling
   Future<void> getCounselignDatesAndSlots(
-    // {required BuildContext context,}
+    {required BuildContext context,}
   ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _counselingDatesAndSlots =
-        await counselingService.getSlotsAndDateForCounseling();
+        await counselingService.getSlotsAndDateForCounseling(context: context);
 
     /// set _isLoading false
     _isLoading = false;
@@ -159,7 +159,7 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
       _isLoading = true;
       notifyListeners();
       bool success = await counselingService.createCounselingAppointment(
-        // context: context,
+        context: context,
         appointmentDate: pickedDate,
         slot: pickedSlot,
         mode: pickedMode,

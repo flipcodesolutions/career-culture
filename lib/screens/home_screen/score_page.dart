@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 
-
 class ScoreboardPage extends StatefulWidget {
   const ScoreboardPage({super.key});
 
@@ -44,7 +43,7 @@ class _ScoreboardPageState extends State<ScoreboardPage>
     Future.microtask(() {
       ScoreBoardProvider scoreBoardProvider =
           context.read<ScoreBoardProvider>();
-      scoreBoardProvider.getScoreBoard();
+      scoreBoardProvider.getScoreBoard(context: context);
       _tabController.addListener(() {
         setState(() {});
       });
@@ -142,10 +141,10 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
             (index) => TopPlayerCard(
               index: (index + 1).toString(),
               isListTile: true,
-              name: score![0].name ?? '',
+              name: score?[index].name ?? '',
               isFirst: index == 0,
-              score: score![0].totalPoints ?? '0',
-              imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
+              score: score?[index].totalPoints ?? '0',
+              imageUrl: '${AppStrings.assetsUrl}${score?[index].image}',
             ),
           ),
         ),

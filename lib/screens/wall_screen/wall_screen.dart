@@ -47,7 +47,7 @@ class _WallScreenState extends State<WallScreen>
     super.initState();
     WallProvider wallProvider = context.read<WallProvider>();
     Future.microtask(() {
-      wallProvider.getWall();
+      wallProvider.getWall(context: context);
     });
   }
 
@@ -77,7 +77,7 @@ class _WallScreenState extends State<WallScreen>
                 ? Center(child: CustomLoader())
                 : wallProvider.wallModel?.data?.isNotEmpty == true
                 ? CustomRefreshIndicator(
-                  onRefresh: () async => wallProvider.getWall(),
+                  onRefresh: () async => wallProvider.getWall(context: context),
                   child: ListView.builder(
                     itemCount: wallProvider.wallModel?.data?.length ?? 0,
                     itemBuilder: (context, index) {
@@ -102,7 +102,8 @@ class _WallScreenState extends State<WallScreen>
                               isLiked: userProvider.isUserLoggedIn,
                               wallProvider: wallProvider,
                               postId: post?.id ?? -1,
-                              isFromWallScreen: true
+                              isFromWallScreen: true,
+                              context: context
                             ),
                         onSharePressed:
                             () async => MethodHelper.shareWallPost(
@@ -116,7 +117,7 @@ class _WallScreenState extends State<WallScreen>
                   ),
                 )
                 : CustomRefreshIndicator(
-                  onRefresh: () async => wallProvider.getWall(),
+                  onRefresh: () async => wallProvider.getWall(context: context),
                   child: ListView(
                     children: [
                       Center(

@@ -31,7 +31,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     Future.microtask(() {
       if (!context.mounted) return;
       final provider = context.read<OnBoardingProvider>();
-      provider.getOnBoarding();
+      provider.getOnBoarding(context: context);
     });
   }
 

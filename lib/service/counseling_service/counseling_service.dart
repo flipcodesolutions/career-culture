@@ -1,5 +1,5 @@
 import 'dart:developer';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/counseling_model/counseling_models.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
@@ -9,11 +9,11 @@ import '../../app_const/app_strings.dart';
 
 class CounselingService {
   Future<CounselingDatesAndSlotsModel?> getSlotsAndDateForCounseling(
-    // {required BuildContext context,}
+    {required BuildContext context,}
   ) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
-        // context: context,
+        context: context,
         uri: ApiHelper.getCounselingDatesAndSlots,
       );
       if (response.isNotEmpty) {
@@ -28,7 +28,7 @@ class CounselingService {
 
   /// create counseling appointment
   Future<bool> createCounselingAppointment({
-    // required BuildContext context,
+    required BuildContext context,
     required String appointmentDate,
     required String slot,
     required String mode,
@@ -37,7 +37,7 @@ class CounselingService {
       String uId = await SharedPrefs.getSharedString(AppStrings.userId);
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.createCounselingAppointment,
-        // context: context,
+        context: context,
         body: {
           "user_id": uId,
           "appointment_date": appointmentDate,

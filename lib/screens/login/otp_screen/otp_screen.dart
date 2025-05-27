@@ -106,7 +106,7 @@ class _OtpScreen extends State<OtpScreen> with NavigateHelper {
                             () async =>
                                 loginProvider.resendOtpSecond == 0
                                     ? loginProvider.sentOtpToMobileNumber(
-                                      // context: context,
+                                      context: context,
                                     )
                                     : loginProvider.verifyOtpToMobileNumber(
                                       context: context,

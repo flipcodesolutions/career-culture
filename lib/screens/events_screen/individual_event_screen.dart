@@ -35,9 +35,11 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
           AllEventProvider eventProvider = context.read<AllEventProvider>();
-          isMyEvents
-              ? await eventProvider.getAllUserEvents()
-              : await eventProvider.getAllEvents();
+          Future.microtask(() async {
+            isMyEvents
+                ? await eventProvider.getAllUserEvents(context: context)
+                : await eventProvider.getAllEvents(context: context);
+          });
           pop(context);
         }
       },

@@ -21,12 +21,12 @@ class HomeScreenProvider extends ChangeNotifier {
   ProgramsModel? get sliderModel => _sliderModel;
 
   Future<void> getHomeScreenSlider(
-    // {required BuildContext context}
+    {required BuildContext context}
   ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _sliderModel = await programsService.getHomeScreenSliders();
+    _sliderModel = await programsService.getHomeScreenSliders(context: context);
 
     /// set _isLoading false
     _isLoading = false;
@@ -37,13 +37,13 @@ class HomeScreenProvider extends ChangeNotifier {
   UserOverAllScoreModel? _overAllScoreModel;
   UserOverAllScoreModel? get overAllScoreModel => _overAllScoreModel;
   Future<void> getUserOverAllScore(
-    // {required BuildContext context}
+    {required BuildContext context}
   ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _overAllScoreModel = await programsService.getUserOverAllScore(
-      // context: context,
+      context: context,
     );
 
     /// set _isLoading false

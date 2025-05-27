@@ -16,7 +16,7 @@ class HttpHelper {
   // Generalized response handler
   static Future<Map<String, dynamic>> processResponse({
     required Response response,
-    // required BuildContext context,
+    required BuildContext context,
   }) async {
     try {
       // if (!context.mounted) return {};
@@ -44,10 +44,10 @@ class HttpHelper {
           title: "Session expired. Please log in again.",
           color: AppColors.error,
         );
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(builder: (context) => LoginScreen()),
-        //   (route) => false,
-        // );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+          (route) => false,
+        );
         return {}; // Empty map since user is logged out
       }
 
@@ -90,7 +90,7 @@ class HttpHelper {
 
   // GET method
   static Future<Map<String, dynamic>> get({
-    // required BuildContext context,
+    required BuildContext context,
     required String uri,
     Map<String, String>? headers,
   }) async {
@@ -103,9 +103,7 @@ class HttpHelper {
       var response = await client.get(url, headers: headers ?? header);
 
       // if (context.mounted) {
-        return processResponse(response: response,
-        //  context: context
-        );
+      return processResponse(response: response, context: context);
       // }
     } catch (e) {
       if (isDebugMode) {
@@ -127,7 +125,7 @@ class HttpHelper {
     required String uri,
     Object? body,
     Map<String, String>? headers,
-    // required BuildContext context,
+    required BuildContext context,
     Encoding? encoding,
   }) async {
     try {
@@ -146,9 +144,7 @@ class HttpHelper {
       }
 
       // if (!context.mounted) return {};
-      return processResponse(response: response, 
-      // context: context
-      );
+      return processResponse(response: response, context: context);
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
     }
@@ -160,7 +156,7 @@ class HttpHelper {
     required String uri,
     Object? body,
     Map<String, String>? headers,
-    // required BuildContext context,
+    required BuildContext context,
     Encoding? encoding,
   }) async {
     try {
@@ -176,9 +172,7 @@ class HttpHelper {
       );
 
       // if (!context.mounted) return {};
-      return processResponse(response: response, 
-      // context: context
-      );
+      return processResponse(response: response, context: context);
     } catch (e) {
       if (isDebugMode) {
         log("PUT request error: $e");
@@ -189,7 +183,7 @@ class HttpHelper {
 
   // DELETE method
   static Future<Map<String, dynamic>> delete({
-    // required BuildContext context,
+    required BuildContext context,
     required String uri,
     Object? body,
     Map<String, String>? headers,
@@ -206,9 +200,7 @@ class HttpHelper {
       );
 
       // if (!context.mounted) return {};
-      return processResponse(response: response,
-      //  context: context
-       );
+      return processResponse(response: response, context: context);
     } catch (e) {
       if (isDebugMode) {
         log("DELETE request error: $e");

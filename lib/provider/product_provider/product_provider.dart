@@ -20,12 +20,12 @@ class ProductProvider extends ChangeNotifier {
   ProductModel? get productModel => _productModel;
 
   Future<void> getProductList(
-    // {required BuildContext context}
+    {required BuildContext context}
     ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _productModel = await productService.getProductList();
+    _productModel = await productService.getProductList(context: context);
 
     /// set _isLoading false
     _isLoading = false;
@@ -81,7 +81,7 @@ class ProductProvider extends ChangeNotifier {
       transactionId: DateTime.now().toIso8601String(),
     );
     _confirmOrderModel = await productService.createOrder(
-      // context: context,
+      context: context,
       order: _orderModel,
     );
     if (_confirmOrderModel?.success == "success") {
@@ -117,7 +117,7 @@ class ProductProvider extends ChangeNotifier {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _orderListModel = await ordersListService.getOrderList();
+    _orderListModel = await ordersListService.getOrderList(context: context);
 
     /// set _isLoading false
     _isLoading = false;

@@ -33,7 +33,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
     super.initState();
     SignUpProvider signUpProvider = context.read<SignUpProvider>();
     Future.microtask(() {
-      signUpProvider.getConveners();
+      signUpProvider.getConveners(context: context);
     });
   }
 
@@ -145,15 +145,13 @@ class _StartYourJourneyState extends State<StartYourJourney> {
 
                   /// searchable convener drop down
                   if (!signUpProvider.isUpdatingProfile)
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child:
-                          signUpProvider.isLoading
-                              ? Center(child: CustomLoader())
-                              : ConvenerDropDown(
-                                signUpProvider: signUpProvider,
-                              ),
-                    ),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child:
+                        signUpProvider.isLoading
+                            ? Center(child: CustomLoader())
+                            : ConvenerDropDown(signUpProvider: signUpProvider),
+                  ),
                   SizeHelper.height(),
                   RadioQuestionWidgetWithHeading(
                     question: signUpProvider.genderQuestion,

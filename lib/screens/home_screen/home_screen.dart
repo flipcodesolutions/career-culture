@@ -49,9 +49,9 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     Future.microtask(() async {
       userProvider.checkIfUserIsLoggedIn();
       userProvider.checkIfUserIsApproved();
-      await productProvider.getProductList();
-      await eventProvider.getAllEvents();
-      await homeProvider.getUserOverAllScore();
+      await productProvider.getProductList(context: context);
+      await eventProvider.getAllEvents(context: context);
+      await homeProvider.getUserOverAllScore(context: context);
       userId = await SharedPrefs.getSharedString(AppStrings.userId);
       userName = await SharedPrefs.getSharedString(AppStrings.userName);
     });
@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
       },
       child: Scaffold(
         appBar: AppBar(
+          shape: Border(),
           leading: CustomContainer(
             padding: EdgeInsets.all(5),
             child: Image.asset(AppImageStrings.imageOnlyLogo),
@@ -121,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
         body: AnimationLimiter(
           child: CustomRefreshIndicator(
             onRefresh: () async {
-              await homeScreenProvider.getHomeScreenSlider();
+              await homeScreenProvider.getHomeScreenSlider(context: context);
             },
             child: ListView(
               shrinkWrap: true,

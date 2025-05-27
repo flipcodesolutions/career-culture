@@ -30,7 +30,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// mobile number controller
   final TextEditingController mobileController = TextEditingController();
   Future<bool> login({
-    // required BuildContext context,
+    required BuildContext context,
     required String emailOrPassword,
     required String password,
     required UserProvider userProvider,
@@ -39,7 +39,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.loginUser(
-      // context: context,
+      context: context,
       emailOrPassword: emailOrPassword,
       password: password,
       userProvider: userProvider,
@@ -62,13 +62,13 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
 
   TextEditingController otpController = TextEditingController();
   Future<bool> sentOtpToMobileNumber(
-    // {required BuildContext context}
+    {required BuildContext context}
   ) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _otpModel = await loginService.sentOtpToMobile(
-      // context: context,
+      context: context,
       mobileNumber: mobileController.text,
     );
     if (_otpModel?.success == true) {
@@ -119,7 +119,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.verifyOtpOfMobile(
-      // context: context,
+      context: context,
       mobileNumber: mobileController.text,
       otp: otpController.text,
     );
@@ -168,7 +168,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _loginResponseModel = await loginService.checkEmailExit(
-      // context: context,
+      context: context,
       email: email,
     );
 
@@ -210,7 +210,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    bool success = await loginService.deleteUser(uId: uId);
+    bool success = await loginService.deleteUser(uId: uId,context: context);
 
     /// set _isLoading false
     _isLoading = false;

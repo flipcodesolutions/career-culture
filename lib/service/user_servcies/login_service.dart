@@ -1,5 +1,5 @@
 import 'dart:developer';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
@@ -9,7 +9,7 @@ import '../../provider/user_provider/user_provider.dart';
 
 class LoginService {
   Future<UserModel?> loginUser({
-    // required BuildContext context,
+    required BuildContext context,
     required UserProvider userProvider,
     required String emailOrPassword,
     required String password,
@@ -19,7 +19,7 @@ class LoginService {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.login,
         body: body,
-        // context: context,
+        context: context,
       );
       if (response.isNotEmpty) {
         log(response.toString());
@@ -40,13 +40,13 @@ class LoginService {
 
   ///
   Future<UserModel?> checkEmailExit({
-    // required BuildContext context,
+    required BuildContext context,
     required String email,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.verifyEmail,
-        // context: context,
+        context: context,
         body: {"email": email},
       );
       if (response.isNotEmpty) {
@@ -62,13 +62,13 @@ class LoginService {
 
   //// delete user
   Future<bool> deleteUser({
-    // required BuildContext context,
+    required BuildContext context,
     required String uId,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         uri: ApiHelper.deleteUser(uId: uId),
-        // context: context,
+        context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
         await SharedPrefs.clearShared();
@@ -84,14 +84,14 @@ class LoginService {
   ///
   ///
   Future<SentOtpModel?> sentOtpToMobile({
-    // required BuildContext context,
+    required BuildContext context,
     required String mobileNumber,
   }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.sentOtpToMobile,
         body: {"contactNo": mobileNumber},
-        // context: context,
+        context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
         SentOtpModel model = SentOtpModel.fromJson(response);
@@ -105,7 +105,7 @@ class LoginService {
   }
 
   Future<UserModel?> verifyOtpOfMobile({
-    // required BuildContext context,
+    required BuildContext context,
     required String mobileNumber,
     required String otp,
   }) async {
@@ -113,7 +113,7 @@ class LoginService {
       Map<String, dynamic> response = await HttpHelper.post(
         uri: ApiHelper.verifyOtpOfMobile,
         body: {"contactNo": mobileNumber, "otp": otp},
-        // context: context,
+        context: context,
       );
       if (response.isNotEmpty && response['success'] == true) {
         UserModel model = UserModel.fromJson(response);

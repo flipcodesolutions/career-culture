@@ -58,6 +58,7 @@ class AppStrings {
   static const dontHaveAccount = "Don’t have an account ? Register";
   static const startYourJourney = "Start Your Journey";
   static const updateYourInfo = "Update Your Profile";
+  static const update = "Update";
   static const createAnAccountToJoinUS = "Create An Account To Join US";
   static const onlyChangeWhatYouMust = "Only Change What You Must";
   static const name = "Name";
@@ -137,6 +138,7 @@ class AppStrings {
   static const bookCounselingAppointment = "Book Counseling Appointment";
   static const counselingAppointment = " Counseling Appointment";
   static const deleteAccount = "Delete Account";
+  static const delete = "Delete";
   static const logOut = "LogOut";
   static const camera = "Camera";
   static const gallery = "Gallery";
@@ -172,7 +174,7 @@ class AppStrings {
   static const yourAssessmentIsDoneAlready = "Your Assessment Is Done Already";
   static const yourAssessmentIsUnderReview = "Your Assessment Is Under Review";
   static const noRecentActivity = "No Recent Activity";
-  static const selectConvener = "Select Convener";
+  static const selectCoordinator = "Select Coordinator";
   static const searchHere = "Search Here ...";
   static const bookAnAppointment = "Book an appointment.";
   static const counseling1 = "Counseling 1";
@@ -201,7 +203,7 @@ class AppStrings {
   static const noQuestionsFound = "No Questions Found";
   static const noOrdersFound = "No Orders Found";
   static const noAnnouncementFound = "No Announcement Found";
-  static const noConvenerFound = "No Convener Found";
+  static const noCoordinatorFound = "No Coordinator Found";
   static const location = "Location";
   static const contactInfo = "Contact Information";
   static const contactDetails = "Contact Details";

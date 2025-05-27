@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -128,7 +127,13 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
                   )
                   : PrimaryBtn(
                     width: 90.w,
-                    btnText: AppStrings.continue_,
+                    btnText:
+                        userProvider.currentSignUpPageIndex ==
+                                userProvider.signUpSteps.length - 1
+                            ? signUpProvider.isUpdatingProfile
+                                ? AppStrings.update
+                                : AppStrings.submit
+                            : AppStrings.continue_,
                     onTap: () async {
                       // log(
                       //   "first ${signUpProvider.firstName.text} middle ${signUpProvider.middleName.text} last ${signUpProvider.lastName.text} birth ${signUpProvider.birthDate.text} convener ${signUpProvider.selectedConvener?.name} gender ${signUpProvider.genderQuestion.answer} image ${signUpProvider.signUpRequestModel.imageFile.length}",

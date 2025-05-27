@@ -32,7 +32,7 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
     super.initState();
     HomeScreenProvider homeScreenProvider = context.read<HomeScreenProvider>();
     Future.microtask(() {
-      homeScreenProvider.getHomeScreenSlider();
+      homeScreenProvider.getHomeScreenSlider(context: context);
     });
   }
 

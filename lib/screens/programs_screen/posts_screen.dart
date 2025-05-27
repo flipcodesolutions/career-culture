@@ -60,7 +60,7 @@ class _PostsScreenState extends State<PostsScreen>
     super.initState();
     Future.microtask(() {
       postProvider.getPostById(
-        // context: context,
+        context: context,
         id: widget.chapterId.toString(),
       );
     });

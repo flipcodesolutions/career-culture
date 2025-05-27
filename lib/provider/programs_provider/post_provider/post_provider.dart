@@ -20,13 +20,13 @@ class PostProvider extends ChangeNotifier {
   }
 
   Future<void> getPostById({
-    // required BuildContext context,
+    required BuildContext context,
     required String id,
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _postListModel = await postService.getPostById( id: id);
+    _postListModel = await postService.getPostById( id: id,context: context);
     if (_postListModel?.success == true && _postListModel?.data?.length == 1) {
       _currentPost = _postListModel?.data?.first;
       notifyListeners();

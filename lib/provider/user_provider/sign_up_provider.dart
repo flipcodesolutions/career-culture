@@ -15,10 +15,8 @@ import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/pin_put_widget.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
-import 'package:pinput/pinput.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
@@ -105,14 +103,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
-  Future<void> getConveners(
-    // {required BuildContext context}
-  ) async {
+  Future<void> getConveners({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _convenerListModel = await convenersService.getConvenerList(
-      // context: context,
+      context: context,
     );
 
     /// set _isLoading false
@@ -325,7 +321,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     // 1) Email OTP
     if (!_isEmailVerified) {
-      await sendEmailOtp();
+      await sendEmailOtp(context: context);
       final ok = await _showEmailOtpDialog(context);
       if (!ok) return false;
       setIsEmailVerified = ok;
@@ -335,7 +331,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // 2) Contact #1 OTP
     if (!_isContactNo1Verified) {
       final sent1 = await sendMobileOtp(
-        // context: context,
+        context: context,
         number: contactNo1.text,
       );
       if (!sent1) return false;
@@ -356,7 +352,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // 3) Contact #2 OTP (only if provided)
     if (contactNo2.text.isNotEmpty && !_isContactNo2Verified) {
       bool sent2 = await sendMobileOtp(
-        // context: context,
+        context: context,
         number: contactNo2.text,
       );
       if (!sent2) return false;
@@ -428,7 +424,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendEmailOtp();
+                    await sendEmailOtp(context: context);
                   },
                 ),
                 PrimaryBtn(
@@ -437,7 +433,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   onTap: () async {
                     if (otpFormKey.currentState?.validate() == true) {
                       bool success = await verifyEmailOtp(
-                        // context: context,
+                        context: context,
                         email: email.text,
                         otp: otpController.text,
                       );
@@ -456,14 +452,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   /// Method to send the OTP
-  Future<void> sendEmailOtp(
-    // {required BuildContext context}
-  ) async {
+  Future<void> sendEmailOtp({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();
 
     _emailOtpModel = await otpService.sendEmailOtp(
-      // context: context,
+      context: context,
       email: email.text,
     );
 
@@ -472,14 +466,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> sendMobileOtp({
-    // required BuildContext context,
+    required BuildContext context,
     required String number,
   }) async {
     _isLoading = true;
     notifyListeners();
 
     _mobileOtpModel = await otpService.sendMobileOtp(
-      // context: context,
+      context: context,
       contactNo: number,
     );
 
@@ -493,7 +487,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> verifyEmailOtp({
-    // required BuildContext context,
+    required BuildContext context,
     required String email,
     required String otp,
   }) async {
@@ -501,7 +495,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
 
     _verifyMobile = await otpService.verifyEmailOtp(
-      // context: context,
+      context: context,
       email: email,
       otp: otp,
     );
@@ -521,7 +515,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   Future<bool> verifyMobileOtp({
-    // required BuildContext context,
+    required BuildContext context,
     required String contactNo,
     required String otp,
   }) async {
@@ -529,7 +523,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
 
     _verifyMobile = await otpService.verifyMobileOtp(
-      // context: context,
+      context: context,
       contactNo: contactNo,
       otp: otp,
     );
@@ -595,7 +589,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendMobileOtp(number: contact);
+                    await sendMobileOtp(number: contact, context: context);
                   },
                 ),
                 PrimaryBtn(
@@ -604,7 +598,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   onTap: () async {
                     if (otpFormKey.currentState?.validate() == true) {
                       bool success = await verifyMobileOtp(
-                        // context: context,
+                        context: context,
                         contactNo: contact,
                         otp: otpController.text,
                       );
@@ -731,13 +725,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (_signUpConfirmModel?.success == true) {
       SharedPrefs.saveToken(_signUpConfirmModel?.data?.token ?? "");
 
-      refreshSignUpProvider();
-
       // /// navigate user to home screen
       // context.read<HomeScreenProvider>().setNavigationIndex = 0;
       _isUpdatingProfile
           ? pop(context)
           : pushRemoveUntil(context: context, widget: MainScreen(setIndex: 0));
+      refreshSignUpProvider();
     }
   }
 

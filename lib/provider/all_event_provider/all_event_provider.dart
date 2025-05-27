@@ -20,14 +20,14 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
   MyEventsModel? get myEventsModel => _myEventsModel;
 
   Future<void> getAllEvents({
-    // required BuildContext context,
+    required BuildContext context,
     String id = "",
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _eventModel = await eventService.getAllEvents(
-      // context: context, 
+      context: context, 
       id: id);
 
     /// set _isLoading false
@@ -45,7 +45,7 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
     EventParticipantConfirmation? confirmation = await eventService
         .eventParticipation(
-          // context: context,
+          context: context,
            id: id);
     if (confirmation?.success == true) {
       WidgetHelper.customSnackBar(
@@ -62,14 +62,14 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
 
   ///
   Future<void> getAllUserEvents({
-    // required BuildContext context,
+    required BuildContext context,
     String id = "",
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _myEventsModel = await eventService.getAllUserEvents(
-      // context: context,
+      context: context,
       id: id,
     );
 

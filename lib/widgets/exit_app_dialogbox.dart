@@ -218,7 +218,7 @@ class DeleteAccount extends StatelessWidget with NavigateHelper {
                           borderColor: AppColors.error,
                           backGroundColor: AppColors.error,
                           width: 30.w,
-                          btnText: AppStrings.logOut,
+                          btnText: AppStrings.delete,
                           textStyle: TextStyleHelper.smallHeading.copyWith(
                             color: AppColors.white,
                           ),

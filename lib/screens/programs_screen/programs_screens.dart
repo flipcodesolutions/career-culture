@@ -64,9 +64,9 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     ProgramsProvider programsProvider = context.read<ProgramsProvider>();
     UserProvider userProvider = context.read<UserProvider>();
     Future.microtask(() async {
-      programsProvider.getAllPrograms();
+      programsProvider.getAllPrograms(context: context);
       userProvider.isUserLoggedIn
-          ? await programsProvider.getUserProgress()
+          ? await programsProvider.getUserProgress(context: context)
           : null;
     });
   }
@@ -98,9 +98,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
             InkWell(
               onTap: () async {
                 programsProvider.setGridView = !programsProvider.isGridView;
-                await chapterProvider.getAllChapters(
-                  // context: context,
-                );
+                await chapterProvider.getAllChapters(context: context);
               },
               child: CustomContainer(
                 width: 8.w,
@@ -128,8 +126,8 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                 : programsProvider.programsModel?.data?.isNotEmpty == true
                 ? CustomRefreshIndicator(
                   onRefresh: () async {
-                    await programsProvider.getAllPrograms();
-                    await chapterProvider.getAllChapters();
+                    await programsProvider.getAllPrograms(context: context);
+                    await chapterProvider.getAllChapters(context: context);
                   },
                   child: Column(
                     children: [
@@ -187,7 +185,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                 (item, index) => ProgramContainer(
                                   item: item,
                                   gradient: ListHelper.programListGradient
-                                      .elementAt(index),
+                                      .elementAtOrNull(index),
                                 ),
                           ),
                         ),
@@ -301,7 +299,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                 : CustomRefreshIndicator(
                   onRefresh:
                       () async => await programsProvider.getAllPrograms(
-                        // context: context,
+                        context: context,
                       ),
                   child: ListView(
                     children: [

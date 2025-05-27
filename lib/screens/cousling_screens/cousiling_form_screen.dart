@@ -46,8 +46,10 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
     Future.microtask(() async {
       CounselingProvider counselingProvider =
           context.read<CounselingProvider>();
-      await counselingProvider.getCounselignDatesAndSlots();
-      counselingProvider.initControllerFromLocalStorage();
+      Future.microtask(() async {
+        await counselingProvider.getCounselignDatesAndSlots(context: context);
+        counselingProvider.initControllerFromLocalStorage();
+      });
     });
   }
 
@@ -63,7 +65,9 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
       ),
       body: CustomRefreshIndicator(
         onRefresh:
-            () async => await counselingProvider.getCounselignDatesAndSlots(),
+            () async => await counselingProvider.getCounselignDatesAndSlots(
+              context: context,
+            ),
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: AnimationLimiter(

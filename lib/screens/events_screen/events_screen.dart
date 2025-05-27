@@ -41,9 +41,11 @@ class _EventsScreenState extends State<EventsScreen>
     super.initState();
     Future.microtask(() {
       AllEventProvider eventProvider = context.read<AllEventProvider>();
-      widget.isMyEvents
-          ? eventProvider.getAllUserEvents()
-          : eventProvider.getAllEvents();
+      Future.microtask(() async {
+        widget.isMyEvents
+            ? eventProvider.getAllUserEvents(context: context)
+            : eventProvider.getAllEvents(context: context);
+      });
     });
   }
 
@@ -66,7 +68,7 @@ class _EventsScreenState extends State<EventsScreen>
           title: CustomText(
             text: AppStrings.eventActivity,
             style: TextStyleHelper.mediumHeading,
-          )
+          ),
         ),
         body:
             eventProvider.isLoading
@@ -79,8 +81,12 @@ class _EventsScreenState extends State<EventsScreen>
                   onRefresh:
                       () async =>
                           widget.isMyEvents
-                              ? await eventProvider.getAllUserEvents()
-                              : await eventProvider.getAllEvents(),
+                              ? await eventProvider.getAllUserEvents(
+                                context: context,
+                              )
+                              : await eventProvider.getAllEvents(
+                                context: context,
+                              ),
                   child: CustomListWidget(
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
@@ -146,8 +152,12 @@ class _EventsScreenState extends State<EventsScreen>
                   onRefresh:
                       () async =>
                           widget.isMyEvents
-                              ? await eventProvider.getAllUserEvents()
-                              : await eventProvider.getAllEvents(),
+                              ? await eventProvider.getAllUserEvents(
+                                context: context,
+                              )
+                              : await eventProvider.getAllEvents(
+                                context: context,
+                              ),
                   child: ListView(
                     children: [
                       CustomContainer(

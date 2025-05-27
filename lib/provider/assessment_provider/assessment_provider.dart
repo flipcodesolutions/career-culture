@@ -33,7 +33,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
     _assessmentQuestions = await assessmentQuestionsService
         .getAssessmentQuestionsByPostId(
-          // context: context,
+          context: context,
           postId: _postId,
         );
     // _assessmentQuestions?.data?.forEach((e) {
@@ -159,7 +159,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     log(_assessmentQuestions?.toJson().toString() ?? "");
     bool success = await assessmentQuestionsService
         .postAssessmentQuestionsByPostId(
-          // context: context,
+          context: context,
           assessmentAnswer: _assessmentQuestions,
         );
 

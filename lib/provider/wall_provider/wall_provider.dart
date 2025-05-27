@@ -18,14 +18,12 @@ class WallProvider extends ChangeNotifier {
   // List<PostInfo> get wallPost => _wallPost;
 
   /// Fetch wall data
-  Future<void> getWall(
-    // {required BuildContext context}
-  ) async {
+  Future<void> getWall({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();
 
     // try {
-    _wallModel = await _postService.getWallPosts();
+    _wallModel = await _postService.getWallPosts(context: context);
     // _wallPost.clear();
 
     // if (_wallModel?.success == true && _wallModel?.data != null) {
@@ -46,9 +44,13 @@ class WallProvider extends ChangeNotifier {
   Future<void> likePost({
     required int wallId,
     required bool isFromWallScreen,
+    required BuildContext context,
   }) async {
     // 1. Call the service
-    final PostLikeModel? response = await _postService.likePost(wallId: wallId);
+    final PostLikeModel? response = await _postService.likePost(
+      wallId: wallId,
+      context: context,
+    );
     if (response?.success != true) return;
 
     // 2. Update the wall list item
@@ -83,13 +85,19 @@ class WallProvider extends ChangeNotifier {
     _slugWallPost = post;
   }
 
-  Future<void> getWallPostBySlug({required String? slug}) async {
+  Future<void> getWallPostBySlug({
+    required String? slug,
+    required BuildContext context,
+  }) async {
     /// if slug
     if (slug?.isNotEmpty == true && slug != null) {
       /// set _isLoading true
       _isLoading = true;
       notifyListeners();
-      _slugWallPost = await _postService.getWallPostBySlug(slug: slug);
+      _slugWallPost = await _postService.getWallPostBySlug(
+        slug: slug,
+        context: context,
+      );
 
       /// set _isLoading false
       _isLoading = false;
