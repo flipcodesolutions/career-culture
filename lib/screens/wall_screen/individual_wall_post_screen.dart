@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -36,7 +37,10 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
     super.initState();
     Future.microtask(() async {
       if (!widget.isFromWallScreen) {
-        await wallProvider.getWallPostBySlug(slug: widget.slug,context: context);
+        await wallProvider.getWallPostBySlug(
+          slug: widget.slug,
+          context: context,
+        );
       }
     });
   }
@@ -69,8 +73,10 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
               wallProvider.slugWallPost != null
                   ? CustomRefreshIndicator(
                     onRefresh:
-                        () async =>
-                            wallProvider.getWallPostBySlug(slug: widget.slug,context: context),
+                        () async => wallProvider.getWallPostBySlug(
+                          slug: widget.slug,
+                          context: context,
+                        ),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -86,45 +92,50 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen> {
                           SizeHelper.height(),
                           Padding(
                             padding: EdgeInsets.only(left: 5.w),
-                            child: CustomText(
-                              text: wallProvider.slugWallPost?.title ?? "",
-                              style: TextStyleHelper.mediumHeading,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 2.w),
-                            child: PostButton(
-                              onTap:
-                                  () async => MethodHelper.likeWallPost(
-                                    context: context,
-                                    isLiked: true,
-                                    wallProvider: wallProvider,
-                                    postId: wallProvider.slugWallPost?.id ?? -1,
-                                    isFromWallScreen: widget.isFromWallScreen
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: CustomText(
+                                    text:
+                                        wallProvider.slugWallPost?.title ?? "",
+                                    style: TextStyleHelper.mediumHeading,
+                                    useOverflow: false,
                                   ),
-                              icon:
-                                  wallProvider.slugWallPost?.isMyFavourite ==
-                                          true
-                                      ? Icons.thumb_up_alt
-                                      : Icons.thumb_up_alt_outlined,
-                              label:
-                                  "${wallProvider.slugWallPost?.likeCount ?? 0}",
+                                ),
+                                PostButton(
+                                  onTap:
+                                      () async => MethodHelper.likeWallPost(
+                                        context: context,
+                                        isLiked: true,
+                                        wallProvider: wallProvider,
+                                        postId:
+                                            wallProvider.slugWallPost?.id ?? -1,
+                                        isFromWallScreen:
+                                            widget.isFromWallScreen,
+                                      ),
+                                  icon:
+                                      wallProvider
+                                                  .slugWallPost
+                                                  ?.isMyFavourite ==
+                                              true
+                                          ? Icons.thumb_up_alt
+                                          : Icons.thumb_up_alt_outlined,
+                                  label:
+                                      "${wallProvider.slugWallPost?.likeCount ?? 0}",
+                                ),
+                              ],
                             ),
-                            // CustomText(
-                            //   text:
-                            //       "${wallProvider.slugWallPost?.likeCount.toString()} Like",
-                            //   style: TextStyleHelper.smallText,
-                            // ),
                           ),
+
                           SizeHelper.height(),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: CustomText(
-                              text:
+                            child: Html(
+                              data:
                                   wallProvider.slugWallPost?.description ??
                                   "Failed To Load Description !!",
-                              style: TextStyleHelper.smallText,
-                              useOverflow: false,
                             ),
                           ),
                         ],
