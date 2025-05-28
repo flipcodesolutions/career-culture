@@ -540,7 +540,7 @@ class CustomProgressBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSize.size10),
                 height: height ?? 1.h,
                 width: width ?? 30.w,
-                backGroundColor: AppColors.grey,
+                backGroundColor: AppColors.lightGrey,
                 child: Stack(
                   children: [
                     Positioned.fill(
@@ -551,6 +551,7 @@ class CustomProgressBar extends StatelessWidget {
                           backGroundColor: AppColors.secondary,
                           borderRadius: BorderRadius.horizontal(
                             right: Radius.circular(AppSize.size10),
+                            left: Radius.circular(AppSize.size10),
                           ),
                         ),
                       ),

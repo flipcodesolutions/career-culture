@@ -10,14 +10,18 @@ class AppColors {
   static const Color error = Colors.red;
   static const Color white = Colors.white;
   static const Color grey = Colors.grey;
+  static const Color lightGrey = Color.fromARGB(255, 211, 211, 211);
   static const Color black = Colors.black;
   static const Color counselingBox = Color(0xffF9F9EE);
+
   /// body gradient color
   static const Color body1 = Color(0xffF7EAEA);
   static const Color body2 = Color(0xffE2F0FF);
+
   /// mind gradient color
   static const Color mind1 = Color(0xffF8F6F6);
   static const Color mind2 = Color(0xffD8FFD2);
+
   /// soul gradient color
   static const Color soul1 = Color(0xffF7F7F4);
   static const Color soul2 = Color(0xffFEE9C7);

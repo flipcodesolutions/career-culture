@@ -189,7 +189,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
                   imageUrl: player?.image ?? "",
                 ),
                 title: CustomText(text: player?.name?.split(" ").first ?? ""),
-                trailing: Text("${player?.totalPoints} pts"),
+                trailing: CustomText(text: "${player?.totalPoints} Coins"),
               );
             },
           ),
@@ -222,7 +222,7 @@ class TopPlayerCard extends StatelessWidget {
         tileColor: AppColors.white,
         leading: CircleAvatarForScoreLeading(index: index, imageUrl: imageUrl),
         title: CustomText(text: name),
-        trailing: Text("$score pts"),
+        trailing: CustomText(text: "$score Coins"),
       );
     }
     return CustomContainer(

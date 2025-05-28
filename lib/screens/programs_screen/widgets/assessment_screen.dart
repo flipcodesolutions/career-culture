@@ -314,9 +314,7 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                 alignment: Alignment.center,
                 child: CustomText(text: "OR"),
               ),
-              // CustomContainer(
-              //   child: ,
-              // )
+              CustomContainer(child: AudioRecorderPlayer(questionId: widget.question.id,)),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
@@ -328,7 +326,8 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
 }
 
 class AudioRecorderPlayer extends StatefulWidget {
-  const AudioRecorderPlayer({super.key});
+  final int? questionId;
+  const AudioRecorderPlayer({super.key,required this.questionId});
   @override
   _AudioRecorderPlayerState createState() => _AudioRecorderPlayerState();
 }
@@ -357,21 +356,20 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
     super.dispose();
   }
 
-  Future<void> _startRecording() async {
+  Future<void> _startRecording({
+    required AssessmentProvider assessmentProvider,
+  }) async {
     bool permissionGranted = await Permission.microphone.request().isGranted;
     if (!permissionGranted) return;
 
     Directory tempDir = await getTemporaryDirectory();
-    _filePath = '${tempDir.path}/audio_record.aac';
-
+    _filePath = '${tempDir.path}/${DateTime.now().toIso8601String()}.aac';
     await _recorder.startRecorder(toFile: _filePath, codec: Codec.aacADTS);
-
     setState(() => _isRecording = true);
-
-    _monitorFileSize();
+    _monitorFileSize(assessmentProvider: assessmentProvider);
   }
 
-  void _monitorFileSize() {
+  void _monitorFileSize({required AssessmentProvider assessmentProvider}) {
     _sizeMonitor = Stream.periodic(Duration(milliseconds: 500)).listen((
       _,
     ) async {
@@ -380,7 +378,7 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
       if (await file.exists()) {
         final size = await file.length();
         if (size >= _maxFileSize) {
-          _stopRecording();
+          _stopRecording(assessmentProvider: assessmentProvider);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Recording stopped: Max size 5MB reached')),
           );
@@ -389,9 +387,15 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
     });
   }
 
-  Future<void> _stopRecording() async {
+  Future<void> _stopRecording({
+    required AssessmentProvider assessmentProvider,
+  }) async {
     await _recorder.stopRecorder();
     _sizeMonitor?.cancel();
+    // assessmentProvider.makeFilesSelection(
+    //   questionId: widget.questionId ?? -1,
+    //   selectedFiles: accepted,
+    // );
     setState(() => _isRecording = false);
   }
 
@@ -413,6 +417,7 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -437,7 +442,15 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton.icon(
-                  onPressed: _isRecording ? _stopRecording : _startRecording,
+                  onPressed:
+                      () =>
+                          _isRecording
+                              ? _stopRecording(
+                                assessmentProvider: assessmentProvider,
+                              )
+                              : _startRecording(
+                                assessmentProvider: assessmentProvider,
+                              ),
                   icon: Icon(
                     _isRecording ? Icons.stop : Icons.fiber_manual_record,
                   ),
