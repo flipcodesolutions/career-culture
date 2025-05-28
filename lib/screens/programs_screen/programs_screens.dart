@@ -156,13 +156,13 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                               children: [
                                 CustomUserProfilePicCircle(
                                   isPhotoString:
-                                      signUpProvider
-                                          .signUpRequestModel
-                                          .images
+                                      userProvider
+                                          .user
+                                          .profile
+                                          ?.images
                                           ?.isNotEmpty ==
                                       true,
-                                  photoLink:
-                                      signUpProvider.signUpRequestModel.images,
+                                  photoLink: userProvider.user.profile?.images,
                                 ),
 
                                 CustomProgressBar(

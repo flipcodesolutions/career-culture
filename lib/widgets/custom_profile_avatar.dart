@@ -21,6 +21,7 @@ class CustomProfileAvatar extends StatefulWidget {
 }
 
 class _CustomProfileAvatarState extends State<CustomProfileAvatar> {
+  String? imageLink;
   @override
   Widget build(BuildContext context) {
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();

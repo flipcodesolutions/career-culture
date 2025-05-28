@@ -21,6 +21,11 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../models/assessment_question_model/assessment_question_model.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AssessmentScreen extends StatefulWidget {
   const AssessmentScreen({super.key, required this.postNameAndId});
@@ -305,9 +310,161 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                 allowedExtensions: ["mp3", "ogg", "wav"],
                 icon: AppIconsData.audio,
               ),
+              CustomContainer(
+                alignment: Alignment.center,
+                child: CustomText(text: "OR"),
+              ),
+              // CustomContainer(
+              //   child: ,
+              // )
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AudioRecorderPlayer extends StatefulWidget {
+  const AudioRecorderPlayer({super.key});
+  @override
+  _AudioRecorderPlayerState createState() => _AudioRecorderPlayerState();
+}
+
+class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
+  FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+  FlutterSoundPlayer _player = FlutterSoundPlayer();
+  bool _isRecording = false;
+  bool _isPlaying = false;
+  String? _filePath;
+  final int _maxFileSize = 5 * 1024 * 1024; // 5 MB
+  StreamSubscription? _sizeMonitor;
+
+  @override
+  void initState() {
+    super.initState();
+    _recorder.openRecorder();
+    _player.openPlayer();
+  }
+
+  @override
+  void dispose() {
+    _recorder.closeRecorder();
+    _player.closePlayer();
+    _sizeMonitor?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _startRecording() async {
+    bool permissionGranted = await Permission.microphone.request().isGranted;
+    if (!permissionGranted) return;
+
+    Directory tempDir = await getTemporaryDirectory();
+    _filePath = '${tempDir.path}/audio_record.aac';
+
+    await _recorder.startRecorder(toFile: _filePath, codec: Codec.aacADTS);
+
+    setState(() => _isRecording = true);
+
+    _monitorFileSize();
+  }
+
+  void _monitorFileSize() {
+    _sizeMonitor = Stream.periodic(Duration(milliseconds: 500)).listen((
+      _,
+    ) async {
+      if (_filePath == null) return;
+      final file = File(_filePath!);
+      if (await file.exists()) {
+        final size = await file.length();
+        if (size >= _maxFileSize) {
+          _stopRecording();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Recording stopped: Max size 5MB reached')),
+          );
+        }
+      }
+    });
+  }
+
+  Future<void> _stopRecording() async {
+    await _recorder.stopRecorder();
+    _sizeMonitor?.cancel();
+    setState(() => _isRecording = false);
+  }
+
+  Future<void> _playRecording() async {
+    if (_filePath == null || _isPlaying) return;
+    await _player.startPlayer(
+      fromURI: _filePath,
+      whenFinished: () {
+        setState(() => _isPlaying = false);
+      },
+    );
+    setState(() => _isPlaying = true);
+  }
+
+  Future<void> _stopPlayback() async {
+    await _player.stopPlayer();
+    setState(() => _isPlaying = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _isRecording ? Icons.mic : Icons.mic_none,
+              size: 64,
+              color: _isRecording ? Colors.red : Colors.blue,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _isRecording ? 'Recording...' : 'Press to record (max 5MB)',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _isRecording ? _stopRecording : _startRecording,
+                  icon: Icon(
+                    _isRecording ? Icons.stop : Icons.fiber_manual_record,
+                  ),
+                  label: Text(_isRecording ? 'Stop' : 'Record'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _isRecording ? Colors.red : Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: _isPlaying ? _stopPlayback : _playRecording,
+                  icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
+                  label: Text(_isPlaying ? 'Stop' : 'Play'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

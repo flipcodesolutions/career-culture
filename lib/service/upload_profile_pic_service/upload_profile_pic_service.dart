@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
@@ -16,20 +15,17 @@ import '../../utils/widget_helper/widget_helper.dart';
 class UploadProfilePicService {
   Future<UserProfileUploadModel?> uploadProfilePic({
     required BuildContext context,
-    required XFile? image,
+    required Uint8List bytes,
   }) async {
     try {
       MultipartRequest request = await HttpHelper.multipart(
         uri: ApiHelper.uploadProfilePic,
       );
-      Uint8List bytes = await image?.readAsBytes() ?? Uint8List(0);
-      String name = await SharedPrefs.getSharedString(AppStrings.userName);
       request.files.add(
         http.MultipartFile.fromBytes(
-          "image",
+          "images",
           bytes,
-          filename:
-              'profile_pic_${name.replaceAll(" ", "_")}.${image?.mimeType ?? ""}',
+          filename: '${DateTime.now().toIso8601String()}.jpg',
         ),
       );
       StreamedResponse streamedResponse = await request.send();

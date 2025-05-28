@@ -9,7 +9,6 @@ import 'package:mindful_youth/screens/notification_screen/notification_screen.da
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
-import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_product_showcase.dart';
@@ -36,8 +35,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
-  String? userId;
-  String? userName;
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();
@@ -49,11 +46,10 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
     Future.microtask(() async {
       userProvider.checkIfUserIsLoggedIn();
       userProvider.checkIfUserIsApproved();
+      userProvider.getUserData();
       await productProvider.getProductList(context: context);
       await eventProvider.getAllEvents(context: context);
       await homeProvider.getUserOverAllScore(context: context);
-      userId = await SharedPrefs.getSharedString(AppStrings.userId);
-      userName = await SharedPrefs.getSharedString(AppStrings.userName);
     });
   }
 
@@ -159,8 +155,6 @@ class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
                               onTap:
                                   () =>
                                       homeScreenProvider.setNavigationIndex = 4,
-                              userId: userId ?? "",
-                              userName: userName ?? "",
                               score:
                                   homeScreenProvider
                                       .overAllScoreModel

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
-import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_profile_pic_circle.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/user_name_and_userid.dart';
@@ -24,19 +23,15 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
     required this.score,
     this.scoreMessage,
     this.animationDuration = const Duration(seconds: 3),
-    required this.userId,
-    required this.userName,
     required this.onTap,
   });
   final String score;
   final String? scoreMessage;
   final Duration animationDuration;
-  final String userId;
-  final String userName;
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
+    UserProvider userProvider = context.watch<UserProvider>();
     return GestureDetector(
       onTap:
           () => push(
@@ -66,9 +61,8 @@ class DashBoardUserScoreWidget extends StatelessWidget with NavigateHelper {
               children: [
                 CustomUserProfilePicCircle(
                   isPhotoString:
-                      signUpProvider.signUpRequestModel.images?.isNotEmpty ==
-                      true,
-                  photoLink: signUpProvider.signUpRequestModel.images,
+                      userProvider.user.profile?.images?.isNotEmpty == true,
+                  photoLink: userProvider.user.profile?.images,
                 ),
                 SizeHelper.width(width: 5.w),
                 CustomContainer(

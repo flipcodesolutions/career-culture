@@ -116,7 +116,7 @@ class _ScoreboardPageState extends State<ScoreboardPage>
       backGroundColor: AppColors.lightWhite,
       child: TopPlayerCard(
         isListTile: true,
-        name: player.name ?? "",
+        name: player.name?.split(" ").first ?? "",
         score: player.totalPoints ?? "",
         imageUrl: "${AppStrings.assetsUrl}${player.image ?? ""}",
       ),
@@ -141,7 +141,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
             (index) => TopPlayerCard(
               index: (index + 1).toString(),
               isListTile: true,
-              name: score?[index].name ?? '',
+              name: score?[index].name?.split(" ").first ?? '',
               isFirst: index == 0,
               score: score?[index].totalPoints ?? '0',
               imageUrl: '${AppStrings.assetsUrl}${score?[index].image}',
@@ -160,18 +160,18 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TopPlayerCard(
-                name: score![2].name ?? '',
+                name: score![2].name?.split(" ").first ?? '',
                 score: score![2].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![2].image}',
               ),
               TopPlayerCard(
-                name: score![0].name ?? '',
+                name: score![0].name?.split(" ").first ?? '',
                 isFirst: true,
                 score: score![0].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
               ),
               TopPlayerCard(
-                name: score![1].name ?? '',
+                name: score![1].name?.split(" ").first ?? '',
                 score: score![1].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![1].image}',
               ),
@@ -188,7 +188,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
                   index: "${(index + 4)}",
                   imageUrl: player?.image ?? "",
                 ),
-                title: CustomText(text: player?.name ?? ""),
+                title: CustomText(text: player?.name?.split(" ").first ?? ""),
                 trailing: Text("${player?.totalPoints} pts"),
               );
             },

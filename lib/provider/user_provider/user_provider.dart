@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
 import 'package:mindful_youth/models/user_profile_upload_model/user_profile_upload_model.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
@@ -156,6 +157,20 @@ import '../../widgets/custom_text.dart';
 /// );
 /// ```
 class UserProvider extends ChangeNotifier {
+  User _user = User();
+  User get user => _user;
+  void getUserData() async {
+    _user.name = await SharedPrefs.getSharedString(AppStrings.userName);
+    _user.id = int.tryParse(
+      await SharedPrefs.getSharedString(AppStrings.userId),
+    );
+
+    _user.profile = UserProfile(
+      images: await SharedPrefs.getSharedString(AppStrings.images),
+    );
+    notifyListeners();
+  }
+
   /// if provider is Loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -236,7 +251,7 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
       _userProfileUploadModel = await uploadProfileService.uploadProfilePic(
         context: context,
-        image: selectedImage,
+        bytes: _imageBytes ?? Uint8List(0),
       );
       if (_userProfileUploadModel?.success == true) {
         await SharedPrefs.saveString(
@@ -306,7 +321,7 @@ class UserProvider extends ChangeNotifier {
     required BuildContext context,
     required ImageSource source,
   }) async {
-    Navigator.pop(context); // Close the bottom sheet
+    Navigator.pop(context);
     isUpdating = true;
     notifyListeners();
     final XFile? pickedFile = await _picker.pickImage(
