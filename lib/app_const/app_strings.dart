@@ -39,7 +39,7 @@ class AppStrings {
   static const assessment = "Assessment";
   static const submit = "Submit";
   static const notifications = "Notifications";
-  static const eventActivity = "Event Activity";
+  static const eventActivity = "Events";
   static const recommended = "Recommended";
   static const recommendedBooks = "$recommended Books";
   static const aspectForYourMentalWellBeing =

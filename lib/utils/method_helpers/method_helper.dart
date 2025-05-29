@@ -10,6 +10,7 @@ import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.da
 import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
 import 'package:mindful_youth/service/fcm_token_service/fcm_token_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -361,5 +362,26 @@ class MethodHelper with NavigateHelper {
           title: AppStrings.pleaseLoginFirst,
           isError: true,
         );
+  }
+
+  /// extract time from iso time string using in [ScreenTracker]
+  static String extractTime(String urlEncodedDateTime) {
+    // Decode the URL-encoded timestamp
+    String decoded = Uri.decodeComponent(urlEncodedDateTime);
+
+    // Extract the time part from the decoded datetime string
+    // Example input: "2025-05-29T14:05:55.819745"
+    DateTime dateTime = DateTime.parse(decoded);
+
+    // Format into "HH:mm:ss"
+    String formattedTime =
+        "${_twoDigits(dateTime.hour)}:"
+        "${_twoDigits(dateTime.minute)}:"
+        "${_twoDigits(dateTime.second)}";
+    return formattedTime;
+  }
+
+  static String _twoDigits(int n) {
+    return n.toString().padLeft(2, '0');
   }
 }

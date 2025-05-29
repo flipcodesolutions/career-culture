@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/score_model/score_board_model.dart';
 import 'package:mindful_youth/provider/score_board_provider/score_board_provider.dart';
@@ -163,17 +164,20 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
                 name: score![2].name?.split(" ").first ?? '',
                 score: score![2].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![2].image}',
+                index: "2",
               ),
               TopPlayerCard(
                 name: score![0].name?.split(" ").first ?? '',
                 isFirst: true,
                 score: score![0].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
+                index: "0",
               ),
               TopPlayerCard(
                 name: score![1].name?.split(" ").first ?? '',
                 score: score![1].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![1].image}',
+                index: "1",
               ),
             ],
           ),
@@ -239,11 +243,16 @@ class TopPlayerCard extends StatelessWidget {
             borderColor: isFirst ? AppColors.primary : AppColors.secondary,
             child: Column(
               children: [
-                ClipRRect(
-                  child: CustomImageWithLoader(
-                    imageUrl: imageUrl,
-                    height: 8.h,
-                    width: 17.w,
+                CustomContainer(
+                  shape: BoxShape.circle,
+                  height: isFirst ? 10.h : 8.h,
+                  width: isFirst ? 20.w : 12.w,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(isFirst ? 10.w : 5.w),
+                    child: CustomImageWithLoader(
+                      imageUrl: imageUrl,
+                      errorIconSize: AppSize.size30,
+                    ),
                   ),
                 ),
                 SizeHelper.height(height: 1.h),
@@ -254,6 +263,18 @@ class TopPlayerCard extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          CustomContainer(
+            height: 5.h,
+            width: 10.w,
+            child:
+                index == "0"
+                    ? Image.asset(AppImageStrings.firstPosition)
+                    : index == "1"
+                    ? Image.asset(AppImageStrings.secondPosition)
+                    : index == "2"
+                    ? Image.asset(AppImageStrings.thirdPosition)
+                    : SizedBox.shrink(),
           ),
         ],
       ),

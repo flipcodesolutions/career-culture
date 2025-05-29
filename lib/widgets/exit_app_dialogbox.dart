@@ -139,6 +139,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
 
                         /// set sign up provider to init
                         userProvider.logout();
+                        context.read<LoginProvider>().logout();
                         context.read<SignUpProvider>().refreshSignUpProvider();
                         await FirebaseAuth.instance.signOut();
                         loginProvider.mobileController.clear();

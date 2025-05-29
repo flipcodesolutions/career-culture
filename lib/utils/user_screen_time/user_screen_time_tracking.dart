@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/service/user_time_tracking_service/user_time_tracking_service.dart';
+
+import '../method_helpers/method_helper.dart';
 // import 'package:provider/provider.dart';
 
 class AnalyticsService {
@@ -26,8 +28,13 @@ class AnalyticsService {
   }) async {
     // Flush previous log before starting a new one
     if (_activeScreen != null && _activeScreen != screenName) {
-      exitLogEvent(endTime: DateTime.now().toIso8601String());
-      await flush(userProvider: userProvider,context: context); // Now flush with old screen data
+      exitLogEvent(
+        endTime: MethodHelper.extractTime(DateTime.now().toIso8601String()),
+      );
+      await flush(
+        userProvider: userProvider,
+        context: context,
+      ); // Now flush with old screen data
     }
 
     _activeScreen = screenName;
@@ -45,9 +52,10 @@ class AnalyticsService {
 
   UserTimeTrackingService userTimeTrackingService = UserTimeTrackingService();
 
-  Future<void> flush(
-  {required BuildContext context,
-  required UserProvider userProvider}) async {
+  Future<void> flush({
+    required BuildContext context,
+    required UserProvider userProvider,
+  }) async {
     /// if user is not logged in
     if (!userProvider.isUserLoggedIn) return;
     //// else  make call

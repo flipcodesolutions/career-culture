@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
@@ -25,6 +26,14 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   set setLoginResponseModel(UserModel? userModel) {
     _loginResponseModel = userModel;
     notifyListeners();
+  }
+
+  void logout() {
+    _loginResponseModel = null;
+    mobileController.text = "";
+    _otpModel = null;
+    otpController.text = "";
+    cancelTimerOtpResend();
   }
 
   /// mobile number controller
@@ -61,9 +70,7 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
   }
 
   TextEditingController otpController = TextEditingController();
-  Future<bool> sentOtpToMobileNumber(
-    {required BuildContext context}
-  ) async {
+  Future<bool> sentOtpToMobileNumber({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
@@ -210,16 +217,20 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    bool success = await loginService.deleteUser(uId: uId,context: context);
+    bool success = await loginService.deleteUser(uId: uId, context: context);
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
     if (success) {
       if (!context.mounted) return;
-      context.read<UserProvider>().setIsUserLoggedIn = false;
+      UserProvider userProvider = context.read<UserProvider>();
+      userProvider.setIsUserLoggedIn = false;
       SharedPrefs.clearShared();
-
+      userProvider.logout();
+      context.read<SignUpProvider>().refreshSignUpProvider();
+      await FirebaseAuth.instance.signOut();
+      logout();
       pushRemoveUntil(
         context: context,
         widget: LoginScreen(isToNavigateHome: true),

@@ -9,4 +9,7 @@ class AppImageStrings {
   static const String gridOffIcon = "assets/images/grid_off_icon.png";
   static const String imageOnlyLogo = "assets/images/only_logo.png";
   static const String referPage = "assets/images/refer_image.png";
+  static const String firstPosition = "assets/images/1st-place.png";
+  static const String secondPosition = "assets/images/2nd-place.png";
+  static const String thirdPosition = "assets/images/3rd-place.png";
 }

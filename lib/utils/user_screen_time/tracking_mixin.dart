@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:provider/provider.dart';
 import '../../provider/user_provider/user_provider.dart';
 import 'user_screen_time_tracking.dart';
@@ -53,7 +54,7 @@ mixin ScreenTracker<T extends StatefulWidget>
     if (_userProvider != null) {
       AnalyticsService.instance.logEvent(
         context: context,
-        startTime: DateTime.now().toIso8601String(),
+        startTime: MethodHelper.extractTime(DateTime.now().toIso8601String()),
         screenName: screenName,
         userProvider: _userProvider ?? UserProvider(),
       );
@@ -63,7 +64,7 @@ mixin ScreenTracker<T extends StatefulWidget>
   void logScreenClose() async {
     if (debug) debugPrint("[$screenName] logScreenClose at ${DateTime.now()}");
     AnalyticsService.instance.exitLogEvent(
-      endTime: DateTime.now().toIso8601String(),
+      endTime: MethodHelper.extractTime(DateTime.now().toIso8601String()),
     );
     if (_userProvider != null) {
       await AnalyticsService.instance.flush(
