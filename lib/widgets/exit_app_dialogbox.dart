@@ -128,6 +128,8 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                       ),
                       onTap: () async {
                         /// delete locale storage
+                        UserProvider userProvider =
+                            context.read<UserProvider>();
                         await SharedPrefs.clearShared();
                         if (!context.mounted) return;
 
@@ -136,7 +138,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                         //     0;
 
                         /// set sign up provider to init
-                        context.read<UserProvider>().setIsUserLoggedIn = false;
+                        userProvider.logout();
                         context.read<SignUpProvider>().refreshSignUpProvider();
                         await FirebaseAuth.instance.signOut();
                         loginProvider.mobileController.clear();

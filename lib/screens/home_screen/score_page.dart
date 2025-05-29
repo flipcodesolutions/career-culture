@@ -239,9 +239,12 @@ class TopPlayerCard extends StatelessWidget {
             borderColor: isFirst ? AppColors.primary : AppColors.secondary,
             child: Column(
               children: [
-                CustomLoaderImage(
-                  imageUrl: imageUrl,
-                  radius: isFirst ? AppSize.size40 : AppSize.size30,
+                ClipRRect(
+                  child: CustomImageWithLoader(
+                    imageUrl: imageUrl,
+                    height: 8.h,
+                    width: 17.w,
+                  ),
                 ),
                 SizeHelper.height(height: 1.h),
                 CustomText(text: name, style: TextStyleHelper.smallHeading),

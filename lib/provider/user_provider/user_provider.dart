@@ -171,6 +171,13 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void logout() {
+    _isUserLoggedIn = false;
+    _imageBytes = null;
+    isUpdating = false;
+    notifyListeners();
+  }
+
   /// if provider is Loading
   bool _isLoading = false;
   bool get isLoading => _isLoading;
