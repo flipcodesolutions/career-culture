@@ -54,7 +54,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
   }
 
   @override
-  String get screenName => 'PostsScreen';
+  String get screenName => 'ProgramScreen';
   @override
   bool get debug => false; // Enable debug logs
   @override

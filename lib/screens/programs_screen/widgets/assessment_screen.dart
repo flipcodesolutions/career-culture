@@ -28,8 +28,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AssessmentScreen extends StatefulWidget {
-  const AssessmentScreen({super.key, required this.postNameAndId});
-  final String postNameAndId;
+  const AssessmentScreen({super.key, required this.postName});
+  final String postName;
   @override
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
@@ -43,7 +43,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   }
 
   @override
-  String get screenName => 'Assessment_${widget.postNameAndId}';
+  String get screenName => widget.postName;
   @override
   bool get debug => false; // Enable debug logs
 
@@ -314,7 +314,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                 alignment: Alignment.center,
                 child: CustomText(text: "OR"),
               ),
-              CustomContainer(child: AudioRecorderPlayer(questionId: widget.question.id,)),
+              CustomContainer(
+                child: AudioRecorderPlayer(questionId: widget.question.id),
+              ),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
@@ -327,7 +329,7 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
 
 class AudioRecorderPlayer extends StatefulWidget {
   final int? questionId;
-  const AudioRecorderPlayer({super.key,required this.questionId});
+  const AudioRecorderPlayer({super.key, required this.questionId});
   @override
   _AudioRecorderPlayerState createState() => _AudioRecorderPlayerState();
 }

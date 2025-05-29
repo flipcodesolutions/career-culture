@@ -35,7 +35,7 @@ class _EventsScreenState extends State<EventsScreen>
   }
 
   @override
-  String get screenName => 'EventsScreen';
+  String get screenName => 'EventScreen';
   @override
   void initState() {
     super.initState();

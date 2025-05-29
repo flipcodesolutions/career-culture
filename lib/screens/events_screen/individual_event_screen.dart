@@ -8,6 +8,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
@@ -19,7 +20,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/all_events_model.dart/all_events_model.dart';
 
-class IndividualEventScreen extends StatelessWidget with NavigateHelper {
+class IndividualEventScreen extends StatefulWidget {
   const IndividualEventScreen({
     super.key,
     required this.eventInfo,
@@ -27,6 +28,20 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
   });
   final EventModel eventInfo;
   final bool isMyEvents;
+
+  @override
+  State<IndividualEventScreen> createState() => _IndividualEventScreenState();
+}
+
+class _IndividualEventScreenState extends State<IndividualEventScreen>  with  WidgetsBindingObserver, ScreenTracker<IndividualEventScreen> ,NavigateHelper {
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'EventScreen';
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
@@ -36,7 +51,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
         if (!didPop) {
           AllEventProvider eventProvider = context.read<AllEventProvider>();
           Future.microtask(() async {
-            isMyEvents
+            widget.isMyEvents
                 ? await eventProvider.getAllUserEvents(context: context)
                 : await eventProvider.getAllEvents(context: context);
           });
@@ -46,7 +61,7 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
       child: Scaffold(
         appBar: AppBar(
           title: CustomText(
-            text: eventInfo.title ?? "",
+            text: widget.eventInfo.title ?? "",
             style: TextStyleHelper.mediumHeading,
           ),
         ),
@@ -63,13 +78,14 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(AppSize.size10),
                   child: CustomImageWithLoader(
-                    imageUrl: "${AppStrings.assetsUrl}${eventInfo.poster}",
+                    imageUrl:
+                        "${AppStrings.assetsUrl}${widget.eventInfo.poster}",
                   ),
                 ),
               ),
               SizeHelper.height(),
               CustomText(
-                text: eventInfo.description ?? "No Description To Show ",
+                text: widget.eventInfo.description ?? "No Description To Show ",
                 useOverflow: false,
               ),
               SizeHelper.height(),
@@ -77,19 +93,19 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               SizeHelper.height(height: 1.h),
               paddedText(
                 heading: "Time :- ",
-                text: eventInfo.time ?? "Not Found",
+                text: widget.eventInfo.time ?? "Not Found",
               ),
               paddedText(
                 heading: "Registration End Date :- ",
-                text: eventInfo.registrationEndDate ?? "Not Found",
+                text: widget.eventInfo.registrationEndDate ?? "Not Found",
               ),
               paddedText(
                 heading: "Start Date :- ",
-                text: eventInfo.startDate ?? "Not Found",
+                text: widget.eventInfo.startDate ?? "Not Found",
               ),
               paddedText(
                 heading: "End Date :- ",
-                text: eventInfo.endDate ?? "Not Found",
+                text: widget.eventInfo.endDate ?? "Not Found",
               ),
 
               SizeHelper.height(),
@@ -97,22 +113,22 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
               SizeHelper.height(height: 1.h),
               paddedText(
                 heading: "Venue :- ",
-                text: eventInfo.venue ?? "Not Provided",
+                text: widget.eventInfo.venue ?? "Not Provided",
               ),
               SizeHelper.height(),
               HeadingText(text: AppStrings.contactInfo),
               SizeHelper.height(height: 1.h),
               paddedText(
                 heading: "Contact :- ",
-                text: eventInfo.contact ?? "Not Provided",
+                text: widget.eventInfo.contact ?? "Not Provided",
               ),
               SizeHelper.height(height: 1.h),
-              if (eventInfo.amount?.isNotEmpty == true) ...[
+              if (widget.eventInfo.amount?.isNotEmpty == true) ...[
                 HeadingText(text: AppStrings.registration),
                 paddedText(
                   heading: "${AppStrings.registration} Fee:- ",
                   text:
-                      "${eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
+                      "${widget.eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
                 ),
                 SizeHelper.height(),
               ],
@@ -126,9 +142,10 @@ class IndividualEventScreen extends StatelessWidget with NavigateHelper {
                           context: context,
                           builder:
                               (context) => ContestAgreementWidget(
-                                id: eventInfo.id.toString(),
+                                id: widget.eventInfo.id.toString(),
                                 termsText:
-                                    eventInfo.terms ?? "No Terms Found!!",
+                                    widget.eventInfo.terms ??
+                                    "No Terms Found!!",
                               ),
                         )
                         : WidgetHelper.customSnackBar(

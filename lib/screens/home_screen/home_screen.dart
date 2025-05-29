@@ -10,6 +10,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_product_showcase.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
@@ -34,7 +35,15 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with NavigateHelper {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, ScreenTracker<HomeScreen>, NavigateHelper {
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  String get screenName => 'HomeScreen';
   @override
   void initState() {
     UserProvider userProvider = context.read<UserProvider>();

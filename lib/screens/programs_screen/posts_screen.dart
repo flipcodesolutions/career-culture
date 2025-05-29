@@ -24,7 +24,6 @@ import '../../app_const/app_strings.dart';
 import '../../models/post_models/post_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
 import '../../widgets/custom_audio_player.dart';
-import '../../widgets/custom_image.dart';
 import '../../widgets/custom_score_with_animation.dart';
 import 'widgets/render_media_data.dart';
 
@@ -49,8 +48,7 @@ class _PostsScreenState extends State<PostsScreen>
   }
 
   @override
-  String get screenName =>
-      'ChapterScreen_${widget.chapterId}_${widget.chapterName}';
+  String get screenName => widget.chapterName;
   @override
   bool get debug => false; // Enable debug logs
   @override
@@ -176,7 +174,7 @@ class _PostsScreenState extends State<PostsScreen>
                         ? push(
                           context: context,
                           widget: AssessmentScreen(
-                            postNameAndId:
+                            postName:
                                 "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
                           ),
                           transition: FadeUpwardsPageTransitionsBuilder(),
