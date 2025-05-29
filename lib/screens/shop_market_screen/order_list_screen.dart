@@ -182,18 +182,17 @@ class _StatusBadge extends StatelessWidget {
 
   Color _colorForStatus() {
     switch (status.toLowerCase()) {
-      case 'pending':
-        return AppColors.secondary;
-      case 'shipped':
+      case 'placed':
+        return AppColors.black
+        ;
+      case 'confirmed':
         return AppColors.lightPrimary;
       case 'delivered':
         return AppColors.primary;
-      case 'approved':
-        return AppColors.lightPrimary;
       case 'cancelled':
         return AppColors.error;
       default:
-        return AppColors.cream;
+        return AppColors.black;
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:mindful_youth/models/product_model/order_list_model.dart';
 import 'package:mindful_youth/service/product_service/orders_list_service.dart';
 import 'package:mindful_youth/service/product_service/product_service.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/product_model/product_model.dart';
 
@@ -19,9 +20,7 @@ class ProductProvider extends ChangeNotifier {
   ProductModel? _productModel;
   ProductModel? get productModel => _productModel;
 
-  Future<void> getProductList(
-    {required BuildContext context}
-    ) async {
+  Future<void> getProductList({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
@@ -88,6 +87,7 @@ class ProductProvider extends ChangeNotifier {
       addressController.clear();
       _orderModel?.price = product?.price;
       _orderModel?.qty = 1;
+      WidgetHelper.customSnackBar(title: AppStrings.orderPlaced);
     }
 
     /// set _isLoading false

@@ -240,6 +240,7 @@ class AppStrings {
   static const hello = 'Hello';
   static const uId = 'UID';
   static const program = 'Programs';
+  static const orderPlaced = 'Order Placed Successfully';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
