@@ -291,14 +291,9 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                       backGroundColor: AppColors.lightWhite,
                       margin: EdgeInsets.only(right: 5.w),
                       borderRadius: BorderRadius.circular(AppSize.size10),
-                      height: 25.h,
-                      width: 90.w,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        ),
+                      child: ImageContainer(
+                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        showImageInPanel: false,
                       ),
                     ),
                   ),
@@ -314,17 +309,12 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                         () async =>
                             launchUrl(url: item.url ?? "", context: context),
                     child: CustomContainer(
+                      backGroundColor: AppColors.lightWhite,
                       margin: EdgeInsets.only(right: 5.w),
                       borderRadius: BorderRadius.circular(AppSize.size10),
-                      height: 25.h,
-                      width: 90.w,
-                      backGroundColor: AppColors.lightWhite,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        ),
+                      child: ImageContainer(
+                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        showImageInPanel: false,
                       ),
                     ),
                   ),
@@ -339,17 +329,12 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                         () async =>
                             launchUrl(url: item.url ?? "", context: context),
                     child: CustomContainer(
+                      backGroundColor: AppColors.lightWhite,
                       margin: EdgeInsets.only(right: 5.w),
                       borderRadius: BorderRadius.circular(AppSize.size10),
-                      height: 25.h,
-                      width: 90.w,
-                      backGroundColor: AppColors.lightWhite,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        ),
+                      child: ImageContainer(
+                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                        showImageInPanel: false,
                       ),
                     ),
                   ),
@@ -357,9 +342,6 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
 
             MediaRender(
               heading: AppStrings.recommendedBooks,
-              isList: false,
-              axisCountForGrid: 3,
-              isNotScroll: true,
               data: post?.media?.where((e) => e.type == 'book').toList() ?? [],
               itemBuilder:
                   (item, index) => GestureDetector(
@@ -369,12 +351,12 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(AppSize.size10),
                       child: CustomContainer(
+                        backGroundColor: AppColors.lightWhite,
                         margin: EdgeInsets.only(right: 5.w),
                         borderRadius: BorderRadius.circular(AppSize.size10),
-                        backGroundColor: AppColors.lightWhite,
-                        child: CustomImageWithLoader(
+                        child: ImageContainer(
+                          image: "${AppStrings.assetsUrl}${item.thumbnail}",
                           showImageInPanel: false,
-                          imageUrl: "${AppStrings.assetsUrl}${item.thumbnail}",
                         ),
                       ),
                     ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -102,9 +104,12 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                   child: ListView(
                     padding: EdgeInsets.symmetric(vertical: 2.h),
                     children: [
-                      ImageContainer(
-                        image: "${AppStrings.assetsUrl}${program?.image}",
-                        showImageInPanel: true,
+                      CustomContainer(
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
+                        child: ImageContainer(
+                          image: "${AppStrings.assetsUrl}${program?.image}",
+                          showImageInPanel: true,
+                        ),
                       ),
                       SizeHelper.height(),
                       Padding(
@@ -207,28 +212,29 @@ class ImageContainer extends StatelessWidget {
     required this.image,
     required this.showImageInPanel,
     this.fit,
+    this.aspectRatio,
   });
   final bool showImageInPanel;
   final String image;
   final BoxFit? fit;
+  final double? aspectRatio;
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
+    log("image $image");
+    return CustomContainer(
       child: CustomContainer(
         backGroundColor: AppColors.lightWhite,
-        borderColor: AppColors.black,
+        boxShadow: ShadowHelper.scoreContainer,
         borderRadius: BorderRadius.circular(AppSize.size10),
-        borderWidth: 0.2,
-        margin: EdgeInsets.symmetric(horizontal: 5.w),
-        // height: 30.h,
-        // width: 90.w,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppSize.size20),
-          child: CustomImageWithLoader(
-            imageUrl: image,
-            showImageInPanel: showImageInPanel,
-            fit: fit ?? BoxFit.contain,
+          borderRadius: BorderRadius.circular(AppSize.size10),
+          child: AspectRatio(
+            aspectRatio:aspectRatio ?? 16 / 9,
+            child: CustomImageWithLoader(
+              imageUrl: image,
+              showImageInPanel: showImageInPanel,
+              fit: fit ?? BoxFit.contain,
+            ),
           ),
         ),
       ),

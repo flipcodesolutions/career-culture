@@ -15,7 +15,7 @@ import '../../../widgets/custom_image.dart';
 import '../../../widgets/custom_text.dart';
 
 class ProgramContainer extends StatelessWidget with NavigateHelper {
-  const ProgramContainer({super.key, required this.item,this.gradient});
+  const ProgramContainer({super.key, required this.item, this.gradient});
   final ProgramsInfo item;
   final Gradient? gradient;
   @override
@@ -44,11 +44,14 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomContainer(
+              height: 8.h,
+              width: 17.w,
               margin: EdgeInsets.only(right: 5.w, left: 2.w),
               shape: BoxShape.circle,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppSize.size40),
                 child: CustomImageWithLoader(
+                  fit: BoxFit.cover,
                   imageUrl: "${AppStrings.assetsUrl}${item.image}",
                 ),
               ),
