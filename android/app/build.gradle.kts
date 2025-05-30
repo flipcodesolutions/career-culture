@@ -58,5 +58,9 @@ flutter {
     source = "../.."
 }
 dependencies {
+    // For core library desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
+    // For Facebook Android SDK
+    implementation("com.facebook.android:facebook-android-sdk:latest.release")
 }

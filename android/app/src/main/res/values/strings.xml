@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Career Culture</string>
+    
+    <!-- this is important for login with facebook -->
+
+    <string name="facebook_app_id">1177664930303762</string>
+    <string name="facebook_client_token">4083cca11c9d7281dc4ea2d2d8c9d9bf</string>
+
+</resources>

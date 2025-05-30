@@ -6,6 +6,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
+import 'package:mindful_youth/utils/method_helpers/facebook_login_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -196,6 +197,18 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                         SignInSocialOptions(
                           logo: AppImageStrings.facebookLogo,
                           name: AppStrings.facebook,
+                          onTap: () async {
+                            final userCredential =
+                                await FacebookFirebaseLogin.loginWithFacebook();
+                            if (userCredential != null) {
+                              final user = userCredential.user;
+                              print(
+                                "Signed in: ${user?.displayName} (${user?.email})",
+                              );
+                            } else {
+                              print("Login failed");
+                            }
+                          },
                         ),
                       ],
                     ),
