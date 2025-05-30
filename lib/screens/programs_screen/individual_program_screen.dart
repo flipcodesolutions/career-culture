@@ -229,7 +229,7 @@ class ImageContainer extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppSize.size10),
           child: AspectRatio(
-            aspectRatio:aspectRatio ?? 16 / 9,
+            aspectRatio: aspectRatio ?? 16 / 9,
             child: CustomImageWithLoader(
               imageUrl: image,
               showImageInPanel: showImageInPanel,
