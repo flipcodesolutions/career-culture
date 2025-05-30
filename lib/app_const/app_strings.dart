@@ -250,6 +250,7 @@ class AppStrings {
   static const role = "role";
   static const isApproved = "isApproved";
   static const status = "status";
+  static const studentId = "studentId";
   static const id = "id";
   static const images = "images";
   static const userId = "userId";
@@ -274,4 +275,6 @@ class AppStrings {
   static const userApproved = "userApproved";
   static const userConvenerId = "userConvenerId";
   static const myReferralCode = "myReferralCode";
+  static const isProfileDataIsEmpty = "isProfileDataIsEmpty";
+  static const isUserEducationDataIsEmpty = "isUserEducationDataIsEmpty";
 }

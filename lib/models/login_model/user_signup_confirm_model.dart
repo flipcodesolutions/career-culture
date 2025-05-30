@@ -1,3 +1,6 @@
+import 'package:mindful_youth/screens/home_screen/home_screen.dart';
+import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
+
 import '../../app_const/app_strings.dart';
 import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
 
@@ -568,6 +571,11 @@ class UserModelData {
 
       await SharedPrefs.saveString(AppStrings.status, user?.status ?? '');
       _log(AppStrings.status, user?.status ?? '');
+      await SharedPrefs.saveString(
+        AppStrings.studentId,
+        user?.studentId.toString() ?? '',
+      );
+      _log(AppStrings.studentId, user?.studentId.toString() ?? '');
 
       await SharedPrefs.saveString(AppStrings.id, user?.id.toString() ?? '');
       _log(AppStrings.id, user?.id.toString() ?? '');
@@ -595,6 +603,11 @@ class UserModelData {
 
   void _saveUserProfileToLocalStorage() async {
     if (user?.profile != null) {
+      /// set a check flag for backend registered users
+      await saveBoolChecks(
+        key: AppStrings.isProfileDataIsEmpty,
+        value: user?.profile == null,
+      );
       await SharedPrefs.saveString(
         AppStrings.images,
         user?.profile?.images ?? '',
@@ -671,11 +684,22 @@ class UserModelData {
         user?.profile?.district ?? '',
       );
       _log(AppStrings.userDistrict, user?.profile?.district ?? '');
+    } else {
+      /// set a check flag for backend registered users
+      await saveBoolChecks(
+        key: AppStrings.isProfileDataIsEmpty,
+        value: user?.profile == null,
+      );
     }
   }
 
   void _saveUserEducationToLocalStorage() async {
     if (user?.userEducation != null) {
+      /// set a check flag for backend registered users
+      await saveBoolChecks(
+        key: AppStrings.isUserEducationDataIsEmpty,
+        value: user?.userEducation == null,
+      );
       await SharedPrefs.saveString(
         AppStrings.study,
         user?.userEducation?.study ?? '',
@@ -708,7 +732,24 @@ class UserModelData {
         AppStrings.userNameOfCompanyOrBusiness,
         user?.userEducation?.nameOfCompanyOrBusiness ?? '',
       );
+    } else {
+      /// set a check flag for backend registered users
+      await saveBoolChecks(
+        key: AppStrings.isUserEducationDataIsEmpty,
+        value: user?.userEducation == null,
+      );
     }
+  }
+
+  /// This key indicates whether a [UserModel] is being initialized for a user originating from the backend.
+  /// If `user.profile` and `user.userEducation` are null, this flag will redirect the user to the
+  /// [SignUpScreen] from the [HomeScreen], prompting them to complete their profile information.
+  Future<void> saveBoolChecks({
+    required String key,
+    required bool value,
+  }) async {
+    await SharedPrefs.saveBool(key, value);
+    _log(key, (value).toString());
   }
 }
 
@@ -728,6 +769,7 @@ class User {
   String? isApproved;
   String? otp;
   String? status;
+  int? studentId;
   String? myReferralCode;
   UserEducation? userEducation;
   UserProfile? profile;
@@ -761,6 +803,7 @@ class User {
     isApproved = json['isApproved'];
     otp = json['otp'];
     status = json['status'];
+    studentId = json['student_id'];
     myReferralCode = json['my_referral_code'];
     userEducation =
         json['user_education'] != null
@@ -784,6 +827,7 @@ class User {
     data['isApproved'] = this.isApproved;
     data['otp'] = this.otp;
     data['status'] = this.status;
+    data['student_id'] = this.studentId;
     data['my_referral_code'] = this.status;
     if (this.userEducation != null) {
       data['user_education'] = this.userEducation!.toJson();

@@ -5,10 +5,12 @@ import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -21,6 +23,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../provider/product_provider/product_provider.dart';
+import '../../provider/user_provider/sign_up_provider.dart';
 import '../../widgets/custom_annoucement_slider.dart';
 import '../../widgets/custom_slider.dart';
 import '../../widgets/exit_app_dialogbox.dart';
@@ -35,8 +38,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, ScreenTracker<HomeScreen>, NavigateHelper {
-    @override
+class _HomeScreenState extends State<HomeScreen>
+    with WidgetsBindingObserver, ScreenTracker<HomeScreen>, NavigateHelper {
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
@@ -50,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Sc
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     AllEventProvider eventProvider = context.read<AllEventProvider>();
     ProductProvider productProvider = context.read<ProductProvider>();
+    SignUpProvider signUpProvider = context.read<SignUpProvider>();
     // TODO: implement initState
     super.initState();
     Future.microtask(() async {
@@ -59,6 +64,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Sc
       await productProvider.getProductList(context: context);
       await eventProvider.getAllEvents(context: context);
       await homeProvider.getUserOverAllScore(context: context);
+
+      /// check if logged in user has empty user profile or user education
+      if (await userProvider.isUserProfileAndUserEducationIsNull()) {
+        /// set the flag to true so [SignUpPage] render in update mode
+        signUpProvider.setIsUpdatingProfile = true;
+
+        /// redirect user to fill the empty fields
+        push(
+          context: context,
+          widget: SignUpScreen(isFromHomeScreen: true),
+          transition: OpenUpwardsPageTransitionsBuilder(),
+        );
+      }
     });
   }
 

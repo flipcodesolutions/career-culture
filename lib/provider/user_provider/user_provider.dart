@@ -7,6 +7,7 @@ import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/screens/login/sign_up/share_contact_details.dart';
 import 'package:mindful_youth/screens/login/sign_up/start_your_journey.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:mindful_youth/widgets/exit_app_dialogbox.dart';
 import 'package:provider/provider.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
@@ -171,11 +172,17 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// used in [LogoutDialog]
   void logout() {
     _isUserLoggedIn = false;
     _imageBytes = null;
     isUpdating = false;
     notifyListeners();
+  }
+
+  Future<bool> isUserProfileAndUserEducationIsNull() async {
+    return await SharedPrefs.getSharedBool(AppStrings.isProfileDataIsEmpty) ||
+        await SharedPrefs.getSharedBool(AppStrings.isUserEducationDataIsEmpty);
   }
 
   /// if provider is Loading

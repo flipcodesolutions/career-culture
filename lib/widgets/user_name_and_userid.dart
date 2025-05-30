@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:sizer/sizer.dart';
 import '../app_const/app_strings.dart';
 
 class UserNameAndUIdRow extends StatefulWidget {
@@ -23,7 +25,7 @@ class _UserNameAndUIdRowState extends State<UserNameAndUIdRow> {
   }
 
   void getNameAndId() async {
-    userId = await SharedPrefs.getSharedString(AppStrings.userId);
+    userId = await SharedPrefs.getSharedString(AppStrings.studentId);
     userName = await SharedPrefs.getSharedString(AppStrings.userName);
     setState(() {
       isLoading = false;
@@ -38,11 +40,10 @@ class _UserNameAndUIdRowState extends State<UserNameAndUIdRow> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 3,
               child: CustomText(text: "${AppStrings.hello} , $userName"),
             ),
-            Spacer(),
-            Expanded(child: CustomText(text: "${AppStrings.uId} : $userId")),
+            SizeHelper.width(width: 5.w),
+            CustomText(text: "${AppStrings.uId} : $userId", useOverflow: false),
           ],
         );
   }

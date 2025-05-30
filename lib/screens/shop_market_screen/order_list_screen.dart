@@ -183,8 +183,7 @@ class _StatusBadge extends StatelessWidget {
   Color _colorForStatus() {
     switch (status.toLowerCase()) {
       case 'placed':
-        return AppColors.black
-        ;
+        return AppColors.black;
       case 'confirmed':
         return AppColors.lightPrimary;
       case 'delivered':

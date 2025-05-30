@@ -27,7 +27,7 @@ class CustomAnimatedScore extends StatelessWidget {
           (context, value, child) => CustomText(
             text:
                 "${formatter.format(value)} ${lastText ?? ""}", // Format number,
-            style:textStyle ?? TextStyleHelper.mediumHeading,
+            style: textStyle ?? TextStyleHelper.mediumHeading,
           ),
     );
   }

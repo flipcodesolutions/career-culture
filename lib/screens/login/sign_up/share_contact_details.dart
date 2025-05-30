@@ -130,10 +130,13 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         labelText: AppStrings.address2,
                         controller: signUpProvider.address2,
                         validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
+                            (value) =>
+                                value?.isNotEmpty == true
+                                    ? ValidatorHelper.validateValue(
+                                      value: value,
+                                      context: context,
+                                    )
+                                    : null,
                       ),
                     ),
                     SizeHelper.height(),

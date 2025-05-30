@@ -21,7 +21,8 @@ import '../../../utils/method_helpers/method_helper.dart';
 import '../../../utils/widget_helper/widget_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  final bool isFromHomeScreen;
+  const SignUpScreen({super.key, this.isFromHomeScreen = false});
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -40,44 +41,53 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     }
   }
 
+  void _handleBackNavigation(BuildContext context) {
+    // Access providers, assuming they are available in your widget's scope
+    // For example, if you're using Provider:
+    UserProvider userProvider = context.read<UserProvider>();
+    SignUpProvider signUpProvider = context.read<SignUpProvider>();
+
+    if (userProvider.currentSignUpPageIndex == 0) {
+      if (widget.isFromHomeScreen) {
+        WidgetHelper.customSnackBar(
+          title: "Must Fill The Profile Details",
+          isError: true,
+        );
+        return;
+      } else {
+        pop(context);
+      }
+    } else {
+      // Navigate to the previous page
+      userProvider.setCurrentSignupPageIndex =
+          userProvider.currentSignUpPageIndex - 1;
+      pageController.previousPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   final PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
     return PopScope(
-      canPop: userProvider.currentSignUpPageIndex == 0,
+      canPop:
+          userProvider.currentSignUpPageIndex == 0 && !widget.isFromHomeScreen,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          if (userProvider.currentSignUpPageIndex > 0) {
-            userProvider.setCurrentSignupPageIndex =
-                userProvider.currentSignUpPageIndex - 1;
-            pageController.previousPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
+          _handleBackNavigation(context);
         }
       },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            onPressed:
-                () =>
-                    userProvider.currentSignUpPageIndex == 0
-                        ? pop(context)
-                        : {
-                          userProvider.setCurrentSignupPageIndex =
-                              userProvider.currentSignUpPageIndex - 1,
-                          pageController.previousPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          ),
-                        },
+            onPressed: () => _handleBackNavigation(context),
             icon: AppIcons.backArrow,
           ),
           shape: Border(bottom: BorderSide(color: AppColors.white)),
-
           bottom: PreferredSize(
             preferredSize: Size(0, 0),
             child: CustomContainer(
