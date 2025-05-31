@@ -108,6 +108,7 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder:
           (context, value, child) => MaterialApp(
+            navigatorKey: NotificationService.instance.navigatorKey,
             debugShowCheckedModeBanner: false,
             title: AppStrings.appName,
             // app theme

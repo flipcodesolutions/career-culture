@@ -132,9 +132,22 @@
 // }
 
 import 'dart:convert';
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:provider/provider.dart';
+
+import '../../app_const/app_strings.dart';
 
 @pragma(
   'vm:entry-point',
@@ -147,7 +160,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 /// A singleton service class that manages Firebase Cloud Messaging and local notifications.
-class NotificationService {
+class NotificationService with NavigateHelper {
+  ///
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   // Private constructor for singleton pattern.
   NotificationService._privateConstructor();
 
@@ -212,11 +227,13 @@ class NotificationService {
     });
 
     // Handle user interaction when the app is brought to foreground from background/terminated:contentReference[oaicite:13]{index=13}.
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageTap);
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (event) => _handleMessageTap(event.data),
+    );
     // Check if the app was opened via a notification (terminated state).
     RemoteMessage? initialMessage = await _messaging.getInitialMessage();
     if (initialMessage != null) {
-      _handleMessageTap(initialMessage);
+      _handleMessageTap(initialMessage.data);
     }
   }
 
@@ -244,6 +261,10 @@ class NotificationService {
         // Handle local notification tap (if needed).
         // You can add logic to navigate to specific screens using payload from response.payload.
         print('Local notification tapped with payload: ${response.payload}');
+        final context = navigatorKey.currentContext;
+        if (context == null) return;
+        Map<String, dynamic> responseJson = jsonDecode(response.payload ?? "");
+        _handleMessageTap(responseJson);
       },
     );
 
@@ -288,9 +309,34 @@ class NotificationService {
   }
 
   /// Handle notification tap: navigate or process message data.
-  void _handleMessageTap(RemoteMessage message) {
-    print('Notification opened: ${message.data}');
-    // TODO: Implement navigation or state update based on message data, e.g.:
-    // if (message.data['type'] == 'chat') { navigate to chat screen with message.data; }
+  void _handleMessageTap(Map<String, dynamic> message) async {
+    print('Notification opened: $message');
+    // Use navigatorKey to navigate with context
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    String token = await SharedPrefs.getSharedString(AppStrings.userToken);
+    if (token.isEmpty) {
+     await pushRemoveUntil(
+        context: context,
+        widget: LoginScreen(isToNavigateHome: true),
+      );
+      return;
+    }
+    pushRemoveUntil(
+      context: context,
+      widget: MainScreen(setIndex: 0),
+    ).whenComplete(() {
+      // Example: Navigate based on payload
+      final type = message['navigate'];
+      if (type == 'event') {
+        push(
+          context: context,
+          widget: IndividualEventScreen(
+            eventInfo: EventModel.fromJson(jsonDecode(message['data'])),
+            isMyEvents: false,
+          ),
+        );
+      }
+    });
   }
 }

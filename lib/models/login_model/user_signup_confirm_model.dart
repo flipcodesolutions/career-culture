@@ -769,7 +769,7 @@ class User {
   String? isApproved;
   String? otp;
   String? status;
-  int? studentId;
+  String? studentId;
   String? myReferralCode;
   UserEducation? userEducation;
   UserProfile? profile;
