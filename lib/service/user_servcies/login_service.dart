@@ -5,38 +5,44 @@ import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart'
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
-import '../../provider/user_provider/user_provider.dart';
+import '../../app_const/app_strings.dart';
+
 
 class LoginService {
-  Future<UserModel?> loginUser({
-    required BuildContext context,
-    required UserProvider userProvider,
-    required String emailOrPassword,
-    required String password,
-  }) async {
-    try {
-      var body = {"email": emailOrPassword, "password": password};
-      Map<String, dynamic> response = await HttpHelper.post(
-        uri: ApiHelper.login,
-        body: body,
-        context: context,
-      );
-      if (response.isNotEmpty) {
-        log(response.toString());
-        UserModel model = UserModel.fromJson(response);
-        if (model.success == true) {
-          userProvider.setIsUserLoggedIn = true;
-          SharedPrefs.saveToken(model.data?.token ?? "");
-        }
-        await SharedPrefs.saveToken(model.data?.token ?? "");
-        return model;
-      }
-      return null;
-    } catch (e) {
-      log('error while loggin in user => $e');
-      return null;
-    }
-  }
+  // Future<UserModel?> loginUser({
+  //   required BuildContext context,
+  //   required UserProvider userProvider,
+  //   required String emailOrPassword,
+  //   required String password,
+  // }) async {
+  //   try {
+  //     var body = {"email": emailOrPassword, "password": password};
+  //     Map<String, dynamic> response = await HttpHelper.post(
+  //       uri: ApiHelper.login,
+  //       body: body,
+  //       context: context,
+  //     );
+  //     if (response.isNotEmpty) {
+  //       log(response.toString());
+  //       UserModel model = UserModel.fromJson(response);
+  //       //// wait for model to store data in local
+  //       if (model.data != null) {
+  //         await model.data!.saveAllToLocalStorage();
+  //       }
+
+  //       if (model.success == true) {
+  //         userProvider.setIsUserLoggedIn = true;
+  //         SharedPrefs.saveToken(model.data?.token ?? "");
+  //       }
+  //       await SharedPrefs.saveToken(model.data?.token ?? "");
+  //       return model;
+  //     }
+  //     return null;
+  //   } catch (e) {
+  //     log('error while loggin in user => $e');
+  //     return null;
+  //   }
+  // }
 
   ///
   Future<UserModel?> checkEmailExit({
@@ -51,6 +57,12 @@ class LoginService {
       );
       if (response.isNotEmpty) {
         UserModel model = UserModel.fromJson(response);
+        //// wait for model to store data in local
+        if (model.data != null) {
+          await model.data!.saveAllToLocalStorage();
+        }
+        await SharedPrefs.saveString(AppStrings.isEmailVerified, "yes");
+        await SharedPrefs.saveString(AppStrings.userEmail, email);
         return model;
       }
       return null;
@@ -117,6 +129,11 @@ class LoginService {
       );
       if (response.isNotEmpty && response['success'] == true) {
         UserModel model = UserModel.fromJson(response);
+        if (model.data != null) {
+          await model.data!.saveAllToLocalStorage();
+        }
+        await SharedPrefs.saveString(AppStrings.isContactVerified, "yes");
+        await SharedPrefs.saveString(AppStrings.phone, mobileNumber);
         return model;
       }
       return null;

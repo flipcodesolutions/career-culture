@@ -510,6 +510,13 @@ class UserModelData {
     _saveUserEducationToLocalStorage();
   }
 
+  ///
+  Future<void> saveAllToLocalStorage() async {
+    await _saveUserStorage();
+    await _saveUserProfileToLocalStorage();
+    await _saveUserEducationToLocalStorage();
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['token'] = this.token;
@@ -532,7 +539,7 @@ class UserModelData {
     }
   }
 
-  void _saveUserStorage() async {
+  Future<void> _saveUserStorage() async {
     if (email != null) {
       await SharedPrefs.saveString(AppStrings.userEmail, email ?? "");
     }
@@ -601,7 +608,7 @@ class UserModelData {
     }
   }
 
-  void _saveUserProfileToLocalStorage() async {
+  Future<void> _saveUserProfileToLocalStorage() async {
     if (user?.profile != null) {
       /// set a check flag for backend registered users
       await saveBoolChecks(
@@ -693,7 +700,7 @@ class UserModelData {
     }
   }
 
-  void _saveUserEducationToLocalStorage() async {
+  Future<void> _saveUserEducationToLocalStorage() async {
     if (user?.userEducation != null) {
       /// set a check flag for backend registered users
       await saveBoolChecks(

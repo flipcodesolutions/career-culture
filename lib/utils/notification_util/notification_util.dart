@@ -143,6 +143,7 @@ import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
@@ -316,7 +317,7 @@ class NotificationService with NavigateHelper {
     if (context == null) return;
     String token = await SharedPrefs.getSharedString(AppStrings.userToken);
     if (token.isEmpty) {
-     await pushRemoveUntil(
+      await pushRemoveUntil(
         context: context,
         widget: LoginScreen(isToNavigateHome: true),
       );
@@ -334,6 +335,17 @@ class NotificationService with NavigateHelper {
           widget: IndividualEventScreen(
             eventInfo: EventModel.fromJson(jsonDecode(message['data'])),
             isMyEvents: false,
+          ),
+        );
+      }
+      if (type == 'wall') {
+        print(message.entries.toString());
+        Map<String, dynamic> response = jsonDecode(message['data']);
+        push(
+          context: context,
+          widget: IndividualWallPostScreen(
+            slug: response['slug'],
+            isFromWallScreen: false,
           ),
         );
       }

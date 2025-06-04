@@ -71,6 +71,11 @@ class SignUpService {
         isError: !jsonResponse['success'],
       );
       UserModel model = UserModel.fromJson(jsonResponse);
+      /// save model info to local
+      if (model.data != null) {
+        await model.data!.saveAllToLocalStorage();
+      }
+
       return model;
     } else {
       WidgetHelper.customSnackBar(
@@ -147,6 +152,10 @@ class SignUpService {
         );
         UserModel model = UserModel.fromJson(jsonResponse);
         model.data?.token = token;
+        /// save model info to local
+        if (model.data != null) {
+          await model.data!.saveAllToLocalStorage();
+        }
         return model;
       } else {
         WidgetHelper.customSnackBar(

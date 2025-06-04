@@ -22,7 +22,12 @@ import '../../../utils/widget_helper/widget_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
   final bool isFromHomeScreen;
-  const SignUpScreen({super.key, this.isFromHomeScreen = false});
+  final bool isRegisteredFromPanel;
+  const SignUpScreen({
+    super.key,
+    this.isFromHomeScreen = false,
+    this.isRegisteredFromPanel = false,
+  });
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -34,11 +39,12 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     super.initState();
 
     SignUpProvider signUpProvider = context.read<SignUpProvider>();
-    if (signUpProvider.isUpdatingProfile) {
-      Future.microtask(() async {
-        await signUpProvider.initControllerWithLocalStorage();
-      });
-    }
+    
+    // if (signUpProvider.isUpdatingProfile) {
+    Future.microtask(() async {
+      await signUpProvider.initControllerWithLocalStorage();
+    });
+    // }
   }
 
   void _handleBackNavigation(BuildContext context) {
@@ -261,6 +267,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
                 height: 15.h,
                 borderRadius: BorderRadius.circular(AppSize.size10),
                 child: CustomImageWithLoader(
+                  icon: widget.icon,
                   imageUrl:
                       "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
                   showImageInPanel: false,

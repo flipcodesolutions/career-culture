@@ -42,6 +42,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
+  /// if user is registered from backend directly
+  bool _isRegisteredFromBackEnd = false;
+  bool get isRegisteredFromBackEnd => _isRegisteredFromBackEnd;
+  set setIsRegisteredFromBackEnd(bool isRegistered) {
+    _isRegisteredFromBackEnd = isRegistered;
+    print("setting is registered from back is ==> $isRegistered");
+    notifyListeners();
+  }
+
   UserSignUpRequestModel _signUpRequestModel = UserSignUpRequestModel();
   UserSignUpRequestModel get signUpRequestModel => _signUpRequestModel;
 
@@ -708,7 +717,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _signUpConfirmModel =
-        _isUpdatingProfile
+        _isUpdatingProfile || _isRegisteredFromBackEnd
             ? await signUpService.updateUserInfo(
               context: context,
               signUp: _signUpRequestModel,

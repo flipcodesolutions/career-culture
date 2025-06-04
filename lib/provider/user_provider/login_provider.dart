@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:mindful_youth/service/user_servcies/login_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
+import '../../app_const/app_strings.dart';
 import '../../models/login_model/sent_otp_model.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
 import '../../utils/method_helpers/method_helper.dart';
@@ -38,28 +40,28 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
 
   /// mobile number controller
   final TextEditingController mobileController = TextEditingController();
-  Future<bool> login({
-    required BuildContext context,
-    required String emailOrPassword,
-    required String password,
-    required UserProvider userProvider,
-  }) async {
-    /// set _isLoading true
-    _isLoading = true;
-    notifyListeners();
-    _loginResponseModel = await loginService.loginUser(
-      context: context,
-      emailOrPassword: emailOrPassword,
-      password: password,
-      userProvider: userProvider,
-    );
+  // Future<bool> login({
+  //   required BuildContext context,
+  //   required String emailOrPassword,
+  //   required String password,
+  //   required UserProvider userProvider,
+  // }) async {
+  //   /// set _isLoading true
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   _loginResponseModel = await loginService.loginUser(
+  //     context: context,
+  //     emailOrPassword: emailOrPassword,
+  //     password: password,
+  //     userProvider: userProvider,
+  //   );
 
-    /// set _isLoading false
-    _isLoading = false;
-    notifyListeners();
+  //   /// set _isLoading false
+  //   _isLoading = false;
+  //   notifyListeners();
 
-    return _loginResponseModel?.success == true;
-  }
+  //   return _loginResponseModel?.success == true;
+  // }
 
   /// sent otp to mobile number
   SentOtpModel? _otpModel;
@@ -134,17 +136,12 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       cancelTimerOtpResend();
       if (_loginResponseModel?.data?.isNewUser == true) {
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
-        signUpProvider.contactNo1.text = mobileController.text;
-        signUpProvider.setIsContactNo1Verified = true;
         signUpProvider.setIsUpdatingProfile = false;
+        signUpProvider.setIsRegisteredFromBackEnd =
+            _loginResponseModel?.data?.user?.id != null ||
+            _loginResponseModel?.data?.user?.studentId?.isNotEmpty == true;
         push(context: context, widget: SignUpScreen());
       } else {
-        // if (_loginResponseModel?.data?.user?.status != "active") {
-        //   MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-        //     context: context,
-        //   );
-        //   return;
-        // }
         if (!context.mounted) return;
         context.read<UserProvider>().setIsUserLoggedIn = true;
         isNavigateHome
@@ -186,8 +183,10 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
       if (_loginResponseModel?.data?.isNewUser == true) {
         if (!context.mounted) return;
         SignUpProvider signUpProvider = context.read<SignUpProvider>();
-        signUpProvider.email.text = loginResponseModel?.data?.email ?? '';
         signUpProvider.setIsUpdatingProfile = false;
+        signUpProvider.setIsRegisteredFromBackEnd =
+            _loginResponseModel?.data?.user?.id != null ||
+            _loginResponseModel?.data?.user?.studentId?.isNotEmpty == true;
         notifyListeners();
         signUpProvider.setIsEmailVerified = true;
         push(context: context, widget: SignUpScreen());

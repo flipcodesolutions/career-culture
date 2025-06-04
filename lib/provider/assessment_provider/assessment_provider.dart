@@ -32,10 +32,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     _assessmentQuestions = await assessmentQuestionsService
-        .getAssessmentQuestionsByPostId(
-          context: context,
-          postId: _postId,
-        );
+        .getAssessmentQuestionsByPostId(context: context, postId: _postId);
     // _assessmentQuestions?.data?.forEach((e) {
     //   e.question?.trim();
     //   e.answer?.trim();
@@ -67,7 +64,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       List<String> currentOptions = [];
       if (selectedOptionJson != null && selectedOptionJson.isNotEmpty) {
         try {
-          currentOptions = selectedOptionJson.split(",");
+          currentOptions = selectedOptionJson.split("|");
         } catch (e) {
           print("Error decoding selectedOption: $e");
         }
@@ -81,7 +78,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       }
 
       // Save it back
-      _assessmentQuestions?.data?[index].answer = currentOptions.join(",");
+      _assessmentQuestions?.data?[index].answer = currentOptions.join("|");
 
       notifyListeners();
     }
