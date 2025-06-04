@@ -241,6 +241,8 @@ class AppStrings {
   static const uId = 'UID';
   static const program = 'Programs';
   static const orderPlaced = 'Order Placed Successfully';
+  static const facebookLoginFails = 'Facebook Login Failed';
+  static const facebookLoginDone = 'Facebook Login Done';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

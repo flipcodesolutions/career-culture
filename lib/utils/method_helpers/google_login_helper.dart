@@ -56,47 +56,12 @@ class GoogleLoginHelper {
         );
         return;
       }
-
-      // WidgetHelper.customSnackBar(
-      //   context: context,
-      //   title: "Signed in as ${user.email}",
-      // );
-
-      // if (context.mounted) {
-      //   Navigator.of(context).push(
-      //     PageRouteBuilder(
-      //       transitionDuration: Duration(milliseconds: 300),
-      //       pageBuilder:
-      //           (context, animation, secondaryAnimation) =>
-      //               MainScreen(setIndex: 0),
-      //     ),
-      //   );
-      // }
       if (!context.mounted) return;
       await loginProvider.checkEmailExit(
         context: context,
         email: user.email ?? "",
       );
-      // if (emailExists) {
-      //   if (context.mounted) {
-      //     redirectToMainScreen(context);
-      //   }
-      // } else {
-      //   bool profileCreated = await profileProvider.createProfile(
-      //     context: context,
-      //     email: user.email ?? "",
-      //     name: user.displayName ?? "",
-      //   );
-      //   if (profileCreated) {
-      //     if (context.mounted) {
-      //       redirectToMainScreen(context);
-      //     }
-      //   } else {
-      //     if (context.mounted) {
-      //       abortSignInAndRedirectToLoginPage(context);
-      //     }
-      //   }
-      // }
+
     } catch (e) {
       WidgetHelper.customSnackBar(
         // context: context,
@@ -106,33 +71,4 @@ class GoogleLoginHelper {
     }
   }
 
-  // static void abortSignInAndRedirectToLoginPage(BuildContext context) {
-  //   signOut();
-  //   Navigator.of(context).pop();
-  //   WidgetHelper.customSnackBar(
-  //     context: context,
-  //     title: AppStrings.signInFailed,
-  //     isError: true,
-  //   );
-  // }
-
-  // static void redirectToMainScreen(BuildContext context) {
-  //   Navigator.of(context).pushAndRemoveUntil(
-  //     MaterialPageRoute(builder: (context) => MainScreen()),
-  //     (route) => false,
-  //   );
-  //   WidgetHelper.customSnackBar(context: context, title: AppStrings.welcome);
-  // }
-
-  /// Sign out user
-  // static Future<void> signOut() async {
-  //   try {
-  //     await FirebaseAuth.instance.signOut();
-  //     await GoogleSignIn().signOut();
-  //   } catch (e) {
-  //     Environment.debugMode
-  //         ? debugPrint("Sign-out error: ${e.toString()}")
-  //         : null;
-  //   }
-  // }
 }

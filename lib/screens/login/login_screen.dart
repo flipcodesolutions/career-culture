@@ -197,18 +197,11 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                         SignInSocialOptions(
                           logo: AppImageStrings.facebookLogo,
                           name: AppStrings.facebook,
-                          onTap: () async {
-                            final userCredential =
-                                await FacebookFirebaseLogin.loginWithFacebook();
-                            if (userCredential != null) {
-                              final user = userCredential.user;
-                              print(
-                                "Signed in: ${user?.displayName} (${user?.email})",
-                              );
-                            } else {
-                              print("Login failed");
-                            }
-                          },
+                          onTap: () async =>
+                            await FacebookFirebaseLogin.loginWithFacebook(
+                              context,
+                            )
+                          ,
                         ),
                       ],
                     ),
