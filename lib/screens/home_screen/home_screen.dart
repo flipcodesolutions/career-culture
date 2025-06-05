@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen>
     UserProvider userProvider = context.watch<UserProvider>();
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
     AllEventProvider eventProvider = context.watch<AllEventProvider>();
+    ProductProvider productProvider = context.watch<ProductProvider>();
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -146,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: CustomRefreshIndicator(
             onRefresh: () async {
               await homeScreenProvider.getHomeScreenSlider(context: context);
+              await productProvider.getProductList(context: context);
             },
             child: ListView(
               shrinkWrap: true,

@@ -424,17 +424,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                     width: AppSize.size80,
                   ),
                 ),
-                //  CustomTextFormField(
-                //   labelText: AppStrings.otp,
-                //   controller: otpController,
-                //   keyboardType: TextInputType.numberWithOptions(),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return "Please enter OTP";
-                //     }
-                //     return null;
-                //   },
-                // ),
               ),
               actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
