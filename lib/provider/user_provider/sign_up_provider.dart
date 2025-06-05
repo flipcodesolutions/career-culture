@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -105,6 +107,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   GetConvenersService convenersService = GetConvenersService();
   ConvenerListModel? _convenerListModel;
   ConvenerListModel? get convenerListModel => _convenerListModel;
+  String? coordinatorIdFromLocal;
   Convener? _selectedConvener;
   Convener? get selectedConvener => _selectedConvener;
   set setConvener(Convener? convener) {
@@ -119,6 +122,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _convenerListModel = await convenersService.getConvenerList(
       context: context,
     );
+    _convenerListModel?.data?.convener?.forEach((e) {
+      if (e.id.toString() == coordinatorIdFromLocal) {
+        _selectedConvener = e;
+        notifyListeners();
+      }
+    });
 
     /// set _isLoading false
     _isLoading = false;
@@ -316,7 +325,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       WidgetHelper.customSnackBar(
         title: AppStrings.noStateFound,
         isError: true,
-        autoClose: false
+        autoClose: false,
       );
       return false;
     }
@@ -324,7 +333,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       WidgetHelper.customSnackBar(
         title: AppStrings.noCitiesFound,
         isError: true,
-        autoClose: false
+        autoClose: false,
       );
       return false;
     }
@@ -921,6 +930,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,
+    );
+
+    coordinatorIdFromLocal = await SharedPrefs.getSharedString(
+      AppStrings.coordinatorId,
     );
     // print('🚻 Gender: ${_genderQuestion.answer}');
 

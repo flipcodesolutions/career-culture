@@ -64,7 +64,7 @@ class Convener {
     this.role,
     this.isApproved,
     this.status,
-    this.city
+    this.city,
   });
 
   Convener.fromJson(Map<String, dynamic> json) {

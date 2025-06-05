@@ -508,6 +508,7 @@ class UserModelData {
     _saveUserStorage();
     _saveUserProfileToLocalStorage();
     _saveUserEducationToLocalStorage();
+    _saveCoordinatorToLocal();
   }
 
   ///
@@ -748,6 +749,20 @@ class UserModelData {
     }
   }
 
+  /// use to save coordinator id to local
+  Future<void> _saveCoordinatorToLocal() async {
+    if (user?.coordinator != null) {
+      await SharedPrefs.saveString(
+        AppStrings.coordinatorId,
+        user?.coordinator?.convenerId.toString() ?? '',
+      );
+      _log(
+        AppStrings.coordinatorId,
+        user?.coordinator?.convenerId.toString() ?? '',
+      );
+    }
+  }
+
   /// This key indicates whether a [UserModel] is being initialized for a user originating from the backend.
   /// If `user.profile` and `user.userEducation` are null, this flag will redirect the user to the
   /// [SignUpScreen] from the [HomeScreen], prompting them to complete their profile information.
@@ -780,6 +795,7 @@ class User {
   String? myReferralCode;
   UserEducation? userEducation;
   UserProfile? profile;
+  Coordinator? coordinator;
 
   User({
     this.id,
@@ -796,6 +812,7 @@ class User {
     this.myReferralCode,
     this.userEducation,
     this.profile,
+    this.coordinator,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -820,6 +837,10 @@ class User {
         json['profile'] != null
             ? new UserProfile.fromJson(json['profile'])
             : null;
+    coordinator =
+        json['convener'] != null
+            ? new Coordinator.fromJson(json['convener'])
+            : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -841,6 +862,9 @@ class User {
     }
     if (this.profile != null) {
       data['profile'] = this.profile!.toJson();
+    }
+    if (this.coordinator != null) {
+      data['convener'] = this.coordinator!.toJson();
     }
     return data;
   }
@@ -966,6 +990,29 @@ class UserProfile {
     data['country'] = this.country;
     data['district'] = this.district;
     data['images'] = this.images;
+    return data;
+  }
+}
+
+/// this coordinator class will be used in [SignUpScreen] to load coordinator for user registered from admin panel
+class Coordinator {
+  int? id;
+  int? studentId;
+  int? convenerId;
+
+  Coordinator({this.id, this.studentId, this.convenerId});
+
+  Coordinator.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    studentId = json['student_id'];
+    convenerId = json['convener_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['student_id'] = this.studentId;
+    data['convener_id'] = this.convenerId;
     return data;
   }
 }

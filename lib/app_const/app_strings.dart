@@ -280,4 +280,5 @@ class AppStrings {
   static const myReferralCode = "myReferralCode";
   static const isProfileDataIsEmpty = "isProfileDataIsEmpty";
   static const isUserEducationDataIsEmpty = "isUserEducationDataIsEmpty";
+  static const coordinatorId = "coordinator";
 }
