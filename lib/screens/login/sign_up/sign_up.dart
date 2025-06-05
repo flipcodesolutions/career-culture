@@ -39,7 +39,8 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     super.initState();
 
     SignUpProvider signUpProvider = context.read<SignUpProvider>();
-    
+    UserProvider userProvider = context.read<UserProvider>();
+    userProvider.setCurrentSignupPageIndex = 0;
     // if (signUpProvider.isUpdatingProfile) {
     Future.microtask(() async {
       await signUpProvider.initControllerWithLocalStorage();
@@ -58,7 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
         WidgetHelper.customSnackBar(
           title: "Must Fill The Profile Details",
           isError: true,
-          autoClose: false
+          autoClose: false,
         );
         return;
       } else {
@@ -95,6 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
             icon: AppIcons.backArrow,
           ),
           shape: Border(bottom: BorderSide(color: AppColors.white)),
+          
           bottom: PreferredSize(
             preferredSize: Size(0, 0),
             child: CustomContainer(
@@ -238,10 +240,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
             });
           }
         } catch (e) {
-          WidgetHelper.customSnackBar(
-            title: e.toString(),
-            isError: true,
-          );
+          WidgetHelper.customSnackBar(title: e.toString(), isError: true);
         }
       } else {
         WidgetHelper.customSnackBar(

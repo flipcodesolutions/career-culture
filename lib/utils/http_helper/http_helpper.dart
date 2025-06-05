@@ -29,7 +29,7 @@ class HttpHelper {
       if (response.statusCode == 500) {
         WidgetHelper.customSnackBar(
           isError: true,
-          title: "Internal Server Error (500)",
+          title: "Internal Server Error (${response.statusCode})",
           color: AppColors.error,
         );
         throw Exception("Server error");
@@ -39,7 +39,7 @@ class HttpHelper {
       if (response.statusCode == 401) {
         WidgetHelper.customSnackBar(
           isError: true,
-          title: "Session expired. Please log in again.",
+          title: "Session expired. Please log in again. (${response.statusCode})",
           color: AppColors.error,
         );
         Navigator.of(context).pushAndRemoveUntil(
@@ -54,7 +54,9 @@ class HttpHelper {
         if (data.containsKey('success') && !data['success']) {
           WidgetHelper.customSnackBar(
             isError: true,
-            title: data['message'] ?? "Something went wrong",
+            title:
+                "${data['message']} ${response.statusCode}" ??
+                "Something went wrong (${response.statusCode})",
             color: AppColors.error,
           );
           return data; // Return data even if unsuccessful
@@ -65,7 +67,7 @@ class HttpHelper {
       // Handle unexpected errors
       WidgetHelper.customSnackBar(
         isError: true,
-        title: "Unexpected Error",
+        title: "Unexpected Error (${response.statusCode})",
         color: AppColors.error,
       );
       return {};
@@ -73,10 +75,9 @@ class HttpHelper {
       if (isDebugMode) {
         log("Error processing response: $e");
       }
-      ;
       WidgetHelper.customSnackBar(
         isError: true,
-        title: "Something went wrong",
+        title: "Something went wrong (${response.statusCode})",
         color: AppColors.error,
       );
       return {};

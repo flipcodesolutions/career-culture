@@ -62,6 +62,7 @@ class AppStrings {
   static const createAnAccountToJoinUS = "Create An Account To Join US";
   static const onlyChangeWhatYouMust = "Only Change What You Must";
   static const name = "Name";
+  static const studentID = "Student ID";
   static const firstName = "First Name";
   static const middleName = "Middle Name";
   static const lastName = "Last Name";

@@ -65,11 +65,16 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
+  TextEditingController studentIdController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController contactController = TextEditingController();
 
-  void initControllerFromLocalStorage() async {
+  /// will load data before page is visible
+  Future<void> initControllerFromLocalStorage() async {
+    studentIdController.text = await SharedPrefs.getSharedString(
+      AppStrings.studentId,
+    );
     nameController.text = await SharedPrefs.getSharedString(
       AppStrings.userName,
     );

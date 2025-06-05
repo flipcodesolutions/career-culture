@@ -78,10 +78,26 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                   children: [
                     SizeHelper.height(height: 3.h),
 
+                    /// student id
+                    CustomTextFormField(
+                      labelText: AppStrings.studentID,
+                      // hintText: AppStrings.enterName,
+                      maxLength: 100,
+                      controller: counselingProvider.studentIdController,
+                      enabled:
+                          counselingProvider.studentIdController.text.isEmpty,
+                      validator:
+                          (value) => ValidatorHelper.validateValue(
+                            value: value,
+                            context: context,
+                          ),
+                    ),
+                    SizeHelper.height(),
+
                     /// name
                     CustomTextFormField(
                       labelText: AppStrings.name,
-                      hintText: AppStrings.enterName,
+                      // hintText: AppStrings.enterName,
                       maxLength: 100,
                       controller: counselingProvider.nameController,
                       enabled: counselingProvider.nameController.text.isEmpty,
@@ -96,7 +112,7 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                     /// email
                     CustomTextFormField(
                       labelText: AppStrings.email,
-                      hintText: AppStrings.enterEmail,
+                      // hintText: AppStrings.enterEmail,
                       maxLength: 100,
                       controller: counselingProvider.emailController,
                       enabled: counselingProvider.emailController.text.isEmpty,
@@ -111,7 +127,7 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                     /// email
                     CustomTextFormField(
                       labelText: AppStrings.contactNo,
-                      hintText: AppStrings.enterContact,
+                      // hintText: AppStrings.enterContact,
                       maxLength: 10,
                       controller: counselingProvider.contactController,
                       enabled:
