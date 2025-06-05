@@ -67,7 +67,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     if (genderQuestion.answer?.isEmpty ?? true) {
       WidgetHelper.customSnackBar(
-        // context: context,
+        autoClose: false,
         title: AppStrings.genderNeeded,
         isError: true,
       );
@@ -75,7 +75,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
       WidgetHelper.customSnackBar(
-        // context: context,
+        autoClose: false,
         title: AppStrings.mustSelectProfilePic,
         isError: true,
       );
@@ -85,8 +85,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         ? _selectedConvener?.id == null || _selectedConvener?.name == null
         : false) {
       WidgetHelper.customSnackBar(
-        // context: context,
-        title: AppStrings.somethingWentWrong,
+        autoClose: false,
+        title: AppStrings.mustSelectCoordinator,
         isError: true,
       );
       isValid = false;
@@ -314,17 +314,17 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (!isValid) return false;
     if (state == "" || state == AppStrings.noStateFound) {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: AppStrings.noStateFound,
         isError: true,
+        autoClose: false
       );
       return false;
     }
     if (city == "" || city == AppStrings.noCitiesFound) {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: AppStrings.noCitiesFound,
         isError: true,
+        autoClose: false
       );
       return false;
     }
@@ -515,7 +515,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       return true;
     } else {
       WidgetHelper.customSnackBar(
-        // context: context,
+        autoClose: false,
         title: AppStrings.thisNumberIsTaken,
         isError: true,
       );
@@ -543,7 +543,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       return true;
     } else {
       WidgetHelper.customSnackBar(
-        // context: context,
+        autoClose: false,
         title: AppStrings.thisNumberIsTaken,
         isError: true,
       );
@@ -654,7 +654,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     if (_areYouWorking.answer?.isEmpty ?? true) {
       WidgetHelper.customSnackBar(
-        // context: context,
+        autoClose: false,
         title: AppStrings.mustGiveAllAnswer,
         isError: true,
       );

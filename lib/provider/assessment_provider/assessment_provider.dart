@@ -143,9 +143,9 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
     if (!hasAllValidAnswers) {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: "Please answer all questions and upload required files.",
         isError: true,
+        autoClose: false
       );
       return;
     }

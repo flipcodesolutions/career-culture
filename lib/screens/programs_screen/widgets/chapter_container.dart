@@ -38,7 +38,7 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
                     transition: ScaleFadePageTransitionsBuilder(),
                   )
                   : WidgetHelper.customSnackBar(
-                    // context: context,
+                    autoClose: false,
                     title: AppStrings.notOpenYet,
                     isError: true,
                   ),

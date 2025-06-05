@@ -29,7 +29,6 @@ class HttpHelper {
       if (response.statusCode == 500) {
         WidgetHelper.customSnackBar(
           isError: true,
-          // context: context,
           title: "Internal Server Error (500)",
           color: AppColors.error,
         );
@@ -40,7 +39,6 @@ class HttpHelper {
       if (response.statusCode == 401) {
         WidgetHelper.customSnackBar(
           isError: true,
-          // context: context,
           title: "Session expired. Please log in again.",
           color: AppColors.error,
         );
@@ -56,7 +54,6 @@ class HttpHelper {
         if (data.containsKey('success') && !data['success']) {
           WidgetHelper.customSnackBar(
             isError: true,
-            // context: context,
             title: data['message'] ?? "Something went wrong",
             color: AppColors.error,
           );
@@ -68,7 +65,6 @@ class HttpHelper {
       // Handle unexpected errors
       WidgetHelper.customSnackBar(
         isError: true,
-        // context: context,
         title: "Unexpected Error",
         color: AppColors.error,
       );
@@ -80,7 +76,6 @@ class HttpHelper {
       ;
       WidgetHelper.customSnackBar(
         isError: true,
-        // context: context,
         title: "Something went wrong",
         color: AppColors.error,
       );
@@ -111,7 +106,6 @@ class HttpHelper {
       }
       // if (!context.mounted) return {};
       WidgetHelper.customSnackBar(
-        // context: context,
         isError: true,
         title: "Something went wrong!",
         color: AppColors.error,

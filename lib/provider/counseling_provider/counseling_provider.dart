@@ -51,14 +51,14 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
       _counselingDatesAndSlots;
 
   /// get dates and slots for counseling
-  Future<void> getCounselignDatesAndSlots(
-    {required BuildContext context,}
-  ) async {
+  Future<void> getCounselignDatesAndSlots({
+    required BuildContext context,
+  }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _counselingDatesAndSlots =
-        await counselingService.getSlotsAndDateForCounseling(context: context);
+    _counselingDatesAndSlots = await counselingService
+        .getSlotsAndDateForCounseling(context: context);
 
     /// set _isLoading false
     _isLoading = false;
@@ -172,14 +172,13 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
         if (context.mounted) {
           pop(context);
           WidgetHelper.customSnackBar(
-            // context: context,
-            title: AppStrings.counselingAppointmentSubmitted,
+            title: AppStrings.counselingAppointmentRequested,
+            autoClose: false,
           );
         }
       }
     } else {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: AppStrings.somethingWentWrong,
         isError: true,
       );

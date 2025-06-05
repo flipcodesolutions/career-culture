@@ -393,7 +393,7 @@ Future<void> launchUrl({
     print("failed");
     if (!context.mounted) return;
     WidgetHelper.customSnackBar(
-      // context: context,
+      autoClose: false,
       title: "Could Not Launch This Url",
       isError: true,
     );

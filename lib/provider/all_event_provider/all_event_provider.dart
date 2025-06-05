@@ -49,7 +49,6 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
            id: id);
     if (confirmation?.success == true) {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: AppStrings.participateDone,
       );
     }

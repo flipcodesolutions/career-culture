@@ -226,7 +226,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                                             item,
                                                           )
                                                           : WidgetHelper.customSnackBar(
-                                                            // context: context,
+                                                            autoClose: false,
                                                             title:
                                                                 AppStrings
                                                                     .notOpenYet,
@@ -358,7 +358,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
       transition: OpenUpwardsPageTransitionsBuilder(),
     );
     WidgetHelper.customSnackBar(
-      // context: context,
+      autoClose: false,
       title: AppStrings.pleaseLoginFirst,
       isError: true,
     );
@@ -467,7 +467,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
               isOpen
                   ? isDone
                       ? WidgetHelper.customSnackBar(
-                        // context: context,
+                        autoClose: false,
                         title: AppStrings.counselingAppointmentDone,
                         isError: true,
                       )
@@ -477,7 +477,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
                         transition: ScaleFadePageTransitionsBuilder(),
                       )
                   : WidgetHelper.customSnackBar(
-                    // context: context,
+                    autoClose: false,
                     title: AppStrings.mileStoneNotAchieved,
                     isError: true,
                   ),

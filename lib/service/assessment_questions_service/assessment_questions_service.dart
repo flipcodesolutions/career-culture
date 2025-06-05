@@ -99,14 +99,12 @@ class AssessmentQuestionsService {
         final jsonResponse = jsonDecode(resp.body);
         log("${jsonResponse}");
         WidgetHelper.customSnackBar(
-          // context: context,
           title: "${jsonResponse['message']}",
           isError: !jsonResponse['success'],
         );
         return jsonResponse['success'];
       } else {
         WidgetHelper.customSnackBar(
-          // context: context,
           title: "Error: ${streamed.statusCode}",
           isError: true,
         );

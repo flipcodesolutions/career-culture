@@ -129,7 +129,6 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                       );
                     } else {
                       WidgetHelper.customSnackBar(
-                        // context: context,
                         title: "Validation Failed",
                         isError: true,
                       );

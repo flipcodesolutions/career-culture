@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toastification/toastification.dart';
 import '../../app_const/app_colors.dart';
+import '../../widgets/custom_text.dart';
 
 mixin WidgetHelper {
   // custom sizedBox for height
@@ -36,46 +38,55 @@ mixin WidgetHelper {
 
   // show dialog
   static customSnackBar({
-    // required BuildContext context,
     required String title,
     Color? color,
     bool? isError,
+    bool autoClose = true,
   }) {
+    toastification.dismissAll();
     if (isError ?? false) {
-      // toastification;
-      toastification.dismissAll();
       toastification.show(
-        icon: Icon(Icons.info_outline, color: AppColors.white),
+        icon: SizedBox.shrink(),
         borderSide: BorderSide(color: color ?? AppColors.black),
         primaryColor: color,
+        applyBlurEffect: true,
         foregroundColor: AppColors.white,
-        // backgroundColor: AppColors.errorColor,
-        // primaryColor: ColorHelper.kPrimary,
-        closeButtonShowType: CloseButtonShowType.none,
         type: ToastificationType.error,
-        showProgressBar: true,
         alignment: Alignment.bottomCenter,
         style: ToastificationStyle.fillColored,
+        autoCloseDuration: autoClose ? Duration(seconds: 5) : null,
+        showProgressBar: autoClose,
         dragToClose: true,
-        // context: context, // optional if you use ToastificationWrapper
-        title: Text(title, style: TextStyle(color: AppColors.white)),
-        autoCloseDuration: const Duration(seconds: 2),
+        title: CustomText(text: title),
+        closeButton: closeBtnBuilderForToastification(),
       );
     } else {
-      toastification.dismissAll();
-
       toastification.show(
+        applyBlurEffect: true,
         foregroundColor: AppColors.white,
         backgroundColor: color ?? AppColors.white,
-        closeButtonShowType: CloseButtonShowType.none,
         type: ToastificationType.success,
         style: ToastificationStyle.fillColored,
-        showProgressBar: true,
+        showProgressBar: autoClose,
+        autoCloseDuration: autoClose ? Duration(seconds: 5) : null,
         alignment: Alignment.bottomCenter,
-        // context: context, // optional if you use ToastificationWrapper
-        title: Text(title),
-        autoCloseDuration: const Duration(seconds: 2),
+        title: CustomText(text: title),
+        closeButton: closeBtnBuilderForToastification(),
       );
     }
+  }
+
+  /// used for showing close btn in snackbar
+  static ToastCloseButton closeBtnBuilderForToastification() {
+    return ToastCloseButton(
+      showType: CloseButtonShowType.always,
+      buttonBuilder:
+          (context, onClose) => CustomContainer(
+            child: GestureDetector(
+              onTap: onClose,
+              child: Icon(Icons.cancel, color: AppColors.white),
+            ),
+          ),
+    );
   }
 }

@@ -53,11 +53,11 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
     if (oversized.isNotEmpty) {
       final names = oversized.map((f) => f.name).join(', ');
       WidgetHelper.customSnackBar(
-        // context: context,
         title:
             'These files exceed the '
             '${(widget.maxFileSizeBytes / (1024 * 1024)).toStringAsFixed(1)} MB limit: $names',
         isError: true,
+        autoClose: false
       );
     }
     // 3️⃣ update state & provider with only the accepted ones

@@ -158,10 +158,12 @@ class PostInfo {
       assessmentStatus?.toLowerCase() == "Approved".toLowerCase()
           ? WidgetHelper.customSnackBar(
             title: AppStrings.yourAssessmentIsDoneAlready,
+            autoClose: false,
           )
           : WidgetHelper.customSnackBar(
             title: AppStrings.yourAssessmentIsUnderReview,
             isError: true,
+            autoClose: false,
           );
     }
   }

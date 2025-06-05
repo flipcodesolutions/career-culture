@@ -149,7 +149,7 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>  with  Wi
                               ),
                         )
                         : WidgetHelper.customSnackBar(
-                          // context: context,
+                          autoClose: false,
                           title: AppStrings.yourAreNotApprovedYet,
                           isError: true,
                         );
@@ -161,7 +161,7 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>  with  Wi
                       transition: ScaleFadePageTransitionsBuilder(),
                     );
                     WidgetHelper.customSnackBar(
-                      // context: context,
+                      autoClose: false,
                       title: AppStrings.pleaseLoginFirst,
                       isError: true,
                     );
@@ -290,12 +290,11 @@ class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
                                 id: widget.id.toString(),
                               )
                               : WidgetHelper.customSnackBar(
-                                // context: context,
+                                autoClose: false,
                                 title: AppStrings.yourAreNotApprovedYet,
                                 isError: true,
                               )
                       : () => WidgetHelper.customSnackBar(
-                        // context: context,
                         title: AppStrings.mustAcceptTerms,
                         isError: true,
                       ),

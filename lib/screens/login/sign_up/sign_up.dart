@@ -58,6 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
         WidgetHelper.customSnackBar(
           title: "Must Fill The Profile Details",
           isError: true,
+          autoClose: false
         );
         return;
       } else {
@@ -225,7 +226,7 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
           );
           if (result == null) {
             WidgetHelper.customSnackBar(
-              // context: context,
+              autoClose: false,
               title: AppStrings.noFilePicked,
               isError: true,
             );
@@ -238,14 +239,13 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
           }
         } catch (e) {
           WidgetHelper.customSnackBar(
-            // context: context,
             title: e.toString(),
             isError: true,
           );
         }
       } else {
         WidgetHelper.customSnackBar(
-          // context: context,
+          autoClose: false,
           title: AppStrings.noPermissionFound,
           isError: true,
         );

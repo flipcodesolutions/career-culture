@@ -228,8 +228,8 @@ class AppStrings {
       'Earn rewards when your friends join using your code!';
   static willGetThisMuchCoins({required String points}) =>
       'On SuccessFull Invite You Will Get $points Points As Reward';
-  static const counselingAppointmentSubmitted =
-      "Counseling Appointment Submitted";
+  static const counselingAppointmentRequested =
+      "Counseling Appointment Requested";
   static const noStateFound = 'No States Found';
   static const noCitiesFound = 'No Cities Found';
   static const counselingAppointmentDone = 'Counseling Appointment Done';
@@ -243,6 +243,7 @@ class AppStrings {
   static const orderPlaced = 'Order Placed Successfully';
   static const facebookLoginFails = 'Facebook Login Failed';
   static const facebookLoginDone = 'Facebook Login Done';
+  static const mustSelectCoordinator = 'Must Select Coordinator';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

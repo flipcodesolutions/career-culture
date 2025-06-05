@@ -320,7 +320,6 @@ class MethodHelper with NavigateHelper {
     );
     await SharedPrefs.clearShared();
     WidgetHelper.customSnackBar(
-      // context: context,
       title: AppStrings.accountIsDeleted,
       isError: true,
     );
@@ -337,7 +336,6 @@ class MethodHelper with NavigateHelper {
     );
     if (refer.status == ShareResultStatus.success) {
       WidgetHelper.customSnackBar(
-        // context: context,
         title: AppStrings.inviteRequestSent,
       );
     }
@@ -358,7 +356,6 @@ class MethodHelper with NavigateHelper {
           context: context,
         )
         : WidgetHelper.customSnackBar(
-          // context: context,
           title: AppStrings.pleaseLoginFirst,
           isError: true,
         );
