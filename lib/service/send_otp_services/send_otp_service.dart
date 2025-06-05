@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
+import 'package:mindful_youth/models/login_model/verify_otp_model.dart';
 // import 'package:mindful_youth/models/login_model/user_signup_confirm_model.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
@@ -20,9 +21,7 @@ class SendOtpService {
       );
       if (response.isNotEmpty) {
         SendEmailOtpModel model = SendEmailOtpModel.fromJson(response);
-        WidgetHelper.customSnackBar(
-          title: model.message ?? "",
-        );
+        WidgetHelper.customSnackBar(title: model.message ?? "");
         return model;
       }
       return null;
@@ -49,7 +48,7 @@ class SendOtpService {
       }
       return false;
     } catch (e) {
-      log("error while verify mobile otp => $e");
+      log("error while verify email otp => $e");
       return false;
     }
   }
@@ -66,9 +65,7 @@ class SendOtpService {
       );
       if (response.isNotEmpty) {
         SentOtpModel model = SentOtpModel.fromJson(response);
-        WidgetHelper.customSnackBar(
-          title: model.message ?? "",
-        );
+        WidgetHelper.customSnackBar(title: model.message ?? "");
         return model;
       }
       return null;
@@ -91,7 +88,8 @@ class SendOtpService {
         body: {"contactNo": contactNo, "otp": otp},
       );
       if (response.isNotEmpty) {
-        return response['data']['isNewUser'];
+        OtpVerifyModel model = OtpVerifyModel.fromJson(response);
+        return model.data?.isNewUser ?? false;
       }
       return false;
     } catch (e) {

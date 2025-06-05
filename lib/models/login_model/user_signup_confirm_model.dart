@@ -622,17 +622,6 @@ class UserModelData {
       );
       _log(AppStrings.images, user?.profile?.images ?? '');
 
-      // await SharedPrefs.saveString(
-      //   AppStrings.userId,
-      //   user?.profile?.userId.toString() ?? '',
-      // );
-      // _log(AppStrings.userId, user?.profile?.userId.toString() ?? '');
-
-      // await SharedPrefs.saveString(
-      //   AppStrings.userContactNo1,
-      //   user?.profile?.contactNo1 ?? '',
-      // );
-      // _log(AppStrings.userContactNo1, user?.profile?.contactNo1 ?? '');
       await SharedPrefs.saveString(
         AppStrings.userContactNo1,
         user?.phone ?? '',

@@ -40,9 +40,10 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
 
     SignUpProvider signUpProvider = context.read<SignUpProvider>();
     UserProvider userProvider = context.read<UserProvider>();
-    userProvider.setCurrentSignupPageIndex = 0;
+
     // if (signUpProvider.isUpdatingProfile) {
     Future.microtask(() async {
+      userProvider.setCurrentSignupPageIndex = 0;
       await signUpProvider.initControllerWithLocalStorage();
     });
     // }
@@ -96,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
             icon: AppIcons.backArrow,
           ),
           shape: Border(bottom: BorderSide(color: AppColors.white)),
-          
+
           bottom: PreferredSize(
             preferredSize: Size(0, 0),
             child: CustomContainer(

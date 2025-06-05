@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
@@ -12,10 +10,10 @@ import 'package:mindful_youth/service/user_servcies/login_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:provider/provider.dart';
-import '../../app_const/app_strings.dart';
 import '../../models/login_model/sent_otp_model.dart';
 import '../../models/login_model/user_signup_confirm_model.dart';
 import '../../utils/method_helpers/method_helper.dart';
+import '../../utils/widget_helper/widget_helper.dart';
 
 class LoginProvider extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
@@ -127,6 +125,9 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
+
+    /// this is line is for to get rid of data user just entered but did'nt finished and goes back , without this line will pre load the data what user filled lastly
+    await WidgetHelper.clearUserStorage(skipKeys: {});
     _loginResponseModel = await loginService.verifyOtpOfMobile(
       context: context,
       mobileNumber: mobileController.text,
@@ -171,6 +172,9 @@ class LoginProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
+
+    /// this is line is for to get rid of data user just entered but did'nt finished and goes back , without this line will pre load the data what user filled lastly
+    await WidgetHelper.clearUserStorage(skipKeys: {});
     _loginResponseModel = await loginService.checkEmailExit(
       context: context,
       email: email,

@@ -920,7 +920,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _genderQuestion.answer = await SharedPrefs.getSharedString(
       AppStrings.userGender,
     );
-
+    _selectedConvener = null;
     coordinatorIdFromLocal = await SharedPrefs.getSharedString(
       AppStrings.coordinatorId,
     );
