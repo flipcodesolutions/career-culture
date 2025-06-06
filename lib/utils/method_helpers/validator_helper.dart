@@ -68,13 +68,21 @@ class ValidatorHelper with NavigateHelper {
     required String? value,
     required BuildContext context,
   }) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return AppStrings.pleaseEnterMessage;
     }
 
-    // Check if the date is in "yyyy-MM-dd" format
+    final trimmedValue = value.trim();
+
+    // Validate pattern: DD-Mmm-YYYY (e.g., 05-Jan-2002)
+    final regex = RegExp(r'^\d{2}-[A-Z][a-z]{2}-\d{4}$');
+    if (!regex.hasMatch(trimmedValue)) {
+      return AppStrings.needProperDateFormate;
+    }
+
+    // Validate actual date
     try {
-      final parsedDate = DateFormat('yyyy-MM-dd').parseStrict(value);
+      DateFormat('dd-MMM-yyyy').parseStrict(trimmedValue);
     } catch (e) {
       return AppStrings.needProperDateFormate;
     }

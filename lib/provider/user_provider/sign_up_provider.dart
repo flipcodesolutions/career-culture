@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/get_conveners_service/get_conveners_service.dart';
 import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -150,20 +151,81 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   int _lastLength = 0;
 
   void addHyphen() {
-    final text = birthDate.text;
-    final selectionIndex = birthDate.selection.baseOffset;
+    final oldText = birthDate.text;
+    final oldSelection = birthDate.selection;
 
-    if (text.length > _lastLength) {
-      // Typing forward
-      if (text.length == 4 || text.length == 7) {
-        birthDate.text = '$text-';
-        birthDate.selection = TextSelection.fromPosition(
-          TextPosition(offset: birthDate.text.length),
-        );
-      }
+    // Remove all hyphens first
+    String rawText = oldText.replaceAll('-', '');
+
+    // Limit length to 8 (DDMMMYYYY without hyphens)
+    if (rawText.length > 9) {
+      rawText = rawText.substring(0, 8);
     }
 
-    _lastLength = birthDate.text.length;
+    String day = '';
+    String month = '';
+    String year = '';
+
+    if (rawText.length >= 2) {
+      day = rawText.substring(0, 2);
+    } else {
+      day = rawText; // partial day input
+    }
+
+    if (rawText.length > 2) {
+      int monthEndIndex = rawText.length >= 5 ? 5 : rawText.length;
+      month = rawText.substring(2, monthEndIndex);
+    }
+
+    if (rawText.length > 5) {
+      year = rawText.substring(5);
+    }
+
+    // Capitalize first letter of month, rest lowercase
+    if (month.isNotEmpty) {
+      month =
+          month[0].toUpperCase() +
+          (month.length > 1 ? month.substring(1).toLowerCase() : '');
+    }
+
+    // Build new formatted string with hyphens
+    String newText = day;
+    if (month.isNotEmpty) newText += '-$month';
+    if (year.isNotEmpty) newText += '-$year';
+
+    // If text didn't change, no need to update
+    if (newText == oldText) return;
+
+    // Calculate new cursor position
+    int cursorPos = oldSelection.baseOffset;
+
+    // Count hyphens before cursor in old and new text to adjust cursor correctly
+    int hyphensBeforeCursorOld =
+        '-'.allMatches(oldText.substring(0, cursorPos)).length;
+    int hyphensBeforeCursorNew =
+        '-'
+            .allMatches(
+              newText.substring(
+                0,
+                cursorPos + (newText.length - oldText.length),
+              ),
+            )
+            .length;
+
+    int diff = hyphensBeforeCursorNew - hyphensBeforeCursorOld;
+    int newCursorPos = cursorPos + diff;
+
+    // Clamp cursor within newText length
+    if (newCursorPos > newText.length) newCursorPos = newText.length;
+    if (newCursorPos < 0) newCursorPos = 0;
+
+    // Update controller text and selection
+    birthDate.text = newText;
+    birthDate.selection = TextSelection.fromPosition(
+      TextPosition(offset: newCursorPos),
+    );
+
+    _lastLength = newText.length;
     notifyListeners();
   }
 
@@ -691,7 +753,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.contactNo1 = contactNo1.text;
     _signUpRequestModel.contactNo2 = contactNo2.text;
     _signUpRequestModel.gender = genderQuestion.answer;
-    _signUpRequestModel.dateOfBirth = birthDate.text;
+    _signUpRequestModel.dateOfBirth = MethodHelper.convertDateToBackendFormat(
+      birthDate.text,
+    );
     _signUpRequestModel.addressLine1 = address1.text;
     _signUpRequestModel.addressLine2 = address2.text;
     // _signUpRequestModel.city = city.text;
@@ -913,7 +977,11 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // print('✅ Middle Name: ${middleName.text}');
     // print('✅ Last Name: ${lastName.text}');
 
-    birthDate.text = await SharedPrefs.getSharedString(AppStrings.dateOfBirth);
+    birthDate.text = MethodHelper.convertToDisplayFormat(
+      inputDate: await SharedPrefs.getSharedString(AppStrings.dateOfBirth),
+    );
+
+    /// this is used to know if user is adding date field or deleting
     _lastLength = birthDate.text.length;
     // print('📅 Date of Birth: ${birthDate.text}');
 

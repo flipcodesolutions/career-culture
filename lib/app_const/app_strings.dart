@@ -153,6 +153,7 @@ class AppStrings {
   static const cancel = "Cancel";
   static const exit = "Exit";
   static const dateFormate = "YYYY-MM-DD";
+  static const ddMmmYyyy = "DD-MMM-YYYY";
   static const acceptTerms = "Accept Terms Before Proceeding !!";
   static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
   static const agreeToTerms = "I agree to the terms Of This Event.";

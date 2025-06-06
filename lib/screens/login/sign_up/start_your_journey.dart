@@ -119,9 +119,14 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                     padding: EdgeInsets.symmetric(horizontal: 5.w),
                     child: CustomTextFormField(
                       labelText: AppStrings.birthDate,
-                      hintText: AppStrings.dateFormate,
-                      onChanged: (value) => signUpProvider.addHyphen(),
-                      maxLength: 10,
+                      hintText: AppStrings.ddMmmYyyy,
+                      onChanged:
+                          (value) => {
+                            signUpProvider.addHyphen(),
+                            signUpProvider.firstPageFormKey.currentState
+                                ?.validate(),
+                          },
+                      maxLength: 11,
                       suffix: CustomContainer(
                         width: 10.w,
                         child: GestureDetector(
@@ -132,7 +137,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                               ),
                         ),
                       ),
-                      keyboardType: TextInputType.numberWithOptions(),
+                      keyboardType: TextInputType.text,
                       controller: signUpProvider.birthDate,
                       validator:
                           (value) => ValidatorHelper.validateDateFormate(

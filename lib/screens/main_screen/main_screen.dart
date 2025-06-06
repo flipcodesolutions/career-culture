@@ -4,7 +4,6 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/screens/account_screen/account_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/home_screen/home_screen.dart';
-import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/programs_screens.dart';
 import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
 import 'package:mindful_youth/utils/border_helper/border_helper.dart';
@@ -123,6 +122,7 @@ class CustomFloatingActionBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: DateTime.now().toIso8601String(),
       onPressed: onPressed,
       backgroundColor: backGroundColor ?? AppColors.primary,
       foregroundColor: foregroundColor ?? AppColors.white,

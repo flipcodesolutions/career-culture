@@ -277,15 +277,39 @@ class MethodHelper with NavigateHelper {
     );
     if (date != null) {
       /// set the controller text in string like "1999-01-12"
-      return formatDateInYyyyMmDd(date: date);
+      return formateDateInDdMmmYyyy(inputDate: date);
     } else {
       return "";
     }
   }
 
-  //// formate date
-  static String formatDateInYyyyMmDd({required DateTime date}) {
-    return DateFormat('yyyy-MM-dd').format(date);
+  /// convert date from [YYYY-MM-DD] to [DD-MMM-YYYY]
+  static String formateDateInDdMmmYyyy({required DateTime inputDate}) {
+    try {
+      return DateFormat("dd-MMM-yyyy").format(inputDate);
+    } catch (e) {
+      return "";
+    }
+  }
+
+  /// convert date from [DD-MMM-YYYY] to [YYYY-MM-DD]
+  static String convertDateToBackendFormat(String inputDate) {
+    try {
+      DateTime date = DateFormat("dd-MMM-yyyy").parse(inputDate);
+      return DateFormat("yyyy-MM-dd").format(date);
+    } catch (e) {
+      return "";
+    }
+  }
+
+  /// convert date from [YYYY-MM-DD] to [DD-MMM-YYYY]
+  static String convertToDisplayFormat({required String inputDate}) {
+    try {
+      DateTime date = DateFormat("yyyy-MM-dd").parse(inputDate);
+      return DateFormat("dd-MMM-yyyy").format(date);
+    } catch (e) {
+      return "Invalid date";
+    }
   }
 
   /// get fcm token
@@ -335,9 +359,7 @@ class MethodHelper with NavigateHelper {
       ),
     );
     if (refer.status == ShareResultStatus.success) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.inviteRequestSent,
-      );
+      WidgetHelper.customSnackBar(title: AppStrings.inviteRequestSent);
     }
   }
 
