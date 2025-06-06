@@ -233,7 +233,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     DateTime? initialDate;
     try {
       // Try parsing the existing text to a DateTime
-      initialDate = DateFormat('yyyy-MM-dd').parse(birthDate.text);
+      initialDate = DateFormat('dd-MMM-yyyy').parse(birthDate.text);
       notifyListeners();
     } catch (_) {
       // Fallback if parsing fails or text is empty
@@ -251,7 +251,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     );
     if (date != null) {
       /// set the controller text in string like "1999-01-12"
-      birthDate.text = DateFormat('yyyy-MM-dd').format(date);
+      birthDate.text = DateFormat('dd-MMM-yyyy').format(date);
       notifyListeners();
     }
   }
