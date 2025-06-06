@@ -36,7 +36,6 @@ void main() async {
   /// will wait until every thing is initialized
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  requestPermission();
   // FirebaseMessaging.onBackgroundMessage(onBackGroundMessage);
   // await FirebaseMessagingUtils.initNotifications();
   // Register background handler (top-level function) before any Firebase Messaging usage:contentReference[oaicite:4]{index=4}
@@ -100,8 +99,20 @@ void requestPermission() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    requestPermission();
+  }
 
   @override
   Widget build(BuildContext context) {

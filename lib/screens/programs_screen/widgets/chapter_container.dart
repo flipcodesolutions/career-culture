@@ -91,6 +91,8 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
                             Expanded(
                               child: CustomText(
                                 text: chaptersInfo.description ?? "",
+
+                                maxLines: 2,
                               ),
                             ),
                             Icon(

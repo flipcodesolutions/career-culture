@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -58,7 +57,6 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
         context: context,
         id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
       );
-
       userProvider.isUserLoggedIn
           ? programsProvider.getUserProgress(
             context: context,
@@ -102,14 +100,10 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                                 .toString(),
                       ),
                   child: ListView(
-                    padding: EdgeInsets.symmetric(vertical: 2.h),
                     children: [
-                      CustomContainer(
-                        margin: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: ImageContainer(
-                          image: "${AppStrings.assetsUrl}${program?.image}",
-                          showImageInPanel: true,
-                        ),
+                      ImageContainer(
+                        image: "${AppStrings.assetsUrl}${program?.image}",
+                        showImageInPanel: true,
                       ),
                       SizeHelper.height(),
                       Padding(
@@ -224,16 +218,16 @@ class ImageContainer extends StatelessWidget {
     return CustomContainer(
       child: CustomContainer(
         backGroundColor: AppColors.lightWhite,
-        boxShadow: ShadowHelper.scoreContainer,
-        borderRadius: BorderRadius.circular(AppSize.size10),
+        // boxShadow: ShadowHelper.scoreContainer,
+        // borderRadius: BorderRadius.circular(AppSize.size10),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppSize.size10),
+          // borderRadius: BorderRadius.circular(AppSize.size10),
           child: AspectRatio(
             aspectRatio: aspectRatio ?? 16 / 9,
             child: CustomImageWithLoader(
               imageUrl: image,
               showImageInPanel: showImageInPanel,
-              fit: fit ?? BoxFit.contain,
+              fit: fit ?? BoxFit.cover,
             ),
           ),
         ),
