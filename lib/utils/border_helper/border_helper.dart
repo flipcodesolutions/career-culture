@@ -16,6 +16,13 @@ class BorderHelper {
   static OutlineInputBorder inputBorderDisabled = OutlineInputBorder(
     borderSide: BorderSide(width: 0.3, color: AppColors.grey),
   );
+  // for container like border
+  static OutlineInputBorder containerLikeBorder({
+    required double borderRadius,
+  }) => OutlineInputBorder(
+    borderRadius: BorderRadius.circular(borderRadius),
+    borderSide: BorderSide.none, // No visible border
+  );
 
   /// textField
   static InputDecoration textFormFieldPrimary({
@@ -60,26 +67,11 @@ class BorderHelper {
     filled: true,
     fillColor: fillColor,
     contentPadding: contentPadding,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide.none, // No visible border
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide.none,
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide.none,
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide.none,
-    ),
-    disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide.none,
-    ),
+    border: containerLikeBorder(borderRadius: borderRadius),
+    enabledBorder: containerLikeBorder(borderRadius: borderRadius),
+    focusedBorder: containerLikeBorder(borderRadius: borderRadius),
+    errorBorder: containerLikeBorder(borderRadius: borderRadius),
+    disabledBorder: containerLikeBorder(borderRadius: borderRadius),
     hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.grey),
   );
 }
