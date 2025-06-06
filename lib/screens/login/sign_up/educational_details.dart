@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
+import 'package:mindful_youth/utils/list_helper/list_helper.dart';
 import 'package:mindful_youth/widgets/custom_radio_question_widget_wtih_heading.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -59,6 +60,7 @@ class EducationalDetails extends StatelessWidget {
                       // hintText: AppStrings.nameOfPresentStudy,
                       labelText: AppStrings.presentStudy,
                       controller: signUpProvider.presentStudy,
+                      suggestions: ListHelper.fieldsOfStudy,
                       validator:
                           (value) => ValidatorHelper.validateValue(
                             value: value,
@@ -73,6 +75,7 @@ class EducationalDetails extends StatelessWidget {
                       maxLength: 50,
                       // hintText: AppStrings.nameOfLastStudy,
                       labelText: AppStrings.lastStudy,
+                      suggestions: ListHelper.fieldsOfStudy,
                       controller: signUpProvider.lastStudy,
                       validator:
                           (value) => ValidatorHelper.validateValue(
