@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -11,7 +10,6 @@ import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/shop_market_screen/order_list_screen.dart';
-import 'package:mindful_youth/screens/shop_market_screen/products_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
@@ -28,7 +26,6 @@ import 'package:sizer/sizer.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../cousling_screens/cousiling_form_screen.dart';
 import '../refer_screen/refer_screen.dart';
-
 import 'dart:io';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -70,18 +67,6 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
             text: AppStrings.account,
             style: TextStyleHelper.mediumHeading,
           ),
-          // actions: [
-          //   if (!userProvider.isUserLoggedIn)
-          //     IconButton(
-          //       onPressed:
-          //           () => push(
-          //             context: context,
-          //             widget: LoginScreen(),
-          //             transition: FadeUpwardsPageTransitionsBuilder(),
-          //           ),
-          //       icon: Icon(Icons.login, color: AppColors.primary),
-          //     ),
-          // ],
         ),
         body:
             userProvider.isUserLoggedIn
@@ -101,6 +86,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             ),
                         children: [
                           /// profile circle avatar
+                          SizeHelper.height(),
                           CustomProfileAvatar(),
                           SizeHelper.height(),
 
@@ -133,15 +119,8 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                                   transition:
                                       OpenUpwardsPageTransitionsBuilder(),
                                 ),
-                            titleText: AppStrings.eventHistory,
+                            titleText: AppStrings.myParticipants,
                           ),
-
-                          /// program history
-                          // ProfilePageListTiles(
-                          //   leading: Icons.event_sharp,
-                          //   onTap: () {},
-                          //   titleText: AppStrings.programsHistory,
-                          // ),
 
                           /// certificates
                           ProfilePageListTiles(
@@ -154,7 +133,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                                   transition:
                                       OpenUpwardsPageTransitionsBuilder(),
                                 ),
-                            titleText: AppStrings.certificates,
+                            titleText: AppStrings.myCertificates,
                           ),
 
                           /// saved

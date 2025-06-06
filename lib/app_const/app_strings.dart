@@ -131,9 +131,9 @@ class AppStrings {
   static const district = "District";
   static const account = "Account";
   static const profile = "Profile";
-  static const eventHistory = "Event History";
+  static const myParticipants = "My Participants";
   static const programsHistory = "Programs History";
-  static const certificates = "Certificates";
+  static const myCertificates = "My Certificates";
   static const saved = "Saved";
   static const refer = "Refer";
   static const bookCounselingAppointment = "Book Counseling Appointment";
