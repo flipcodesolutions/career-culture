@@ -68,6 +68,7 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
                       child: CustomImageWithLoader(
                         imageUrl:
                             "${AppStrings.assetsUrl}${chaptersInfo.image}",
+                        skeletonHeight: 10.h,
                       ),
                     ),
                   ),

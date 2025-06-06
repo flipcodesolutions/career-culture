@@ -39,7 +39,8 @@ class HttpHelper {
       if (response.statusCode == 401) {
         WidgetHelper.customSnackBar(
           isError: true,
-          title: "Session expired. Please log in again. (${response.statusCode})",
+          title:
+              "Session expired. Please log in again. (${response.statusCode})",
           color: AppColors.error,
         );
         Navigator.of(context).pushAndRemoveUntil(
@@ -105,12 +106,6 @@ class HttpHelper {
       if (isDebugMode) {
         log("GET request error: $e");
       }
-      // if (!context.mounted) return {};
-      WidgetHelper.customSnackBar(
-        isError: true,
-        title: "Something went wrong!",
-        color: AppColors.error,
-      );
     }
     return {}; // Return an empty map on failure
   }

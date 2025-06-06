@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../app_const/app_colors.dart';
 import '../app_const/app_image_strings.dart';
 import '../app_const/app_size.dart';
+import 'custom_container.dart';
 import 'cutom_loader.dart';
 
 class CustomImageWithLoader extends StatelessWidget {
@@ -11,6 +13,7 @@ class CustomImageWithLoader extends StatelessWidget {
     required this.imageUrl,
     this.width,
     this.height,
+    this.skeletonHeight,
     this.fit,
     this.errorIconSize,
     this.showImageInPanel = true,
@@ -19,6 +22,7 @@ class CustomImageWithLoader extends StatelessWidget {
   final String imageUrl;
   final double? width;
   final double? height;
+  final double? skeletonHeight;
   final BoxFit? fit;
   final double? errorIconSize;
   final bool showImageInPanel;
@@ -39,7 +43,16 @@ class CustomImageWithLoader extends StatelessWidget {
             size: errorIconSize ?? AppSize.size50,
           ),
       fit: fit ?? BoxFit.cover,
-      placeholder: (context, url) => Center(child: CustomLoader()),
+      placeholder:
+          (context, url) => Shimmer.fromColors(
+            baseColor: AppColors.white,
+            highlightColor: AppColors.grey,
+            child: CustomContainer(
+              width: width ?? double.infinity,
+              height: skeletonHeight,
+              backGroundColor: AppColors.white,
+            ),
+          ),
       imageUrl: imageUrl,
     );
 

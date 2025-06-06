@@ -24,6 +24,7 @@ class AllEventService {
       }
       return null;
     } catch (e) {
+      
       kDebugMode ? log("error while getting all events => $e") : null;
       return null;
     }

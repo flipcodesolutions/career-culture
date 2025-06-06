@@ -103,7 +103,7 @@ class _WallScreenState extends State<WallScreen>
                               wallProvider: wallProvider,
                               postId: post?.id ?? -1,
                               isFromWallScreen: true,
-                              context: context
+                              context: context,
                             ),
                         onSharePressed:
                             () async => MethodHelper.shareWallPost(
@@ -200,6 +200,7 @@ class FeedPostCard extends StatelessWidget {
                   showImageInPanel: false,
                   fit: BoxFit.cover,
                   width: 85.w,
+                  skeletonHeight: 20.h,
                   imageUrl: "${AppStrings.assetsUrl}${post?.image}",
                 ),
               ),
