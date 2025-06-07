@@ -61,6 +61,7 @@ class SignUpService {
         signUp.nameOfCompanyOrBusiness ?? "";
 
     final streamedResponse = await request.send();
+    // request.fields.forEach((e, f) => log("$e -> $f")); // for printing what is being sent
     final data = await http.Response.fromStream(streamedResponse);
     log(signUp.toJson().toString());
     if (streamedResponse.statusCode == 200) {
@@ -70,6 +71,7 @@ class SignUpService {
         isError: !jsonResponse['success'],
       );
       UserModel model = UserModel.fromJson(jsonResponse);
+
       /// save model info to local
       if (model.data != null) {
         await model.data!.saveAllToLocalStorage();
@@ -140,6 +142,7 @@ class SignUpService {
           signUp.nameOfCompanyOrBusiness ?? "";
 
       final streamedResponse = await request.send();
+      // request.fields.forEach((e, f) => log("$e -> $f")); // for printing what is being sent
       final data = await http.Response.fromStream(streamedResponse);
       if (streamedResponse.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(data.body);
@@ -149,6 +152,7 @@ class SignUpService {
         );
         UserModel model = UserModel.fromJson(jsonResponse);
         model.data?.token = token;
+
         /// save model info to local
         if (model.data != null) {
           await model.data!.saveAllToLocalStorage();

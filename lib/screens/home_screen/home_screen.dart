@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
@@ -11,7 +10,6 @@ import 'package:mindful_youth/screens/notification_screen/notification_screen.da
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
-import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
