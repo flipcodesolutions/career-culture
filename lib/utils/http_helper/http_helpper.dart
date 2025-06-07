@@ -43,6 +43,7 @@ class HttpHelper {
               "Session expired. Please log in again. (${response.statusCode})",
           color: AppColors.error,
         );
+        await SharedPrefs.clearShared();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()),
           (route) => false,
