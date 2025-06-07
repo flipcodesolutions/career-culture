@@ -308,7 +308,7 @@ class MethodHelper with NavigateHelper {
       DateTime date = DateFormat("yyyy-MM-dd").parse(inputDate);
       return DateFormat("dd-MMM-yyyy").format(date);
     } catch (e) {
-      return "Invalid date";
+      return "";
     }
   }
 

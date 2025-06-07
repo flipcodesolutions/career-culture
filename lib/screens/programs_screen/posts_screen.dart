@@ -18,6 +18,7 @@ import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:mindful_youth/widgets/youtube_player.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -222,6 +223,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -245,15 +247,23 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               SizeHelper.height(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: CustomContainer(
-                  backGroundColor: AppColors.lightWhite,
-                  boxShadow: ShadowHelper.scoreContainer,
-                  child: VideoPlayerWidget(
-                    height: 30.h,
-                    width: 90.w,
-                    autoPlay: false,
-                    showControls: true,
-                    videoUrl: "${AppStrings.assetsUrl}${post?.video}",
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: CustomContainer(
+                    backGroundColor: AppColors.lightWhite,
+                    boxShadow: ShadowHelper.scoreContainer,
+                    child: CustomVideoPlayer(
+                      description: post?.description ?? "",
+                      heading: post?.title ?? "",
+                      videoId: "iLnmTe5Q2Qw",
+                    ),
+                    //  VideoPlayerWidget(
+                    //   height: 30.h,
+                    //   width: 90.w,
+                    //   autoPlay: false,
+                    //   showControls: true,
+                    //   videoUrl: "${AppStrings.assetsUrl}${post?.video}",
+                    // ),
                   ),
                 ),
               ),
