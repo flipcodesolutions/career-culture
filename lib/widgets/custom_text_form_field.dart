@@ -100,6 +100,13 @@ class CustomTextFormField extends StatelessWidget {
             textAlign: textAlign,
             validator: validator,
             onChanged: onChanged,
+            buildCounter:
+                (
+                  context, {
+                  required currentLength,
+                  required isFocused,
+                  required maxLength,
+                }) => null,
           );
         },
         optionsViewBuilder: (context, onSelected, options) {

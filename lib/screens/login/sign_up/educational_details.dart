@@ -60,7 +60,7 @@ class EducationalDetails extends StatelessWidget {
                       // hintText: AppStrings.nameOfPresentStudy,
                       labelText: AppStrings.presentStudy,
                       controller: signUpProvider.presentStudy,
-                      suggestions: ListHelper.fieldsOfStudy,
+                      suggestions: ListHelper.degreesList,
                       validator:
                           (value) => ValidatorHelper.validateValue(
                             value: value,
@@ -75,7 +75,7 @@ class EducationalDetails extends StatelessWidget {
                       maxLength: 50,
                       // hintText: AppStrings.nameOfLastStudy,
                       labelText: AppStrings.lastStudy,
-                      suggestions: ListHelper.fieldsOfStudy,
+                      suggestions: ListHelper.degreesList,
                       controller: signUpProvider.lastStudy,
                       validator:
                           (value) => ValidatorHelper.validateValue(

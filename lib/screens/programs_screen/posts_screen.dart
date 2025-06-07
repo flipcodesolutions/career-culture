@@ -166,7 +166,7 @@ class _PostsScreenState extends State<PostsScreen>
                 child: PrimaryBtn(
                   width: 90.w,
                   btnText:
-                      "${AppStrings.assessment} (${postProvider.currentPost?.points ?? 0} Points)",
+                      "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
                   onTap: () {
                     context.read<AssessmentProvider>().setPostId =
                         postProvider.currentPost?.id?.toString() ?? "";
