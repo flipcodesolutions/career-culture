@@ -166,7 +166,7 @@ class AppStrings {
   static const enterReason = "Enter Reason";
   static const enterName = "Enter Name";
   static const enterContact = "Enter Contact";
-  static const products = "Recommended Products";
+  static const products = "Products";
   static const purchaseHistory = "Purchase History";
   static const rupee = "₹";
   static const buyNow = "Buy Now";
