@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
@@ -14,7 +15,6 @@ import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_video_player.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
@@ -235,11 +235,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
             SizeHelper.height(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: CustomText(
-                text: post?.description ?? "",
-                useOverflow: false,
-                textAlign: TextAlign.justify,
-              ),
+              child: Html(data: post?.description ?? ""),
             ),
             SizeHelper.height(),
             if (post?.video?.isNotEmpty == true) ...[
@@ -252,18 +248,10 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                   child: CustomContainer(
                     backGroundColor: AppColors.lightWhite,
                     boxShadow: ShadowHelper.scoreContainer,
-                    child: CustomVideoPlayer(
-                      description: post?.description ?? "",
-                      heading: post?.title ?? "",
-                      videoId: "iLnmTe5Q2Qw",
+                    child: VideoPreviewScreen(
+                      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                      description: post?.description,
                     ),
-                    //  VideoPlayerWidget(
-                    //   height: 30.h,
-                    //   width: 90.w,
-                    //   autoPlay: false,
-                    //   showControls: true,
-                    //   videoUrl: "${AppStrings.assetsUrl}${post?.video}",
-                    // ),
                   ),
                 ),
               ),

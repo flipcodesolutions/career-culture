@@ -1,34 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
-import 'package:mindful_youth/utils/method_helpers/gradient_helper.dart';
-import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:sizer/sizer.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../app_const/app_strings.dart';
 
-/// A widget that displays a YouTube video with optional fullscreen mode.
-class CustomVideoPlayer extends StatefulWidget {
-  const CustomVideoPlayer({
-    Key? key,
-    required this.videoId,
-    required this.heading,
-    required this.description,
-  }) : super(key: key);
-
-  final String videoId;
-  final String heading;
-  final String description;
+class VideoPreviewScreen extends StatelessWidget with NavigateHelper {
+  final String videoUrl;
+  final String? description;
+  const VideoPreviewScreen({
+    super.key,
+    required this.videoUrl,
+    this.description,
+  });
 
   @override
-  _CustomVideoPlayerState createState() => _CustomVideoPlayerState();
+  Widget build(BuildContext context) {
+    final videoId = YoutubePlayer.convertUrlToId(videoUrl) ?? '';
+
+    return GestureDetector(
+      onTap:
+          () => push(
+            context: context,
+            widget: YoutubePlayerScreen(
+              videoId: videoId,
+              description: description,
+            ),
+          ),
+
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: CustomImageWithLoader(
+              showImageInPanel: false,
+              fit: BoxFit.cover,
+              imageUrl: 'https://img.youtube.com/vi/$videoId/0.jpg',
+            ),
+          ),
+          const Icon(Icons.play_circle_fill, size: 64, color: Colors.white),
+        ],
+      ),
+    );
+  }
 }
 
-class _CustomVideoPlayerState extends State<CustomVideoPlayer>
-    with NavigateHelper {
-  late final YoutubePlayerController _controller;
+class YoutubePlayerScreen extends StatefulWidget {
+  final String videoId;
+  final String? description;
+
+  const YoutubePlayerScreen({
+    super.key,
+    required this.videoId,
+    this.description,
+  });
+
+  @override
+  State<YoutubePlayerScreen> createState() => _YoutubePlayerScreenState();
+}
+
+class _YoutubePlayerScreenState extends State<YoutubePlayerScreen> {
+  late YoutubePlayerController _controller;
+  bool _isFullScreen = false;
+  String _videoTitle = "";
 
   @override
   void initState() {
@@ -36,171 +79,169 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer>
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoId,
       flags: const YoutubePlayerFlags(
-        autoPlay: false,
+        autoPlay: true,
         mute: false,
-        enableCaption: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: true,
+        hideControls: false,
+        controlsVisibleAtStart: false,
+        enableCaption: false,
+        showLiveFullscreenButton: false,
       ),
-    )..addListener(_listener);
-  }
-
-  void _listener() {
-    if (_controller.value.isFullScreen) {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    } else {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: SystemUiOverlay.values,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller
-      ..removeListener(_listener)
-      ..dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return YoutubePlayer(
-      controller: _controller,
-      showVideoProgressIndicator: true,
-      bottomActions: [
-        const CurrentPosition(),
-        SizeHelper.width(),
-        const ProgressBar(isExpanded: true),
-        const RemainingDuration(),
-        SizeHelper.width(),
-        IconButton(
-          onPressed: () {
-            push(
-              context: context,
-              widget: FullScreenYoutubePage(controller: _controller),
-            );
-          },
-          icon: const Icon(Icons.fullscreen, color: AppColors.white),
-        ),
-      ],
     );
-  }
-}
 
-/// Full-screen page for immersive playback.
-class FullScreenYoutubePage extends StatefulWidget {
-  const FullScreenYoutubePage({super.key, required this.controller});
+    _controller.addListener(() {
+      if (_controller.metadata.title.isNotEmpty &&
+          _controller.metadata.title != _videoTitle) {
+        setState(() {
+          _videoTitle = _controller.metadata.title;
+        });
+      }
 
-  final YoutubePlayerController controller;
-
-  @override
-  _FullScreenYoutubePageState createState() => _FullScreenYoutubePageState();
-}
-
-class _FullScreenYoutubePageState extends State<FullScreenYoutubePage>
-    with NavigateHelper {
-  bool _showOverlay = true;
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    widget.controller.play();
+      final isNowFullScreen = _controller.value.isFullScreen;
+      if (isNowFullScreen != _isFullScreen) {
+        setState(() => _isFullScreen = isNowFullScreen);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _controller.pause();
+    _controller.dispose();
+
+    // Restore UI on exit
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
-      overlays: SystemUiOverlay.values,
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
     );
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
     super.dispose();
   }
 
-  String _format(Duration d) {
-    String two(int n) => n.toString().padLeft(2, '0');
-    final h = d.inHours;
-    final m = two(d.inMinutes.remainder(60));
-    final s = two(d.inSeconds.remainder(60));
-    return h > 0 ? '$two(h):$m:$s' : '$m:$s';
+  void _toggleFullscreen() async {
+    if (!_isFullScreen) {
+      // Enter fullscreen
+      await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } else {
+      // Exit fullscreen
+      // Delay restoring UI slightly to avoid timing issues
+      Future.delayed(Duration(milliseconds: 400), () {
+        SystemChrome.setEnabledSystemUIMode(
+          SystemUiMode.edgeToEdge, // or SystemUiMode.manual with overlays
+          overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
+        );
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+      });
+    }
+
+    _controller.toggleFullScreenMode(); // Use this instead of copyWith
   }
 
   @override
   Widget build(BuildContext context) {
-    final c = widget.controller;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.white,
+      // appBar: _isFullScreen ? null : AppBar(),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () => setState(() => _showOverlay = !_showOverlay),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Center(
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: YoutubePlayer(controller: c),
+        child: YoutubePlayerBuilder(
+          player: YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
+            bufferIndicator: CustomLoader(),
+            onEnded: (metaData) {
+              _controller.seekTo(Duration.zero);
+              _controller.play();
+            },
+            progressColors: const ProgressBarColors(
+              playedColor: AppColors.primary,
+              handleColor: AppColors.secondary,
+            ),
+            bottomActions: [
+              const CurrentPosition(),
+              const ProgressBar(
+                isExpanded: true,
+                colors: ProgressBarColors(
+                  playedColor: AppColors.primary,
+                  handleColor: AppColors.primary,
+                  bufferedColor: AppColors.secondary,
                 ),
               ),
-              if (_showOverlay)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 2.w,
-                      vertical: 1.h,
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: GradientHelper.videoPlayer,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ProgressBar(controller: c),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                c.value.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                                color: Colors.white,
-                              ),
-                              onPressed:
-                                  () =>
-                                      c.value.isPlaying ? c.pause() : c.play(),
-                            ),
-                            CustomText(
-                              text:
-                                  '${_format(c.value.position)} / ${_format(c.value.position)}',
-                              style: TextStyleHelper.smallText.copyWith(
-                                color: AppColors.white,
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: const Icon(Icons.fullscreen_exit),
-                              color: Colors.white,
-                              onPressed: () => pop(context),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+              const RemainingDuration(),
+              IconButton(
+                icon: Icon(
+                  _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                  color: Colors.white,
                 ),
+                onPressed: _toggleFullscreen,
+              ),
             ],
           ),
+          builder:
+              (context, player) => SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AspectRatio(aspectRatio: 16 / 9, child: player),
+                    if (!_isFullScreen) ...[
+                      _videoTitle.isNotEmpty
+                          ? CustomContainer(
+                            boxShadow: ShadowHelper.scoreContainer,
+                            backGroundColor: AppColors.white,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                              vertical: 1.h,
+                            ),
+                            child: CustomText(
+                              text: _controller.metadata.title,
+                              useOverflow: false,
+                              style: TextStyleHelper.smallHeading.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          )
+                          : SizedBox.shrink(),
+
+                      if (widget.description?.isNotEmpty == true)
+                        CustomContainer(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 1.h,
+                          ),
+                          child:
+                              widget.description?.isNotEmpty == true
+                                  ? Html(
+                                    data:
+                                        widget.description ??
+                                        AppStrings.noDescriptionFound,
+                                  )
+                                  : CustomContainer(
+                                    padding: EdgeInsets.only(top: 5.h),
+                                    alignment: Alignment.center,
+                                    child: CustomText(
+                                      text: AppStrings.noDescriptionFound,
+                                    ),
+                                  ),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
         ),
       ),
     );

@@ -248,6 +248,7 @@ class AppStrings {
   static const facebookLoginFails = 'Facebook Login Failed';
   static const facebookLoginDone = 'Facebook Login Done';
   static const mustSelectCoordinator = 'Must Select Coordinator';
+  static const noDescriptionFound = 'No Description Found !!';
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
