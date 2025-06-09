@@ -51,7 +51,7 @@ class AppStrings {
   static const enterMobileNo = "Enter Mobile No";
   static const password = "Password";
   static const forgetPassword = "Forget Password";
-  static const verifyOtp = "Verify Otp";
+  static const verifyOtp = "Verify OTP";
   static const login = "Login";
   static const orLoginWith = "Or Login With";
   static const google = "Google";
@@ -98,7 +98,7 @@ class AppStrings {
   static const enterYourEmailToResetYourPassword =
       "Enter Your Email Account To Reset Your Password";
   static const youWillReceiveOtpSoon =
-      "You Receive Otp Soon On You Mobile Number";
+      "You Receive Otp Soon On Your Mobile Number";
   static const provideAnswers = "Provide Answers";
   static const giveAnswerOfTheseQuestions = "Give Answer Of These Questions!";
   static const whatWouldYouLikeToConcentrateOn =
