@@ -14,6 +14,7 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
@@ -21,6 +22,7 @@ import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:mindful_youth/widgets/youtube_player.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../app_const/app_strings.dart';
 import '../../models/post_models/post_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
@@ -152,13 +154,20 @@ class _PostsScreenState extends State<PostsScreen>
                       );
                     },
                   )
-              : ListView(
-                children: [
-                  NoDataFoundWidget(
-                    height: 80.h,
-                    text: AppStrings.noPostsFound,
-                  ),
-                ],
+              : CustomRefreshIndicator(
+                onRefresh:
+                    () async => postProvider.getPostById(
+                      context: context,
+                      id: widget.chapterId.toString(),
+                    ),
+                child: ListView(
+                  children: [
+                    NoDataFoundWidget(
+                      height: 80.h,
+                      text: AppStrings.noPostsFound,
+                    ),
+                  ],
+                ),
               ),
       bottomNavigationBar:
           postProvider.currentPost != null
@@ -205,6 +214,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
 
   @override
   Widget build(BuildContext context) {
+    PostProvider postProvider = context.watch<PostProvider>();
     if (post == null) return Center(child: NoDataFoundWidget());
 
     return PopScope(
@@ -218,134 +228,84 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
           }
         }
       },
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 2.h),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: ImageContainer(
-                showImageInPanel: true,
-                image: "${AppStrings.assetsUrl}${post?.image}",
-              ),
+      child: CustomRefreshIndicator(
+        onRefresh:
+            () async => postProvider.getPostById(
+              context: context,
+              id: post?.chapterId.toString() ?? "",
             ),
-            SizeHelper.height(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: Html(data: post?.description ?? ""),
-            ),
-            SizeHelper.height(),
-            if (post?.video?.isNotEmpty == true) ...[
-              HeadingTextWidget(heading: AppStrings.mustWatch),
-              SizeHelper.height(),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: CustomContainer(
-                    backGroundColor: AppColors.lightWhite,
-                    boxShadow: ShadowHelper.scoreContainer,
-                    child: VideoPreviewScreen(
-                      videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                      description: post?.description,
-                    ),
-                  ),
+                child: ImageContainer(
+                  showImageInPanel: true,
+                  image: "${AppStrings.assetsUrl}${post?.image}",
                 ),
               ),
               SizeHelper.height(),
-            ],
-            if (post?.audio?.isNotEmpty == true) ...[
-              HeadingTextWidget(heading: AppStrings.mustListen),
-              SizeHelper.height(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: CustomAudioPlayer(
-                  audioUrl: "${AppStrings.assetsUrl}${post?.audio}",
-                ),
+                child: Html(data: post?.description ?? ""),
               ),
               SizeHelper.height(),
-            ],
-            // CustomContainer(
-            //   padding: EdgeInsets.symmetric(horizontal: 5.w),
-            //   child: ,
-            // ),
-            SizeHelper.height(),
-            MediaRender(
-              heading: AppStrings.video,
-              data:
-                  post?.media?.where((e) => e.type == 'video').toList() ??
-                  <Media>[],
-              itemBuilder:
-                  (item, index) => GestureDetector(
-                    onTap:
-                        () async =>
-                            launchUrl(url: item.url ?? "", context: context),
+              if (post?.video?.isNotEmpty == true &&
+                  YoutubePlayer.convertUrlToId(
+                        "https://www.youtube.com/embed/hHuG7FIKgtc?si=s3piV74E2EzYtmd-" ??
+                            "",
+                      )?.isNotEmpty ==
+                      true) ...[
+                HeadingTextWidget(heading: AppStrings.mustWatch),
+                SizeHelper.height(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
                     child: CustomContainer(
                       backGroundColor: AppColors.lightWhite,
-                      margin: EdgeInsets.only(right: 5.w),
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      child: ImageContainer(
-                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        showImageInPanel: false,
+                      boxShadow: ShadowHelper.scoreContainer,
+                      child: VideoPreviewScreen(
+                        videoUrl:
+                            "https://www.youtube.com/embed/hHuG7FIKgtc?si=s3piV74E2EzYtmd-" ??
+                            "",
+                        description: post?.description,
                       ),
                     ),
                   ),
-            ),
-
-            MediaRender(
-              heading: AppStrings.articles,
-              data:
-                  post?.media?.where((e) => e.type == 'article').toList() ?? [],
-              itemBuilder:
-                  (item, index) => GestureDetector(
-                    onTap:
-                        () async =>
-                            launchUrl(url: item.url ?? "", context: context),
-                    child: CustomContainer(
-                      backGroundColor: AppColors.lightWhite,
-                      margin: EdgeInsets.only(right: 5.w),
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      child: ImageContainer(
-                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        showImageInPanel: false,
-                      ),
-                    ),
+                ),
+                SizeHelper.height(),
+              ],
+              if (post?.audio?.isNotEmpty == true) ...[
+                HeadingTextWidget(heading: AppStrings.mustListen),
+                SizeHelper.height(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomAudioPlayer(
+                    audioUrl: "${AppStrings.assetsUrl}${post?.audio}",
                   ),
-            ),
-
-            MediaRender(
-              heading: AppStrings.audio,
-              data: post?.media?.where((e) => e.type == 'audio').toList() ?? [],
-              itemBuilder:
-                  (item, index) => GestureDetector(
-                    onTap:
-                        () async =>
-                            launchUrl(url: item.url ?? "", context: context),
-                    child: CustomContainer(
-                      backGroundColor: AppColors.lightWhite,
-                      margin: EdgeInsets.only(right: 5.w),
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      child: ImageContainer(
-                        image: "${AppStrings.assetsUrl}${item.thumbnail}",
-                        showImageInPanel: false,
-                      ),
-                    ),
-                  ),
-            ),
-
-            MediaRender(
-              heading: AppStrings.recommendedBooks,
-              data: post?.media?.where((e) => e.type == 'book').toList() ?? [],
-              itemBuilder:
-                  (item, index) => GestureDetector(
-                    onTap:
-                        () async =>
-                            launchUrl(url: item.url ?? "", context: context),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(AppSize.size10),
+                ),
+                SizeHelper.height(),
+              ],
+              // CustomContainer(
+              //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+              //   child: ,
+              // ),
+              SizeHelper.height(),
+              MediaRender(
+                heading: AppStrings.video,
+                data:
+                    post?.media?.where((e) => e.type == 'video').toList() ??
+                    <Media>[],
+                itemBuilder:
+                    (item, index) => GestureDetector(
+                      onTap:
+                          () async =>
+                              launchUrl(url: item.url ?? "", context: context),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
                         margin: EdgeInsets.only(right: 5.w),
@@ -356,9 +316,76 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                         ),
                       ),
                     ),
-                  ),
-            ),
-          ],
+              ),
+
+              MediaRender(
+                heading: AppStrings.articles,
+                data:
+                    post?.media?.where((e) => e.type == 'article').toList() ??
+                    [],
+                itemBuilder:
+                    (item, index) => GestureDetector(
+                      onTap:
+                          () async =>
+                              launchUrl(url: item.url ?? "", context: context),
+                      child: CustomContainer(
+                        backGroundColor: AppColors.lightWhite,
+                        margin: EdgeInsets.only(right: 5.w),
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: ImageContainer(
+                          image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                          showImageInPanel: false,
+                        ),
+                      ),
+                    ),
+              ),
+
+              MediaRender(
+                heading: AppStrings.audio,
+                data:
+                    post?.media?.where((e) => e.type == 'audio').toList() ?? [],
+                itemBuilder:
+                    (item, index) => GestureDetector(
+                      onTap:
+                          () async =>
+                              launchUrl(url: item.url ?? "", context: context),
+                      child: CustomContainer(
+                        backGroundColor: AppColors.lightWhite,
+                        margin: EdgeInsets.only(right: 5.w),
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: ImageContainer(
+                          image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                          showImageInPanel: false,
+                        ),
+                      ),
+                    ),
+              ),
+
+              MediaRender(
+                heading: AppStrings.recommendedBooks,
+                data:
+                    post?.media?.where((e) => e.type == 'book').toList() ?? [],
+                itemBuilder:
+                    (item, index) => GestureDetector(
+                      onTap:
+                          () async =>
+                              launchUrl(url: item.url ?? "", context: context),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: CustomContainer(
+                          backGroundColor: AppColors.lightWhite,
+                          margin: EdgeInsets.only(right: 5.w),
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          child: ImageContainer(
+                            image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                            showImageInPanel: false,
+                          ),
+                        ),
+                      ),
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

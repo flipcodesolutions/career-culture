@@ -13,6 +13,7 @@ class UserTimeTrackingService {
         uri: ApiHelper.screenTime,
         context: context,
         body: logData,
+        showSnackBar: false,
       );
       if (response.isNotEmpty) {
         return response['success'];

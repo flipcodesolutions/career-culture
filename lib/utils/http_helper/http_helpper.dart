@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -11,12 +12,19 @@ import '../shared_prefs_helper/shared_prefs_helper.dart';
 import '../widget_helper/widget_helper.dart';
 
 class HttpHelper {
-  static final client = RetryClient(http.Client());
+  static final client = RetryClient(
+    http.Client(),
+    retries: 3,
+    when: (res) => res.statusCode >= 500,
+    whenError:
+        (err, stack) => err is http.ClientException || err is SocketException,
+  );
   static bool isDebugMode = kDebugMode;
   // Generalized response handler
   static Future<Map<String, dynamic>> processResponse({
     required Response response,
     required BuildContext context,
+    bool showSnackBar = true,
   }) async {
     try {
       // if (!context.mounted) return {};
@@ -54,34 +62,40 @@ class HttpHelper {
       // Ensure status is 200 even for validation errors
       if (response.statusCode == 200) {
         if (data.containsKey('success') && !data['success']) {
-          WidgetHelper.customSnackBar(
-            isError: true,
-            title:
-                "${data['message']} ${response.statusCode}" ??
-                "Something went wrong (${response.statusCode})",
-            color: AppColors.error,
-          );
+          showSnackBar
+              ? WidgetHelper.customSnackBar(
+                isError: true,
+                title:
+                    "${data['message']} ${response.statusCode}" ??
+                    "Something went wrong (${response.statusCode})",
+                color: AppColors.error,
+              )
+              : null;
           return data; // Return data even if unsuccessful
         }
         return data; // If success is true, return the data
       }
 
       // Handle unexpected errors
-      WidgetHelper.customSnackBar(
-        isError: true,
-        title: "Unexpected Error (${response.statusCode})",
-        color: AppColors.error,
-      );
+      showSnackBar
+          ? WidgetHelper.customSnackBar(
+            isError: true,
+            title: "Unexpected Error (${response.statusCode})",
+            color: AppColors.error,
+          )
+          : null;
       return {};
     } catch (e) {
       if (isDebugMode) {
         log("Error processing response: $e");
       }
-      WidgetHelper.customSnackBar(
-        isError: true,
-        title: "Something went wrong (${response.statusCode})",
-        color: AppColors.error,
-      );
+      showSnackBar
+          ? WidgetHelper.customSnackBar(
+            isError: true,
+            title: "Something went wrong (${response.statusCode})",
+            color: AppColors.error,
+          )
+          : null;
       return {};
     }
   }
@@ -91,6 +105,7 @@ class HttpHelper {
     required BuildContext context,
     required String uri,
     Map<String, String>? headers,
+    bool showSnackBar = true,
   }) async {
     try {
       var token = await SharedPrefs.getToken();
@@ -101,7 +116,11 @@ class HttpHelper {
       var response = await client.get(url, headers: headers ?? header);
 
       // if (context.mounted) {
-      return processResponse(response: response, context: context);
+      return processResponse(
+        response: response,
+        context: context,
+        showSnackBar: showSnackBar,
+      );
       // }
     } catch (e) {
       if (isDebugMode) {
@@ -118,6 +137,7 @@ class HttpHelper {
     Map<String, String>? headers,
     required BuildContext context,
     Encoding? encoding,
+    bool showSnackBar = true,
   }) async {
     try {
       var token = await SharedPrefs.getToken();
@@ -135,7 +155,11 @@ class HttpHelper {
       }
 
       // if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      return processResponse(
+        response: response,
+        context: context,
+        showSnackBar: showSnackBar,
+      );
     } catch (e) {
       isDebugMode ? log("POST request error: $e") : null;
     }
@@ -149,6 +173,7 @@ class HttpHelper {
     Map<String, String>? headers,
     required BuildContext context,
     Encoding? encoding,
+    bool showSnackBar = true,
   }) async {
     try {
       var token = await SharedPrefs.getToken();
@@ -163,7 +188,11 @@ class HttpHelper {
       );
 
       // if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      return processResponse(
+        response: response,
+        context: context,
+        showSnackBar: showSnackBar,
+      );
     } catch (e) {
       if (isDebugMode) {
         log("PUT request error: $e");
@@ -178,6 +207,7 @@ class HttpHelper {
     required String uri,
     Object? body,
     Map<String, String>? headers,
+    bool showSnackBar = true,
   }) async {
     try {
       var token = await SharedPrefs.getToken();
@@ -191,7 +221,11 @@ class HttpHelper {
       );
 
       // if (!context.mounted) return {};
-      return processResponse(response: response, context: context);
+      return processResponse(
+        response: response,
+        context: context,
+        showSnackBar: showSnackBar,
+      );
     } catch (e) {
       if (isDebugMode) {
         log("DELETE request error: $e");

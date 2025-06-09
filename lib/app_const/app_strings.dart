@@ -249,6 +249,11 @@ class AppStrings {
   static const facebookLoginDone = 'Facebook Login Done';
   static const mustSelectCoordinator = 'Must Select Coordinator';
   static const noDescriptionFound = 'No Description Found !!';
+  static const level1QuizTest = 'Level - 1 : Quiz Test';
+  static const questions = 'Questions';
+  static const multipleChoiceAnswer = "Multiple Choice Answer";
+  static const points10 = "10 Points";
+  static const perQuestion = "Per Questions";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

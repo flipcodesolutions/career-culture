@@ -63,12 +63,14 @@ class _AssessmentScreenState extends State<AssessmentScreen>
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
     bool isQuestions =
         assessmentProvider.assessmentQuestions?.data?.isNotEmpty == true;
+    int noQuestions = assessmentProvider.assessmentQuestions?.data?.length ?? 0;
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(
-          text: AppStrings.assessment,
-          style: TextStyleHelper.mediumHeading,
-        ),
+        // title: CustomText(
+        //   text: AppStrings.assessment,
+        //   style: TextStyleHelper.mediumHeading,
+        // ),
+        shape: Border(bottom: BorderSide(color: AppColors.white)),
       ),
       body:
           assessmentProvider.isLoading
@@ -85,27 +87,58 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                             (widget) => SlideAnimation(
                               child: FadeInAnimation(child: widget),
                             ),
-                        children: List.generate(
-                          assessmentProvider
-                                  .assessmentQuestions
-                                  ?.data
-                                  ?.length ??
-                              0,
-                          (index) {
+                        children: [
+                          /// assessment heading
+                          CustomContainer(
+                            alignment: Alignment.topLeft,
+                            child: CustomText(
+                              text: AppStrings.assessment,
+                              style: TextStyleHelper.mediumHeading.copyWith(
+                                color: AppColors.primary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                          CustomContainer(
+                            alignment: Alignment.topLeft,
+                            child: CustomText(
+                              text: AppStrings.level1QuizTest,
+                              style: TextStyleHelper.smallText.copyWith(
+                                color: AppColors.blackShade75,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                          SizeHelper.height(),
+                          QuestionRowAndColumInfoWithIcon(
+                            heading1: "$noQuestions ${AppStrings.questions}",
+                            heading2: AppStrings.multipleChoiceAnswer,
+                            icon: Icons.question_mark_outlined,
+                          ),
+                          SizeHelper.height(height: 1.h),
+                          QuestionRowAndColumInfoWithIcon(
+                            heading1: AppStrings.points10,
+                            heading2: AppStrings.perQuestion,
+                            icon: Icons.checklist_rtl_rounded,
+                          ),
+                          SizeHelper.height(height: 1.h),
+                          Divider(),
+                          ...List.generate(noQuestions, (index) {
                             AssessmentQuestion? item =
                                 assessmentProvider
                                     .assessmentQuestions
                                     ?.data?[index];
                             if (!isMedia && item?.type == "video" ||
-                                item?.type == "audio") {
+                                item?.type == "audio" ||
+                                item?.type == "image") {
                               isMedia = true;
                             }
                             return QuestionWidget(
                               question: item ?? AssessmentQuestion(),
                               questionIndex: index + 1,
                             );
-                          },
-                        ),
+                          }),
+                        ],
                       ),
                     ),
                   ),
@@ -141,6 +174,50 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   }
 }
 
+/// will be used to render the info about assessment on screen with heading info and icon using Row and Column
+class QuestionRowAndColumInfoWithIcon extends StatelessWidget {
+  const QuestionRowAndColumInfoWithIcon({
+    super.key,
+    required this.heading1,
+    required this.heading2,
+    required this.icon,
+  });
+  final IconData icon;
+  final String heading1;
+  final String heading2;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      child: Row(
+        children: [
+          CustomContainer(
+            borderColor: AppColors.darkBlue,
+            shape: BoxShape.circle,
+            child: Icon(icon, color: AppColors.darkBlue),
+          ),
+          SizeHelper.width(width: 5.w),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CustomText(text: heading1, style: TextStyleHelper.smallHeading),
+              CustomText(
+                text: heading2,
+                style: TextStyleHelper.smallText.copyWith(
+                  color: AppColors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class QuestionWidget<T> extends StatefulWidget {
   final AssessmentQuestion question;
   final int questionIndex;
@@ -168,23 +245,29 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
           children: [
             CustomText(
               useOverflow: false,
-              text:
-                  "${widget.questionIndex}. ${widget.question.question?.trim()}",
+              text: "Question - ${widget.questionIndex}",
+              style: TextStyleHelper.smallText.copyWith(
+                color: AppColors.blackShade75,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            SizeHelper.height(height: 0.5.h),
+            CustomText(
+              useOverflow: false,
+              text: "${widget.question.question?.trim()}",
               style: TextStyleHelper.smallHeading,
               // textAlign: TextAlign.justify,
             ),
+            SizeHelper.height(height: 0.5.h),
             if (widget.question.type == "checkbox") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
                     return CheckboxListTile(
                       dense: true,
-                      activeColor: AppColors.primary,
+                      activeColor: AppColors.secondary,
                       selected: entry.value == widget.question.answer,
                       selectedTileColor: AppColors.lightWhite,
-                      title: CustomText(
-                        text: "${entry.key + 1}. $option",
-                        useOverflow: false,
-                      ),
+                      title: CustomText(text: option, useOverflow: false),
                       value:
                           widget.question.answer?.contains(entry.value) ??
                           false,
@@ -202,27 +285,31 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
             ] else if (widget.question.type == "radio") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
-                    return RadioListTile<String>(
-                      dense: true,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      controlAffinity: ListTileControlAffinity.trailing,
-                      activeColor: AppColors.primary,
-                      selected: entry.value == widget.question.answer,
-                      selectedTileColor: AppColors.lightWhite,
-                      title: CustomText(
-                        text: "${entry.key + 1}. $option",
-                        useOverflow: false,
+                    return CustomContainer(
+                      margin: EdgeInsets.symmetric(vertical: 0.2.h),
+                      borderColor: AppColors.lightGrey,
+                      borderWidth: 0.5,
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      child: RadioListTile<String>(
+                        contentPadding: EdgeInsets.only(left: 5.w),
+                        dense: true,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        activeColor: AppColors.secondary,
+                        selected: entry.value == widget.question.answer,
+                        selectedTileColor: AppColors.lightWhite,
+                        title: CustomText(text: option, useOverflow: false),
+                        value: entry.value,
+                        groupValue: widget.question.answer,
+                        onChanged: (value) {
+                          if (value != null) {
+                            assessmentProvider.makeRadioSelection(
+                              questionId: widget.question.id ?? -1,
+                              selection: entry.value,
+                            );
+                          }
+                        },
                       ),
-                      value: entry.value,
-                      groupValue: widget.question.answer,
-                      onChanged: (value) {
-                        if (value != null) {
-                          assessmentProvider.makeRadioSelection(
-                            questionId: widget.question.id ?? -1,
-                            selection: entry.value,
-                          );
-                        }
-                      },
                     );
                   }) ??
                   [SizedBox.shrink()],
