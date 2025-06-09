@@ -28,15 +28,13 @@ class CustomSpeedDial extends StatelessWidget {
       children: [
         SpeedDialChild(
           child: Icon(Icons.message, color: AppColors.white),
-          backgroundColor: Colors.red,
-          label: 'Message',
-          onTap: () => print('Message'),
+          backgroundColor: AppColors.primary,
+          onTap: () {},
         ),
         SpeedDialChild(
           child: Icon(Icons.call, color: AppColors.white),
-          backgroundColor: Colors.green,
-          label: 'Call',
-          onTap: () => print('Call'),
+          backgroundColor: AppColors.primary,
+          onTap: () {},
         ),
         // Add more actions
       ],
