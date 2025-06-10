@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
@@ -8,7 +9,6 @@ import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_file_picker.dart';
@@ -26,27 +26,23 @@ import 'dart:io';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../../utils/navigation_helper/navigation_helper.dart';
+import 'assessment_result_screen.dart';
 
 class AssessmentScreen extends StatefulWidget {
-  const AssessmentScreen({super.key, required this.postName});
+  const AssessmentScreen({
+    super.key,
+    required this.postName,
+    this.isInReviewMode = false,
+  });
   final String postName;
+  final bool isInReviewMode;
   @override
   State<AssessmentScreen> createState() => _AssessmentScreenState();
 }
 
 class _AssessmentScreenState extends State<AssessmentScreen>
-    with WidgetsBindingObserver, ScreenTracker<AssessmentScreen> {
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
-  String get screenName => widget.postName;
-  @override
-  bool get debug => false; // Enable debug logs
-
+    with NavigateHelper {
   bool isMedia = false;
   @override
   void initState() {
@@ -93,7 +89,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                             alignment: Alignment.topLeft,
                             child: CustomText(
                               text: AppStrings.assessment,
-                              style: TextStyleHelper.mediumHeading.copyWith(
+                              style: TextStyleHelper.largeHeading.copyWith(
                                 color: AppColors.primary,
                                 fontStyle: FontStyle.italic,
                               ),
@@ -123,21 +119,44 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                           ),
                           SizeHelper.height(height: 1.h),
                           Divider(),
-                          ...List.generate(noQuestions, (index) {
-                            AssessmentQuestion? item =
-                                assessmentProvider
-                                    .assessmentQuestions
-                                    ?.data?[index];
-                            if (!isMedia && item?.type == "video" ||
-                                item?.type == "audio" ||
-                                item?.type == "image") {
-                              isMedia = true;
-                            }
-                            return QuestionWidget(
-                              question: item ?? AssessmentQuestion(),
-                              questionIndex: index + 1,
-                            );
-                          }),
+                          CustomContainer(
+                            child: IntrinsicHeight(
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    children: List.generate(noQuestions, (
+                                      index,
+                                    ) {
+                                      AssessmentQuestion? item =
+                                          assessmentProvider
+                                              .assessmentQuestions
+                                              ?.data?[index];
+                                      if (!isMedia && item?.type == "video" ||
+                                          item?.type == "audio" ||
+                                          item?.type == "image") {
+                                        isMedia = true;
+                                      }
+                                      return QuestionWidget(
+                                        isInReviewMode: widget.isInReviewMode,
+                                        question: item ?? AssessmentQuestion(),
+                                        questionIndex: index + 1,
+                                      );
+                                    }),
+                                  ),
+                                  if (!assessmentProvider.isTestStarted)
+                                    ClipRect(
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaX: 5.0,
+                                          sigmaY: 5.0,
+                                        ),
+                                        child: CustomContainer(),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -152,25 +171,46 @@ class _AssessmentScreenState extends State<AssessmentScreen>
               ? CustomContainer(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 child: PrimaryBtn(
-                  btnText: AppStrings.submit,
+                  btnText:
+                      !assessmentProvider.isTestStarted
+                          ? AppStrings.startTheTest
+                          : AppStrings.submitAnswer,
                   onTap: () {
                     /// logic to submit after finishing all questions
-                    if (assessmentProvider.formKey.currentState?.validate() ==
-                        true) {
-                      assessmentProvider.submitAssessmentQuestions(
-                        context: context,
-                      );
-                    } else {
-                      WidgetHelper.customSnackBar(
-                        title: "Validation Failed",
-                        isError: true,
-                      );
-                    }
+                    assessmentProvider.isTestStarted
+                        ? finishTest(
+                          assessmentProvider: assessmentProvider,
+                          ctx: context,
+                        )
+                        : assessmentProvider.startTest();
+                    // if (assessmentProvider.formKey.currentState?.validate() ==
+                    //     true) {
+                    //   assessmentProvider.submitAssessmentQuestions(
+                    //     context: context,
+                    //   );
+                    // } else {
+                    //   WidgetHelper.customSnackBar(
+                    //     title: "Validation Failed",
+                    //     isError: true,
+                    //   );
+                    // }
                   },
                 ),
               )
               : null,
     );
+  }
+
+  void finishTest({
+    required AssessmentProvider assessmentProvider,
+    required BuildContext ctx,
+  }) async {
+    bool isTestCompleted = await assessmentProvider.finishTest();
+    if (isTestCompleted) {
+      push(context: ctx, widget: AssessmentResultScreen());
+    } else {
+      WidgetHelper.customSnackBar(title: AppStrings.somethingWentWrong);
+    }
   }
 }
 
@@ -221,10 +261,12 @@ class QuestionRowAndColumInfoWithIcon extends StatelessWidget {
 class QuestionWidget<T> extends StatefulWidget {
   final AssessmentQuestion question;
   final int questionIndex;
+  final bool isInReviewMode;
   QuestionWidget({
     super.key,
     required this.question,
     required this.questionIndex,
+    required this.isInReviewMode,
   });
 
   @override
@@ -262,16 +304,18 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
             if (widget.question.type == "checkbox") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
-                    return CheckboxListTile(
-                      dense: true,
-                      activeColor: AppColors.secondary,
-                      selected: entry.value == widget.question.answer,
-                      selectedTileColor: AppColors.lightWhite,
-                      title: CustomText(text: option, useOverflow: false),
-                      value:
-                          widget.question.answer?.contains(entry.value) ??
+
+                    return OptionTile(
+                      option: option,
+                      isSelected:
+                          widget.question.userAnswer?.contains(entry.value) ??
                           false,
-                      onChanged: (value) {
+                      isCorrect:
+                          widget.question.correctAnswer?.contains(option) ==
+                          true,
+                      isReviewMode: widget.isInReviewMode,
+                      isMultiSelect: true,
+                      onCheckboxToggled: (value) {
                         if (value != null) {
                           assessmentProvider.makeOptionSelection(
                             questionId: widget.question.id ?? -1,
@@ -285,31 +329,23 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
             ] else if (widget.question.type == "radio") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
-                    return CustomContainer(
-                      margin: EdgeInsets.symmetric(vertical: 0.2.h),
-                      borderColor: AppColors.lightGrey,
-                      borderWidth: 0.5,
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      child: RadioListTile<String>(
-                        contentPadding: EdgeInsets.only(left: 5.w),
-                        dense: true,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        activeColor: AppColors.secondary,
-                        selected: entry.value == widget.question.answer,
-                        selectedTileColor: AppColors.lightWhite,
-                        title: CustomText(text: option, useOverflow: false),
-                        value: entry.value,
-                        groupValue: widget.question.answer,
-                        onChanged: (value) {
-                          if (value != null) {
-                            assessmentProvider.makeRadioSelection(
-                              questionId: widget.question.id ?? -1,
-                              selection: entry.value,
-                            );
-                          }
-                        },
-                      ),
+
+                    return OptionTile(
+                      option: option,
+                      isSelected: widget.question.userAnswer == option,
+                      isCorrect:
+                          widget.question.correctAnswer?.contains(option) ==
+                          true,
+                      isReviewMode: widget.isInReviewMode,
+                      isMultiSelect: false,
+                      onRadioSelected: (value) {
+                        if (value.isNotEmpty) {
+                          assessmentProvider.makeRadioSelection(
+                            questionId: widget.question.id ?? -1,
+                            selection: option,
+                          );
+                        }
+                      },
                     );
                   }) ??
                   [SizedBox.shrink()],
@@ -569,6 +605,79 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A reusable option tile for both radio (single-select) and checkbox (multi-select) questions,
+/// supporting input and review modes with correct/incorrect highlighting.
+class OptionTile extends StatelessWidget {
+  final String option;
+  final bool isSelected; // whether user selected this option
+  final bool isCorrect; // whether this option is a correct answer
+  final bool isReviewMode; // whether we are in review mode
+  final bool isMultiSelect; // true = checkbox, false = radio
+  final ValueChanged<String>? onRadioSelected;
+  final ValueChanged<bool?>? onCheckboxToggled;
+
+  const OptionTile({
+    super.key,
+    required this.option,
+    required this.isSelected,
+    required this.isCorrect,
+    required this.isReviewMode,
+    required this.isMultiSelect,
+    this.onRadioSelected,
+    this.onCheckboxToggled,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine tile background color
+    Color? bgColor;
+    if (isReviewMode) {
+      if (isCorrect) {
+        bgColor = AppColors.lightPrimary; // e.g. correct highlight
+      } else if (isSelected && !isCorrect) {
+        bgColor = AppColors.errorShade100; // wrong selection highlight
+      }
+    } else {
+      if (isSelected) {
+        bgColor = AppColors.lightGrey;
+      }
+    }
+
+    return CustomContainer(
+      backGroundColor: bgColor,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      borderColor: AppColors.lightGrey,
+      borderWidth: 0.5,
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      child:
+          isMultiSelect
+              ? CheckboxListTile(
+                contentPadding: EdgeInsets.only(left: 5.w),
+                controlAffinity: ListTileControlAffinity.trailing,
+                dense: true,
+                activeColor:
+                    isReviewMode ? AppColors.primary : AppColors.secondary,
+                title: CustomText(text: option, useOverflow: false),
+                value: isSelected,
+                onChanged: isReviewMode ? null : onCheckboxToggled,
+              )
+              : RadioListTile<String>(
+                contentPadding: EdgeInsets.only(left: 5.w),
+                controlAffinity: ListTileControlAffinity.trailing,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                dense: true,
+                activeColor:
+                    isReviewMode ? AppColors.primary : AppColors.secondary,
+                title: CustomText(text: option, useOverflow: false),
+                value: option,
+                groupValue: isSelected ? option : null,
+                onChanged:
+                    isReviewMode ? null : (_) => onRadioSelected?.call(option),
+              ),
     );
   }
 }

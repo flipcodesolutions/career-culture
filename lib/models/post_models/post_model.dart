@@ -39,6 +39,8 @@ class PostInfo {
   String? image;
   String? video;
   String? audio;
+  String? audioGuj;
+  String? audioHin;
   String? isAnnouncement;
   String? isOnWall;
   int? points;
@@ -56,6 +58,8 @@ class PostInfo {
     this.image,
     this.video,
     this.audio,
+    this.audioGuj,
+    this.audioHin,
     this.isAnnouncement,
     this.isOnWall,
     this.points,
@@ -75,6 +79,8 @@ class PostInfo {
     String? title,
     String? description,
     String? audio,
+    String? audioGuj,
+    String? audioHin,
     String? isAnnouncement,
     String? isOnWall,
     int? points,
@@ -91,6 +97,8 @@ class PostInfo {
       title: title ?? this.title,
       description: description ?? this.description,
       audio: audio ?? this.audio,
+      audioGuj: audioGuj ?? this.audioGuj,
+      audioHin: audioHin ?? this.audioHin,
       isAnnouncement: isAnnouncement ?? this.isAnnouncement,
       isOnWall: isOnWall ?? this.isOnWall,
       points: points ?? this.points,
@@ -113,6 +121,8 @@ class PostInfo {
     image = json['image'];
     video = json['video'];
     audio = json['audio'];
+    audioGuj = json['audio_guj'];
+    audioHin = json['audio_hin'];
     isAnnouncement = json['isAnnouncement'];
     isAnnouncement = json['isOnWall'];
     points = int.tryParse(json['points'].toString()) ?? 0;
@@ -136,6 +146,8 @@ class PostInfo {
     data['image'] = this.image;
     data['video'] = this.video;
     data['audio'] = this.audio;
+    data['audio_hin'] = this.audioHin;
+    data['audio_guj'] = this.audioGuj;
     data['isAnnouncement'] = this.isAnnouncement;
     data['points'] = this.isAnnouncement;
     data['isOnWall'] = this.isOnWall;

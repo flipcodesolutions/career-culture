@@ -254,6 +254,11 @@ class AppStrings {
   static const multipleChoiceAnswer = "Multiple Choice Answer";
   static const points10 = "10 Points";
   static const perQuestion = "Per Questions";
+  static const startTheTest = "Start The Test";
+  static const submitAnswer = "Submit Answers";
+  static const congratulations = "Congratulations!";
+  static const youHaveCompletedAssessmentQuiz =
+      "You Have Completed the Quiz round of assessment successfully.";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

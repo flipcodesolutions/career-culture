@@ -52,7 +52,7 @@ class MethodHelper with NavigateHelper {
   static List<String> parseOptions(String? jsonString) {
     try {
       if (jsonString?.isNotEmpty == true) {
-        return jsonString?.split('|') ?? [];
+        return jsonString?.split('|').map((e) => e.trim()).toList() ?? [];
       } else {
         return [];
       }

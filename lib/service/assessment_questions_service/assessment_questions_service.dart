@@ -40,7 +40,6 @@ class AssessmentQuestionsService {
   }
 
   Future<bool> postAssessmentQuestionsByPostId({
-    required BuildContext context,
     required AssessmentQuestionModel? assessmentAnswer,
   }) async {
     try {
@@ -57,38 +56,41 @@ class AssessmentQuestionsService {
 
       for (var i = 0; i < dataList.length; i++) {
         AssessmentQuestion question = dataList[i];
-        bool isMedia = ['audio', 'image'].contains(question.type);
+        // log("=============start==============");
+        // log(question.toJson().toString());
+        // log("=============end==============");
+        // bool isMedia = ['audio', 'image'].contains(question.type);
 
         // Add base fields
         request.fields['data[$i][questionId]'] = question.id.toString();
         request.fields['data[$i][type]'] = question.type ?? "";
 
         // Add text-based answer
-        request.fields['data[$i][answer]'] = question.answer.toString();
+        request.fields['data[$i][answer]'] = question.userAnswer.toString();
 
-        if (isMedia) {
-          // Handle file-based answers
-          List<PlatformFile> files = question.selectedFiles ?? [];
+        // if (isMedia) {
+        //   // Handle file-based answers
+        //   List<PlatformFile> files = question.selectedFiles ?? [];
 
-          for (var j = 0; j < files.length; j++) {
-            File file = File(files[j].path ?? "");
-            String mimeType =
-                lookupMimeType(file.path) ?? 'application/octet-stream';
+        //   for (var j = 0; j < files.length; j++) {
+        //     File file = File(files[j].path ?? "");
+        //     String mimeType =
+        //         lookupMimeType(file.path) ?? 'application/octet-stream';
 
-            // Add media file to request
-            request.files.add(
-              await http.MultipartFile.fromPath(
-                question.type == "audio"
-                    ? 'data[$i][audio_files]' // This field name must match backend expectations
-                    : 'data[$i][image_files]',
-                file.path,
-                contentType: MediaType.parse(mimeType),
-              ),
-            );
-          }
-        }
+        //     // Add media file to request
+        //     request.files.add(
+        //       await http.MultipartFile.fromPath(
+        //         question.type == "audio"
+        //             ? 'data[$i][audio_files]' // This field name must match backend expectations
+        //             : 'data[$i][image_files]',
+        //         file.path,
+        //         contentType: MediaType.parse(mimeType),
+        //       ),
+        //     );
+        //   }
+        // }
       }
-
+      // log(" ==========??????????? ${request.fields}");
       // Send the request with timeout
       final streamed = await request.send().timeout(
         const Duration(seconds: 30),

@@ -38,7 +38,9 @@ class AssessmentQuestion {
   String? options;
   String? status;
   String? answer;
+  String? userAnswer;
   List<String>? extractedOptions;
+  List<String>? correctAnswer;
   List<PlatformFile>? selectedFiles;
   AssessmentQuestion({
     this.id,
@@ -48,7 +50,9 @@ class AssessmentQuestion {
     this.options,
     this.status,
     this.answer,
+    this.userAnswer,
     this.extractedOptions,
+    this.correctAnswer,
     this.selectedFiles,
   });
 
@@ -59,6 +63,7 @@ class AssessmentQuestion {
     type = json['type'];
     options = json['options'];
     status = json['status'];
+    correctAnswer = MethodHelper.parseOptions(json['answers']);
     extractedOptions = MethodHelper.parseOptions(json['options']);
   }
 

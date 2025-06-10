@@ -12,4 +12,8 @@ class AppImageStrings {
   static const String firstPosition = "assets/images/1st-place.png";
   static const String secondPosition = "assets/images/2nd-place.png";
   static const String thirdPosition = "assets/images/3rd-place.png";
+  static const String celebrationFirework =
+      "assets/images/celebration_firecrakers.png";
+  static const String assessmentResultTrophy =
+      "assets/images/assessmet_complete.png";
 }

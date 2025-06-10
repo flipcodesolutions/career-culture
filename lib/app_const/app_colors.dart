@@ -8,6 +8,7 @@ class AppColors {
   static const Color cream = Color(0xffFFFEE3CC);
   static const Color lightPrimary = Color(0xffBCE1B5);
   static const Color error = Colors.red;
+  static  Color errorShade100 = Colors.red.shade100;
   static const Color white = Colors.white;
   static const Color grey = Colors.grey;
   static const Color lightGrey = Color.fromARGB(255, 211, 211, 211);

@@ -31,6 +31,8 @@ import 'utils/notification_util/notification_util.dart';
 import 'utils/text_style_helper/text_style_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:geocoding/geocoding.dart';
 
 void main() async {
   /// will wait until every thing is initialized
@@ -112,6 +114,7 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     requestPermission();
+    // fetchLocationDetails();
   }
 
   @override
@@ -210,3 +213,51 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+// Future<Position> getCurrentLocation() async {
+//   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//   if (!serviceEnabled) {
+//     throw Exception('Location services are disabled.');
+//   }
+
+//   LocationPermission permission = await Geolocator.checkPermission();
+//   if (permission == LocationPermission.denied) {
+//     permission = await Geolocator.requestPermission();
+//     if (permission == LocationPermission.denied) {
+//       throw Exception('Location permissions are denied');
+//     }
+//   }
+
+//   if (permission == LocationPermission.deniedForever) {
+//     throw Exception('Location permissions are permanently denied.');
+//   }
+
+//   return await Geolocator.getCurrentPosition(
+//     locationSettings: LocationSettings(accuracy: LocationAccuracy.medium),
+//   );
+// }
+
+// Future<void> getAddressFromLatLng(Position position) async {
+//   List<Placemark> placemarks = await placemarkFromCoordinates(
+//     position.latitude,
+//     position.longitude,
+//   );
+
+//   if (placemarks.isNotEmpty) {
+//     final place = placemarks[0];
+//     print('Country: ${place.country}');
+//     print('State: ${place.administrativeArea}');
+//     print('City: ${place.locality}');
+//     print('District: ${place.subAdministrativeArea}');
+//     print('Postal Code: ${place.postalCode}');
+//   }
+// }
+
+// void fetchLocationDetails() async {
+//   try {
+//     Position pos = await getCurrentLocation();
+//     await getAddressFromLatLng(pos);
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+// }

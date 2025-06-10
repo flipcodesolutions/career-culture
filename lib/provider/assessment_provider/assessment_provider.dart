@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
@@ -33,14 +34,6 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
     _assessmentQuestions = await assessmentQuestionsService
         .getAssessmentQuestionsByPostId(context: context, postId: _postId);
-    // _assessmentQuestions?.data?.forEach((e) {
-    //   e.question?.trim();
-    //   e.answer?.trim();
-    //   e.options?.trim();
-    //   e.extractedOptions?.forEach((e) {
-    //     e.trim();
-    //   });
-    // });
 
     /// set _isLoading false
     _isLoading = false;
@@ -58,7 +51,8 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      String? selectedOptionJson = _assessmentQuestions?.data?[index].answer;
+      String? selectedOptionJson =
+          _assessmentQuestions?.data?[index].userAnswer;
 
       // Decode it into a List<String>
       List<String> currentOptions = [];
@@ -78,7 +72,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       }
 
       // Save it back
-      _assessmentQuestions?.data?[index].answer = currentOptions.join("|");
+      _assessmentQuestions?.data?[index].userAnswer = currentOptions.join("|");
 
       notifyListeners();
     }
@@ -94,7 +88,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      _assessmentQuestions?.data?[index].answer = selection;
+      _assessmentQuestions?.data?[index].userAnswer = selection;
       notifyListeners();
     }
   }
@@ -125,19 +119,130 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       notifyListeners();
     }
   }
+  // depreicated after new implementaion for assessments
+  // Future<void> submitAssessmentQuestions({
+  //   required BuildContext context,
+  // }) async {
+  //   // Validation before making API call
+  //   bool hasAllValidAnswers =
+  //       _assessmentQuestions?.data?.every((q) {
+  //         final isMediaType = ['audio', 'image'].contains(q.type);
+  //         if (isMediaType) {
+  //           return (q.selectedFiles?.isNotEmpty ?? false);
+  //         } else {
+  //           return (q.answer != null && q.answer?.trim().isNotEmpty == true);
+  //         }
+  //       }) ??
+  //       false;
 
-  Future<void> submitAssessmentQuestions({
-    required BuildContext context,
-  }) async {
+  //   if (!hasAllValidAnswers) {
+  //     WidgetHelper.customSnackBar(
+  //       title: "Please answer all questions and upload required files.",
+  //       isError: true,
+  //       autoClose: false,
+  //     );
+  //     return;
+  //   }
+
+  //   /// set _isLoading true
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   log(_assessmentQuestions?.toJson().toString() ?? "");
+  //   bool success = await assessmentQuestionsService
+  //       .postAssessmentQuestionsByPostId(
+  //         context: context,
+  //         assessmentAnswer: _assessmentQuestions,
+  //       );
+
+  //   /// set _isLoading false
+  //   _isLoading = false;
+  //   notifyListeners();
+  //   if (success) {
+  //     if (!context.mounted) return;
+  //     pop(context);
+  //   }
+  // }
+
+  /// prepare for test
+  DateTime? startTime;
+  DateTime? finishTime;
+  String? score;
+
+  /// to check if test time to start or stop
+  bool _isTestStarted = false;
+  bool get isTestStarted => _isTestStarted;
+
+  void startTest() {
+    if (!_isTestStarted) {
+      startTime = DateTime.now();
+      _isTestStarted = true;
+    }
+    notifyListeners();
+  }
+
+  /// after user finish with test , check and generate result from the answers and also send the user answer to backend
+  Future<bool> finishTest() async {
+    /// check if all questions are answered
+    if (_assessmentQuestions?.data?.every(
+          (q) =>
+              q.userAnswer != null && q.userAnswer?.trim().isNotEmpty == true,
+        ) ==
+        false) {
+      WidgetHelper.customSnackBar(
+        title: AppStrings.mustGiveAllAnswer,
+        isError: true,
+      );
+      return false;
+    }
+
+    /// check how many answer is correct
+    int noOfCorrectAnswer = 0;
+
+    _assessmentQuestions?.data?.forEach((e) {
+      if (e.type == "checkbox") {
+        if (e.correctAnswer ==
+            e.userAnswer?.split("|").map((e) => e.trim()).toList()) {
+          noOfCorrectAnswer++;
+        }
+      } else {
+        if (e.userAnswer == e.correctAnswer?.first) {
+          noOfCorrectAnswer++;
+        }
+      }
+    });
+
+    if (_isTestStarted) {
+      print(
+        "correct Answer ==> $noOfCorrectAnswer / ${_assessmentQuestions?.data?.length}",
+      );
+      finishTime = DateTime.now();
+      submitAssessmentQuestions();
+      _isTestStarted = false;
+    }
+    notifyListeners();
+    return true;
+  }
+
+  /// reset test
+  void resetTest() {
+    score = null;
+    startTime = null;
+    finishTime = null;
+    _assessmentQuestions = null;
+    _formKey.currentState?.reset();
+    _isTestStarted = false;
+    notifyListeners();
+  }
+
+  /// sent back the answer user has picked to show them
+  Future<void> submitAssessmentQuestions(
+    // {required BuildContext context,}
+  ) async {
     // Validation before making API call
     bool hasAllValidAnswers =
         _assessmentQuestions?.data?.every((q) {
-          final isMediaType = ['audio', 'image'].contains(q.type);
-          if (isMediaType) {
-            return (q.selectedFiles?.isNotEmpty ?? false);
-          } else {
-            return (q.answer != null && q.answer?.trim().isNotEmpty == true);
-          }
+          return (q.userAnswer != null &&
+              q.userAnswer?.trim().isNotEmpty == true);
         }) ??
         false;
 
@@ -145,7 +250,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       WidgetHelper.customSnackBar(
         title: "Please answer all questions and upload required files.",
         isError: true,
-        autoClose: false
+        autoClose: false,
       );
       return;
     }
@@ -156,16 +261,17 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     log(_assessmentQuestions?.toJson().toString() ?? "");
     bool success = await assessmentQuestionsService
         .postAssessmentQuestionsByPostId(
-          context: context,
+          // context: context,
           assessmentAnswer: _assessmentQuestions,
         );
+    // if (success) {
+    //   WidgetHelper.customSnackBar(
+    //     title: AppStrings.yourAssessmentIsUnderReview,
+    //   );
+    // }
 
     /// set _isLoading false
     _isLoading = false;
     notifyListeners();
-    if (success) {
-      if (!context.mounted) return;
-      pop(context);
-    }
   }
 }

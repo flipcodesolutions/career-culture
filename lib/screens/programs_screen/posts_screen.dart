@@ -6,6 +6,7 @@ import 'package:mindful_youth/provider/assessment_provider/assessment_provider.d
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -189,8 +190,13 @@ class _PostsScreenState extends State<PostsScreen>
                           ),
                           transition: FadeUpwardsPageTransitionsBuilder(),
                         )
-                        : postProvider.currentPost
-                            ?.handleWhatToShowIfAssessmentHasSubmittedAlready();
+                        : push(
+                          context: context,
+                          widget: AssessmentResultScreen(),
+                          transition: FadeForwardsPageTransitionsBuilder(),
+                        );
+                    // : postProvider.currentPost
+                    //     ?.handleWhatToShowIfAssessmentHasSubmittedAlready();
                   },
                 ),
               )
@@ -235,18 +241,15 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               id: post?.chapterId.toString() ?? "",
             ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
+          // padding: EdgeInsets.symmetric(vertical: 2.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: ImageContainer(
-                  showImageInPanel: true,
-                  image: "${AppStrings.assetsUrl}${post?.image}",
-                ),
+              ImageContainer(
+                showImageInPanel: true,
+                image: "${AppStrings.assetsUrl}${post?.image}",
               ),
               SizeHelper.height(),
               Padding(
