@@ -99,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen>
         }
       },
       child: Scaffold(
-        
         appBar: AppBar(
           shape: Border(),
           leading: CustomContainer(

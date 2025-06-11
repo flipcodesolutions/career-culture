@@ -41,31 +41,7 @@ class ChapterProvider extends ChangeNotifier {
       return list;
     }
     for (int i = 1; i <= (_chaptersModel?.data?.length ?? 0); i++) {
-      list.add(
-        ChapterContainer(
-          chaptersInfo: _chaptersModel!.data![i - 1],
-          isOpen:
-              isUserLoggedIn
-                  ? canAccessChapter(
-                    totalChapters: (_chaptersModel?.data?.length ?? 0),
-                    totalAllMarks:
-                        double.tryParse(
-                          userProgressModel?.data?.totalPossiblePoints
-                                  .toString() ??
-                              "",
-                        ) ??
-                        0,
-                    correctPoints:
-                        double.tryParse(
-                          userProgressModel?.data?.totalUserPoints.toString() ??
-                              "",
-                        ) ??
-                        0,
-                    requestedChapter: i,
-                  )
-                  : false,
-        ),
-      );
+      list.add(ChapterContainer(chaptersInfo: _chaptersModel!.data![i - 1]));
     }
     // _chaptersModel?.data?.forEach(
     //   (e) => list.add(ChapterContainer(chaptersInfo: e)),
@@ -73,9 +49,7 @@ class ChapterProvider extends ChangeNotifier {
     return list;
   }
 
-  Future<void> getAllChapters(
-    {required BuildContext context}
-  ) async {
+  Future<void> getAllChapters({required BuildContext context}) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();

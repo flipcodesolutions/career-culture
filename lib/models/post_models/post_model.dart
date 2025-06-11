@@ -1,7 +1,3 @@
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
-
-import '../../app_const/app_strings.dart';
-
 class PostListModel {
   bool? success;
   String? message;
@@ -48,8 +44,9 @@ class PostInfo {
   List<Media>? media;
   bool? isForVideo;
   bool? isForImage;
-  bool? isAssessmentDone;
-  String? assessmentStatus;
+  // bool? isAssessmentDone;
+  bool? isFirstAssessmentDone;
+  bool? isSecondAssessmentDone;
   PostInfo({
     this.id,
     this.chapterId,
@@ -67,8 +64,9 @@ class PostInfo {
     this.media,
     this.isForImage,
     this.isForVideo,
-    this.isAssessmentDone,
-    this.assessmentStatus,
+    // this.isAssessmentDone,
+    this.isFirstAssessmentDone,
+    this.isSecondAssessmentDone,
   });
 
   PostInfo copyWith({
@@ -88,8 +86,9 @@ class PostInfo {
     List<Media>? media,
     bool? isForImage,
     bool? isForVideo,
-    bool? isAssessmentDone,
-    String? assessmentStatus,
+    // bool? isAssessmentDone,
+    bool? isFirstAssessmentDone,
+    bool? isSecondAssessmentDone,
   }) {
     return PostInfo(
       id: id ?? this.id,
@@ -108,8 +107,11 @@ class PostInfo {
       video: video ?? this.video,
       isForImage: isForImage ?? this.isForImage,
       isForVideo: isForVideo ?? this.isForVideo,
-      isAssessmentDone: isAssessmentDone ?? this.isAssessmentDone,
-      assessmentStatus: assessmentStatus ?? this.assessmentStatus,
+      // isAssessmentDone: isAssessmentDone ?? this.isAssessmentDone,
+      isFirstAssessmentDone:
+          isFirstAssessmentDone ?? this.isFirstAssessmentDone,
+      isSecondAssessmentDone:
+          isSecondAssessmentDone ?? this.isSecondAssessmentDone,
     );
   }
 
@@ -133,8 +135,9 @@ class PostInfo {
         media!.add(new Media.fromJson(v));
       });
     }
-    isAssessmentDone = json['assessment'];
-    assessmentStatus = json['assessmentStatus'];
+    // isAssessmentDone = json['assessment'];
+    isFirstAssessmentDone = json['firstAssessment'];
+    isFirstAssessmentDone = json['secondAssessment'];
   }
 
   Map<String, dynamic> toJson() {
@@ -155,30 +158,31 @@ class PostInfo {
     if (this.media != null) {
       data['media'] = this.media!.map((v) => v.toJson()).toList();
     }
-    data['assessment'] = isAssessmentDone;
-    data['assessmentStatus'] = assessmentStatus;
+    // data['assessment'] = isAssessmentDone;
+    data['firstAssessment'] = isFirstAssessmentDone;
+    data['secondAssessment'] = isFirstAssessmentDone;
     return data;
   }
 
-  void handleWhatToShowIfAssessmentHasSubmittedAlready() {
-    if (assessmentStatus == null) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.somethingWentWrong,
-        isError: true,
-      );
-    } else {
-      assessmentStatus?.toLowerCase() == "Approved".toLowerCase()
-          ? WidgetHelper.customSnackBar(
-            title: AppStrings.yourAssessmentIsDoneAlready,
-            autoClose: false,
-          )
-          : WidgetHelper.customSnackBar(
-            title: AppStrings.yourAssessmentIsUnderReview,
-            isError: true,
-            autoClose: false,
-          );
-    }
-  }
+  // void handleWhatToShowIfAssessmentHasSubmittedAlready() {
+  //   if (isFirstAssessmentDone == null) {
+  //     WidgetHelper.customSnackBar(
+  //       title: AppStrings.somethingWentWrong,
+  //       isError: true,
+  //     );
+  //   } else {
+  //     isFirstAssessmentDone?.toLowerCase() == "Approved".toLowerCase()
+  //         ? WidgetHelper.customSnackBar(
+  //           title: AppStrings.yourAssessmentIsDoneAlready,
+  //           autoClose: false,
+  //         )
+  //         : WidgetHelper.customSnackBar(
+  //           title: AppStrings.yourAssessmentIsUnderReview,
+  //           isError: true,
+  //           autoClose: false,
+  //         );
+  //   }
+  // }
 }
 
 class Media {

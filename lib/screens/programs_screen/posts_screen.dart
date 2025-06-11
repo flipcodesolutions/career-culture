@@ -8,6 +8,7 @@ import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/media_assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -177,14 +178,19 @@ class _PostsScreenState extends State<PostsScreen>
                 child: PrimaryBtn(
                   width: 90.w,
                   btnText:
-                      "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
+                      postProvider.currentPost?.isSecondAssessmentDone == true
+                          ? "All Test Completed. Bravo"
+                          : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
                   onTap: () {
                     context.read<AssessmentProvider>().setPostId =
                         postProvider.currentPost?.id?.toString() ?? "";
-                    postProvider.currentPost?.isAssessmentDone != true
+                    bool isFirstDone =
+                        postProvider.currentPost?.isFirstAssessmentDone != true;
+                    !isFirstDone
                         ? push(
                           context: context,
                           widget: AssessmentScreen(
+                            isInReviewMode: isFirstDone,
                             postName:
                                 "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
                           ),
@@ -192,11 +198,9 @@ class _PostsScreenState extends State<PostsScreen>
                         )
                         : push(
                           context: context,
-                          widget: AssessmentResultScreen(),
-                          transition: FadeForwardsPageTransitionsBuilder(),
+                          widget: MediaAssessmentScreen(),
+                          transition: FadeUpwardsPageTransitionsBuilder(),
                         );
-                    // : postProvider.currentPost
-                    //     ?.handleWhatToShowIfAssessmentHasSubmittedAlready();
                   },
                 ),
               )
@@ -259,8 +263,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               SizeHelper.height(),
               if (post?.video?.isNotEmpty == true &&
                   YoutubePlayer.convertUrlToId(
-                        "https://www.youtube.com/embed/hHuG7FIKgtc?si=s3piV74E2EzYtmd-" ??
-                            "",
+                        postProvider.currentPost?.video ?? "",
                       )?.isNotEmpty ==
                       true) ...[
                 HeadingTextWidget(heading: AppStrings.mustWatch),
@@ -273,9 +276,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                       backGroundColor: AppColors.lightWhite,
                       boxShadow: ShadowHelper.scoreContainer,
                       child: VideoPreviewScreen(
-                        videoUrl:
-                            "https://www.youtube.com/embed/hHuG7FIKgtc?si=s3piV74E2EzYtmd-" ??
-                            "",
+                        videoUrl: postProvider.currentPost?.video ?? "",
                         description: post?.description,
                       ),
                     ),

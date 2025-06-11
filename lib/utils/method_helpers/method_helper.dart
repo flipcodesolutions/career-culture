@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
 import 'package:mindful_youth/service/fcm_token_service/fcm_token_service.dart';
@@ -17,6 +18,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/wall_provider/wall_provider.dart';
+import '../../widgets/custom_container.dart';
+import '../../widgets/custom_text.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
 import '../widget_helper/widget_helper.dart';
 
@@ -403,4 +406,47 @@ class MethodHelper with NavigateHelper {
   static String _twoDigits(int n) {
     return n.toString().padLeft(2, '0');
   }
+
+  /// used in [AssessmentResultScreen] to display time taken by user to finish test
+  static String formatTimeDifference(DateTime startTime, DateTime? finishTime) {
+    if (finishTime == null) return "N/A";
+
+    Duration diff = finishTime.difference(startTime);
+
+    if (diff.inHours >= 1) {
+      int hours = diff.inHours;
+      int minutes = diff.inMinutes % 60;
+      return "${hours.toString().padLeft(2, '0')} : ${minutes.toString().padLeft(2, '0')} hr";
+    } else {
+      int minutes = diff.inMinutes;
+      int seconds = diff.inSeconds % 60;
+      return "${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')} min";
+    }
+  }
+
+  //// its a ui builder for pick image source
+  static Widget buildImageOption({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomContainer(
+            width: AppSize.size60,
+            height: AppSize.size60,
+            shape: BoxShape.circle,
+            backGroundColor: AppColors.grey.withOpacity(0.2),
+            child: Icon(icon, size: 28, color: AppColors.secondary),
+          ),
+          SizedBox(height: AppSize.size10),
+          CustomText(text: label),
+        ],
+      ),
+    );
+  }
+  //
 }

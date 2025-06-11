@@ -16,4 +16,11 @@ class AppImageStrings {
       "assets/images/celebration_firecrakers.png";
   static const String assessmentResultTrophy =
       "assets/images/assessmet_complete.png";
+  static const String arrowRight2 = "assets/images/arrow_right_2.png";
+  static const String coin = "assets/images/coin.png";
+  static const String coins = "assets/images/coins.png";
+  static const String correctSign = "assets/images/correct_sign.png";
+  static const String shareIcon = "assets/images/share_icon.png";
+  static const String timeIcon = "assets/images/time_clock.png";
+  static const String trophy = "assets/images/trophy.png";
 }

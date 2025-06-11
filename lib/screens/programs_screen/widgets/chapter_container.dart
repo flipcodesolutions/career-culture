@@ -16,19 +16,14 @@ import '../../../widgets/custom_text.dart';
 import '../posts_screen.dart';
 
 class ChapterContainer extends StatelessWidget with NavigateHelper {
-  const ChapterContainer({
-    super.key,
-    required this.chaptersInfo,
-    required this.isOpen,
-  });
+  const ChapterContainer({super.key, required this.chaptersInfo});
   final ChaptersInfo chaptersInfo;
-  final bool isOpen;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
           () =>
-              isOpen
+              chaptersInfo.isOpen != null && chaptersInfo.isOpen == true
                   ? push(
                     context: context,
                     widget: PostsScreen(

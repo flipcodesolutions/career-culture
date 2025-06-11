@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import '../../models/assessment_question_model/assessment_question_model.dart';
 import '../../utils/widget_helper/widget_helper.dart';
@@ -28,12 +29,19 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
   Future<void> getAssessmentQuestionsByPostId({
     required BuildContext context,
+    bool isInReviewMode = false,
   }) async {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
     _assessmentQuestions = await assessmentQuestionsService
         .getAssessmentQuestionsByPostId(context: context, postId: _postId);
+    if (isInReviewMode) {
+      _assessmentQuestions?.data?.forEach(
+        /// this will set the previously answer to show user
+        (e) => e.setPreviouslyAnswerToCurrentModel(),
+      );
+    }
 
     /// set _isLoading false
     _isLoading = false;
@@ -100,7 +108,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      _assessmentQuestions?.data?[index].answer = selection;
+      _assessmentQuestions?.data?[index].userAnswer = selection;
       notifyListeners();
     }
   }
@@ -115,7 +123,25 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
+      if (selectedFiles?.any((e) => e.size >= 1024 * 1024 * 2) == true) {
+        WidgetHelper.customSnackBar(
+          title: AppStrings.imagesShouldBeLessThan2Mb,
+          isError: true,
+        );
+        return;
+      }
       _assessmentQuestions?.data?[index].selectedFiles = selectedFiles;
+      notifyListeners();
+    }
+  }
+
+  /// clear file selection
+  void clearFilesSelection({required int questionId}) {
+    int? index = _assessmentQuestions?.data?.indexWhere(
+      (e) => e.id == questionId,
+    );
+    if (index != null && index != -1) {
+      _assessmentQuestions?.data?[index].selectedFiles?.clear();
       notifyListeners();
     }
   }
@@ -167,6 +193,8 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   DateTime? startTime;
   DateTime? finishTime;
   String? score;
+  int point = 10;
+  int correctAnswer = 0;
 
   /// to check if test time to start or stop
   bool _isTestStarted = false;
@@ -178,6 +206,24 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       _isTestStarted = true;
     }
     notifyListeners();
+  }
+
+  /// get the number of correct answer
+  String noOfCorrectAnswer() {
+    return "$correctAnswer / ${_assessmentQuestions?.data?.length}";
+  }
+
+  //// get the string how many coins earned with test
+  String coinsEarned() {
+    return "${point * correctAnswer}";
+  }
+
+  /// get the String how much time test took to complete
+  String totalTimeOfTest() {
+    return MethodHelper.formatTimeDifference(
+      startTime ?? DateTime.now(),
+      finishTime,
+    );
   }
 
   /// after user finish with test , check and generate result from the answers and also send the user answer to backend
@@ -215,8 +261,17 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       print(
         "correct Answer ==> $noOfCorrectAnswer / ${_assessmentQuestions?.data?.length}",
       );
+      correctAnswer = noOfCorrectAnswer;
       finishTime = DateTime.now();
-      submitAssessmentQuestions();
+
+      /// set _isLoading true
+      _isLoading = true;
+      notifyListeners();
+      await submitAssessmentQuestions();
+
+      /// set _isLoading false
+      _isLoading = false;
+      notifyListeners();
       _isTestStarted = false;
     }
     notifyListeners();

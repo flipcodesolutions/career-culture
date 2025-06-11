@@ -34,7 +34,7 @@ class ChaptersInfo {
   int? programId;
   String? image;
   String? status;
-
+  bool? isOpen;
   ChaptersInfo({
     this.id,
     this.title,
@@ -42,6 +42,7 @@ class ChaptersInfo {
     this.programId,
     this.image,
     this.status,
+    this.isOpen,
   });
 
   ChaptersInfo.fromJson(Map<String, dynamic> json) {
@@ -51,6 +52,7 @@ class ChaptersInfo {
     programId = json['program_id'];
     image = json['image'];
     status = json['status'];
+    isOpen = json['isOpen'];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,6 +63,7 @@ class ChaptersInfo {
     data['program_id'] = this.programId;
     data['image'] = this.image;
     data['status'] = this.status;
+    data['isOpen'] = this.isOpen;
     return data;
   }
 }

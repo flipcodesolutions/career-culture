@@ -1,4 +1,7 @@
+import 'dart:developer';
+import 'dart:typed_data';
 import 'dart:ui';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_icons.dart';
@@ -6,6 +9,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/utils/border_helper/border_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/image_picker_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -44,13 +48,18 @@ class AssessmentScreen extends StatefulWidget {
 class _AssessmentScreenState extends State<AssessmentScreen>
     with NavigateHelper {
   bool isMedia = false;
+  bool isTestDone = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    isTestDone = widget.isInReviewMode;
     AssessmentProvider assessmentProvider = context.read<AssessmentProvider>();
     Future.microtask(() {
-      assessmentProvider.getAssessmentQuestionsByPostId(context: context);
+      assessmentProvider.getAssessmentQuestionsByPostId(
+        context: context,
+        isInReviewMode: widget.isInReviewMode,
+      );
     });
   }
 
@@ -72,93 +81,89 @@ class _AssessmentScreenState extends State<AssessmentScreen>
           assessmentProvider.isLoading
               ? Center(child: CustomLoader())
               : isQuestions
-              ? Form(
-                key: assessmentProvider.formKey,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  child: AnimationLimiter(
-                    child: Column(
-                      children: AnimationConfiguration.toStaggeredList(
-                        childAnimationBuilder:
-                            (widget) => SlideAnimation(
-                              child: FadeInAnimation(child: widget),
-                            ),
-                        children: [
-                          /// assessment heading
-                          CustomContainer(
-                            alignment: Alignment.topLeft,
-                            child: CustomText(
-                              text: AppStrings.assessment,
-                              style: TextStyleHelper.largeHeading.copyWith(
-                                color: AppColors.primary,
-                                fontStyle: FontStyle.italic,
-                              ),
+              ? SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                child: AnimationLimiter(
+                  child: Column(
+                    children: AnimationConfiguration.toStaggeredList(
+                      childAnimationBuilder:
+                          (widget) => SlideAnimation(
+                            child: FadeInAnimation(child: widget),
+                          ),
+                      children: [
+                        /// assessment heading
+                        CustomContainer(
+                          alignment: Alignment.topLeft,
+                          child: CustomText(
+                            text: AppStrings.assessment,
+                            style: TextStyleHelper.largeHeading.copyWith(
+                              color: AppColors.primary,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
-                          CustomContainer(
-                            alignment: Alignment.topLeft,
-                            child: CustomText(
-                              text: AppStrings.level1QuizTest,
-                              style: TextStyleHelper.smallText.copyWith(
-                                color: AppColors.blackShade75,
-                                fontStyle: FontStyle.italic,
-                              ),
+                        ),
+                        CustomContainer(
+                          alignment: Alignment.topLeft,
+                          child: CustomText(
+                            text: AppStrings.level1QuizTest,
+                            style: TextStyleHelper.smallText.copyWith(
+                              color: AppColors.blackShade75,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
-                          SizeHelper.height(),
-                          QuestionRowAndColumInfoWithIcon(
-                            heading1: "$noQuestions ${AppStrings.questions}",
-                            heading2: AppStrings.multipleChoiceAnswer,
-                            icon: Icons.question_mark_outlined,
-                          ),
-                          SizeHelper.height(height: 1.h),
-                          QuestionRowAndColumInfoWithIcon(
-                            heading1: AppStrings.points10,
-                            heading2: AppStrings.perQuestion,
-                            icon: Icons.checklist_rtl_rounded,
-                          ),
-                          SizeHelper.height(height: 1.h),
-                          Divider(),
-                          CustomContainer(
-                            child: IntrinsicHeight(
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    children: List.generate(noQuestions, (
-                                      index,
-                                    ) {
-                                      AssessmentQuestion? item =
-                                          assessmentProvider
-                                              .assessmentQuestions
-                                              ?.data?[index];
-                                      if (!isMedia && item?.type == "video" ||
-                                          item?.type == "audio" ||
-                                          item?.type == "image") {
-                                        isMedia = true;
-                                      }
-                                      return QuestionWidget(
-                                        isInReviewMode: widget.isInReviewMode,
-                                        question: item ?? AssessmentQuestion(),
-                                        questionIndex: index + 1,
-                                      );
-                                    }),
-                                  ),
-                                  if (!assessmentProvider.isTestStarted)
-                                    ClipRect(
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: CustomContainer(),
+                        ),
+                        SizeHelper.height(),
+                        QuestionRowAndColumInfoWithIcon(
+                          heading1: "$noQuestions ${AppStrings.questions}",
+                          heading2: AppStrings.multipleChoiceAnswer,
+                          icon: Icons.question_mark_outlined,
+                        ),
+                        SizeHelper.height(height: 1.h),
+                        QuestionRowAndColumInfoWithIcon(
+                          heading1: assessmentProvider.point.toString(),
+                          heading2: AppStrings.perQuestion,
+                          icon: Icons.checklist_rtl_rounded,
+                        ),
+                        SizeHelper.height(height: 1.h),
+                        Divider(),
+                        CustomContainer(
+                          child: IntrinsicHeight(
+                            child: Stack(
+                              children: [
+                                Column(
+                                  children: List.generate(noQuestions, (index) {
+                                    AssessmentQuestion? item =
+                                        assessmentProvider
+                                            .assessmentQuestions
+                                            ?.data?[index];
+                                    if (!isMedia && item?.type == "video" ||
+                                        item?.type == "audio" ||
+                                        item?.type == "image") {
+                                      isMedia = true;
+                                    }
+                                    return QuestionWidget(
+                                      isInReviewMode: widget.isInReviewMode,
+                                      question: item ?? AssessmentQuestion(),
+                                      questionIndex: index + 1,
+                                    );
+                                  }),
+                                ),
+                                if (!assessmentProvider.isTestStarted &&
+                                    !widget.isInReviewMode)
+                                  ClipRect(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 5.0,
+                                        sigmaY: 5.0,
                                       ),
+                                      child: CustomContainer(),
                                     ),
-                                ],
-                              ),
+                                  ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -172,29 +177,24 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 child: PrimaryBtn(
                   btnText:
-                      !assessmentProvider.isTestStarted
+                      /// if widget is build for review we assume the test is done or when user finish test on success will update it to
+                      isTestDone
+                          ? AppStrings.testCompleted
+                          : !assessmentProvider.isTestStarted
                           ? AppStrings.startTheTest
                           : AppStrings.submitAnswer,
-                  onTap: () {
-                    /// logic to submit after finishing all questions
-                    assessmentProvider.isTestStarted
-                        ? finishTest(
-                          assessmentProvider: assessmentProvider,
-                          ctx: context,
-                        )
-                        : assessmentProvider.startTest();
-                    // if (assessmentProvider.formKey.currentState?.validate() ==
-                    //     true) {
-                    //   assessmentProvider.submitAssessmentQuestions(
-                    //     context: context,
-                    //   );
-                    // } else {
-                    //   WidgetHelper.customSnackBar(
-                    //     title: "Validation Failed",
-                    //     isError: true,
-                    //   );
-                    // }
-                  },
+                  onTap:
+                      isTestDone
+                          ? null
+                          : () {
+                            /// logic to submit after finishing all questions
+                            assessmentProvider.isTestStarted
+                                ? finishTest(
+                                  assessmentProvider: assessmentProvider,
+                                  ctx: context,
+                                )
+                                : assessmentProvider.startTest();
+                          },
                 ),
               )
               : null,
@@ -207,9 +207,14 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   }) async {
     bool isTestCompleted = await assessmentProvider.finishTest();
     if (isTestCompleted) {
-      push(context: ctx, widget: AssessmentResultScreen());
-    } else {
-      WidgetHelper.customSnackBar(title: AppStrings.somethingWentWrong);
+      setState(() {
+        isTestDone = true;
+      });
+      push(
+        context: ctx,
+        widget: AssessmentResultScreen(postName: widget.postName),
+        transition: FadeForwardsPageTransitionsBuilder(),
+      );
     }
   }
 }
@@ -221,11 +226,12 @@ class QuestionRowAndColumInfoWithIcon extends StatelessWidget {
     required this.heading1,
     required this.heading2,
     required this.icon,
+    this.listOfHeading2 = const [],
   });
   final IconData icon;
   final String heading1;
   final String heading2;
-
+  final List<String> listOfHeading2;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -248,6 +254,15 @@ class QuestionRowAndColumInfoWithIcon extends StatelessWidget {
                 style: TextStyleHelper.smallText.copyWith(
                   color: AppColors.grey,
                   fontStyle: FontStyle.italic,
+                ),
+              ),
+              ...listOfHeading2.map(
+                (e) => CustomText(
+                  text: e,
+                  style: TextStyleHelper.smallText.copyWith(
+                    color: AppColors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ],
@@ -419,31 +434,86 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                   return validate;
                 },
               ),
-              // CustomFilePicker(
-              //   questionId: widget.question.id ?? -1,
-              //   allowMultiple: true,
-              //   allowedExtensions: ["mp4", "mkv", "webp"],
-              //   icon: AppIconsData.video,
-              // ),
             ] else if (widget.question.type == "audio") ...[
-              CustomFilePicker(
-                questionId: widget.question.id ?? -1,
-                allowMultiple: true,
-                allowedExtensions: ["mp3", "ogg", "wav"],
-                icon: AppIconsData.audio,
-              ),
-              CustomContainer(
-                alignment: Alignment.center,
-                child: CustomText(text: "OR"),
-              ),
               CustomContainer(
                 child: AudioRecorderPlayer(questionId: widget.question.id),
               ),
+            ] else if (widget.question.type == "image") ...[
+              SizeHelper.height(height: 1.h),
+              PickImage(question: widget.question),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PickImage extends StatefulWidget {
+  const PickImage({super.key, required this.question});
+  final AssessmentQuestion question;
+  @override
+  State<PickImage> createState() => _PickImageState();
+}
+
+class _PickImageState extends State<PickImage> {
+  @override
+  Widget build(BuildContext context) {
+    final AssessmentProvider assessmentProvider =
+        context.watch<AssessmentProvider>();
+    List<PlatformFile> files =
+        assessmentProvider.assessmentQuestions?.data
+            ?.firstWhere((e) => e.id == widget.question.id)
+            .selectedFiles ??
+        [];
+
+    return InkWell(
+      onTap:
+          () =>
+              files.isEmpty
+                  ? ImagePickerHelper.showImagePicker(
+                    context,
+                    (image) async => assessmentProvider.makeFilesSelection(
+                      questionId: widget.question.id ?? -1,
+                      selectedFiles: [
+                        await ImagePickerHelper.convertFileToPlatformFile(
+                          image ?? File(""),
+                        ),
+                      ],
+                    ),
+                  )
+                  : null,
+      child: CustomContainer(
+        height: 20.h,
+        width: 90.w,
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        backGroundColor: AppColors.lightWhite,
+        child:
+            files.isEmpty
+                ? Center(child: CustomText(text: AppStrings.clickToAddImage))
+                : Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.memory(files.first.bytes ?? Uint8List(0)),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        onPressed: () {
+                          files.clear();
+                          assessmentProvider.clearFilesSelection(
+                            questionId: widget.question.id ?? -1,
+                          );
+                        },
+                        icon: Icon(Icons.cancel, color: AppColors.error),
+                      ),
+                    ),
+                  ],
+                ),
       ),
     );
   }

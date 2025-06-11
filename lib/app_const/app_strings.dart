@@ -250,6 +250,7 @@ class AppStrings {
   static const mustSelectCoordinator = 'Must Select Coordinator';
   static const noDescriptionFound = 'No Description Found !!';
   static const level1QuizTest = 'Level - 1 : Quiz Test';
+  static const level2ActivitySubmission = 'Level - 2 : Activity Submission';
   static const questions = 'Questions';
   static const multipleChoiceAnswer = "Multiple Choice Answer";
   static const points10 = "10 Points";
@@ -259,6 +260,16 @@ class AppStrings {
   static const congratulations = "Congratulations!";
   static const youHaveCompletedAssessmentQuiz =
       "You Have Completed the Quiz round of assessment successfully.";
+  static const nextLevel = "Next Level";
+  static const score = "Score";
+  static const time = "Time";
+  static const coins = "Coins";
+  static const totalCoins = "Total Coins";
+  static const reviewAnswer = "Review Answer";
+  static const shareScore = "Share Score";
+  static const testCompleted = "Test Completed";
+  static const clickToAddImage = "Click To Add Image";
+  static const imagesShouldBeLessThan2Mb = "Images Should Be Less Than 2Mb";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
