@@ -1,10 +1,8 @@
-import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:mindful_youth/app_const/app_icons.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
@@ -13,9 +11,7 @@ import 'package:mindful_youth/utils/method_helpers/image_picker_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
-import 'package:mindful_youth/widgets/custom_file_picker.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -66,9 +62,20 @@ class _AssessmentScreenState extends State<AssessmentScreen>
   @override
   Widget build(BuildContext context) {
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
+    // Non-media questions (text, multiple choice, etc.)
     bool isQuestions =
-        assessmentProvider.assessmentQuestions?.data?.isNotEmpty == true;
-    int noQuestions = assessmentProvider.assessmentQuestions?.data?.length ?? 0;
+        assessmentProvider.assessmentQuestions?.data?.any(
+          (e) => e.type != "video" && e.type != "image" && e.type != "audio",
+        ) ==
+        true;
+
+    final List<AssessmentQuestion>? mediaList =
+        assessmentProvider.assessmentQuestions?.data
+            ?.where(
+              (e) =>
+                  e.type != "video" && e.type != "image" && e.type != "audio",
+            )
+            .toList();
     return Scaffold(
       appBar: AppBar(
         // title: CustomText(
@@ -114,7 +121,8 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                         ),
                         SizeHelper.height(),
                         QuestionRowAndColumInfoWithIcon(
-                          heading1: "$noQuestions ${AppStrings.questions}",
+                          heading1:
+                              "${mediaList?.length ?? 0} ${AppStrings.questions}",
                           heading2: AppStrings.multipleChoiceAnswer,
                           icon: Icons.question_mark_outlined,
                         ),
@@ -131,22 +139,23 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                             child: Stack(
                               children: [
                                 Column(
-                                  children: List.generate(noQuestions, (index) {
-                                    AssessmentQuestion? item =
-                                        assessmentProvider
-                                            .assessmentQuestions
-                                            ?.data?[index];
-                                    if (!isMedia && item?.type == "video" ||
-                                        item?.type == "audio" ||
-                                        item?.type == "image") {
-                                      isMedia = true;
-                                    }
-                                    return QuestionWidget(
-                                      isInReviewMode: widget.isInReviewMode,
-                                      question: item ?? AssessmentQuestion(),
-                                      questionIndex: index + 1,
-                                    );
-                                  }),
+                                  children: List.generate(
+                                    mediaList?.length ?? 0,
+                                    (index) {
+                                      AssessmentQuestion? item =
+                                          mediaList?[index];
+                                      if (!isMedia && item?.type == "video" ||
+                                          item?.type == "audio" ||
+                                          item?.type == "image") {
+                                        isMedia = true;
+                                      }
+                                      return QuestionWidget(
+                                        isInReviewMode: widget.isInReviewMode,
+                                        question: item ?? AssessmentQuestion(),
+                                        questionIndex: index + 1,
+                                      );
+                                    },
+                                  ),
                                 ),
                                 if (!assessmentProvider.isTestStarted &&
                                     !widget.isInReviewMode)
@@ -168,8 +177,12 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                   ),
                 ),
               )
-              : Center(
-                child: NoDataFoundWidget(text: AppStrings.noQuestionsFound),
+              : CustomContainer(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                width: 90.w,
+                height: 80.h,
+                child: NoDataFoundWidget(),
               ),
       bottomNavigationBar:
           isQuestions

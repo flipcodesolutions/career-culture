@@ -125,7 +125,13 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                   ),
                 ),
               )
-              : NoDataFoundWidget(),
+              : CustomContainer(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                width: 90.w,
+                height: 80.h,
+                child: NoDataFoundWidget(),
+              ),
     );
   }
 }

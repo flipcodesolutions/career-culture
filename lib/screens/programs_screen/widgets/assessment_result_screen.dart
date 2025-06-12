@@ -5,6 +5,7 @@ import 'package:mindful_youth/provider/assessment_provider/assessment_provider.d
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/media_assessment_screen.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -17,6 +18,9 @@ import '../../../app_const/app_image_strings.dart';
 import '../../../app_const/app_strings.dart';
 import '../../../widgets/custom_score_with_animation.dart';
 import '../../../widgets/primary_btn.dart';
+import 'package:screenshot/screenshot.dart';
+
+import '../../../widgets/user_name_and_userid.dart';
 
 class AssessmentResultScreen extends StatefulWidget {
   const AssessmentResultScreen({super.key, required this.postName});
@@ -27,155 +31,171 @@ class AssessmentResultScreen extends StatefulWidget {
 
 class _AssessmentResultScreenState extends State<AssessmentResultScreen>
     with NavigateHelper {
+  final ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     final AssessmentProvider assessmentProvider =
         context.read<AssessmentProvider>();
     final HomeScreenProvider homeScreenProvider =
         context.read<HomeScreenProvider>();
-    return Scaffold(
-      appBar: AppBar(shape: Border(bottom: BorderSide(color: AppColors.white))),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomContainer(
-              alignment: Alignment.center,
-              child: CustomText(
-                text: AppStrings.congratulations,
-                style: TextStyleHelper.largeHeading.copyWith(
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-            SizeHelper.height(height: 1.h),
-            CustomContainer(
-              alignment: Alignment.center,
-              child: CustomText(
-                text: AppStrings.youHaveCompletedAssessmentQuiz,
-                style: TextStyleHelper.xSmallText.copyWith(
-                  color: AppColors.grey,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            SizeHelper.height(height: 1.h),
-            CustomContainer(
-              child: Stack(
-                children: [
-                  Image.asset(
-                    AppImageStrings.celebrationFirework,
-                    height: 35.h,
-                  ),
-                  Image.asset(
-                    AppImageStrings.assessmentResultTrophy,
-                    fit: BoxFit.cover,
-                    height: 35.h,
-                    width: 100.w,
-                  ),
-                ],
-              ),
-            ),
-            SizeHelper.height(height: 3.h),
-
-            /// create a user assessment score
-            AssessmentScoreBoard(
-              coins: assessmentProvider.coinsEarned(),
-              score: assessmentProvider.noOfCorrectAnswer(),
-              time: assessmentProvider.totalTimeOfTest(),
-              totalCoins:
-                  "${int.parse(homeScreenProvider.overAllScoreModel?.data?.totalPoints ?? "0") + int.parse(assessmentProvider.coinsEarned())}",
-            ),
-            SizeHelper.height(height: 3.h),
-
-            /// review and share score btn
-            CustomContainer(
-              margin: EdgeInsets.symmetric(horizontal: 5.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(AppSize.size30),
-                    onTap:
-                        () => push(
-                          context: context,
-                          widget: AssessmentScreen(
-                            postName: widget.postName,
-                            isInReviewMode: true,
-                          ),
-                          transition: OpenUpwardsPageTransitionsBuilder(),
-                        ),
-                    child: CustomContainer(
-                      width: 44.w,
-                      height: 7.h,
-                      borderRadius: BorderRadius.circular(AppSize.size30),
-                      backGroundColor: AppColors.lightGrey,
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            AppImageStrings.correctSign,
-                            width: 10.w,
-                            height: 5.h,
-                          ),
-                          SizeHelper.width(),
-                          CustomText(
-                            text: AppStrings.reviewAnswer,
-                            style: TextStyleHelper.smallHeading,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(AppSize.size30),
-                    onTap: () {},
-                    child: CustomContainer(
-                      width: 44.w,
-                      height: 7.h,
-                      borderRadius: BorderRadius.circular(AppSize.size30),
-                      backGroundColor: AppColors.secondary,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SizeHelper.width(),
-                          CustomText(
-                            text: AppStrings.shareScore,
-                            style: TextStyleHelper.smallHeading,
-                          ),
-                          Image.asset(
-                            AppImageStrings.shareIcon,
-                            width: 9.w,
-                            height: 5.h,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return Screenshot(
+      controller: screenshotController,
+      child: Scaffold(
+        appBar: AppBar(
+          shape: Border(bottom: BorderSide(color: AppColors.white)),
         ),
-      ),
-      bottomNavigationBar: CustomContainer(
-        margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-        child: PrimaryBtn(
-          isIcon: true,
-          icon: Image.asset(
-            AppImageStrings.arrowRight2,
-            width: 10.w,
-            height: 3.h,
-          ),
-          btnText: AppStrings.nextLevel,
-          onTap:
-              () => push(
-                context: context,
-                widget: MediaAssessmentScreen(),
-                transition: FadeUpwardsPageTransitionsBuilder(),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomContainer(
+                alignment: Alignment.center,
+                child: CustomText(
+                  text: AppStrings.congratulations,
+                  style: TextStyleHelper.largeHeading.copyWith(
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
+              SizeHelper.height(height: 1.h),
+              CustomContainer(
+                alignment: Alignment.center,
+                child: CustomText(
+                  text: AppStrings.youHaveCompletedAssessmentQuiz,
+                  style: TextStyleHelper.xSmallText.copyWith(
+                    color: AppColors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+              SizeHelper.height(height: 1.h),
+              CustomContainer(
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      AppImageStrings.celebrationFirework,
+                      height: 35.h,
+                    ),
+                    Image.asset(
+                      AppImageStrings.assessmentResultTrophy,
+                      fit: BoxFit.cover,
+                      height: 35.h,
+                      width: 100.w,
+                    ),
+                  ],
+                ),
+              ),
+              SizeHelper.height(height: 1.h),
+
+              /// name and user student id row
+              // CustomContainer(
+              //   margin: EdgeInsets.symmetric(horizontal: 5.w),
+              //   child: UserNameAndUIdRow(),
+              // ),
+              SizeHelper.height(height: 3.h),
+
+              /// create a user assessment score
+              AssessmentScoreBoard(
+                coins: assessmentProvider.coinsEarned(),
+                score: assessmentProvider.noOfCorrectAnswer(),
+                time: assessmentProvider.totalTimeOfTest(),
+                totalCoins:
+                    "${int.parse(homeScreenProvider.overAllScoreModel?.data?.totalPoints ?? "0") + int.parse(assessmentProvider.coinsEarned())}",
+              ),
+              SizeHelper.height(height: 3.h),
+
+              /// review and share score btn
+              CustomContainer(
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      borderRadius: BorderRadius.circular(AppSize.size30),
+                      onTap:
+                          () => push(
+                            context: context,
+                            widget: AssessmentScreen(
+                              postName: widget.postName,
+                              isInReviewMode: true,
+                            ),
+                            transition: OpenUpwardsPageTransitionsBuilder(),
+                          ),
+                      child: CustomContainer(
+                        width: 44.w,
+                        height: 7.h,
+                        borderRadius: BorderRadius.circular(AppSize.size30),
+                        backGroundColor: AppColors.lightGrey,
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              AppImageStrings.correctSign,
+                              width: 10.w,
+                              height: 5.h,
+                            ),
+                            SizeHelper.width(),
+                            CustomText(
+                              text: AppStrings.reviewAnswer,
+                              style: TextStyleHelper.smallHeading,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(AppSize.size30),
+                      onTap:
+                          () => MethodHelper.shareAssessmentResultScreen(
+                            screenShotController: screenshotController,
+                          ),
+                      child: CustomContainer(
+                        width: 44.w,
+                        height: 7.h,
+                        borderRadius: BorderRadius.circular(AppSize.size30),
+                        backGroundColor: AppColors.secondary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            SizeHelper.width(),
+                            CustomText(
+                              text: AppStrings.shareScore,
+                              style: TextStyleHelper.smallHeading,
+                            ),
+                            Image.asset(
+                              AppImageStrings.shareIcon,
+                              width: 9.w,
+                              height: 5.h,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: CustomContainer(
+          margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+          child: PrimaryBtn(
+            isIcon: true,
+            icon: Image.asset(
+              AppImageStrings.arrowRight2,
+              width: 10.w,
+              height: 3.h,
+            ),
+            btnText: AppStrings.nextLevel,
+            onTap:
+                () => push(
+                  context: context,
+                  widget: MediaAssessmentScreen(),
+                  transition: FadeUpwardsPageTransitionsBuilder(),
+                ),
+          ),
         ),
       ),
     );

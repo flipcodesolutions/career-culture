@@ -39,9 +39,7 @@ class _UserNameAndUIdRowState extends State<UserNameAndUIdRow> {
         : Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: CustomText(text: "${AppStrings.hello} , $userName"),
-            ),
+            Expanded(child: CustomText(text: "$userName")),
             SizeHelper.width(width: 5.w),
             CustomText(text: "${AppStrings.uId} : $userId", useOverflow: false),
           ],

@@ -210,7 +210,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
   /// get the number of correct answer
   String noOfCorrectAnswer() {
-    return "$correctAnswer / ${_assessmentQuestions?.data?.length}";
+    return "$correctAnswer / ${_assessmentQuestions?.data?.where((e) => e.type != "video" && e.type != "image" && e.type != "audio").toList().length}";
   }
 
   //// get the string how many coins earned with test

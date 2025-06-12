@@ -270,6 +270,7 @@ class AppStrings {
   static const testCompleted = "Test Completed";
   static const clickToAddImage = "Click To Add Image";
   static const imagesShouldBeLessThan2Mb = "Images Should Be Less Than 2Mb";
+  static const resultSharedSuccessfully = "Result Shared Successfully";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -185,34 +187,46 @@ class _PostsScreenState extends State<PostsScreen>
                     context.read<AssessmentProvider>().setPostId =
                         postProvider.currentPost?.id?.toString() ?? "";
                     bool isFirstDone =
-                        postProvider.currentPost?.isFirstAssessmentDone != true;
-                    !isFirstDone
-                        ? push(
-                          context: context,
-                          widget: AssessmentScreen(
-                            isInReviewMode: isFirstDone,
-                            postName:
-                                "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
-                          ),
-                          transition: FadeUpwardsPageTransitionsBuilder(),
-                        )
-                        : push(
-                          context: context,
-                          widget: MediaAssessmentScreen(),
-                          transition: FadeUpwardsPageTransitionsBuilder(),
-                        );
+                        postProvider.currentPost?.isFirstAssessmentDone == true;
+                    bool isSecondDone =
+                        postProvider.currentPost?.isSecondAssessmentDone ==
+                        true;
+
+                    if (!isFirstDone && !isSecondDone) {
+                      // Case 1: Neither assessment is done
+                      push(
+                        context: context,
+                        widget: AssessmentScreen(
+                          isInReviewMode: false,
+                          postName:
+                              "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
+                        ),
+                        transition: FadeUpwardsPageTransitionsBuilder(),
+                      );
+                    } else if (isFirstDone && !isSecondDone) {
+                      // Case 2: First done, second not done
+                      push(
+                        context: context,
+                        widget: MediaAssessmentScreen(),
+                        transition: FadeUpwardsPageTransitionsBuilder(),
+                      );
+                    } else if (isFirstDone && isSecondDone) {
+                      // Case 3: Both assessments are done
+                      WidgetHelper.customSnackBar(
+                        title: AppStrings.yourAssessmentIsDoneAlready,
+                      );
+                    } else {
+                      // Fallback: Unexpected state
+                      WidgetHelper.customSnackBar(
+                        title:
+                            "Unexpected state: First Assessment = $isFirstDone, Second Assessment = $isSecondDone",
+                        isError: true,
+                      );
+                    }
                   },
                 ),
               )
               : null,
-      // floatingActionButton:
-      //     postProvider.currentPost != null
-      //         ? FloatingActionButton(
-      //           onPressed: () {},
-      //           backgroundColor: AppColors.black,
-      //           child: AppIcons.add(color: AppColors.white),
-      //         )
-      //         : null,
     );
   }
 }

@@ -137,7 +137,7 @@ class PostInfo {
     }
     // isAssessmentDone = json['assessment'];
     isFirstAssessmentDone = json['firstAssessment'];
-    isFirstAssessmentDone = json['secondAssessment'];
+    isSecondAssessmentDone = json['secondAssessment'];
   }
 
   Map<String, dynamic> toJson() {
@@ -160,7 +160,7 @@ class PostInfo {
     }
     // data['assessment'] = isAssessmentDone;
     data['firstAssessment'] = isFirstAssessmentDone;
-    data['secondAssessment'] = isFirstAssessmentDone;
+    data['secondAssessment'] = isSecondAssessmentDone;
     return data;
   }
 

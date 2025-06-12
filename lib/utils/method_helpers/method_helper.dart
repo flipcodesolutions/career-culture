@@ -12,6 +12,8 @@ import 'package:mindful_youth/screens/wall_screen/wall_screen.dart';
 import 'package:mindful_youth/service/fcm_token_service/fcm_token_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/user_screen_time/tracking_mixin.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -448,5 +450,28 @@ class MethodHelper with NavigateHelper {
       ),
     );
   }
-  //
+
+  /// this method is used in [AssessmentResultScreen] to share user result after assessment
+  static void shareAssessmentResultScreen({
+    required ScreenshotController screenShotController,
+  }) async {
+    final image = await screenShotController.capture();
+
+    if (image == null) return;
+
+    final directory = await getTemporaryDirectory();
+    final imagePath = File('${directory.path}/result.png');
+    await imagePath.writeAsBytes(image);
+
+    /// share post
+    ShareResult refer = await SharePlus.instance.share(
+      ShareParams(
+        title: 'Hey! Check out My Assessment Result',
+        files: [XFile(imagePath.path)],
+      ),
+    );
+    if (refer.status == ShareResultStatus.success) {
+      WidgetHelper.customSnackBar(title: AppStrings.resultSharedSuccessfully);
+    }
+  }
 }
