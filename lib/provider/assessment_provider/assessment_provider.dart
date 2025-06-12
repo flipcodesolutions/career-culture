@@ -319,11 +319,44 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
           // context: context,
           assessmentAnswer: _assessmentQuestions,
         );
-    // if (success) {
-    //   WidgetHelper.customSnackBar(
-    //     title: AppStrings.yourAssessmentIsUnderReview,
-    //   );
-    // }
+
+    /// set _isLoading false
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  /// sent back the answer user has picked to show them
+  Future<void> submitAssessmentMediaQuestions() async {
+    // true if any question fails its media requirement
+    final hasMissingMedia = _assessmentQuestions?.data?.any((q) {
+      if (q.type == 'image' || q.type == 'audio') {
+        // must have at least one file
+        return (q.selectedFiles?.isEmpty ?? true);
+      }
+      if (q.type == 'video') {
+        // must have a non-empty link
+        return (q.userAnswer?.trim().isEmpty ?? true);
+      }
+      return false; // other types don’t require media
+    });
+
+    if (hasMissingMedia == true) {
+      WidgetHelper.customSnackBar(
+        title: "Please attach media: images/audio need file, video needs link",
+        isError: true,
+      );
+      return;
+    }
+
+    /// set _isLoading true
+    _isLoading = true;
+    notifyListeners();
+    log(_assessmentQuestions?.toJson().toString() ?? "");
+    bool success = await assessmentQuestionsService
+        .postAssessmentQuestionsByPostId(
+          // context: context,
+          assessmentAnswer: _assessmentQuestions,
+        );
 
     /// set _isLoading false
     _isLoading = false;

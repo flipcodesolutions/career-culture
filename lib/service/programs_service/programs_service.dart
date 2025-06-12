@@ -10,9 +10,7 @@ import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 
 class ProgramsService {
   /// get all programs
-  Future<ProgramsModel?> getAllPrograms(
-    {required BuildContext context}
-    ) async {
+  Future<ProgramsModel?> getAllPrograms({required BuildContext context}) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,
@@ -52,9 +50,9 @@ class ProgramsService {
 
   /// get home screen sliders
   /// get single programs by id
-  Future<ProgramsModel?> getHomeScreenSliders(
-    {required BuildContext context,}
-  ) async {
+  Future<ProgramsModel?> getHomeScreenSliders({
+    required BuildContext context,
+  }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,
@@ -94,9 +92,9 @@ class ProgramsService {
   }
 
   /// get user total score
-  Future<UserOverAllScoreModel?> getUserOverAllScore(
-    {required BuildContext context,}
-    ) async {
+  Future<UserOverAllScoreModel?> getUserOverAllScore({
+    required BuildContext context,
+  }) async {
     try {
       Map<String, dynamic> response = await HttpHelper.get(
         context: context,

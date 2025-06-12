@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
@@ -95,29 +96,21 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                         ),
                         Divider(),
                         CustomContainer(
-                          child: IntrinsicHeight(
-                            child: Stack(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: List.generate(
-                                    mediaList?.length ?? 0,
-                                    (index) {
-                                      mediaList?[index];
-                                      return QuestionWidget(
-                                        isInReviewMode: false,
-                                        question:
-                                            mediaList?[index] ??
-                                            AssessmentQuestion(),
-                                        questionIndex: index + 1,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(mediaList?.length ?? 0, (
+                              index,
+                            ) {
+                              mediaList?[index];
+                              return QuestionWidget(
+                                isInReviewMode: false,
+                                question:
+                                    mediaList?[index] ?? AssessmentQuestion(),
+                                questionIndex: index + 1,
+                              );
+                            }),
                           ),
                         ),
                       ],
@@ -132,6 +125,13 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                 height: 80.h,
                 child: NoDataFoundWidget(),
               ),
+      bottomNavigationBar: CustomContainer(
+        margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+        child: PrimaryBtn(
+          btnText: AppStrings.submitAnswer,
+          onTap: () => assessmentProvider.submitAssessmentMediaQuestions(),
+        ),
+      ),
     );
   }
 }

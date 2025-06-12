@@ -33,11 +33,18 @@ class ApiHelper {
   static String getAssessmentQuestionsByPostId({required String id}) =>
       "$baseUrl/questions?postId=$id";
   static String postAssessmentQuestionsByPostId = "$baseUrl/questions/reply";
+  static String postAssessmentQuestionsImageByPostId =
+      "$baseUrl/questions/reply-image";
+  static String postAssessmentQuestionsVideoByPostId =
+      "$baseUrl/questions/reply-video";
+  static String postAssessmentQuestionsAudioByPostId =
+      "$baseUrl/questions/reply-audio";
 
   /// wall
   static String getWallPosts({required String uId}) =>
       "$baseUrl/wall?user_id=$uId";
   static String likeWallPost = "$baseUrl/wall/like";
+
   /// using this at [PostService] for [IndividualWallPostScreen]
   static String getWallPostBySlug = "$baseUrl/wall/by-slug";
 
@@ -108,6 +115,7 @@ class ApiHelper {
 
   /// create order
   static String createCounselingAppointment = "$baseUrl/appointment";
+
   /// create order
   static String referCode = "$baseUrl/";
 }

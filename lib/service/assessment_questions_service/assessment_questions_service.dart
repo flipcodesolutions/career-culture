@@ -120,3 +120,116 @@ class AssessmentQuestionsService {
     }
   }
 }
+
+////
+Future<bool> postAssessmentMediaQuestionsByPostId({
+  required AssessmentQuestionModel? assessmentAnswer,
+}) async {
+  final token = await SharedPrefs.getToken();
+
+  // group your questions by type
+  final byType = <String, List<AssessmentQuestion>>{
+    'image':
+        assessmentAnswer?.data?.where((q) => q.type == 'image').toList() ?? [],
+    'video':
+        assessmentAnswer?.data?.where((q) => q.type == 'video').toList() ?? [],
+    'audio':
+        assessmentAnswer?.data?.where((q) => q.type == 'audio').toList() ?? [],
+  };
+  // map types to endpoints & form field names
+  final config = <String, Map<String, dynamic>>{
+    'image': {
+      'endpoint': ApiHelper.postAssessmentQuestionsImageByPostId,
+      'fieldName': 'image_files',
+    },
+    'video': {
+      'endpoint': ApiHelper.postAssessmentQuestionsVideoByPostId,
+      'fieldName': 'video_files',
+    },
+    'audio': {
+      'endpoint': ApiHelper.postAssessmentQuestionsAudioByPostId,
+      'fieldName': 'audio_files',
+    },
+  };
+
+  // upload each type in series, bail out on first failure
+  for (var type in ['image', 'video', 'audio']) {
+    final List<AssessmentQuestion> qs = byType[type] ?? [];
+    final String ep = (config[type]!['endpoint'] as String);
+    final String field = config[type]!['fieldName'] as String;
+
+    final ok = await _uploadMediaType(
+      questions: qs,
+      endpoint: ep,
+      fieldName: field,
+      authToken: token,
+    );
+    if (!ok) return false;
+  }
+
+  return true;
+}
+
+/// COMMON HELPER FOR EACH TYPE
+Future<bool> _uploadMediaType({
+  required List<AssessmentQuestion> questions,
+  required String endpoint,
+  required String fieldName, // e.g. "answer" or "image_files"
+  required String authToken,
+}) async {
+  if (questions.isEmpty) return true; // nothing to upload ⇒ success
+
+  final req = await HttpHelper.multipart(uri: endpoint);
+  req.headers['Authorization'] = 'Bearer $authToken';
+
+  for (var i = 0; i < questions.length; i++) {
+    final q = questions[i];
+    req.fields['data[$i][questionId]'] = q.id.toString();
+    req.fields['data[$i][type]'] = q.type ?? '';
+    req.fields['data[$i][answer]'] = q.userAnswer ?? '';
+    if (q.type != "video") {
+      for (var file in q.selectedFiles ?? <PlatformFile>[]) {
+        final path = file.path;
+        if (path == null || path.isEmpty) continue;
+
+        final mime = lookupMimeType(path) ?? 'application/octet-stream';
+        req.files.add(
+          await http.MultipartFile.fromPath(
+            fieldName,
+            path,
+            contentType: MediaType.parse(mime),
+          ),
+        );
+      }
+    }
+  }
+
+  try {
+    final streamed = await req.send().timeout(const Duration(seconds: 30));
+    final resp = await http.Response.fromStream(streamed);
+
+    if (streamed.statusCode != 200) {
+      throw HttpException(
+        'Upload failed (${streamed.statusCode}): ${resp.body}',
+      );
+    }
+
+    final json = jsonDecode(resp.body) as Map<String, dynamic>;
+    if (json['success'] != true) {
+      throw Exception('Server error: ${json['message']}');
+    }
+
+    WidgetHelper.customSnackBar(
+      title: json['message'] as String? ?? 'Upload successful',
+      isError: false,
+    );
+    return true;
+  } catch (e) {
+    WidgetHelper.customSnackBar(
+      title: 'Error uploading ${endpoint}: ${e.toString()}',
+      isError: true,
+    );
+    if (kDebugMode) log('Upload error for ${endpoint}: $e');
+    return false;
+  }
+}
