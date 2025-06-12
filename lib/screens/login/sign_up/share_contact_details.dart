@@ -160,7 +160,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: CustomDropDownWidget<String>(
                             initialSelection: signUpProvider.city,
-                            label: AppStrings.city,
+                            label: AppStrings.district,
                             onSelected:
                                 (dynamic citySelected) =>
                                     signUpProvider.selectCity(
@@ -173,7 +173,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                     CustomContainer(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: CustomTextFormField(
-                        labelText: AppStrings.district,
+                        labelText: AppStrings.city,
                         controller: signUpProvider.district,
                         validator:
                             (value) => ValidatorHelper.validateValue(
