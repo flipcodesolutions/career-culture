@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
-import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 
 class CustomSpeedDial extends StatelessWidget with NavigateHelper {
@@ -36,11 +35,7 @@ class CustomSpeedDial extends StatelessWidget with NavigateHelper {
         SpeedDialChild(
           child: Icon(Icons.call, color: AppColors.white),
           backgroundColor: AppColors.primary,
-          onTap:
-              () => push(
-                context: context,
-                widget: AssessmentResultScreen(postName: ""),
-              ),
+          onTap: () {},
         ),
         // Add more actions
       ],

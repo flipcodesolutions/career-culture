@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   homeScreenProvider
                                       .overAllScoreModel
                                       ?.data
-                                      ?.totalPoints ??
+                                      ?.totalPoints.toString() ??
                                   "-",
                               animationDuration: Duration(seconds: 3),
                             ),

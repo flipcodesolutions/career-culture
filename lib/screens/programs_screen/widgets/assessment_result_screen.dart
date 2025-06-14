@@ -20,7 +20,6 @@ import '../../../widgets/custom_score_with_animation.dart';
 import '../../../widgets/primary_btn.dart';
 import 'package:screenshot/screenshot.dart';
 
-
 class AssessmentResultScreen extends StatefulWidget {
   const AssessmentResultScreen({super.key, required this.postName});
   final String postName;
@@ -101,7 +100,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                 score: assessmentProvider.noOfCorrectAnswer(),
                 time: assessmentProvider.totalTimeOfTest(),
                 totalCoins:
-                    "${int.parse(homeScreenProvider.overAllScoreModel?.data?.totalPoints ?? "0") + int.parse(assessmentProvider.coinsEarned())}",
+                    "${int.parse(homeScreenProvider.overAllScoreModel?.data?.totalPoints.toString() ?? "0") + int.parse(assessmentProvider.coinsEarned())}",
               ),
               SizeHelper.height(height: 5.h),
 

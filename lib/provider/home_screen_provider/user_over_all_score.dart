@@ -29,7 +29,7 @@ class UserOverAllScoreModelData {
   int? userId;
   String? name;
   String? image;
-  String? totalPoints;
+  int? totalPoints;
   int? counselingCount;
 
   UserOverAllScoreModelData({

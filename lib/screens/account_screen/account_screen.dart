@@ -7,6 +7,7 @@ import 'package:mindful_youth/provider/refer_provider/refer_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
+import 'package:mindful_youth/screens/faq_screen/faq_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/shop_market_screen/order_list_screen.dart';
@@ -181,6 +182,21 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                             },
 
                             titleText: AppStrings.purchaseHistory,
+                          ),
+
+                          /// faq history
+                          ProfilePageListTiles(
+                            leading: Icons.question_mark_sharp,
+                            // onTap: () {},
+                            onTap: () async {
+                              push(
+                                context: context,
+                                widget: FaqScreen(),
+                                transition: FadeUpwardsPageTransitionsBuilder(),
+                              );
+                            },
+
+                            titleText: AppStrings.faq,
                           ),
                           ProfilePageListTiles(
                             leading: Icons.delete_forever,
