@@ -52,6 +52,7 @@ class ProgramContainer extends StatelessWidget with NavigateHelper {
                 borderRadius: BorderRadius.circular(AppSize.size40),
                 child: CustomImageWithLoader(
                   fit: BoxFit.cover,
+                  showImageInPanel: false,
                   imageUrl: "${AppStrings.assetsUrl}${item.image}",
                 ),
               ),

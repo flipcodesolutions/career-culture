@@ -62,10 +62,8 @@ class EducationalDetails extends StatelessWidget {
                       controller: signUpProvider.presentStudy,
                       suggestions: ListHelper.degreesList,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -78,10 +76,8 @@ class EducationalDetails extends StatelessWidget {
                       suggestions: ListHelper.degreesList,
                       controller: signUpProvider.lastStudy,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -93,10 +89,8 @@ class EducationalDetails extends StatelessWidget {
                       // hintText: AppStrings.nameOfCollegeOrUniversity,
                       controller: signUpProvider.collegeOrUniversity,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -124,7 +118,6 @@ class EducationalDetails extends StatelessWidget {
                                         "yes"
                                     ? ValidatorHelper.validateValue(
                                       value: value,
-                                      context: context,
                                     )
                                     : null,
                       ),
@@ -146,7 +139,6 @@ class EducationalDetails extends StatelessWidget {
                                 signUpProvider.referCode.text.isNotEmpty
                                     ? ValidatorHelper.validateValue(
                                       value: value,
-                                      context: context,
                                       // lengthToCheck: 8,
                                     )
                                     : null,

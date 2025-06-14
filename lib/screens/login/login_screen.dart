@@ -21,7 +21,6 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
 import '../../utils/method_helpers/google_login_helper.dart';
-import '../../utils/widget_helper/widget_helper.dart';
 import 'otp_screen/otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -83,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
                       validator:
                           (value) => ValidatorHelper.validateMobileNumber(
                             value: value,
-                            context: context,
                           ),
                     ),
                   ),

@@ -20,7 +20,6 @@ import '../../../widgets/custom_score_with_animation.dart';
 import '../../../widgets/primary_btn.dart';
 import 'package:screenshot/screenshot.dart';
 
-import '../../../widgets/user_name_and_userid.dart';
 
 class AssessmentResultScreen extends StatefulWidget {
   const AssessmentResultScreen({super.key, required this.postName});
@@ -104,7 +103,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                 totalCoins:
                     "${int.parse(homeScreenProvider.overAllScoreModel?.data?.totalPoints ?? "0") + int.parse(assessmentProvider.coinsEarned())}",
               ),
-              SizeHelper.height(height: 3.h),
+              SizeHelper.height(height: 5.h),
 
               /// review and share score btn
               CustomContainer(
@@ -126,7 +125,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                           ),
                       child: CustomContainer(
                         width: 44.w,
-                        height: 7.h,
+                        height: 5.h,
                         borderRadius: BorderRadius.circular(AppSize.size30),
                         backGroundColor: AppColors.lightGrey,
                         child: Row(
@@ -134,7 +133,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                             Image.asset(
                               AppImageStrings.correctSign,
                               width: 10.w,
-                              height: 5.h,
+                              height: 3.h,
                             ),
                             SizeHelper.width(),
                             CustomText(
@@ -153,7 +152,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                           ),
                       child: CustomContainer(
                         width: 44.w,
-                        height: 7.h,
+                        height: 5.h,
                         borderRadius: BorderRadius.circular(AppSize.size30),
                         backGroundColor: AppColors.secondary,
                         child: Row(
@@ -167,7 +166,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                             Image.asset(
                               AppImageStrings.shareIcon,
                               width: 9.w,
-                              height: 5.h,
+                              height: 3.h,
                             ),
                           ],
                         ),

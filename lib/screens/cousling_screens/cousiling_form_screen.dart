@@ -87,10 +87,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                       enabled:
                           counselingProvider.studentIdController.text.isEmpty,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                     SizeHelper.height(),
 
@@ -102,10 +100,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                       controller: counselingProvider.nameController,
                       enabled: counselingProvider.nameController.text.isEmpty,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                     SizeHelper.height(),
 
@@ -117,10 +113,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                       controller: counselingProvider.emailController,
                       enabled: counselingProvider.emailController.text.isEmpty,
                       validator:
-                          (value) => ValidatorHelper.validateEmail(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateEmail(value: value),
                     ),
                     SizeHelper.height(),
 
@@ -133,10 +127,8 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
                       enabled:
                           counselingProvider.contactController.text.isEmpty,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                     SizeHelper.height(),
                     CustomDropDownWidget<String>(

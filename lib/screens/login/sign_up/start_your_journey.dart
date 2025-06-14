@@ -82,10 +82,8 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                       labelText: AppStrings.firstName,
                       controller: signUpProvider.firstName,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -95,10 +93,8 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                       labelText: AppStrings.middleName,
                       controller: signUpProvider.middleName,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -108,10 +104,8 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                       labelText: AppStrings.lastName,
                       controller: signUpProvider.lastName,
                       validator:
-                          (value) => ValidatorHelper.validateValue(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -140,10 +134,8 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                       keyboardType: TextInputType.text,
                       controller: signUpProvider.birthDate,
                       validator:
-                          (value) => ValidatorHelper.validateDateFormate(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateDateFormate(value: value),
                     ),
                   ),
                   SizeHelper.height(),
@@ -246,10 +238,7 @@ class ConvenerDropDown extends StatelessWidget {
                   )
                   : SizedBox.shrink(),
       validator:
-          (value) => ValidatorHelper.validateValue(
-            value: value?.name ?? "",
-            context: context,
-          ),
+          (value) => ValidatorHelper.validateValue(value: value?.name ?? ""),
     );
   }
 }

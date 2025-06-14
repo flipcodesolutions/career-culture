@@ -25,6 +25,7 @@ class MediaAssessmentScreen extends StatefulWidget {
 
 class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
     with NavigateHelper {
+  bool isTestDone = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -50,86 +51,105 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                   e.type == "image" || e.type == "video" || e.type == "audio",
             )
             .toList();
-    return Scaffold(
-      appBar: AppBar(shape: Border(bottom: BorderSide(color: AppColors.white))),
-      body:
-          assessmentProvider.isLoading
-              ? Center(child: CustomLoader())
-              : mediaList?.isNotEmpty == true
-              ? SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                child: AnimationLimiter(
-                  child: Column(
-                    children: AnimationConfiguration.toStaggeredList(
-                      childAnimationBuilder:
-                          (widget) => SlideAnimation(
-                            child: FadeInAnimation(child: widget),
-                          ),
-                      children: [
-                        /// assessment heading
-                        CustomContainer(
-                          alignment: Alignment.topLeft,
-                          child: CustomText(
-                            text: AppStrings.assessment,
-                            style: TextStyleHelper.largeHeading.copyWith(
-                              color: AppColors.primary,
-                              fontStyle: FontStyle.italic,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          assessmentProvider.resetTest();
+          pop(context, result: isTestDone);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          shape: Border(bottom: BorderSide(color: AppColors.white)),
+        ),
+        body:
+            assessmentProvider.isLoading
+                ? Center(child: CustomLoader())
+                : mediaList?.isNotEmpty == true
+                ? SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  child: AnimationLimiter(
+                    child: Column(
+                      children: AnimationConfiguration.toStaggeredList(
+                        childAnimationBuilder:
+                            (widget) => SlideAnimation(
+                              child: FadeInAnimation(child: widget),
+                            ),
+                        children: [
+                          /// assessment heading
+                          CustomContainer(
+                            alignment: Alignment.topLeft,
+                            child: CustomText(
+                              text: AppStrings.assessment,
+                              style: TextStyleHelper.largeHeading.copyWith(
+                                color: AppColors.primary,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ),
-                        ),
-                        CustomContainer(
-                          alignment: Alignment.topLeft,
-                          child: CustomText(
-                            text: AppStrings.level2ActivitySubmission,
-                            style: TextStyleHelper.smallText.copyWith(
-                              color: AppColors.blackShade75,
-                              fontStyle: FontStyle.italic,
+                          CustomContainer(
+                            alignment: Alignment.topLeft,
+                            child: CustomText(
+                              text: AppStrings.level2ActivitySubmission,
+                              style: TextStyleHelper.smallText.copyWith(
+                                color: AppColors.blackShade75,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ),
-                        ),
-                        SizeHelper.height(),
-                        QuestionRowAndColumInfoWithIcon(
-                          heading1:
-                              "${mediaList?.length ?? 0} ${AppStrings.questions}",
-                          heading2: AppStrings.multipleChoiceAnswer,
-                          icon: Icons.question_mark_outlined,
-                        ),
-                        Divider(),
-                        CustomContainer(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: List.generate(mediaList?.length ?? 0, (
-                              index,
-                            ) {
-                              mediaList?[index];
-                              return QuestionWidget(
-                                isInReviewMode: false,
-                                question:
-                                    mediaList?[index] ?? AssessmentQuestion(),
-                                questionIndex: index + 1,
-                              );
-                            }),
+                          SizeHelper.height(),
+                          QuestionRowAndColumInfoWithIcon(
+                            heading1:
+                                "${mediaList?.length ?? 0} ${AppStrings.questions}",
+                            heading2: AppStrings.multipleChoiceAnswer,
+                            icon: Icons.question_mark_outlined,
                           ),
-                        ),
-                      ],
+                          Divider(),
+                          CustomContainer(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(mediaList?.length ?? 0, (
+                                index,
+                              ) {
+                                mediaList?[index];
+                                return QuestionWidget(
+                                  isInReviewMode: false,
+                                  question:
+                                      mediaList?[index] ?? AssessmentQuestion(),
+                                  questionIndex: index + 1,
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                )
+                : CustomContainer(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: 5.w),
+                  width: 90.w,
+                  height: 80.h,
+                  child: NoDataFoundWidget(),
                 ),
-              )
-              : CustomContainer(
-                alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 5.w),
-                width: 90.w,
-                height: 80.h,
-                child: NoDataFoundWidget(),
-              ),
-      bottomNavigationBar: CustomContainer(
-        margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-        child: PrimaryBtn(
-          btnText: AppStrings.submitAnswer,
-          onTap: () => assessmentProvider.submitAssessmentMediaQuestions(),
+        bottomNavigationBar: CustomContainer(
+          margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+          child: PrimaryBtn(
+            btnText: AppStrings.submitAnswer,
+            onTap: () async {
+              final bool success = await assessmentProvider
+                  .submitAssessmentMediaQuestions(context: context);
+              if (success) {
+                if (!context.mounted) return;
+                pop(context);
+                assessmentProvider.emptyAssessmentQuestions();
+              }
+            },
+          ),
         ),
       ),
     );

@@ -29,9 +29,7 @@ class ProgramsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllPrograms(
-    {required BuildContext context}
-    ) async {
+  Future<void> getAllPrograms({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();
     _programsModel = await programsService.getAllPrograms(context: context);

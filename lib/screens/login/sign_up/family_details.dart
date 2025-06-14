@@ -46,10 +46,7 @@ class FamilyDetails extends StatelessWidget {
                     labelText: AppStrings.nativePlace,
                     controller: TextEditingController(),
                     validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
+                        (value) => ValidatorHelper.validateValue(value: value),
                   ),
                 ),
                 SizeHelper.height(),
@@ -60,10 +57,7 @@ class FamilyDetails extends StatelessWidget {
                     labelText: AppStrings.currentLocation,
                     controller: TextEditingController(),
                     validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
+                        (value) => ValidatorHelper.validateValue(value: value),
                   ),
                 ),
                 SizeHelper.height(),
@@ -74,10 +68,7 @@ class FamilyDetails extends StatelessWidget {
                     labelText: AppStrings.familyDetails,
                     controller: TextEditingController(),
                     validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
+                        (value) => ValidatorHelper.validateValue(value: value),
                   ),
                 ),
                 SizeHelper.height(),

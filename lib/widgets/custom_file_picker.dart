@@ -66,6 +66,7 @@ class _CustomFilePickerState extends State<CustomFilePicker> {
       assessmentProvider.makeFilesSelection(
         questionId: widget.questionId,
         selectedFiles: accepted,
+        maxFileSize:widget.maxFileSizeBytes
       );
     }
   }

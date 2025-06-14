@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -20,13 +23,17 @@ class OnBoardingSinglePage extends StatefulWidget {
 
 class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
   final AudioPlayer audioPlayer = AudioPlayer();
+  String imageLink = "";
+  String audioLink = "";
+  String videoLink = "";
   @override
   void initState() {
     super.initState();
+    imageLink = widget.onBoardingInfo.image ?? "";
+    audioLink = widget.onBoardingInfo.audioUrl ?? "";
+    videoLink = widget.onBoardingInfo.videoUrl ?? "";
     // Play Audio if available
-    if (widget.onBoardingInfo.audioUrl != null &&
-        widget.onBoardingInfo.audioUrl!.isNotEmpty &&
-        widget.onBoardingInfo.videoUrl?.isEmpty == true) {
+    if (audioLink.isNotEmpty && videoLink.isEmpty == true) {
       audioPlayer
           .setUrl("${AppStrings.assetsUrl}${widget.onBoardingInfo.audioUrl!}")
           .then((_) {
@@ -44,32 +51,26 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
 
   @override
   Widget build(BuildContext context) {
+    log("${AppStrings.assetsUrl}$videoLink");
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (widget.onBoardingInfo.videoUrl != null &&
-              widget.onBoardingInfo.videoUrl?.isNotEmpty == true &&
-              widget.onBoardingInfo.image?.isEmpty == true)
+          if (videoLink.isNotEmpty && imageLink.isEmpty)
             CustomContainer(
-              width: 90.w,
-              height: 25.h,
               child: VideoPlayerWidget(
-                videoUrl:
-                    "${AppStrings.assetsUrl}${widget.onBoardingInfo.videoUrl}",
+                videoUrl: "${AppStrings.assetsUrl}$videoLink",
               ),
             ),
-          if (widget.onBoardingInfo.image != null &&
-              widget.onBoardingInfo.image?.isNotEmpty == true)
+          if (imageLink.isNotEmpty)
             CustomContainer(
               // backGroundColor: AppColors.error,
               width: 90.w,
               height: 25.h,
               child: CustomImageWithLoader(
                 fit: BoxFit.contain,
-                imageUrl:
-                    "${AppStrings.assetsUrl}${widget.onBoardingInfo.image}",
+                imageUrl: "${AppStrings.assetsUrl}$imageLink",
               ),
             ),
           SizeHelper.height(height: 10.h),
@@ -81,27 +82,9 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
             ),
           ),
           SizeHelper.height(),
-          CustomText(
-            text: widget.onBoardingInfo.description ?? "",
-            style: TextStyleHelper.mediumText,
-            useOverflow: false,
-          ),
+          Html(data: widget.onBoardingInfo.description ?? ""),
         ],
       ),
     );
-  }
-}
-
-class AudioPlayerWidget extends StatefulWidget {
-  const AudioPlayerWidget({super.key});
-
-  @override
-  State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();
-}
-
-class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

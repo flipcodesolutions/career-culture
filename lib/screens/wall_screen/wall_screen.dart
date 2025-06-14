@@ -71,12 +71,6 @@ class _WallScreenState extends State<WallScreen>
             text: AppStrings.wall,
             style: TextStyleHelper.mediumHeading,
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.photo_camera_outlined, color: AppColors.primary),
-            ),
-          ],
         ),
         body:
             wallProvider.isLoading

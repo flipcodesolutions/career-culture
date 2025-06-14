@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/service/assessment_questions_service/assessment_questions_service.dart';
@@ -17,6 +18,10 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       AssessmentQuestionsService();
   AssessmentQuestionModel? _assessmentQuestions;
   AssessmentQuestionModel? get assessmentQuestions => _assessmentQuestions;
+  void emptyAssessmentQuestions() {
+    _assessmentQuestions = null;
+    notifyListeners();
+  }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<FormState> get formKey => _formKey;
@@ -109,7 +114,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
       _assessmentQuestions?.data?[index].userAnswer = selection;
-      notifyListeners();
+      // notifyListeners();
     }
   }
 
@@ -117,15 +122,17 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   void makeFilesSelection({
     required int questionId,
     required List<PlatformFile>? selectedFiles,
+    required int maxFileSize,
   }) {
     int? index = _assessmentQuestions?.data?.indexWhere(
       (e) => e.id == questionId,
     );
     if (index != null && index != -1) {
       // Get the current selectedOption JSON string
-      if (selectedFiles?.any((e) => e.size >= 1024 * 1024 * 2) == true) {
+      if (selectedFiles?.any((e) => e.size >= 1024 * 1024 * maxFileSize) ==
+          true) {
         WidgetHelper.customSnackBar(
-          title: AppStrings.imagesShouldBeLessThan2Mb,
+          title: AppStrings.imagesShouldBeLessThan2Mb(size: "$maxFileSize MB"),
           isError: true,
         );
         return;
@@ -145,49 +152,6 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
       notifyListeners();
     }
   }
-  // depreicated after new implementaion for assessments
-  // Future<void> submitAssessmentQuestions({
-  //   required BuildContext context,
-  // }) async {
-  //   // Validation before making API call
-  //   bool hasAllValidAnswers =
-  //       _assessmentQuestions?.data?.every((q) {
-  //         final isMediaType = ['audio', 'image'].contains(q.type);
-  //         if (isMediaType) {
-  //           return (q.selectedFiles?.isNotEmpty ?? false);
-  //         } else {
-  //           return (q.answer != null && q.answer?.trim().isNotEmpty == true);
-  //         }
-  //       }) ??
-  //       false;
-
-  //   if (!hasAllValidAnswers) {
-  //     WidgetHelper.customSnackBar(
-  //       title: "Please answer all questions and upload required files.",
-  //       isError: true,
-  //       autoClose: false,
-  //     );
-  //     return;
-  //   }
-
-  //   /// set _isLoading true
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   log(_assessmentQuestions?.toJson().toString() ?? "");
-  //   bool success = await assessmentQuestionsService
-  //       .postAssessmentQuestionsByPostId(
-  //         context: context,
-  //         assessmentAnswer: _assessmentQuestions,
-  //       );
-
-  //   /// set _isLoading false
-  //   _isLoading = false;
-  //   notifyListeners();
-  //   if (success) {
-  //     if (!context.mounted) return;
-  //     pop(context);
-  //   }
-  // }
 
   /// prepare for test
   DateTime? startTime;
@@ -195,6 +159,9 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   String? score;
   int point = 10;
   int correctAnswer = 0;
+  List<String> mediaTypes = ["video", "image", "audio"];
+  //// used to validate video text field
+  GlobalKey<FormState> videoTextFieldKey = GlobalKey<FormState>();
 
   /// to check if test time to start or stop
   bool _isTestStarted = false;
@@ -210,7 +177,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
 
   /// get the number of correct answer
   String noOfCorrectAnswer() {
-    return "$correctAnswer / ${_assessmentQuestions?.data?.where((e) => e.type != "video" && e.type != "image" && e.type != "audio").toList().length}";
+    return "$correctAnswer / ${_assessmentQuestions?.data?.where((e) => !mediaTypes.contains(e.type)).toList().length}";
   }
 
   //// get the string how many coins earned with test
@@ -229,10 +196,14 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   /// after user finish with test , check and generate result from the answers and also send the user answer to backend
   Future<bool> finishTest() async {
     /// check if all questions are answered
-    if (_assessmentQuestions?.data?.every(
-          (q) =>
-              q.userAnswer != null && q.userAnswer?.trim().isNotEmpty == true,
-        ) ==
+    if (_assessmentQuestions?.data
+            ?.where((e) => mediaTypes.contains(e.type) != true)
+            .toList()
+            .every(
+              (q) =>
+                  q.userAnswer != null &&
+                  q.userAnswer?.trim().isNotEmpty == true,
+            ) ==
         false) {
       WidgetHelper.customSnackBar(
         title: AppStrings.mustGiveAllAnswer,
@@ -244,23 +215,32 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
     /// check how many answer is correct
     int noOfCorrectAnswer = 0;
 
-    _assessmentQuestions?.data?.forEach((e) {
-      if (e.type == "checkbox") {
-        if (e.correctAnswer ==
-            e.userAnswer?.split("|").map((e) => e.trim()).toList()) {
-          noOfCorrectAnswer++;
-        }
-      } else {
-        if (e.userAnswer == e.correctAnswer?.first) {
-          noOfCorrectAnswer++;
-        }
-      }
-    });
+    _assessmentQuestions?.data
+        ?.where((e) => mediaTypes.contains(e.type) != true)
+        .toList()
+        .forEach((e) {
+          if (e.type == "checkbox") {
+            // Parse, trim, and SORT both correct and user answers
+            final List<String>? correctAnswers =
+                e.correctAnswer; // <-- Crucial: Sort the correct answers
+            correctAnswers?.sort();
+            final List<String> userAnswers =
+                e.userAnswer?.split("|").map((s) => s.trim()).toList() ?? [];
+            userAnswers.sort(); // <-- Crucial: Sort the user's answers
+
+            // Now, compare the sorted lists using listEquals
+            // The 'package:collection/collection.dart' provides a robust listEquals
+            if (listEquals(correctAnswers, userAnswers)) {
+              noOfCorrectAnswer++;
+            }
+          } else {
+            if (e.userAnswer == e.correctAnswer?.first) {
+              noOfCorrectAnswer++;
+            }
+          }
+        });
 
     if (_isTestStarted) {
-      print(
-        "correct Answer ==> $noOfCorrectAnswer / ${_assessmentQuestions?.data?.length}",
-      );
       correctAnswer = noOfCorrectAnswer;
       finishTime = DateTime.now();
 
@@ -295,10 +275,12 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   ) async {
     // Validation before making API call
     bool hasAllValidAnswers =
-        _assessmentQuestions?.data?.every((q) {
-          return (q.userAnswer != null &&
-              q.userAnswer?.trim().isNotEmpty == true);
-        }) ??
+        _assessmentQuestions?.data
+            ?.where((e) => mediaTypes.contains(e.type) != true)
+            .every((q) {
+              return (q.userAnswer != null &&
+                  q.userAnswer?.trim().isNotEmpty == true);
+            }) ??
         false;
 
     if (!hasAllValidAnswers) {
@@ -326,40 +308,48 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   }
 
   /// sent back the answer user has picked to show them
-  Future<void> submitAssessmentMediaQuestions() async {
-    // true if any question fails its media requirement
-    final hasMissingMedia = _assessmentQuestions?.data?.any((q) {
-      if (q.type == 'image' || q.type == 'audio') {
-        // must have at least one file
-        return (q.selectedFiles?.isEmpty ?? true);
-      }
-      if (q.type == 'video') {
-        // must have a non-empty link
-        return (q.userAnswer?.trim().isEmpty ?? true);
-      }
-      return false; // other types don’t require media
-    });
+  Future<bool> submitAssessmentMediaQuestions({
+    required BuildContext context,
+  }) async {
+    bool isAnyMediaProvided = false;
+    bool isVideoLinkProvided = false;
 
-    if (hasMissingMedia == true) {
-      WidgetHelper.customSnackBar(
-        title: "Please attach media: images/audio need file, video needs link",
-        isError: true,
-      );
-      return;
+    if (videoTextFieldKey.currentState?.validate() != true) {
+      return false;
     }
 
-    /// set _isLoading true
+    isVideoLinkProvided =
+        _assessmentQuestions?.data
+            ?.where((e) => e.type == "video")
+            .any((e) => e.userAnswer?.isNotEmpty == true) ??
+        false;
+
+    isAnyMediaProvided =
+        _assessmentQuestions?.data
+            ?.where((e) => e.type == "audio" || e.type == "image")
+            .any((e) => (e.selectedFiles ?? []).isNotEmpty) ??
+        false;
+
+    if (!isVideoLinkProvided && !isAnyMediaProvided) {
+      WidgetHelper.customSnackBar(
+        title: "Please Select At Least One Media to Share",
+        isError: true,
+      );
+      return false;
+    }
+
     _isLoading = true;
     notifyListeners();
+
     log(_assessmentQuestions?.toJson().toString() ?? "");
+
     bool success = await assessmentQuestionsService
-        .postAssessmentQuestionsByPostId(
-          // context: context,
+        .postAssessmentMediaQuestionsByPostId(
           assessmentAnswer: _assessmentQuestions,
         );
-
-    /// set _isLoading false
+    videoTextFieldKey.currentState?.reset();
     _isLoading = false;
     notifyListeners();
+    return success;
   }
 }

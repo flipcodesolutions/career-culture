@@ -32,12 +32,12 @@ mixin NavigateHelper {
   }
 
   // for push navigation
-  Future<void> push({
+  Future push({
     required BuildContext context,
     required Widget widget,
     PageTransitionsBuilder? transition,
   }) async {
-    Navigator.of(
+    return await Navigator.of(
       context,
     ).push(_customPageRoute(widget, transitionsBuilder: transition));
   }
@@ -56,8 +56,8 @@ mixin NavigateHelper {
   }
 
   // for pop navigation
-  pop(BuildContext context) {
-    Navigator.of(context).pop();
+  Future pop(BuildContext context, {dynamic result}) async {
+    return Navigator.of(context).pop(result);
   }
 
   // for push remove navigation

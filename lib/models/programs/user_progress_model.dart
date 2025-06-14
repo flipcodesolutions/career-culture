@@ -28,26 +28,26 @@ class UserProgressModel {
 class UserProgressModelData {
   String? programId;
   int? totalPosts;
-  int? completedPosts;
-  int? totalUserPoints;
-  String? totalPossiblePoints;
+  // int? completedPosts;
+  // int? totalUserPoints;
+  // String? totalPossiblePoints;
   double? percentage;
 
   UserProgressModelData({
     this.programId,
     this.totalPosts,
-    this.completedPosts,
-    this.totalUserPoints,
-    this.totalPossiblePoints,
+    // this.completedPosts,
+    // this.totalUserPoints,
+    // this.totalPossiblePoints,
     this.percentage,
   });
 
   UserProgressModelData.fromJson(Map<String, dynamic> json) {
     programId = json['program_id'];
     totalPosts = json['total_posts'];
-    completedPosts = json['completed_posts'];
-    totalUserPoints = json['total_user_points'];
-    totalPossiblePoints = json['total_possible_points'];
+    // completedPosts = json['completed_posts'];
+    // totalUserPoints = json['total_user_points'];
+    // totalPossiblePoints = json['total_possible_points'];
     percentage = double.tryParse(json['percentage'].toString()) ?? 0.0;
   }
 
@@ -55,9 +55,9 @@ class UserProgressModelData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['program_id'] = this.programId;
     data['total_posts'] = this.totalPosts;
-    data['completed_posts'] = this.completedPosts;
-    data['total_user_points'] = this.totalUserPoints;
-    data['total_possible_points'] = this.totalPossiblePoints;
+    // data['completed_posts'] = this.completedPosts;
+    // data['total_user_points'] = this.totalUserPoints;
+    // data['total_possible_points'] = this.totalPossiblePoints;
     data['percentage'] = this.percentage;
     return data;
   }

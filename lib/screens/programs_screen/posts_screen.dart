@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -8,8 +6,8 @@ import 'package:mindful_youth/provider/assessment_provider/assessment_provider.d
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
-import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/gallery_page.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/media_assessment_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -76,6 +74,13 @@ class _PostsScreenState extends State<PostsScreen>
     PostProvider postProvider = context.watch<PostProvider>();
     RecentActivityProvider recentActivityProvider =
         context.watch<RecentActivityProvider>();
+    final List<String> imageMedia =
+        postProvider.currentPost?.media
+            ?.where((e) => e.type == "image" && e.thumbnail?.isNotEmpty == true)
+            .toList()
+            .map((r) => r.thumbnail ?? "")
+            .toList() ??
+        [];
     return Scaffold(
       appBar: AppBar(
         /// if only one post
@@ -83,6 +88,22 @@ class _PostsScreenState extends State<PostsScreen>
           text: postProvider.currentPost?.title ?? widget.chapterName,
           style: TextStyleHelper.mediumHeading,
         ),
+        actions: [
+          /// only load gallery if media have any gallery media to show
+          if (imageMedia.isNotEmpty)
+            IconButton(
+              onPressed:
+                  () => push(
+                    context: context,
+                    widget: GalleryPage(imagesStrings: imageMedia),
+                    transition: FadeForwardsPageTransitionsBuilder(),
+                  ),
+              icon: Icon(
+                Icons.photo_library_outlined,
+                color: AppColors.primary,
+              ),
+            ),
+        ],
       ),
       body:
           postProvider.isLoading
@@ -183,7 +204,7 @@ class _PostsScreenState extends State<PostsScreen>
                       postProvider.currentPost?.isSecondAssessmentDone == true
                           ? "All Test Completed. Bravo"
                           : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
-                  onTap: () {
+                  onTap: () async {
                     context.read<AssessmentProvider>().setPostId =
                         postProvider.currentPost?.id?.toString() ?? "";
                     bool isFirstDone =
@@ -194,7 +215,7 @@ class _PostsScreenState extends State<PostsScreen>
 
                     if (!isFirstDone && !isSecondDone) {
                       // Case 1: Neither assessment is done
-                      push(
+                      bool success = await push(
                         context: context,
                         widget: AssessmentScreen(
                           isInReviewMode: false,
@@ -203,13 +224,27 @@ class _PostsScreenState extends State<PostsScreen>
                         ),
                         transition: FadeUpwardsPageTransitionsBuilder(),
                       );
+                      if (success == true) {
+                        //// if completed successfully , get fresh data
+                        await postProvider.getPostById(
+                          context: context,
+                          id: widget.chapterId.toString(),
+                        );
+                      }
                     } else if (isFirstDone && !isSecondDone) {
                       // Case 2: First done, second not done
-                      push(
+                      bool success = await push(
                         context: context,
                         widget: MediaAssessmentScreen(),
                         transition: FadeUpwardsPageTransitionsBuilder(),
                       );
+                      if (success == true) {
+                        //// if completed successfully , get fresh data
+                        await postProvider.getPostById(
+                          context: context,
+                          id: widget.chapterId.toString(),
+                        );
+                      }
                     } else if (isFirstDone && isSecondDone) {
                       // Case 3: Both assessments are done
                       WidgetHelper.customSnackBar(

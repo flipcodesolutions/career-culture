@@ -62,50 +62,35 @@ class _EditProfileState extends State<EditProfile> {
                   labelText: AppStrings.name,
                   controller: nameController,
                   validator:
-                      (value) => ValidatorHelper.validateValue(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateValue(value: value),
                 ),
                 SizeHelper.height(),
                 CustomTextFormField(
                   labelText: AppStrings.email,
                   controller: emailController,
                   validator:
-                      (value) => ValidatorHelper.validateEmail(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateEmail(value: value),
                 ),
                 SizeHelper.height(),
                 CustomTextFormField(
                   labelText: AppStrings.contactNo,
                   controller: contactController,
                   validator:
-                      (value) => ValidatorHelper.validateValue(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateValue(value: value),
                 ),
                 SizeHelper.height(),
                 CustomTextFormField(
                   labelText: AppStrings.educationalDetails,
                   controller: educationController,
                   validator:
-                      (value) => ValidatorHelper.validateValue(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateValue(value: value),
                 ),
                 SizeHelper.height(),
                 CustomTextFormField(
                   labelText: AppStrings.address,
                   controller: addressController,
                   validator:
-                      (value) => ValidatorHelper.validateValue(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateValue(value: value),
                 ),
                 SizeHelper.height(height: 5.h),
                 PrimaryBtn(

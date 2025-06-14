@@ -79,10 +79,7 @@ class _LoginScreenState extends State<ForgotPasswordScreen>
                     controller: emailOrPhoneController,
                     labelText: AppStrings.email,
                     validator:
-                        (value) => ValidatorHelper.validateValue(
-                          value: value,
-                          context: context,
-                        ),
+                        (value) => ValidatorHelper.validateValue(value: value),
                   ),
                 ),
                 SizeHelper.height(height: 5.h),

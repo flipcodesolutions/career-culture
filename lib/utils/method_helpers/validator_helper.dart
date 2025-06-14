@@ -8,7 +8,6 @@ class ValidatorHelper with NavigateHelper {
   //// validate mobile number
   static String? validateMobileNumber({
     required String? value,
-    required BuildContext context,
     int? lengthToCheck = 10,
   }) {
     if (value?.isEmpty == true) {
@@ -24,11 +23,8 @@ class ValidatorHelper with NavigateHelper {
   }
 
   /// validate name of user
-  static String? validateName({
-    required String? value,
-    required BuildContext context,
-  }) {
-    if (value == null || value.isEmpty) {
+  static String? validateName({required String? value}) {
+    if (value == null || value.trim().isEmpty) {
       /// locale error text for no name
       return AppStrings.nameRequired;
     }
@@ -40,11 +36,8 @@ class ValidatorHelper with NavigateHelper {
   }
 
   /// validate email
-  static String? validateEmail({
-    required String? value,
-    required BuildContext context,
-  }) {
-    if (value == null || value.isEmpty) {
+  static String? validateEmail({required String? value}) {
+    if (value == null || value.trim().isEmpty) {
       return AppStrings.enterEmail;
     }
     final emailRegex = AppRegex.emailReg;
@@ -54,20 +47,37 @@ class ValidatorHelper with NavigateHelper {
     return null;
   }
 
-  static String? validateValue({
-    required String? value,
-    required BuildContext context,
-  }) {
-    if (value == null || value.isEmpty) {
+  static String? validateValue({required String? value}) {
+    if (value == null || value.trim().isEmpty) {
       return AppStrings.pleaseEnterMessage;
     }
     return null;
   }
 
-  static String? validateDateFormate({
-    required String? value,
-    required BuildContext context,
-  }) {
+  static String? validateYoutubeLink({required String? value}) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+
+    final trimmedValue = value.trim();
+    final youtubeRegex = RegExp(
+      r'^(https?:\/\/)?' // Optional protocol
+      r'(www\.|m\.)?' // Optional subdomain
+      r'(youtube\.com|youtu\.be)\/' // Domain
+      r'(watch\?v=|embed\/|v\/|shorts\/)?' // Path
+      r'([\w\-]{11})' // Video ID (11 characters)
+      r'([^\s]*)$', // Optional query string
+      caseSensitive: false,
+    );
+
+    if (!youtubeRegex.hasMatch(trimmedValue)) {
+      return 'Please enter a valid YouTube link';
+    }
+
+    return null; // Valid
+  }
+
+  static String? validateDateFormate({required String? value}) {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.pleaseEnterMessage;
     }

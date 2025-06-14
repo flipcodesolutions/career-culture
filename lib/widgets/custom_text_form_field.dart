@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:sizer/sizer.dart';
@@ -146,7 +147,43 @@ class CustomTextFormField extends StatelessWidget {
         contextMenuBuilder: (context, editableTextState) {
           return AdaptiveTextSelectionToolbar(
             anchors: editableTextState.contextMenuAnchors,
-            children: adaptiveTextSelectionToolbarChildren,
+            children:
+                adaptiveTextSelectionToolbarChildren ??
+                [
+                  TextSelectionToolbarTextButton(
+                    padding: const EdgeInsets.all(8),
+                    onPressed: () async {
+                      final clipboardData = await Clipboard.getData(
+                        'text/plain',
+                      );
+                      final textToPaste = clipboardData?.text ?? '';
+                      final controller = editableTextState.textEditingValue;
+                      final selection = controller.selection;
+
+                      if (selection.isValid) {
+                        final newText = controller.text.replaceRange(
+                          selection.start,
+                          selection.end,
+                          textToPaste,
+                        );
+
+                        editableTextState.userUpdateTextEditingValue(
+                          TextEditingValue(
+                            text: newText,
+                            selection: TextSelection.collapsed(
+                              offset: selection.start + textToPaste.length,
+                            ),
+                          ),
+                          SelectionChangedCause.toolbar,
+                        );
+                      }
+
+                      // Hide toolbar after paste
+                      editableTextState.hideToolbar();
+                    },
+                    child: const Text('Paste'),
+                  ),
+                ],
           );
         },
         buildCounter:

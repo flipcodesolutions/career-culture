@@ -53,7 +53,9 @@ class HttpHelper {
         );
         await SharedPrefs.clearShared();
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(isToNavigateHome: true),
+          ),
           (route) => false,
         );
         return {}; // Empty map since user is logged out

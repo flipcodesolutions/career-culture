@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -12,6 +11,7 @@ import '../app_const/app_size.dart';
 import '../provider/assessment_provider/assessment_provider.dart';
 import '../utils/method_helpers/size_helper.dart';
 import '../utils/text_style_helper/text_style_helper.dart';
+import '../utils/widget_helper/widget_helper.dart';
 import 'custom_container.dart';
 import 'custom_text.dart';
 
@@ -22,7 +22,7 @@ class AudioRecorderPlayer extends StatefulWidget {
   const AudioRecorderPlayer({
     super.key,
     required this.questionId,
-    this.maximumAudioSize = 1,
+    this.maximumAudioSize = 4,
   });
 
   @override
@@ -218,7 +218,7 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
               useOverflow: false,
             ),
             trailing:
-                _audioBuffer.isNotEmpty
+                _audioBuffer.isNotEmpty && !_isRecording
                     ? Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -226,9 +226,11 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
                           onPressed: () {
                             assessmentProvider.makeFilesSelection(
                               questionId: widget.questionId ?? -1,
+                              maxFileSize: widget.maximumAudioSize + 1,
                               selectedFiles: [
                                 PlatformFile(
-                                  name: "${DateTime.now().toIso8601String()}",
+                                  name:
+                                      "${DateTime.now().toIso8601String()}.pcm",
                                   size: _audioBuffer.length,
                                   bytes: Uint8List.fromList(_audioBuffer),
                                 ),

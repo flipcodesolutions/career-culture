@@ -166,7 +166,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                 ),
 
                                 CustomProgressBar(
-                                  width: 60.w,
+                                  width: 55.w,
                                   percentage: programsProvider.getPercentage(),
                                 ),
                               ],
@@ -213,31 +213,8 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                         <ChaptersInfo>[],
                                     itemBuilder:
                                         (item, index) => GestureDetector(
-                                          onTap:
-                                              () =>
-                                                  userProvider.isUserLoggedIn
-                                                      ? checkIfChapterIsOpen(
-                                                            chapterProvider,
-                                                            programsProvider,
-                                                            index,
-                                                          )
-                                                          ? goToPost(
-                                                            context,
-                                                            item,
-                                                          )
-                                                          : WidgetHelper.customSnackBar(
-                                                            autoClose: false,
-                                                            title:
-                                                                AppStrings
-                                                                    .notOpenYet,
-                                                            isError: true,
-                                                          )
-                                                      : {
-                                                        /// redirect if not logged in
-                                                        goToLoginPageWithWarning(
-                                                          context,
-                                                        ),
-                                                      },
+                                          onTap: () => goToPost(context, item),
+
                                           child: CustomContainer(
                                             height: 50.h,
                                             backGroundColor:
@@ -311,31 +288,6 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                   ),
                 ),
       ),
-    );
-  }
-
-  bool checkIfChapterIsOpen(
-    ChapterProvider chapterProvider,
-    ProgramsProvider programsProvider,
-    int index,
-  ) {
-    return chapterProvider.canAccessChapter(
-      totalChapters: (chapterProvider.chaptersModel?.data?.length ?? 0),
-      totalAllMarks:
-          double.tryParse(
-            programsProvider.userProgressModel?.data?.totalPossiblePoints
-                    .toString() ??
-                "",
-          ) ??
-          0,
-      correctPoints:
-          double.tryParse(
-            programsProvider.userProgressModel?.data?.totalUserPoints
-                    .toString() ??
-                "",
-          ) ??
-          0,
-      requestedChapter: index + 1,
     );
   }
 

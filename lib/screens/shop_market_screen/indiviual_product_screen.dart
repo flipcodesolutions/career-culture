@@ -268,10 +268,7 @@ class OrderSheet extends StatelessWidget with NavigateHelper {
                   hintText: AppStrings.address,
                   controller: productProvider.addressController,
                   validator:
-                      (value) => ValidatorHelper.validateValue(
-                        value: value,
-                        context: context,
-                      ),
+                      (value) => ValidatorHelper.validateValue(value: value),
                 ),
                 SizeHelper.height(),
 

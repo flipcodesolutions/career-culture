@@ -72,10 +72,8 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                       label: AppStrings.email,
                       controller: signUpProvider.email,
                       validator:
-                          (value) => ValidatorHelper.validateEmail(
-                            value: value,
-                            context: context,
-                          ),
+                          (value) =>
+                              ValidatorHelper.validateEmail(value: value),
                     ),
                     SizeHelper.height(),
                     CustomTextFieldWithAnimatedIconForVerification(
@@ -88,7 +86,6 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                       validator:
                           (value) => ValidatorHelper.validateMobileNumber(
                             value: value,
-                            context: context,
                           ),
                     ),
                     SizeHelper.height(),
@@ -107,7 +104,6 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                                   ? null
                                   : ValidatorHelper.validateMobileNumber(
                                     value: value,
-                                    context: context,
                                   ),
                     ),
                     SizeHelper.height(),
@@ -117,10 +113,8 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         labelText: AppStrings.address1,
                         controller: signUpProvider.address1,
                         validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
+                            (value) =>
+                                ValidatorHelper.validateValue(value: value),
                       ),
                     ),
                     SizeHelper.height(),
@@ -134,7 +128,6 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                                 value?.isNotEmpty == true
                                     ? ValidatorHelper.validateValue(
                                       value: value,
-                                      context: context,
                                     )
                                     : null,
                       ),
@@ -176,10 +169,8 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         labelText: AppStrings.city,
                         controller: signUpProvider.district,
                         validator:
-                            (value) => ValidatorHelper.validateValue(
-                              value: value,
-                              context: context,
-                            ),
+                            (value) =>
+                                ValidatorHelper.validateValue(value: value),
                       ),
                     ),
                     SizeHelper.height(),
@@ -239,9 +230,7 @@ class CustomTextFieldWithAnimatedIconForVerification extends StatelessWidget {
         maxLength: maxLength,
         controller: controller,
         validator:
-            validator ??
-            (value) =>
-                ValidatorHelper.validateValue(value: value, context: context),
+            validator ?? (value) => ValidatorHelper.validateValue(value: value),
         suffix: GestureDetector(
           onTap: onTap,
           child: CustomContainer(
