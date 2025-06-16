@@ -490,4 +490,42 @@ class MethodHelper with NavigateHelper {
       );
     }
   }
+
+  // Function to launch WhatsApp
+  static Future<void> openWhatsApp() async {
+    try {
+      final String number = AppStrings.mindfulYouthNumber;
+      final String rawMessage = AppStrings.whatsAppInquiryMessage(
+        userID: await SharedPrefs.getSharedString(AppStrings.studentId),
+        name: await SharedPrefs.getSharedString(AppStrings.userName),
+      );
+
+      /// encode message to pass in url para
+      final String encodedMessage = Uri.encodeComponent(rawMessage);
+      final Uri launchUri = Uri.parse(
+        'https://wa.me/$number?text=$encodedMessage',
+      );
+      if (!await launchUrl(launchUri, mode: LaunchMode.externalApplication)) {
+        // Optional fallback (usually not necessary unless targeting web)
+        final Uri fallbackUri = Uri.parse(
+          'https://api.whatsapp.com/send?phone=$number&text=$encodedMessage',
+        );
+        if (!await launchUrl(
+          fallbackUri,
+          mode: LaunchMode.externalApplication,
+        )) {
+          WidgetHelper.customSnackBar(
+            title: 'Could not launch WhatsApp for $number',
+            isError: true,
+          );
+        }
+      }
+    } catch (e) {
+      // Optional: handle any unexpected exceptions
+      WidgetHelper.customSnackBar(
+        title: 'An error occurred while trying to open WhatsApp.',
+        isError: true,
+      );
+    }
+  }
 }

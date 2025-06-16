@@ -44,7 +44,7 @@ class CustomSpeedDial extends StatelessWidget with NavigateHelper {
         SpeedDialChild(
           child: CustomContainer(child: AppSvg.whatsAppLogo),
           backgroundColor: AppColors.white,
-          onTap: () {},
+          onTap: () => MethodHelper.openWhatsApp(),
         ),
         // Add more actions
       ],
