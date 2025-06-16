@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
+import 'package:mindful_youth/provider/faqs_provider.dart/faqs_provider.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
+import '../../app_const/app_strings.dart';
+import '../../models/faqs_model/faqs_model.dart';
+import '../../utils/text_style_helper/text_style_helper.dart';
 import '../../widgets/custom_container.dart';
 import '../../widgets/custom_text.dart';
 
@@ -15,108 +20,96 @@ class FaqScreen extends StatefulWidget {
 }
 
 class _FaqScreenState extends State<FaqScreen> {
-  // Tracks the currently opened FAQ
-  int? openIndex;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final FaqsProvider faqProvider = context.read<FaqsProvider>();
+    Future.microtask(() async {
+      await faqProvider.getFAQs(context: context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Simulated data – replace with Provider data
-    final faqList = [
-      FaqItem(
-        id: 1,
-        question: 'What is your return policy?',
-        answer: 'You can return items within 30 days.',
-      ),
-      FaqItem(
-        id: 2,
-        question: 'How long does shipping take?',
-        answer: 'Shipping usually takes 3-5 business days.',
-      ),
-    ];
-
+    final FaqsProvider faqProvider = context.watch<FaqsProvider>();
+    final FAQsModel? faQsModel = faqProvider.faqsModel;
     return Scaffold(
-      appBar: AppBar(title: const CustomText(text: 'FAQs'), centerTitle: true),
+      appBar: AppBar(
+        title: CustomText(
+          text: AppStrings.faq,
+          style: TextStyleHelper.mediumHeading,
+        ),
+      ),
       body:
-          faqList.isEmpty
-              ? const Center(child: Text('No FAQs available.'))
-              : ListView.builder(
+          faqProvider.isLoading
+              ? Center(child: CustomLoader())
+              : faQsModel?.data?.isNotEmpty == true
+              ? ListView.separated(
+                separatorBuilder:
+                    (context, index) => SizeHelper.height(height: 1.h),
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                itemCount: faqList.length,
+                itemCount: faQsModel?.data?.length ?? 0,
                 itemBuilder: (context, index) {
-                  final faq = faqList[index];
-                  final isOpen = openIndex == index;
-
+                  FAQsModelData? faq = faQsModel?.data?[index];
                   return CustomContainer(
-                    margin: EdgeInsets.only(bottom: 2.h),
+                    backGroundColor: AppColors.white,
                     borderRadius: BorderRadius.circular(AppSize.size10),
-                    backGroundColor: AppColors.lightWhite,
-                    boxShadow: ShadowHelper.simpleShadow,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () {
-                          setState(() {
-                            openIndex = isOpen ? null : index;
-                          });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 3.w,
-                            vertical: 1.h,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      faq.question,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(
-                                    isOpen ? Icons.remove : Icons.add,
-                                    size: 22,
-                                    color: Colors.black87,
-                                  ),
-                                ],
-                              ),
-                              if (isOpen)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 12,
-                                    right: 8,
-                                  ),
-                                  child: Text(
-                                    faq.answer,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800,
-                                      height: 1.4,
-                                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          onTap:
+                              () => faqProvider.toggleIsOpen(id: faq?.id ?? -1),
+                          child: CustomContainer(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(AppSize.size10),
+                              bottom:
+                                  faq?.isOpen != true
+                                      ? Radius.circular(AppSize.size10)
+                                      : Radius.circular(0),
+                            ),
+                            padding: EdgeInsets.all(AppSize.size10),
+                            backGroundColor: AppColors.faqQuestion,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: CustomText(
+                                    text: faq?.question ?? "",
+                                    useOverflow: false,
+                                    style: TextStyleHelper.smallHeading,
                                   ),
                                 ),
-                            ],
+                                Icon(
+                                  faq?.isOpen == true
+                                      ? Icons.keyboard_arrow_up_rounded
+                                      : Icons.keyboard_arrow_down_rounded,
+                                  size: 22,
+                                  color: Colors.black87,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                        if (faq?.isOpen == true)
+                          CustomContainer(
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(AppSize.size10),
+                            ),
+                            padding: EdgeInsets.all(AppSize.size20),
+                            backGroundColor: AppColors.faqAnswer,
+                            child: CustomText(
+                              text: faq?.answer ?? "",
+                              useOverflow: false,
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 },
-              ),
+              )
+              : const Center(child: CustomText(text: 'No FAQs available.')),
     );
   }
-}
-
-class FaqItem {
-  final int id;
-  final String question;
-  final String answer;
-
-  FaqItem({required this.id, required this.question, required this.answer});
 }

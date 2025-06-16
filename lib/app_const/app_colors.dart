@@ -8,13 +8,15 @@ class AppColors {
   static const Color cream = Color(0xffFFFEE3CC);
   static const Color lightPrimary = Color(0xffBCE1B5);
   static const Color error = Colors.red;
-  static  Color errorShade100 = Colors.red.shade100;
+  static Color errorShade100 = Colors.red.shade100;
   static const Color white = Colors.white;
   static const Color grey = Colors.grey;
   static const Color lightGrey = Color.fromARGB(255, 211, 211, 211);
   static const Color black = Colors.black;
   static Color blackShade75 = Colors.black.withOpacity(0.75);
   static const Color counselingBox = Color(0xffF9F9EE);
+  static const Color faqQuestion = Color.fromRGBO(229, 229, 229, 0.5);
+  static const Color faqAnswer = Color.fromRGBO(250, 250, 250, 1);
 
   /// body gradient color
   static const Color body1 = Color(0xffF7EAEA);
