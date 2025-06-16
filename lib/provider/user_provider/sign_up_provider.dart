@@ -399,6 +399,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       );
       return false;
     }
+
+    if (district.text == "" || district.text == AppStrings.noDistrictFound) {
+      WidgetHelper.customSnackBar(
+        title: AppStrings.noDistrictFound,
+        isError: true,
+        autoClose: false,
+      );
+      return false;
+    }
     // 1) Email OTP
     if (!_isEmailVerified) {
       await sendEmailOtp(context: context);

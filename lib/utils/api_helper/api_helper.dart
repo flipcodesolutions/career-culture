@@ -120,4 +120,11 @@ class ApiHelper {
   // static String referCode = "$baseUrl/";
   /// create order
   static String faqs = "$baseUrl/faqs";
+
+  /// selfie Zone
+  /// get titles
+  static String getSelfieZones = "$baseUrl/selfie-zone";
+
+  /// upload selfies
+  static String uploadSelfies = "$baseUrl/selfie-zone/upload";
 }

@@ -237,6 +237,7 @@ class AppStrings {
       "Counseling Appointment Requested";
   static const noStateFound = 'No States Found';
   static const noCitiesFound = 'No Cities Found';
+  static const noDistrictFound = 'No District Found';
   static const counselingAppointmentDone = 'Counseling Appointment Done';
   static const referCodeCopied = 'Refer Code Copied';
   static const yourAnswer = 'Your Answer ...';
@@ -279,6 +280,13 @@ class AppStrings {
     required String name,
   }) =>
       'Hello Career & Culture ,\nMy Student id is => $userID,\nMy Name is $name\n,\nI Have This Query :- \n\n';
+  static const selfieZone = "Selfie Zone";
+  static const uploadSelfie = "Upload Selfie";
+  static const cherishAndInspire =
+      "Cherish & Inspire\n              Selfless Service";
+  static const writeCaptionAboutPhoto = "Write Caption About Photo";
+  static const descriptionOptional = "Description (Optional)";
+  static const mustProvideSelfie = "Must Provide Selfie";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

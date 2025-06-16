@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/screens/selfie_zone_screens/selfie_zone_screens.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
@@ -46,7 +47,22 @@ class CustomSpeedDial extends StatelessWidget with NavigateHelper {
           backgroundColor: AppColors.white,
           onTap: () => MethodHelper.openWhatsApp(),
         ),
-        // Add more actions
+        SpeedDialChild(
+          child: CustomContainer(
+            child: Image.asset(
+              AppImageStrings.selfieBtnIcon,
+              width: AppSize.size30,
+              height: AppSize.size30,
+            ),
+          ),
+          backgroundColor: AppColors.white,
+          onTap:
+              () => push(
+                context: context,
+                widget: SelfieZoneScreen(),
+                transition: FadeUpwardsPageTransitionsBuilder(),
+              ),
+        ),
       ],
     );
   }

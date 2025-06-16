@@ -50,6 +50,7 @@ class ImagePickerHelper {
       },
     );
   }
+
   /// get converted the selected file to save it in platform file var list
   static Future<PlatformFile> convertFileToPlatformFile(File file) async {
     final Uint8List bytes = await file.readAsBytes();
