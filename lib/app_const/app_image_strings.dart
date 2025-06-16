@@ -23,4 +23,5 @@ class AppImageStrings {
   static const String shareIcon = "assets/images/share_icon.png";
   static const String timeIcon = "assets/images/time_clock.png";
   static const String trophy = "assets/images/trophy.png";
+  static const String giveUsCall = "assets/images/give_us_call.gif";
 }

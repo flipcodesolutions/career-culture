@@ -273,6 +273,7 @@ class AppStrings {
   static imagesShouldBeLessThan2Mb({required String size}) =>
       "Images Should Be Less Than $size";
   static const resultSharedSuccessfully = "Result Shared Successfully";
+  static const mindfulYouthNumber = "+91 9592363333";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
+import '../app_const/app_svg.dart';
 
 class CustomSpeedDial extends StatelessWidget with NavigateHelper {
   const CustomSpeedDial({super.key});
@@ -28,13 +33,17 @@ class CustomSpeedDial extends StatelessWidget with NavigateHelper {
 
       children: [
         SpeedDialChild(
-          child: Icon(Icons.message, color: AppColors.white),
-          backgroundColor: AppColors.primary,
-          onTap: () {},
+          child: Image.asset(
+            AppImageStrings.giveUsCall,
+            width: AppSize.size30,
+            height: AppSize.size30,
+          ),
+          backgroundColor: AppColors.white,
+          onTap: () => MethodHelper.makePhoneCall(),
         ),
         SpeedDialChild(
-          child: Icon(Icons.call, color: AppColors.white),
-          backgroundColor: AppColors.primary,
+          child: CustomContainer(child: AppSvg.whatsAppLogo),
+          backgroundColor: AppColors.white,
           onTap: () {},
         ),
         // Add more actions

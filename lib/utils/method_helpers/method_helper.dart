@@ -474,4 +474,20 @@ class MethodHelper with NavigateHelper {
       WidgetHelper.customSnackBar(title: AppStrings.resultSharedSuccessfully);
     }
   }
+
+  /// give us call method
+  // Function to launch phone dialer
+  static Future<void> makePhoneCall() async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: AppStrings.mindfulYouthNumber,
+    );
+    if (!await launchUrl(launchUri)) {
+      // Handle error, e.g., show a SnackBar or AlertDialog
+      WidgetHelper.customSnackBar(
+        title: 'Could not launch $launchUri',
+        isError: true,
+      );
+    }
+  }
 }
