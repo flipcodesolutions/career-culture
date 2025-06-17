@@ -190,7 +190,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
             onTap:
                 () => push(
                   context: context,
-                  widget: MediaAssessmentScreen(),
+                  widget: MediaAssessmentScreen(shouldPop3: true),
                   transition: FadeUpwardsPageTransitionsBuilder(),
                 ),
           ),

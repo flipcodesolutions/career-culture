@@ -150,21 +150,21 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TopPlayerCard(
-                name: score![2].name?.split(" ").first ?? '',
-                score: score![2].totalPoints ?? '0',
+                name: score?[2].name?.split(" ").first ?? '',
+                score: score?[2].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![2].image}',
                 index: "2",
               ),
               TopPlayerCard(
-                name: score![0].name?.split(" ").first ?? '',
+                name: score?[0].name?.split(" ").first ?? '',
                 isFirst: true,
-                score: score![0].totalPoints ?? '0',
+                score: score?[0].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![0].image}',
                 index: "0",
               ),
               TopPlayerCard(
-                name: score![1].name?.split(" ").first ?? '',
-                score: score![1].totalPoints ?? '0',
+                name: score?[1].name?.split(" ").first ?? '',
+                score: score?[1].totalPoints ?? '0',
                 imageUrl: '${AppStrings.assetsUrl}${score![1].image}',
                 index: "1",
               ),
@@ -179,7 +179,7 @@ class ScoreBoardPage<T extends ScorePlayer> extends StatelessWidget {
               return ListTile(
                 leading: CircleAvatarForScoreLeading(
                   index: "${(index + 4)}",
-                  imageUrl: player?.image ?? "",
+                  imageUrl: "${AppStrings.assetsUrl}${player?.image}",
                 ),
                 title: CustomText(text: player?.name?.split(" ").first ?? ""),
                 trailing: CustomText(text: "${player?.totalPoints} Coins"),
@@ -219,7 +219,10 @@ class TopPlayerCard extends StatelessWidget {
       );
     }
     return CustomContainer(
-      margin: EdgeInsets.symmetric(horizontal: 2.5.w),
+      margin: EdgeInsets.symmetric(
+        horizontal: 2.5.w,
+        vertical: !isFirst ? 0 : 2.5.h,
+      ),
       child: Column(
         children: [
           CustomContainer(
@@ -229,16 +232,19 @@ class TopPlayerCard extends StatelessWidget {
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(AppSize.size50),
             ),
-            borderColor: isFirst ? AppColors.primary : AppColors.secondary,
             child: Column(
               children: [
                 CustomContainer(
+                  height: 10.h, // Ensure same height and width
+                  width: 10.h,
+                  padding: EdgeInsets.all(2),
                   shape: BoxShape.circle,
-                  height: isFirst ? 10.h : 8.h,
-                  width: isFirst ? 20.w : 12.w,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(isFirst ? 10.w : 5.w),
+                  borderColor: isFirst ? AppColors.secondary : AppColors.black,
+                  child: ClipOval(
                     child: CustomImageWithLoader(
+                      height: 10.h,
+                      width: 10.h,
+                      fit: BoxFit.cover,
                       imageUrl: imageUrl,
                       errorIconSize: AppSize.size30,
                     ),

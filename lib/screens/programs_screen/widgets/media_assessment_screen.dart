@@ -17,8 +17,8 @@ import '../../../widgets/cutom_loader.dart';
 import 'assessment_screen.dart';
 
 class MediaAssessmentScreen extends StatefulWidget {
-  const MediaAssessmentScreen({super.key});
-
+  const MediaAssessmentScreen({super.key, required this.shouldPop3});
+  final bool shouldPop3;
   @override
   State<MediaAssessmentScreen> createState() => _MediaAssessmentScreenState();
 }
@@ -145,7 +145,11 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                   .submitAssessmentMediaQuestions(context: context);
               if (success) {
                 if (!context.mounted) return;
-                pop(context);
+
+                /// this will determine if the page should pop once or 3 times
+                widget.shouldPop3
+                    ? {pop(context), pop(context), pop(context)}
+                    : pop(context);
                 assessmentProvider.emptyAssessmentQuestions();
               }
             },

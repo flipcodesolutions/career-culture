@@ -235,7 +235,7 @@ class _PostsScreenState extends State<PostsScreen>
                       // Case 2: First done, second not done
                       bool success = await push(
                         context: context,
-                        widget: MediaAssessmentScreen(),
+                        widget: MediaAssessmentScreen(shouldPop3: false),
                         transition: FadeUpwardsPageTransitionsBuilder(),
                       );
                       if (success == true) {
