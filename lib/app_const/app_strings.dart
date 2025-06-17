@@ -218,7 +218,8 @@ class AppStrings {
   static const accountIsDeleted = "Account Is Deleted Or Not Active";
   static const onlineMode = "Online Mode";
   static const offlineMode = "Offline Mode";
-  static const inviteFriends = 'Invite Friends';
+  static const inviteFriends =
+      'Share your referral code with your friend via SMS/ Whatsapp and earn 100 Coins.';
   static const selectMode = "Select Mode";
   static const inviteRequestSent = 'Invite Request Sent Successfully';
   static const selectDateForCounseling = 'Select Date For Counseling';

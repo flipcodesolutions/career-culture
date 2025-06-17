@@ -13,6 +13,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_size.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/services.dart'; // For Clipboard
+import 'package:timeline_tile/timeline_tile.dart';
 
 class ReferralPage extends StatelessWidget {
   const ReferralPage({
@@ -31,29 +32,27 @@ class ReferralPage extends StatelessWidget {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CustomContainer(
-              width: 100.w,
-              height: 30.h,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(AppImageStrings.referPage),
-              ),
+      body: Column(
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CustomContainer(
+            width: 100.w,
+            height: 30.h,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(AppImageStrings.referPage),
             ),
-            ReferralHeader(),
-            SizedBox(height: 24),
-            ReferralCodeCard(referCode: referCode),
-            SizedBox(height: 24),
-            BenefitsList(points: points),
-            Spacer(),
-            ShareButton(referCode: referCode),
-          ],
-        ),
+          ),
+          ReferralHeader(),
+          SizedBox(height: 24),
+          ReferralCodeCard(referCode: referCode),
+          SizedBox(height: 24),
+          // BenefitsList(points: points),
+          ReferralTimeline(),
+          Spacer(),
+        ],
       ),
+      bottomNavigationBar: ShareButton(referCode: referCode),
     );
   }
 }
@@ -63,22 +62,30 @@ class ReferralHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-          text: AppStrings.inviteFriends,
-          style: TextStyleHelper.largeHeading.copyWith(
-            color: AppColors.primary,
+    return CustomContainer(
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      borderColor: AppColors.black,
+      borderWidth: 0.5,
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      padding: EdgeInsets.all(AppSize.size10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomContainer(
+            margin: EdgeInsets.only(right: 2.w),
+            height: AppSize.size40,
+            width: AppSize.size40,
+            child: Image.asset(AppImageStrings.referCoinsIcon),
           ),
-        ),
-        SizedBox(height: 8),
-        CustomText(
-          text: AppStrings.earnRewards,
-          style: TextStyleHelper.mediumHeading,
-          useOverflow: false,
-        ),
-      ],
+          Expanded(
+            child: CustomText(
+              text: AppStrings.inviteFriends,
+              useOverflow: false,
+              style: TextStyleHelper.smallHeading,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -146,30 +153,42 @@ class BenefitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CustomContainer(
-          padding: const EdgeInsets.all(AppSize.size10),
-          backGroundColor: AppColors.white,
-          borderColor: AppColors.primary,
-          borderWidth: 0.5,
-          boxShadow: ShadowHelper.scoreContainer,
-          borderRadius: BorderRadius.circular(AppSize.size10),
-          child: Icon(
-            item.icon,
-            size: AppSize.size20,
-            color: AppColors.secondary,
+    return CustomContainer(
+      height: 10.h,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TimelineTile(
+            alignment: TimelineAlign.manual,
+            axis: TimelineAxis.horizontal,
+            isFirst: true,
+            startChild: CustomContainer(),
           ),
-        ),
-        SizeHelper.width(width: 2.w),
-        Expanded(
-          child: CustomText(
-            text: item.text,
-            style: TextStyleHelper.mediumText,
-            useOverflow: false,
-          ),
-        ),
-      ],
+          TimelineTile(axis: TimelineAxis.horizontal),
+          TimelineTile(axis: TimelineAxis.horizontal, isLast: true),
+          // CustomContainer(
+          //   padding: const EdgeInsets.all(AppSize.size10),
+          //   backGroundColor: AppColors.white,
+          //   borderColor: AppColors.primary,
+          //   borderWidth: 0.5,
+          //   boxShadow: ShadowHelper.scoreContainer,
+          //   borderRadius: BorderRadius.circular(AppSize.size10),
+          //   child: Icon(
+          //     item.icon,
+          //     size: AppSize.size20,
+          //     color: AppColors.secondary,
+          //   ),
+          // ),
+          // SizeHelper.width(width: 2.w),
+          // Expanded(
+          //   child: CustomText(
+          //     text: item.text,
+          //     style: TextStyleHelper.mediumText,
+          //     useOverflow: false,
+          //   ),
+          // ),
+        ],
+      ),
     );
   }
 }
@@ -180,23 +199,108 @@ class ShareButton extends StatelessWidget {
   // final String points;
   @override
   Widget build(BuildContext context) {
-    return PrimaryBtn(
-      width: 90.w,
-      btnText: AppStrings.refer,
-      onTap: () async {
-        // Customize the message as you like:
-        final message =
-            'Hey! Use my referral code "$referCode", And Join The Career Culture App To Change Your Life.';
-        // SharePlus.share(message, subject: 'Join me on MyApp!');
-        ShareResult refer = await SharePlus.instance.share(
-          ShareParams(text: message, title: AppStrings.inviteFriends),
-        );
-        if (refer.status == ShareResultStatus.success) {
-          WidgetHelper.customSnackBar(
-            title: AppStrings.inviteRequestSent,
+    return CustomContainer(
+      margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+      child: PrimaryBtn(
+        width: 90.w,
+        btnText: AppStrings.refer,
+        onTap: () async {
+          // Customize the message as you like:
+          final message =
+              'Hey! Use my referral code "$referCode", And Join The Career Culture App To Change Your Life.';
+          // SharePlus.share(message, subject: 'Join me on MyApp!');
+          ShareResult refer = await SharePlus.instance.share(
+            ShareParams(text: message, title: AppStrings.inviteFriends),
           );
-        }
-      },
+          if (refer.status == ShareResultStatus.success) {
+            WidgetHelper.customSnackBar(title: AppStrings.inviteRequestSent);
+          }
+        },
+      ),
     );
   }
+}
+
+class ReferralTimeline extends StatelessWidget {
+  const ReferralTimeline({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(_steps.length, (index) {
+        final step = _steps[index];
+        return TimelineTile(
+          axis: TimelineAxis.horizontal,
+          alignment: TimelineAlign.center,
+          isFirst: index == 0,
+          isLast: index == _steps.length - 1,
+          beforeLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+          afterLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+          indicatorStyle: IndicatorStyle(
+            width: 80,
+            height: 80,
+            indicator: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [Colors.blue, Colors.teal],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(18),
+                  child: step.icon,
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      '${index + 1}',
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          endChild: Container(
+            width: 120,
+            padding: const EdgeInsets.only(top: 8),
+            alignment: Alignment.center,
+            child: Text(
+              step.label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+final _steps = [
+  _StepData(
+    label: 'Invite your friend\nby sharing code.',
+    icon: Icon(Icons.people, color: Colors.white, size: 30),
+  ),
+  _StepData(
+    label: 'Friend Install\nand signup.',
+    icon: Icon(Icons.download, color: Colors.white, size: 30),
+  ),
+  _StepData(
+    label: 'You and your\nfriend will get\nreward.',
+    icon: Icon(Icons.card_giftcard, color: Colors.white, size: 30),
+  ),
+];
+
+class _StepData {
+  final String label;
+  final Widget icon;
+
+  _StepData({required this.label, required this.icon});
 }
