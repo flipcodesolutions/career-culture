@@ -288,6 +288,7 @@ class AppStrings {
   static const writeCaptionAboutPhoto = "Write Caption About Photo";
   static const descriptionOptional = "Description (Optional)";
   static const mustProvideSelfie = "Must Provide Selfie";
+  static const selectQuestion = "Select Question";
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";

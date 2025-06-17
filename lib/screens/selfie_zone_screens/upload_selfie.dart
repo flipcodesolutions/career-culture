@@ -1,38 +1,44 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/models/selfie_model/selfie_model.dart';
 import 'package:mindful_youth/provider/selfie_provider/selfie_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
-import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_drop_down.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
-import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_strings.dart';
-import '../../models/selfie_model/selfie_model.dart';
-import '../../utils/border_helper/border_helper.dart';
 import '../../utils/method_helpers/image_picker_helper.dart';
 
 class UploadSelfie extends StatefulWidget {
-  const UploadSelfie({super.key, required this.selfie});
-  final GetSelfieZoneData? selfie;
+  const UploadSelfie({super.key});
   @override
   State<UploadSelfie> createState() => _UploadSelfieState();
 }
 
 class _UploadSelfieState extends State<UploadSelfie> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final SelfieProvider selfieProvider = context.read<SelfieProvider>();
+    Future.microtask(() async {
+      await selfieProvider.getSelfieZone(context: context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final SelfieProvider selfieProvider = context.watch<SelfieProvider>();
-    final GetSelfieZoneData? selfie = widget.selfie;
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -48,21 +54,15 @@ class _UploadSelfieState extends State<UploadSelfie> {
           key: formKey,
           child: Column(
             children: [
-              CustomContainer(
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                backGroundColor: AppColors.lightWhite,
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-                child: Html(data: selfie?.description ?? ""),
-              ),
-              SizeHelper.height(height: 1.h),
-              CustomTextFormField(
-                controller: selfieProvider.captionController,
-                decoration: BorderHelper.containerLikeTextField(
-                  hintText: AppStrings.writeCaptionAboutPhoto,
-                ),
-                validator:
-                    (value) => ValidatorHelper.validateValue(value: value),
-              ),
+              selfieProvider.isLoading
+                  ? Center(child: CustomLoader())
+                  : CustomDropDownWidget<int?>(
+                    hintText: AppStrings.selectQuestion,
+                    dropdownMenuEntries: selfieProvider.dropdownMenuEntries(),
+                    onSelected:
+                        (dynamic questionId) => selfieProvider
+                            .setSelectedQuestion(data: questionId as int?),
+                  ),
               SizeHelper.height(height: 1.h),
               CustomContainer(
                 height: 25.h,
@@ -97,7 +97,6 @@ class _UploadSelfieState extends State<UploadSelfie> {
                               (image) async =>
                                   selfieProvider.setSelectedImage = image,
                             ),
-
                         child: CustomContainer(
                           alignment: Alignment.center,
                           borderRadius: BorderRadius.circular(AppSize.size10),
@@ -115,14 +114,33 @@ class _UploadSelfieState extends State<UploadSelfie> {
                 ),
               ),
               SizeHelper.height(height: 1.h),
-              CustomTextFormField(
-                controller: selfieProvider.descriptionController,
-                maxLines: 5,
-                minLines: 3,
-                decoration: BorderHelper.containerLikeTextField(
-                  hintText: AppStrings.descriptionOptional,
+              CustomContainer(
+                width: 90.w,
+                padding: EdgeInsets.all(AppSize.size10),
+                backGroundColor: AppColors.lightWhite,
+                borderRadius: BorderRadius.circular(AppSize.size10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: "Disclaimer :",
+                      style: TextStyleHelper.smallHeading.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    SizeHelper.height(height: 1.h),
+                    CustomText(
+                      text:
+                          "If Your Selfie gets Approved , It Will be Displayed In Wall Feed Posts, Please take note of this before you upload !!",
+                      useOverflow: false,
+                      style: TextStyleHelper.smallText.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
                 ),
-                validator: (value) => null,
               ),
             ],
           ),
@@ -137,7 +155,7 @@ class _UploadSelfieState extends State<UploadSelfie> {
                   btnText: AppStrings.submit,
                   onTap: () {
                     if (formKey.currentState?.validate() == true) {
-                      selfieProvider.uploadSelfie(id: selfie?.id ?? -1);
+                      selfieProvider.uploadSelfie();
                     }
                   },
                 ),

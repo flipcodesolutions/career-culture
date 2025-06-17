@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:mindful_youth/models/selfie_model/selfie_model.dart';
+import 'package:mindful_youth/models/selfie_model/uploaded_selfies_with_status.dart';
 import 'package:mindful_youth/utils/api_helper/api_helper.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
 
@@ -25,6 +26,26 @@ class SelfieService {
       }
     } catch (e) {
       log("error while getting selfie zones => $e");
+      return null;
+    }
+  }
+
+  /// get uploaded selfie
+  Future<UploadedSelfiesWithStatusModel?> getUploadedSelfieWithStatus({
+    required BuildContext context,
+  }) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getUploadedSelfie,
+      );
+      if (response.isNotEmpty) {
+        return UploadedSelfiesWithStatusModel.fromJson(response);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("error while getting uploaded selfie with status => $e");
       return null;
     }
   }

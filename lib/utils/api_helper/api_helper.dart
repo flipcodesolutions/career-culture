@@ -127,4 +127,7 @@ class ApiHelper {
 
   /// upload selfies
   static String uploadSelfies = "$baseUrl/selfie-zone/upload";
+
+  /// uploaded selfies
+  static String getUploadedSelfie = "$baseUrl/uploaded-selfies";
 }

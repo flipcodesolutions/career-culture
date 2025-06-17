@@ -27,4 +27,6 @@ class AppImageStrings {
   static const String selfieBtnIcon = "assets/images/selfie_btn_icon.png";
   static const String uploadIcon = "assets/images/upload_icon.png";
   static const String referCoinsIcon = "assets/images/refer_coin_icon.png";
+  static const String emptySelfieContainer =
+      "assets/images/empty_selfie_container.png";
 }

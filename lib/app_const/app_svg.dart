@@ -10,4 +10,11 @@ class AppSvg {
     width: AppSize.size20,
     colorFilter: const ColorFilter.mode(Color(0xff25d366), BlendMode.srcIn),
   );
+
+  /// whats app logo
+  static SvgPicture suchEmptySelfie = SvgPicture.string(
+    '<svgxmlns="http://www.w3.org/2000/svg"width="300"height="220"viewBox="00300220"fill="none"><pathfill="#FAFAFA"d="M00h300v220H0z"/><pathfill="#E0E0E0"d="M150100a30300100-603030000060z"/><pathfill="#F0F0F0"d="M120110q30-20600t-600z"/><pathfill="#CCCCCC"d="M130140a550015-5h30a5500155v20a55001-55h-30a55001-5-5v-20z"/><circlecx="150"cy="155"r="7"fill="#AAAAAA"/><rectx="143"y="143"width="14"height="4"rx="2"fill="#AAAAAA"/><textx="150"y="190"text-anchor="middle"font-family="Arial,sans-serif"font-size="14"fill="#888">Wow,suchempty.</text><textx="150"y="205"text-anchor="middle"font-family="Arial,sans-serif"font-size="12"fill="#BBB">Uploadaselfietogetstarted</text></svg>',
+    height: AppSize.size20,
+    width: AppSize.size20,
+  );
 }
