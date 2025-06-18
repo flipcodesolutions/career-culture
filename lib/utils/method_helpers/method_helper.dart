@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -24,6 +25,7 @@ import '../../widgets/custom_container.dart';
 import '../../widgets/custom_text.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
 import '../widget_helper/widget_helper.dart';
+import 'dart:typed_data';
 
 class MethodHelper with NavigateHelper {
   /// launch urls
@@ -526,6 +528,51 @@ class MethodHelper with NavigateHelper {
         title: 'An error occurred while trying to open WhatsApp.',
         isError: true,
       );
+    }
+  }
+
+  /// convert pcm file to mp3 audio formate
+  static Future<File?> convertPcmToMp3({
+    required Uint8List pcmBytes,
+    int sampleRate = 16000,
+    int numChannels = 1,
+  }) async {
+    try {
+      print("[FFMPEG] Starting PCM to MP3 conversion...");
+
+      // Step 1: Save PCM to a temporary raw file
+      final tempDir = await getTemporaryDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+      final pcmFile = File('${tempDir?.path}/temp_audio_$timestamp.pcm');
+      await pcmFile.writeAsBytes(pcmBytes);
+      print("[FFMPEG] Saved PCM file at: ${pcmFile.path}");
+
+      // Step 2: Define output mp3 path (also timestamped)
+      final mp3FilePath = '${tempDir?.path}/output_audio_$timestamp.mp3';
+
+      // Step 3: FFmpeg command
+      final ffmpegCmd =
+          '-f s16le -ar $sampleRate -ac $numChannels -i "${pcmFile.path}" -codec:a libmp3lame "$mp3FilePath"';
+      print("[FFMPEG] Running command: $ffmpegCmd");
+
+      // Step 4: Execute
+      final session = await FFmpegKit.execute(ffmpegCmd);
+      final returnCode = await session.getReturnCode();
+      final logs = await session.getAllLogsAsString();
+
+      if (returnCode?.isValueSuccess() ?? false) {
+        print("[FFMPEG] MP3 conversion successful.");
+        print("[FFMPEG] Output MP3 at: $mp3FilePath");
+        return File(mp3FilePath);
+      } else {
+        print("[FFMPEG] MP3 conversion failed!");
+        print("[FFMPEG] Logs:\n$logs");
+        return null;
+      }
+    } catch (e) {
+      print('[FFMPEG] Exception during conversion: $e');
+      return null;
     }
   }
 }

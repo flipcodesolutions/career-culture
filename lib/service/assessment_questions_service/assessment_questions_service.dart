@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -9,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
 import 'package:mindful_youth/utils/http_helper/http_helpper.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../utils/api_helper/api_helper.dart';
 import 'package:mime/mime.dart';
@@ -188,21 +188,38 @@ class AssessmentQuestionsService {
     // Mandatory fields
     req.fields['questionId'] = question.id.toString();
     req.fields['type'] = question.type ?? '';
-
+    final bool isAudio = question.type == "audio";
     if (question.type == 'video') {
       // video: the URL/string
       req.fields['answer'] = question.userAnswer!;
     } else {
       // image/audio: attach each selected file under 'answer'
       for (final file in question.selectedFiles!) {
-        final mime = lookupMimeType(file.name) ?? 'application/octet-stream';
-        log("mime $mime file type ${file.extension}");
+        File? uploadFile;
+        String filename = file.name;
+        Uint8List bytes = file.bytes ?? Uint8List(0);
+
+        if (isAudio) {
+          final mp3 = await MethodHelper.convertPcmToMp3(pcmBytes: bytes);
+          if (mp3 != null) {
+            uploadFile = mp3;
+            bytes = await mp3.readAsBytes();
+            filename = 'audio_${DateTime.now().millisecondsSinceEpoch}.mp3';
+          } else {
+            log("MP3 conversion failed for question ${question.id}");
+            continue;
+          }
+        }
+
+        final mime = lookupMimeType(filename) ?? 'application/octet-stream';
+        log("mime $mime, file type ${file.extension}, final name: $filename");
+
         req.files.add(
           http.MultipartFile.fromBytes(
             'answer',
-            file.bytes!,
-            filename: file.name,
-            // contentType: MediaType.parse(mime),
+            bytes,
+            filename: filename,
+            contentType: MediaType.parse(mime),
           ),
         );
       }
