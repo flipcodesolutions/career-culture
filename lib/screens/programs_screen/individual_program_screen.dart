@@ -168,7 +168,11 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                                       ),
                                       CustomText(
                                         text:
-                                            "Well Done,\nYou Have Reached Advance Level",
+                                            AppStrings.getMessageAccordingToProgress(
+                                              percentage:
+                                                  programsProvider
+                                                      .getPercentage(),
+                                            ),
                                         useOverflow: false,
                                         style: TextStyleHelper.smallText,
                                       ),

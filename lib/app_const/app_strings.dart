@@ -289,6 +289,47 @@ class AppStrings {
   static const descriptionOptional = "Description (Optional)";
   static const mustProvideSelfie = "Must Provide Selfie";
   static const selectQuestion = "Select Question";
+  static String getMessageAccordingToProgress({required double percentage}) {
+    String message;
+    switch (percentage) {
+      case == 0:
+        message = "Getting Started,\nEvery Journey Begins With a Single Step.";
+        break;
+      case == 10:
+        message = "Nice Start,\nYou’ve Completed 10% of the Chapter.";
+        break;
+      case == 20:
+        message = "Keep It Up,\nYou're 20% Done Already.";
+        break;
+      case == 30:
+        message = "Good Going,\n30% Progress Made.";
+        break;
+      case == 40:
+        message = "Almost Halfway,\nYou’ve Reached 40%.";
+        break;
+      case == 50:
+        message = "Halfway There,\n50% Completed!";
+        break;
+      case == 60:
+        message = "More Than Halfway,\nYou're at 60%.";
+        break;
+      case == 70:
+        message = "Great Progress,\n70% Completed.";
+        break;
+      case == 80:
+        message = "Almost Done,\n80% of the Chapter Completed.";
+        break;
+      case == 90:
+        message = "Just a Bit More,\nYou’re at 90%!";
+        break;
+      case == 100:
+        message = "All Done For This Chapter,\nWe Are Proud Of Your Effort!";
+        break;
+      default:
+        message = "Invalid progress percentage.\n";
+    }
+    return message;
+  }
 
   /// list of items stored in local storage when login and signup
   static const userName = "userName";
