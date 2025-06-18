@@ -4,7 +4,6 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -106,41 +105,27 @@ class _HomeScreenState extends State<HomeScreen>
             child: Image.asset(AppImageStrings.imageOnlyLogo),
           ),
           actions: [
-            if (!userProvider.isUserLoggedIn) ...[
-              IconButton(
-                onPressed:
-                    () => push(
-                      context: context,
-                      widget: LoginScreen(),
-                      transition: FadeUpwardsPageTransitionsBuilder(),
-                    ),
-                icon: Icon(Icons.login, color: AppColors.primary),
-              ),
-            ] else ...[
-              IconButton(
-                onPressed:
-                    () => push(
-                      context: context,
-                      widget: ProductListPage(),
+            AppBarIcon(
+              onTap:
+                  () => push(
+                    context: context,
+                    widget: ProductListPage(),
 
-                      transition: OpenUpwardsPageTransitionsBuilder(),
-                    ),
-                icon: Icon(
-                  Icons.shopping_bag_outlined,
-                  color: AppColors.primary,
-                ),
-              ),
-              IconButton(
-                onPressed:
-                    () => push(
-                      context: context,
-                      widget: NotificationScreen(),
-                      transition: ScaleFadePageTransitionsBuilder(),
-                    ),
-                icon: Icon(Icons.notifications),
-              ),
-            ],
+                    transition: OpenUpwardsPageTransitionsBuilder(),
+                  ),
+              icon: AppImageStrings.shoppingBagIcon,
+            ),
+            AppBarIcon(
+              icon: AppImageStrings.notificationBellIcon,
+              onTap:
+                  () => push(
+                    context: context,
+                    widget: NotificationScreen(),
+                    transition: ScaleFadePageTransitionsBuilder(),
+                  ),
+            ),
           ],
+          // ],
         ),
         body: AnimationLimiter(
           child: CustomRefreshIndicator(
@@ -187,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   homeScreenProvider
                                       .overAllScoreModel
                                       ?.data
-                                      ?.totalPoints.toString() ??
+                                      ?.totalPoints
+                                      .toString() ??
                                   "-",
                               animationDuration: Duration(seconds: 3),
                             ),
@@ -254,6 +240,24 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AppBarIcon extends StatelessWidget {
+  const AppBarIcon({super.key, required this.onTap, required this.icon});
+  final void Function()? onTap;
+  final String icon;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: CustomContainer(
+        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        width: 4.h,
+        height: 4.h,
+        child: Image.asset(icon),
       ),
     );
   }

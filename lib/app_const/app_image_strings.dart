@@ -29,4 +29,9 @@ class AppImageStrings {
   static const String referCoinsIcon = "assets/images/refer_coin_icon.png";
   static const String emptySelfieContainer =
       "assets/images/empty_selfie_container.png";
+  static const String notificationBellIcon =
+      "assets/images/notification_bell_icon.png";
+  static const String shoppingBagIcon = "assets/images/shopping_bag_icon.png";
+  static const String noNotificationToShow =
+      "assets/images/no_notification_to_show.png";
 }

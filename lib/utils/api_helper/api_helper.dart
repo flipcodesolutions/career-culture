@@ -130,4 +130,10 @@ class ApiHelper {
 
   /// uploaded selfies
   static String getUploadedSelfie = "$baseUrl/uploaded-selfies";
+
+  /// get user notifications
+  static String getUserNotification = "$baseUrl/notifications";
+
+  /// get user notifications
+  static String sentUserOpenNotification = "$baseUrl/user-read-notification";
 }

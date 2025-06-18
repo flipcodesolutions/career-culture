@@ -575,4 +575,12 @@ class MethodHelper with NavigateHelper {
       return null;
     }
   }
+
+  /// notification time show
+  static String formatDateTime(String utcDateTime) {
+    final dateTime =
+        DateTime.parse(utcDateTime).toLocal(); // Convert to local time
+    final formatter = DateFormat('dd MMM yyyy hh:mm');
+    return formatter.format(dateTime);
+  }
 }

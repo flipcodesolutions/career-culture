@@ -18,6 +18,7 @@ import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_
 import 'package:mindful_youth/provider/refer_provider/refer_provider.dart';
 import 'package:mindful_youth/provider/score_board_provider/score_board_provider.dart';
 import 'package:mindful_youth/provider/selfie_provider/selfie_provider.dart';
+import 'package:mindful_youth/provider/user_notification/user_notification_provider.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/wall_provider/wall_provider.dart';
@@ -81,6 +82,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ReferProvider()),
         ChangeNotifierProvider(create: (context) => FaqsProvider()),
         ChangeNotifierProvider(create: (context) => SelfieProvider()),
+        ChangeNotifierProvider(create: (context) => UserNotificationProvider()),
       ],
       child: ToastificationWrapper(child: const MyApp()),
     ),
