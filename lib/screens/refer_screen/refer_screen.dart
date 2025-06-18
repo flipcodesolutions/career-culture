@@ -33,7 +33,6 @@ class ReferralPage extends StatelessWidget {
         ),
       ),
       body: Column(
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           CustomContainer(
             width: 100.w,
@@ -44,12 +43,13 @@ class ReferralPage extends StatelessWidget {
             ),
           ),
           ReferralHeader(),
-          SizedBox(height: 24),
-          ReferralCodeCard(referCode: referCode),
-          SizedBox(height: 24),
-          // BenefitsList(points: points),
+          SizeHelper.height(),
           ReferralTimeline(),
-          Spacer(),
+          SizeHelper.height(),
+          CustomText(text: "Your Referral Code"),
+          SizeHelper.height(height: 1.h),
+          ReferralCodeCard(referCode: referCode),
+          SizedBox(height: 2.h),
         ],
       ),
       bottomNavigationBar: ShareButton(referCode: referCode),
@@ -125,20 +125,6 @@ class ReferralCodeCard extends StatelessWidget {
   }
 }
 
-class BenefitsList extends StatelessWidget {
-  const BenefitsList({super.key, required this.points});
-  final String points;
-  @override
-  Widget build(BuildContext context) {
-    return BenefitTile(
-      item: BenefitItem(
-        icon: Icons.star,
-        text: AppStrings.willGetThisMuchCoins(points: points),
-      ),
-    );
-  }
-}
-
 class BenefitItem {
   final IconData icon;
   final String text;
@@ -158,12 +144,7 @@ class BenefitTile extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TimelineTile(
-            alignment: TimelineAlign.manual,
-            axis: TimelineAxis.horizontal,
-            isFirst: true,
-            startChild: CustomContainer(),
-          ),
+          ReferralTimeline(),
           TimelineTile(axis: TimelineAxis.horizontal),
           TimelineTile(axis: TimelineAxis.horizontal, isLast: true),
           // CustomContainer(
@@ -226,59 +207,67 @@ class ReferralTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(_steps.length, (index) {
-        final step = _steps[index];
-        return TimelineTile(
-          axis: TimelineAxis.horizontal,
-          alignment: TimelineAlign.center,
-          isFirst: index == 0,
-          isLast: index == _steps.length - 1,
-          beforeLineStyle: LineStyle(color: Colors.teal, thickness: 2),
-          afterLineStyle: LineStyle(color: Colors.teal, thickness: 2),
-          indicatorStyle: IndicatorStyle(
-            width: 80,
-            height: 80,
-            indicator: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [Colors.blue, Colors.teal],
+    return CustomContainer(
+      alignment: Alignment.center,
+      margin: EdgeInsets.symmetric(horizontal: 4.5.w),
+      height: 20.h,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(_steps.length, (index) {
+          final step = _steps[index];
+          return TimelineTile(
+            axis: TimelineAxis.horizontal,
+            alignment: TimelineAlign.start,
+            isFirst: index == 0,
+            isLast: index == _steps.length - 1,
+            beforeLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+            afterLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+            indicatorStyle: IndicatorStyle(
+              width: 20.w,
+              height: 10.h,
+              indicator: CustomContainer(
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    CustomContainer(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue, Colors.teal],
+                      ),
+                      shape: BoxShape.circle,
+                      padding: const EdgeInsets.all(AppSize.size20),
+                      child: step.icon,
                     ),
-                  ),
-                  padding: const EdgeInsets.all(18),
-                  child: step.icon,
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.red,
-                    child: Text(
-                      '${index + 1}',
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      child: CircleAvatar(
+                        radius: AppSize.size10,
+                        backgroundColor: Colors.red,
+                        child: CustomText(
+                          text: '${index + 1}',
+                          style: TextStyleHelper.smallText.copyWith(
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-          endChild: Container(
-            width: 120,
-            padding: const EdgeInsets.only(top: 8),
-            alignment: Alignment.center,
-            child: Text(
-              step.label,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14),
+            endChild: CustomContainer(
+              width: 29.99.w,
+              padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+              child: CustomText(
+                text: step.label,
+                textAlign: TextAlign.center,
+                useOverflow: false,
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }
@@ -293,7 +282,7 @@ final _steps = [
     icon: Icon(Icons.download, color: Colors.white, size: 30),
   ),
   _StepData(
-    label: 'You and your\nfriend will get\nreward.',
+    label: 'You  will get\nreward.',
     icon: Icon(Icons.card_giftcard, color: Colors.white, size: 30),
   ),
 ];
