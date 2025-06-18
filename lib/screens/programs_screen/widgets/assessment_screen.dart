@@ -236,7 +236,10 @@ class _AssessmentScreenState extends State<AssessmentScreen>
       });
       push(
         context: ctx,
-        widget: AssessmentResultScreen(postName: widget.postName),
+        widget: AssessmentResultScreen(
+          postName: widget.postName,
+          isAssessmentPhase2: false,
+        ),
         transition: FadeForwardsPageTransitionsBuilder(),
       );
     }

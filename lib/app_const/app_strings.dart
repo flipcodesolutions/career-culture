@@ -269,7 +269,7 @@ class AppStrings {
   static const coins = "Coins";
   static const totalCoins = "Total Coins";
   static const reviewAnswer = "Review Answer";
-  static const shareScore = "Share Score";
+  static shareScore({bool show = true}) => "Share ${show ? "Score" : ""}";
   static const testCompleted = "Test Completed";
   static const clickToAddImage = "Click To Add Image";
   static imagesShouldBeLessThan2Mb({required String size}) =>

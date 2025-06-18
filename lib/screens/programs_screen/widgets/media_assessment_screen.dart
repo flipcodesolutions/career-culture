@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/models/assessment_question_model/assessment_question_model.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
@@ -145,12 +146,21 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                   .submitAssessmentMediaQuestions(context: context);
               if (success) {
                 if (!context.mounted) return;
+                final bool success = await push(
+                  context: context,
+                  widget: AssessmentResultScreen(
+                    postName: "",
+                    isAssessmentPhase2: true,
+                  ),
+                );
 
                 /// this will determine if the page should pop once or 3 times
-                widget.shouldPop3
-                    ? {pop(context), pop(context), pop(context)}
-                    : pop(context);
-                assessmentProvider.emptyAssessmentQuestions();
+                if (success) {
+                  widget.shouldPop3
+                      ? {pop(context), pop(context), pop(context)}
+                      : pop(context);
+                  assessmentProvider.emptyAssessmentQuestions();
+                }
               }
             },
           ),
