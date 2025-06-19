@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/selfie_model/uploaded_selfies_with_status.dart';
 import 'package:mindful_youth/provider/selfie_provider/selfie_provider.dart';
@@ -39,6 +38,7 @@ class _SelfieZoneScreenState extends State<SelfieZoneScreen>
     final SelfieProvider selfieProvider = context.read<SelfieProvider>();
     Future.microtask(() async {
       await selfieProvider.getUploadedSelfieWithStatus(context: context);
+      await selfieProvider.getSelfieZone(context: context);
     });
   }
 
@@ -113,7 +113,9 @@ class _SelfieZoneScreenState extends State<SelfieZoneScreen>
                           isNotScroll: false,
                           axisCount: 2,
                           data: List.generate(
-                            uploadedSelfie?.length ?? 0,
+                            (((uploadedSelfie?.length ?? 0) > 4
+                                ? 4
+                                : uploadedSelfie?.length ?? 0)),
                             (index) =>
                                 "${AppStrings.assetsUrl}${uploadedSelfie?[index].images}",
                           ),
@@ -149,12 +151,18 @@ class _SelfieZoneScreenState extends State<SelfieZoneScreen>
       bottomNavigationBar: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
         child: PrimaryBtn(
-          onTap:
-              () => push(
+          onTap: () async {
+            final bool success = await push(
+              context: context,
+              widget: UploadSelfie(),
+              transition: OpenUpwardsPageTransitionsBuilder(),
+            );
+            if (success) {
+              await selfieProvider.getUploadedSelfieWithStatus(
                 context: context,
-                widget: UploadSelfie(),
-                transition: OpenUpwardsPageTransitionsBuilder(),
-              ),
+              );
+            }
+          },
           btnText: AppStrings.uploadSelfie,
         ),
       ),
@@ -167,41 +175,43 @@ class ExamplePhotos extends StatelessWidget with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     final SelfieProvider selfieProvider = context.watch<SelfieProvider>();
+
     return selfieProvider.isLoading
         ? Center(child: CustomLoader())
-        :
-        // : eventProvider.eventModel?.data?.isNotEmpty == true
-        // ?
-        CustomContainer(
+        : selfieProvider.selfieZone?.data
+                ?.where((e) => e.suggestedImage?.isNotEmpty == true)
+                .isNotEmpty ==
+            true
+        ? CustomContainer(
           height: 25.h,
           child: CarouselSlider(
             items:
                 // eventProvider.eventModel?.data
                 //     ?.where((e) => e.isAnnouncement == "yes")
-                [
-                  "https://plus.unsplash.com/premium_photo-1701767501250-fda0c8f7907f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                  "https://plus.unsplash.com/premium_photo-1701767501250-fda0c8f7907f?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                ].map((image) {
-                  return AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: CustomContainer(
-                      boxShadow: ShadowHelper.scoreContainer,
-                      backGroundColor: AppColors.white,
-                      borderColor: AppColors.grey,
-                      borderWidth: 0.2,
-                      borderRadius: BorderRadius.circular(AppSize.size10),
-                      margin: EdgeInsets.only(right: 5.w),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: CustomImageWithLoader(
-                          showImageInPanel: false,
-                          fit: BoxFit.cover,
-                          imageUrl: "${image}",
+                selfieProvider.selfieZone?.data
+                    ?.where((e) => e.suggestedImage?.isNotEmpty == true)
+                    .map((image) {
+                      return AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: CustomContainer(
+                          boxShadow: ShadowHelper.scoreContainer,
+                          backGroundColor: AppColors.white,
+                          borderColor: AppColors.grey,
+                          borderWidth: 0.2,
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          margin: EdgeInsets.only(right: 5.w),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+                            child: CustomImageWithLoader(
+                              showImageInPanel: false,
+                              fit: BoxFit.cover,
+                              imageUrl: "${image}",
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }).toList(),
+                      );
+                    })
+                    .toList(),
             options: CarouselOptions(
               enableInfiniteScroll: false,
               viewportFraction: 0.9,
@@ -210,9 +220,15 @@ class ExamplePhotos extends StatelessWidget with NavigateHelper {
               padEnds: true,
             ),
           ),
+        )
+        : CustomContainer(
+          margin: EdgeInsets.symmetric(horizontal: 5.w),
+          width: 90.w,
+          height: 5.h,
+          alignment: Alignment.center,
+          backGroundColor: AppColors.lightWhite,
+          borderRadius: BorderRadius.circular(AppSize.size10),
+          child: CustomText(text: AppStrings.examplePhotosNotFound),
         );
-    // : Center(
-    //   child: NoDataFoundWidget(text: AppStrings.noAnnouncementFound),
-    // );
   }
 }

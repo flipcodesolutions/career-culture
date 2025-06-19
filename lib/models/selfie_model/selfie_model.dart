@@ -32,6 +32,7 @@ class GetSelfieZoneData {
   String? title;
   String? description;
   String? question;
+  String? suggestedImage;
   GetSelfieZoneData({this.id, this.title});
 
   GetSelfieZoneData.fromJson(Map<String, dynamic> json) {
@@ -39,6 +40,7 @@ class GetSelfieZoneData {
     title = json['title'];
     description = json['description'];
     question = json['question'];
+    suggestedImage = json['suggestedImage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +49,7 @@ class GetSelfieZoneData {
     data['title'] = this.title;
     data['description'] = this.description;
     data['question'] = this.question;
+    data['suggestedImage'] = this.suggestedImage;
     return data;
   }
 }

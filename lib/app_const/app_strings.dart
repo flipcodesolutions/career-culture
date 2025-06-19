@@ -289,6 +289,9 @@ class AppStrings {
   static const descriptionOptional = "Description (Optional)";
   static const mustProvideSelfie = "Must Provide Selfie";
   static const selectQuestion = "Select Question";
+  static const examplePhotosNotFound = "Example Photos NotFound";
+  static const selfieWebViewURL =
+      "https://career-culture.flipcodesolutions.com/share-seva";
   static String getMessageAccordingToProgress({required double percentage}) {
     String message;
     switch (percentage) {
