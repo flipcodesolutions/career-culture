@@ -157,8 +157,12 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                 /// this will determine if the page should pop once or 3 times
                 if (success) {
                   widget.shouldPop3
-                      ? {pop(context), pop(context), pop(context)}
-                      : pop(context);
+                      ? {
+                        pop(context, result: success),
+                        pop(context, result: success),
+                        pop(context, result: success),
+                      }
+                      : pop(context, result: success);
                   assessmentProvider.emptyAssessmentQuestions();
                 }
               }

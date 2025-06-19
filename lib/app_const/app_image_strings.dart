@@ -34,4 +34,6 @@ class AppImageStrings {
   static const String shoppingBagIcon = "assets/images/shopping_bag_icon.png";
   static const String noNotificationToShow =
       "assets/images/no_notification_to_show.png";
+  static const String locationIcon = "assets/images/location_icon.png";
+  static const String eventTimingIcon = "assets/images/event_timing_icon.png";
 }

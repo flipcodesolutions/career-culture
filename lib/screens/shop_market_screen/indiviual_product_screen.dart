@@ -78,7 +78,7 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
                               ),
                             ),
                             child: CustomImageWithLoader(
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                               imageUrl:
                                   "${AppStrings.assetsUrl}${productProvider.getListImage(product: widget.product)[index]}",
                             ),
