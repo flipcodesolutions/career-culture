@@ -35,7 +35,7 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
     Future.microtask(() {
       assessmentProvider.getAssessmentQuestionsByPostId(
         context: context,
-        isInReviewMode: false,
+        isInReviewMode: true,
       );
     });
   }
@@ -103,7 +103,7 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                           QuestionRowAndColumInfoWithIcon(
                             heading1:
                                 "${mediaList?.length ?? 0} ${AppStrings.questions}",
-                            heading2: AppStrings.multipleChoiceAnswer,
+                            heading2: AppStrings.uploadMediaAnswer,
                             icon: Icons.question_mark_outlined,
                           ),
                           Divider(),

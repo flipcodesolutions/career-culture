@@ -80,13 +80,17 @@ class _NotificationScreenState extends State<NotificationScreen>
                                   notificationId:
                                       notifications[index].id.toString(),
                                 );
-                            redirectUserToScreen(
+                            final bool success = await redirectUserToScreen(
                               redirect:
                                   notifications[index]
                                       .notificationNavigateScreen ??
                                   "",
                               payload: notifications[index].payload ?? "",
                             );
+                            if (success && context.mounted) {
+                              await userNotificationProvider
+                                  .getUserNotification(context: context);
+                            }
                           },
                           child: CustomContainer(
                             borderRadius: BorderRadius.circular(AppSize.size10),
@@ -179,14 +183,15 @@ class _NotificationScreenState extends State<NotificationScreen>
     );
   }
 
-  void redirectUserToScreen({
+  Future<bool> redirectUserToScreen({
     required String redirect,
     required String payload,
-  }) {
+  }) async {
     Map<String, dynamic> payLoad = jsonDecode(payload);
+    bool result = false;
     switch (redirect) {
       case "event":
-        push(
+        result = await push(
           context: context,
           widget: IndividualEventScreen(
             eventInfo: EventModel.fromJson(payLoad),
@@ -196,5 +201,6 @@ class _NotificationScreenState extends State<NotificationScreen>
         break;
       default:
     }
+    return result;
   }
 }

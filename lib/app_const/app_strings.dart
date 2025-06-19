@@ -256,6 +256,7 @@ class AppStrings {
   static const level2ActivitySubmission = 'Level - 2 : Activity Submission';
   static const questions = 'Questions';
   static const multipleChoiceAnswer = "Multiple Choice Answer";
+  static const uploadMediaAnswer = "Upload Media Task";
   static const points10 = "10 Points";
   static const perQuestion = "Per Questions";
   static const startTheTest = "Start The Test";

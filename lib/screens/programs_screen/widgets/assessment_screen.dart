@@ -11,7 +11,9 @@ import 'package:mindful_youth/utils/method_helpers/image_picker_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/widgets/custom_audio_player.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_image.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -318,8 +320,20 @@ class QuestionWidget<T> extends StatefulWidget {
 class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
   final TextEditingController answerController = TextEditingController();
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.question.type == "video" &&
+        widget.question.userAnswer?.isNotEmpty == true) {
+      answerController.text = widget.question.userAnswer ?? "";
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     AssessmentProvider assessmentProvider = context.watch<AssessmentProvider>();
+    final bool isAnswerProvided = widget.question.userAnswers != null;
+    final String providedAnswer = widget.question.userAnswers?.answer ?? "";
     return CustomContainer(
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
@@ -342,6 +356,17 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               // textAlign: TextAlign.justify,
             ),
             SizeHelper.height(height: 0.5.h),
+            if (isAnswerProvided) ...[
+              CustomText(
+                useOverflow: false,
+                text: "This is the Answer You Provided...",
+                style: TextStyleHelper.smallText.copyWith(
+                  fontStyle: FontStyle.italic,
+                ),
+                // textAlign: TextAlign.justify,
+              ),
+              SizeHelper.height(height: 1.h),
+            ],
             if (widget.question.type == "checkbox") ...[
               ...widget.question.extractedOptions?.asMap().entries.map((entry) {
                     String option = entry.value.trim();
@@ -437,6 +462,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                 key: assessmentProvider.videoTextFieldKey,
                 autovalidateMode: AutovalidateMode.always,
                 child: CustomTextFormField(
+                  enabled:
+                      /// on init check if this answer is already done or not, if there is answer already then just show it in field
+                      !isAnswerProvided,
                   controller: answerController,
                   decoration: BorderHelper.containerLikeTextField(
                     hintText: AppStrings.yourVideoUrl,
@@ -450,7 +478,9 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                     final validate = ValidatorHelper.validateYoutubeLink(
                       value: value,
                     );
-                    if (validate == null) {
+
+                    /// if validation passed check if this question is already answered, if so than not update it in check user answer
+                    if (validate == null && !isAnswerProvided) {
                       assessmentProvider.textAreaAnswer(
                         questionId: widget.question.id ?? -1,
                         selection: answerController.text,
@@ -462,11 +492,27 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               ),
             ] else if (widget.question.type == "audio") ...[
               CustomContainer(
-                child: AudioRecorderPlayer(questionId: widget.question.id),
+                child:
+                    isAnswerProvided
+                        ? CustomAudioPlayer(
+                          audioUrl: "${AppStrings.assetsUrl}$providedAnswer",
+                        )
+                        : AudioRecorderPlayer(questionId: widget.question.id),
               ),
             ] else if (widget.question.type == "image") ...[
               SizeHelper.height(height: 1.h),
-              PickImage(question: widget.question),
+              isAnswerProvided
+                  ? CustomContainer(
+                    padding: EdgeInsets.all(AppSize.size10),
+
+                    borderRadius: BorderRadius.circular(AppSize.size10),
+                    backGroundColor: AppColors.lightWhite,
+                    child: CustomImageWithLoader(
+                      showImageInPanel: false,
+                      imageUrl: "${AppStrings.assetsUrl}$providedAnswer",
+                    ),
+                  )
+                  : PickImage(question: widget.question),
             ] else ...[
               CustomText(text: AppStrings.somethingWentWrong),
             ],

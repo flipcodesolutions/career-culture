@@ -313,21 +313,49 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
   }) async {
     bool isAnyMediaProvided = false;
     bool isVideoLinkProvided = false;
-
+    bool isAllAnswerProvided = false;
     if (videoTextFieldKey.currentState?.validate() != true) {
       return false;
     }
 
+    /// check if all answers are provided
+    isAllAnswerProvided =
+        _assessmentQuestions?.data
+            ?.where(
+              (e) =>
+                  e.type == "audio" || e.type == "image" || e.type == "video",
+            )
+            .every((e) => e.userAnswers != null) ??
+        true;
+    if (isAllAnswerProvided) {
+      WidgetHelper.customSnackBar(
+        title: "All Answers already Submitted Before",
+      );
+      return false;
+    }
+
+    /// check if answered is provided , not from previous
     isVideoLinkProvided =
         _assessmentQuestions?.data
             ?.where((e) => e.type == "video")
-            .any((e) => e.userAnswer?.isNotEmpty == true) ??
+            .any(
+              (e) =>
+                  e.userAnswers != null
+                      ? true
+                      : e.userAnswer?.isNotEmpty == true,
+            ) ??
         false;
 
+    /// check if answered is provided , not from previous
     isAnyMediaProvided =
         _assessmentQuestions?.data
             ?.where((e) => e.type == "audio" || e.type == "image")
-            .any((e) => (e.selectedFiles ?? []).isNotEmpty) ??
+            .any(
+              (e) =>
+                  e.userAnswers != null
+                      ? true
+                      : (e.selectedFiles ?? []).isNotEmpty,
+            ) ??
         false;
 
     if (!isVideoLinkProvided && !isAnyMediaProvided) {

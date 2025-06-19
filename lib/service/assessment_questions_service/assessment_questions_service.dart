@@ -154,7 +154,10 @@ class AssessmentQuestionsService {
     for (final q in mediaQs) {
       final ep = endpointMap[q.type];
       if (ep == null) continue;
-
+      if (q.userAnswers != null) {
+        log('Skipping ${q.type}#${q.id} : Answer Already Provided');
+        continue;
+      }
       // ◀️ Only call the API if there's actually something to send:
       if (q.type == 'video' && (q.userAnswer?.isNotEmpty ?? false) == false) {
         log('Skipping video#${q.id}: no URL provided');

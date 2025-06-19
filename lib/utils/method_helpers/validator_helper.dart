@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../app_const/app_regex.dart';
 import '../../app_const/app_strings.dart';
@@ -54,27 +53,89 @@ class ValidatorHelper with NavigateHelper {
     return null;
   }
 
+  /// check if provided link is valid video only link
   static String? validateYoutubeLink({required String? value}) {
-    if (value == null || value.trim().isEmpty) {
-      return null;
+    if (value == null || value.trim().isEmpty) return null;
+
+    final trimmed = value.trim();
+
+    // Reject music domain explicitly
+    if (trimmed.contains('music.youtube.com')) {
+      return 'Music links are not supported';
     }
 
-    final trimmedValue = value.trim();
-    final youtubeRegex = RegExp(
-      r'^(https?:\/\/)?' // Optional protocol
-      r'(www\.|m\.)?' // Optional subdomain
-      r'(youtube\.com|youtu\.be)\/' // Domain
-      r'(watch\?v=|embed\/|v\/|shorts\/)?' // Path
-      r'([\w\-]{11})' // Video ID (11 characters)
-      r'([^\s]*)$', // Optional query string
-      caseSensitive: false,
-    );
+    Uri? uri;
+    try {
+      uri = Uri.parse(trimmed);
+    } catch (_) {
+      return 'Please enter a valid YouTube URL';
+    }
 
-    if (!youtubeRegex.hasMatch(trimmedValue)) {
+    // Allow only these domains
+    const allowedDomains = [
+      'youtube.com',
+      'www.youtube.com',
+      'm.youtube.com',
+      'youtu.be',
+    ];
+    if (!allowedDomains.contains(uri.host)) {
       return 'Please enter a valid YouTube link';
     }
 
-    return null; // Valid
+    final videoId = _extractYoutubeVideoId(uri);
+    final isValidPlaylist = _isYoutubePlaylist(uri);
+
+    // Check RD/OLAK and similar music playlist types
+    final playlistId = uri.queryParameters['list'];
+    final isMusicPlaylist =
+        playlistId != null &&
+        playlistId.startsWith(RegExp(r'(RD|OLAK|MU|RDEM|RDAMVM)'));
+
+    if (isMusicPlaylist) {
+      return 'YouTube Music links are not supported';
+    }
+
+    if (videoId != null || isValidPlaylist) return null;
+
+    return 'Please enter a valid YouTube link';
+  }
+
+  /// get youtube video id
+  static String? _extractYoutubeVideoId(Uri uri) {
+    if (uri.host == 'youtu.be') {
+      final id = uri.pathSegments.isNotEmpty ? uri.pathSegments[0] : null;
+      return _isValidVideoId(id) ? id : null;
+    }
+
+    if (uri.queryParameters.containsKey('v')) {
+      final id = uri.queryParameters['v'];
+      return _isValidVideoId(id) ? id : null;
+    }
+
+    final segments = uri.pathSegments;
+    if (segments.length >= 2) {
+      final p = segments[0];
+      if (['embed', 'v', 'shorts'].contains(p)) {
+        final id = segments[1];
+        return _isValidVideoId(id) ? id : null;
+      }
+    }
+
+    return null;
+  }
+
+  /// check if link is valid youtube playlist
+  static bool _isYoutubePlaylist(Uri uri) {
+    final playlistId = uri.queryParameters['list'];
+    return uri.path == '/playlist' &&
+        playlistId != null &&
+        playlistId.length > 10;
+  }
+
+  ///
+  static bool _isValidVideoId(String? id) {
+    final validIdPattern = RegExp(r'^[\w-]{11}$');
+    return id != null && validIdPattern.hasMatch(id);
   }
 
   static String? validateDateFormate({required String? value}) {

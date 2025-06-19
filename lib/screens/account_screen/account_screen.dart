@@ -16,6 +16,7 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_profile_avatar.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
@@ -126,13 +127,15 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           ProfilePageListTiles(
                             leading: Icons.workspace_premium,
                             onTap:
-                                //  () {},
-                                () => push(
-                                  context: context,
-                                  widget: CousilingFormScreen(),
-                                  transition:
-                                      OpenUpwardsPageTransitionsBuilder(),
+                                () => WidgetHelper.customSnackBar(
+                                  title: "Coming Soon !!",
                                 ),
+                            // () => push(
+                            //   context: context,
+                            //   widget: CousilingFormScreen(),
+                            //   transition:
+                            //       OpenUpwardsPageTransitionsBuilder(),
+                            // ),
                             titleText: AppStrings.myCertificates,
                           ),
 
