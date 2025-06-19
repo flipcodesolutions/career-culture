@@ -7,6 +7,7 @@ import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../app_const/app_strings.dart';
+import '../../utils/method_helpers/method_helper.dart';
 
 class CounselingProvider extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
@@ -104,15 +105,19 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
     List<String> dates = [];
     _counselingDatesAndSlots?.data?.forEach((e) {
       if (!dates.contains(e.date)) {
-        dates.add(e.date ?? "");
+        if (MethodHelper.isTodayOrFutureDate(dateString: e.date ?? "")) {
+          dates.add(e.date ?? "");
+        }
       }
     });
     dates.sort();
     return dates.isNotEmpty
         ? List.generate(
           dates.length,
-          (index) =>
-              DropdownMenuEntry(value: dates[index], label: dates[index]),
+          (index) => DropdownMenuEntry(
+            value: dates[index],
+            label: MethodHelper.convertToDisplayFormat(inputDate: dates[index]),
+          ),
         )
         : [DropdownMenuEntry(value: "", label: AppStrings.noDateFound)];
   }

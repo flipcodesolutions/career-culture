@@ -583,4 +583,30 @@ class MethodHelper with NavigateHelper {
     final formatter = DateFormat('dd MMM yyyy hh:mm');
     return formatter.format(dateTime);
   }
+
+  /// Custom method to check if a date string is today or in the future
+  static bool isTodayOrFutureDate({required String dateString}) {
+    // 1. Handle null or empty date string immediately
+    if (dateString.isEmpty) {
+      return false; // Cannot validate if there's no date string
+    }
+
+    try {
+      // 2. Parse the date string into a DateTime object
+      //    Using the confirmed "YYYY-MM-DD" format.
+      DateTime dateFromApi = DateFormat('yyyy-MM-dd').parse(dateString);
+
+      // 3. Get today's date, normalized to midnight for accurate comparison
+      DateTime today = DateTime.now();
+      DateTime todayMidnight = DateTime(today.year, today.month, today.day);
+
+      // 4. Check if the parsed date is today or in the future
+      return dateFromApi.isAtSameMomentAs(todayMidnight) ||
+          dateFromApi.isAfter(todayMidnight);
+    } catch (e) {
+      // 5. If parsing fails, log the warning and return false
+      print("Warning: Could not parse date '$dateString'. Error: $e");
+      return false; // Return false if the date cannot be parsed
+    }
+  }
 }
