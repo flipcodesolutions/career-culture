@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/models/all_events_model.dart/user_participated_events.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import '../../app_const/app_strings.dart';
@@ -26,9 +29,7 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
     /// set _isLoading true
     _isLoading = true;
     notifyListeners();
-    _eventModel = await eventService.getAllEvents(
-      context: context, 
-      id: id);
+    _eventModel = await eventService.getAllEvents(context: context, id: id);
 
     /// set _isLoading false
     _isLoading = false;
@@ -44,13 +45,9 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
     EventParticipantConfirmation? confirmation = await eventService
-        .eventParticipation(
-          context: context,
-           id: id);
+        .eventParticipation(context: context, id: id);
     if (confirmation?.success == true) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.participateDone,
-      );
+      WidgetHelper.customSnackBar(title: AppStrings.participateDone);
     }
     pop(context);
 
@@ -87,5 +84,56 @@ class AllEventProvider extends ChangeNotifier with NavigateHelper {
                 .toList() ??
             <EventModel>[]
         : _eventModel?.data ?? <EventModel>[];
+  }
+
+  ///
+  /// get events by condition
+  List<EventModel?> getUpcomingEvents() {
+    print("🔍 Fetching upcoming events...");
+
+    final filteredEvents =
+        _eventModel?.data
+            ?.where((e) {
+              final isValid = e.startDate != null && e.startDate!.isNotEmpty;
+              print(
+                "📅 Checking startDate for '${e.title}': ${e.startDate} -> Valid: $isValid",
+              );
+              return isValid;
+            })
+            .map((e) => e)
+            .where((event) {
+              final isFuture = MethodHelper.isTodayOrFutureDate(
+                dateString: event.startDate ?? "",
+              );
+              print(
+                "📆 Filtering '${event.title}' | startDate: ${event.startDate} -> Is future/today: $isFuture",
+              );
+              return isFuture;
+            })
+            .toList();
+
+    if (filteredEvents == null || filteredEvents.isEmpty) {
+      print("⚠️ No upcoming events found.");
+      return <EventModel>[];
+    }
+
+    print("✅ ${filteredEvents.length} upcoming event(s) found. Sorting...");
+    filteredEvents.sort((a, b) {
+      final result = (a.startDate ?? "").compareTo(b.startDate ?? "");
+      print(
+        "🔃 Comparing '${a.title}' (${a.startDate}) ↔ '${b.title}' (${b.startDate}) => $result",
+      );
+      return result;
+    });
+
+    final result =
+        filteredEvents.length > 3
+            ? filteredEvents.take(3).toList()
+            : filteredEvents;
+    print(
+      "🎯 Returning top ${result.length} event(s): ${result.map((e) => e?.title).toList()}",
+    );
+
+    return result;
   }
 }

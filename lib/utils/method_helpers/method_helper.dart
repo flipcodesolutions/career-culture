@@ -609,4 +609,13 @@ class MethodHelper with NavigateHelper {
       return false; // Return false if the date cannot be parsed
     }
   }
+
+  /// calculates how many days this date ahead
+  static int daysFromToday({required String date}) {
+    final DateTime dateTime = DateTime.tryParse(date) ?? DateTime.now();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final target = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    return target.difference(today).inDays;
+  }
 }

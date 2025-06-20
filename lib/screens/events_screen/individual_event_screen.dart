@@ -33,8 +33,12 @@ class IndividualEventScreen extends StatefulWidget {
   State<IndividualEventScreen> createState() => _IndividualEventScreenState();
 }
 
-class _IndividualEventScreenState extends State<IndividualEventScreen>  with  WidgetsBindingObserver, ScreenTracker<IndividualEventScreen> ,NavigateHelper {
-    @override
+class _IndividualEventScreenState extends State<IndividualEventScreen>
+    with
+        WidgetsBindingObserver,
+        ScreenTracker<IndividualEventScreen>,
+        NavigateHelper {
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
@@ -251,7 +255,7 @@ class _ContestAgreementWidgetState extends State<ContestAgreementWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Terms and Conditions Text
-          CustomText(text: widget.termsText),
+          CustomText(text: widget.termsText, useOverflow: false),
           SizeHelper.height(),
 
           // Checkbox to agree

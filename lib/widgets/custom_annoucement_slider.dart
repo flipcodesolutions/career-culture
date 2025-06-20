@@ -46,7 +46,7 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
                           borderColor: AppColors.grey,
                           borderWidth: 0.2,
                           borderRadius: BorderRadius.circular(AppSize.size10),
-                          margin: EdgeInsets.only(right: 5.w),
+                          margin: EdgeInsets.only(right: 5.w, bottom: 0.5.h),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(AppSize.size10),
                             child: Column(

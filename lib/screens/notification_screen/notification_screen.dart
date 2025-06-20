@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -9,6 +8,7 @@ import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart
 import 'package:mindful_youth/models/user_notification/user_notification_model.dart';
 import 'package:mindful_youth/provider/user_notification/user_notification_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -196,6 +196,15 @@ class _NotificationScreenState extends State<NotificationScreen>
           widget: IndividualEventScreen(
             eventInfo: EventModel.fromJson(payLoad),
             isMyEvents: false,
+          ),
+        );
+        break;
+      case "wall":
+        result = await push(
+          context: context,
+          widget: IndividualWallPostScreen(
+            slug: payLoad['slug'],
+            isFromWallScreen: false,
           ),
         );
         break;
