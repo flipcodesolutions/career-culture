@@ -9,6 +9,7 @@ import 'package:mindful_youth/screens/programs_screen/individual_program_screen.
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/gallery_page.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/media_assessment_screen.dart';
+import 'package:mindful_youth/screens/selfie_zone_screens/info_selfie_web_view.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -357,8 +358,13 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                 itemBuilder:
                     (item, index) => GestureDetector(
                       onTap:
-                          () async =>
-                              launchUrl(url: item.url ?? "", context: context),
+                          () => push(
+                            context: context,
+                            widget: InfoSelfieWebView(webLink: item.url),
+                            transition: OpenUpwardsPageTransitionsBuilder(),
+                          ),
+                      // () async =>
+                      //     launchUrl(url: item.url ?? "", context: context),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
                         margin: EdgeInsets.only(right: 5.w),

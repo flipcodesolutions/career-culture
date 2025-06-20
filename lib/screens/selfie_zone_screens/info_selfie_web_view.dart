@@ -3,8 +3,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../app_const/app_strings.dart';
 
 class InfoSelfieWebView extends StatefulWidget {
-  const InfoSelfieWebView({super.key});
-
+  const InfoSelfieWebView({super.key,this.webLink});
+  final String? webLink;
   @override
   State<InfoSelfieWebView> createState() => _InfoSelfieWebViewState();
 }
@@ -18,7 +18,7 @@ class _InfoSelfieWebViewState extends State<InfoSelfieWebView> {
     webController
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(NavigationDelegate(onProgress: (progress) {}))
-      ..loadRequest(Uri.parse(AppStrings.selfieWebViewURL));
+      ..loadRequest(Uri.parse(widget.webLink ?? AppStrings.selfieWebViewURL));
   }
 
   @override
