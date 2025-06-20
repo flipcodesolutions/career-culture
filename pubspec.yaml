@@ -78,6 +78,7 @@ dependencies:
   timeline_tile: ^2.0.0
   ffmpeg_kit_flutter_new: ^2.0.0
   webview_flutter: ^4.13.0
+  upgrader: ^11.4.0
 
 dev_dependencies:
   flutter_test:

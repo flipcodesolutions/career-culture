@@ -8,6 +8,8 @@ import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_fab_on_screen_btn.dart';
 import 'package:provider/provider.dart';
+import 'package:upgrader/upgrader.dart';
+import '../../app_const/app_colors.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../widgets/navigation_bar.dart';
 
@@ -41,18 +43,26 @@ class _MainScreenState extends State<MainScreen> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     HomeScreenProvider homeScreenProvider = context.watch<HomeScreenProvider>();
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
-        body: screenList[homeScreenProvider.navigationIndex],
-        floatingActionButton: CustomSpeedDial(),
-        bottomNavigationBar: Selector<HomeScreenProvider, int>(
-          builder:
-              (context, navIndex, child) =>
-                  NavigationBarWidget(navIndex: navIndex),
-          selector:
-              (context, homeScreenProvider) =>
-                  homeScreenProvider.navigationIndex,
+    return UpgradeAlert(
+      showIgnore: false,
+      showLater: false,
+      barrierDismissible: false,
+      showReleaseNotes: true,
+      upgrader: Upgrader(debugDisplayAlways: true, debugDisplayOnce: true),
+      cupertinoButtonTextStyle: TextStyle(color: AppColors.primary),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: screenList[homeScreenProvider.navigationIndex],
+          floatingActionButton: CustomSpeedDial(),
+          bottomNavigationBar: Selector<HomeScreenProvider, int>(
+            builder:
+                (context, navIndex, child) =>
+                    NavigationBarWidget(navIndex: navIndex),
+            selector:
+                (context, homeScreenProvider) =>
+                    homeScreenProvider.navigationIndex,
+          ),
         ),
       ),
     );
