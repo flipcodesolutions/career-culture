@@ -65,9 +65,8 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     UserProvider userProvider = context.read<UserProvider>();
     Future.microtask(() async {
       programsProvider.getAllPrograms(context: context);
-      userProvider.isUserLoggedIn
-          ? await programsProvider.getUserProgress(context: context)
-          : null;
+      await programsProvider.getUserOverAllProgress(context: context);
+      await programsProvider.getUserProgress(context: context);
     });
   }
 
@@ -79,7 +78,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     SignUpProvider signUpProvider = context.watch<SignUpProvider>();
     HomeScreenProvider homeProvider = context.read<HomeScreenProvider>();
     final int counselingCount =
-        homeProvider.overAllScoreModel?.data?.counselingCount ?? 0;
+        programsProvider.userOverAllScoreModel?.data?.counselingCount ?? 0;
     final bool isFirstOpen = programsProvider.getPercentage() > 25;
     final bool isSecondOpen = programsProvider.getPercentage() > 75;
     return PopScope(
@@ -333,6 +332,9 @@ class CounselingContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("is fist ==> $isFirstOpen");
+    print("is second ==> $isSecondOpen");
+    print("is cousneling  ==> $counselingCount");
     return IntrinsicHeight(
       child: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
