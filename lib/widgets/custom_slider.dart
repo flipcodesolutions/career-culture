@@ -114,47 +114,7 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
               ),
             ],
           ),
-          // CarouselSlider(
-          //   items:
-          //       homeScreenProvider.sliderModel?.data?.map((image) {
-          //         return GestureDetector(
-          //           onTap: () {
-          //             if (userProvider.isUserLoggedIn) {
-          //               context.read<ProgramsProvider>().setCurrentProgramInfo =
-          //                   image;
-          //               push(
-          //                 context: context,
-          //                 widget: IndividualProgramScreen(
-          //                   programName: image.title ?? "programScreen",
-          //                 ),
-          //                 transition: OpenUpwardsPageTransitionsBuilder(),
-          //               );
-          //             }
-          //           },
-          //           child: CustomContainer(
-          //             borderRadius: BorderRadius.circular(AppSize.size10),
-          //             margin: EdgeInsets.symmetric(horizontal: 5.w),
-          //             child: ClipRRect(
-          //               borderRadius: BorderRadius.circular(AppSize.size10),
-          //               child: CustomImageWithLoader(
-          //                 showImageInPanel: false,
-          //                 fit: BoxFit.cover,
-          //                 imageUrl: "${AppStrings.assetsUrl}${image.image}",
-          //               ),
-          //             ),
-          //           ),
-          //         );
-          //       }).toList(),
-          //   options: CarouselOptions(
-          //     enableInfiniteScroll: false,
-          //     viewportFraction: 1,
-          //     height: 25.h,
-          //     disableCenter: true,
-          //     autoPlay: true,
-          //     padEnds: true,
-          //   ),
-          // ),
         )
-        : Center(child: NoDataFoundWidget(text: AppStrings.noProgramsFound));
+        : Center(child: NoDataFoundIcon());
   }
 }

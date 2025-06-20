@@ -1,5 +1,6 @@
 // Page
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -66,8 +67,10 @@ class _OrderListPageState extends State<OrderListPage> {
                     CustomContainer(
                       height: 90.h,
                       child: Center(
-                        child: NoDataFoundWidget(
-                          text: AppStrings.noOrdersFound,
+                        child: CustomContainer(
+                          child: NoDataFoundIcon(
+                            icon: AppImageStrings.noDataFoundIcon2,
+                          ),
                         ),
                       ),
                     ),

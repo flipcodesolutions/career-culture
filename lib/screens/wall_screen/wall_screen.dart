@@ -121,7 +121,10 @@ class _WallScreenState extends State<WallScreen>
                   child: ListView(
                     children: [
                       Center(
-                        child: NoDataFoundWidget(text: AppStrings.noPostsFound),
+                        child: CustomContainer(
+                          height: 70.h,
+                          child: NoDataFoundIcon(),
+                        ),
                       ),
                     ],
                   ),

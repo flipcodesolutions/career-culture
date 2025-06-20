@@ -1,15 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
 import 'package:mindful_youth/screens/shop_market_screen/products_screen.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
-import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import '../app_const/app_strings.dart';
 import '../models/product_model/product_model.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
+import 'no_data_found.dart';
 
 class ProductShowCase extends StatelessWidget with NavigateHelper {
   const ProductShowCase({super.key});
@@ -33,6 +31,6 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
             },
           ),
         )
-        : Center(child: NoDataFoundWidget(text: AppStrings.noProductsToShow));
+        : Center(child: NoDataFoundIcon(h: 10.h));
   }
 }

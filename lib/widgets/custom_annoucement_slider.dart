@@ -9,6 +9,7 @@ import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:sizer/sizer.dart';
+import '../app_const/app_image_strings.dart';
 import '../provider/all_event_provider/all_event_provider.dart';
 import '../screens/events_screen/individual_event_screen.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
@@ -93,7 +94,7 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
           ),
         )
         : Center(
-          child: NoDataFoundWidget(text: AppStrings.noAnnouncementFound),
+          child: NoDataFoundIcon(icon: AppImageStrings.noDataFoundIcon2),
         );
   }
 }

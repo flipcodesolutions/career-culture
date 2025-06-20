@@ -67,7 +67,7 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                         context: context,
                       ),
                   child:
-                      productProvider.productModel?.data?.product?.isNotEmpty ==
+                      productProvider.productModel?.data?.product?.isNotEmpty !=
                               true
                           ? GridView.builder(
                             gridDelegate:
@@ -96,9 +96,9 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                           : ListView(
                             children: [
                               Center(
-                                child: NoDataFoundWidget(
-                                  height: 90.h,
-                                  text: AppStrings.noProductsToShow,
+                                child: CustomContainer(
+                                  margin: EdgeInsets.only(top: 30.h),
+                                  child: NoDataFoundIcon(),
                                 ),
                               ),
                             ],

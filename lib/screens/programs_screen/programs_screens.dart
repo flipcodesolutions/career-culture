@@ -280,9 +280,11 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                       ),
                   child: ListView(
                     children: [
-                      NoDataFoundWidget(
-                        height: 80.h,
-                        text: AppStrings.noProgramsFound,
+                      CustomContainer(
+                        margin: EdgeInsets.only(top: 30.h),
+                        child: NoDataFoundIcon(
+                          icon: AppImageStrings.noDataFoundIcon2,
+                        ),
                       ),
                     ],
                   ),

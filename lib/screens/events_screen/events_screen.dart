@@ -447,9 +447,7 @@ class _EventsScreenState extends State<EventsScreen>
                       CustomContainer(
                         alignment: Alignment.center,
                         height: 90.h,
-                        child: NoDataFoundWidget(
-                          text: AppStrings.noEventsFound,
-                        ),
+                        child: NoDataFoundIcon(),
                       ),
                     ],
                   ),
