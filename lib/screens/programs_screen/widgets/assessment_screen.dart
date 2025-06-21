@@ -236,7 +236,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
       setState(() {
         isTestDone = true;
       });
-      push(
+      final bool success = await push(
         context: ctx,
         widget: AssessmentResultScreen(
           postName: widget.postName,
@@ -244,6 +244,9 @@ class _AssessmentScreenState extends State<AssessmentScreen>
         ),
         transition: FadeForwardsPageTransitionsBuilder(),
       );
+      if (success) {
+        pop(context, result: success);
+      }
     }
   }
 }

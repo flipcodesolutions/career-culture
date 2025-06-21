@@ -90,7 +90,6 @@ class _EventsScreenState extends State<EventsScreen>
                           horizontal: 5.w,
                           vertical: 1.h,
                         ),
-                        height: 6.h,
                         child: Row(
                           children: [
                             CustomText(
@@ -109,7 +108,7 @@ class _EventsScreenState extends State<EventsScreen>
                           shrinkWrap: true,
                           padding: EdgeInsets.symmetric(
                             horizontal: 5.w,
-                            vertical: 2.h,
+                            vertical: 0.5.h,
                           ),
                           itemBuilder:
                               (context, index) => GestureDetector(
@@ -203,8 +202,8 @@ class _EventsScreenState extends State<EventsScreen>
 
                     if (!widget.isMyEvents)
                       CustomContainer(
+                        margin: EdgeInsets.only(top: 0.5.h),
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        height: 5.h,
                         child: Row(
                           children: [
                             CustomText(
@@ -230,7 +229,7 @@ class _EventsScreenState extends State<EventsScreen>
                         isNotScroll: true,
                         padding: EdgeInsets.symmetric(
                           horizontal: 5.w,
-                          vertical: 2.h,
+                          vertical: 0.5.h,
                         ),
                         data: eventProvider.getEventsByModel(
                           isMyEvents: widget.isMyEvents,
@@ -447,7 +446,13 @@ class _EventsScreenState extends State<EventsScreen>
                       CustomContainer(
                         alignment: Alignment.center,
                         height: 90.h,
-                        child: NoDataFoundIcon(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            NoDataFoundIcon(),
+                            CustomText(text: "No Events Found"),
+                          ],
+                        ),
                       ),
                     ],
                   ),

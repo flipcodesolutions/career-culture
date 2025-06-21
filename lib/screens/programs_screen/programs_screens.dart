@@ -332,6 +332,7 @@ class CounselingContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
     print("is fist ==> $isFirstOpen");
     print("is second ==> $isSecondOpen");
     print("is cousneling  ==> $counselingCount");
@@ -350,54 +351,59 @@ class CounselingContainer extends StatelessWidget {
           ),
         ],
         width: 90.w,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText(
-              text: AppStrings.bookAnAppointment,
-              style: TextStyleHelper.mediumHeading.copyWith(
-                color: AppColors.primary,
-              ),
-            ),
-            SizeHelper.height(height: 1.h),
-            CustomText(
-              text: AppStrings.takeAMomentToTalkWithUs,
-              useOverflow: false,
-            ),
-            SizeHelper.height(),
-            if (counselingCount == 0) ...[
-              CounselingOptions(
-                description: AppStrings.bookAfter25,
-                heading: AppStrings.counseling1,
-                isOpen: isFirstOpen,
-                isDone: counselingCount == 1,
-              ),
-              SizeHelper.height(),
-            ],
-            if (counselingCount == 1) ...[
-              CounselingOptions(
-                description: AppStrings.bookAfter75,
-                heading: AppStrings.counseling2,
-                isOpen: isSecondOpen,
-                isDone: counselingCount == 1,
-              ),
-            ],
-            if (counselingCount != 0 && counselingCount != 1)
-              CustomContainer(
-                backGroundColor: AppColors.white,
-                boxShadow: ShadowHelper.scoreContainer,
-                height: 4.h,
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                alignment: Alignment.center,
-                child: CustomText(
-                  text: "All Counseling is Done",
-                  style: TextStyleHelper.smallHeading,
+        child:
+            programsProvider.isLoading
+                ? Center(child: CustomLoader())
+                : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (counselingCount <= 1) ...[
+                      CustomText(
+                        text: AppStrings.bookAnAppointment,
+                        style: TextStyleHelper.mediumHeading.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizeHelper.height(height: 1.h),
+                      CustomText(
+                        text: AppStrings.takeAMomentToTalkWithUs,
+                        useOverflow: false,
+                      ),
+                      SizeHelper.height(),
+                    ],
+                    if (counselingCount == 0) ...[
+                      CounselingOptions(
+                        description: AppStrings.bookAfter25,
+                        heading: AppStrings.counseling1,
+                        isOpen: isFirstOpen,
+                        isDone: counselingCount == 1,
+                      ),
+                      SizeHelper.height(),
+                    ],
+                    if (counselingCount == 1) ...[
+                      CounselingOptions(
+                        description: AppStrings.bookAfter75,
+                        heading: AppStrings.counseling2,
+                        isOpen: isSecondOpen,
+                        isDone: counselingCount == 2,
+                      ),
+                    ],
+                    if (counselingCount != 0 && counselingCount != 1)
+                      CustomContainer(
+                        backGroundColor: AppColors.white,
+                        boxShadow: ShadowHelper.scoreContainer,
+                        height: 4.h,
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        alignment: Alignment.center,
+                        child: CustomText(
+                          text: "All Counseling is Done",
+                          style: TextStyleHelper.smallHeading,
+                        ),
+                      ),
+                  ],
                 ),
-              ),
-          ],
-        ),
       ),
     );
   }
@@ -419,7 +425,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
   Widget build(BuildContext context) {
     return InkWell(
       onTap:
-          () =>
+          () async =>
               isOpen
                   ? isDone
                       ? WidgetHelper.customSnackBar(

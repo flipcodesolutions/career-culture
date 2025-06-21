@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:mindful_youth/provider/counseling_provider/counseling_provider.dart';
+import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 // import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/custom_text_form_field.dart';
@@ -25,7 +27,8 @@ class CousilingFormScreen extends StatefulWidget {
   State<CousilingFormScreen> createState() => _CousilingFormScreenState();
 }
 
-class _CousilingFormScreenState extends State<CousilingFormScreen> {
+class _CousilingFormScreenState extends State<CousilingFormScreen>
+    with NavigateHelper {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -45,171 +48,185 @@ class _CousilingFormScreenState extends State<CousilingFormScreen> {
   @override
   Widget build(BuildContext context) {
     CounselingProvider counselingProvider = context.watch<CounselingProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(
-          text: AppStrings.counselingAppointment,
-          style: TextStyleHelper.mediumHeading,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        final ProgramsProvider programsProvider =
+            context.read<ProgramsProvider>();
+        if (!didPop && context.mounted) {
+          Future.wait([
+            programsProvider.getUserOverAllProgress(context: context),
+            programsProvider.getUserProgress(context: context),
+          ]).then((v) => pop(context, result: v));
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: CustomText(
+            text: AppStrings.counselingAppointment,
+            style: TextStyleHelper.mediumHeading,
+          ),
         ),
-      ),
-      body: CustomRefreshIndicator(
-        onRefresh:
-            () async => await counselingProvider.getCounselignDatesAndSlots(
-              context: context,
-            ),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w),
-          child: AnimationLimiter(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: AnimationConfiguration.toStaggeredList(
-                  childAnimationBuilder:
-                      (widget) => SlideAnimation(
-                        duration: Duration(milliseconds: 500),
-                        horizontalOffset: 50.w,
-                        child: FadeInAnimation(
+        body: CustomRefreshIndicator(
+          onRefresh:
+              () async => await counselingProvider.getCounselignDatesAndSlots(
+                context: context,
+              ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 5.w),
+            child: AnimationLimiter(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    childAnimationBuilder:
+                        (widget) => SlideAnimation(
                           duration: Duration(milliseconds: 500),
-                          child: widget,
+                          horizontalOffset: 50.w,
+                          child: FadeInAnimation(
+                            duration: Duration(milliseconds: 500),
+                            child: widget,
+                          ),
                         ),
+                    children: [
+                      SizeHelper.height(height: 3.h),
+
+                      /// student id
+                      CustomTextFormField(
+                        labelText: AppStrings.studentID,
+                        // hintText: AppStrings.enterName,
+                        maxLength: 100,
+                        controller: counselingProvider.studentIdController,
+                        enabled:
+                            counselingProvider.studentIdController.text.isEmpty,
+                        validator:
+                            (value) =>
+                                ValidatorHelper.validateValue(value: value),
                       ),
-                  children: [
-                    SizeHelper.height(height: 3.h),
+                      SizeHelper.height(),
 
-                    /// student id
-                    CustomTextFormField(
-                      labelText: AppStrings.studentID,
-                      // hintText: AppStrings.enterName,
-                      maxLength: 100,
-                      controller: counselingProvider.studentIdController,
-                      enabled:
-                          counselingProvider.studentIdController.text.isEmpty,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
-                    ),
-                    SizeHelper.height(),
+                      /// name
+                      CustomTextFormField(
+                        labelText: AppStrings.name,
+                        // hintText: AppStrings.enterName,
+                        maxLength: 100,
+                        controller: counselingProvider.nameController,
+                        enabled: counselingProvider.nameController.text.isEmpty,
+                        validator:
+                            (value) =>
+                                ValidatorHelper.validateValue(value: value),
+                      ),
+                      SizeHelper.height(),
 
-                    /// name
-                    CustomTextFormField(
-                      labelText: AppStrings.name,
-                      // hintText: AppStrings.enterName,
-                      maxLength: 100,
-                      controller: counselingProvider.nameController,
-                      enabled: counselingProvider.nameController.text.isEmpty,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
-                    ),
-                    SizeHelper.height(),
+                      /// email
+                      CustomTextFormField(
+                        labelText: AppStrings.email,
+                        // hintText: AppStrings.enterEmail,
+                        maxLength: 100,
+                        controller: counselingProvider.emailController,
+                        enabled:
+                            counselingProvider.emailController.text.isEmpty,
+                        validator:
+                            (value) =>
+                                ValidatorHelper.validateEmail(value: value),
+                      ),
+                      SizeHelper.height(),
 
-                    /// email
-                    CustomTextFormField(
-                      labelText: AppStrings.email,
-                      // hintText: AppStrings.enterEmail,
-                      maxLength: 100,
-                      controller: counselingProvider.emailController,
-                      enabled: counselingProvider.emailController.text.isEmpty,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateEmail(value: value),
-                    ),
-                    SizeHelper.height(),
+                      /// email
+                      CustomTextFormField(
+                        labelText: AppStrings.contactNo,
+                        // hintText: AppStrings.enterContact,
+                        maxLength: 10,
+                        controller: counselingProvider.contactController,
+                        enabled:
+                            counselingProvider.contactController.text.isEmpty,
+                        validator:
+                            (value) =>
+                                ValidatorHelper.validateValue(value: value),
+                      ),
+                      SizeHelper.height(),
+                      CustomDropDownWidget<String>(
+                        label: AppStrings.preferredModeOfCounseling,
+                        hintText: AppStrings.selectMode,
+                        dropdownMenuEntries: <DropdownMenuEntry<String>>[
+                          DropdownMenuEntry<String>(
+                            value: AppStrings.onlineMode,
+                            label: AppStrings.onlineMode,
+                          ),
+                          DropdownMenuEntry<String>(
+                            value: AppStrings.offlineMode,
+                            label: AppStrings.offlineMode,
+                          ),
+                        ],
+                        onSelected:
+                            (dynamic pickedMode) =>
+                                counselingProvider.selectModeForCounseling(
+                                  pickedMode: pickedMode as String,
+                                ),
+                      ),
+                      SizeHelper.height(),
+                      counselingProvider.isLoading
+                          ? Center(child: CustomLoader())
+                          : CustomDropDownWidget<String>(
+                            label: AppStrings.dateAndTime,
+                            hintText: AppStrings.selectDateForCounseling,
+                            dropdownMenuEntries:
+                                counselingProvider.getDatesForCounseling(),
+                            onSelected:
+                                (dynamic pickedDate) =>
+                                    counselingProvider.selectDateForCounseling(
+                                      pickedDate: pickedDate as String,
+                                    ),
+                          ),
+                      SizeHelper.height(),
+                      counselingProvider.isLoading
+                          ? Center(child: CustomLoader())
+                          : CustomDropDownWidget<String>(
+                            label: AppStrings.availableSlots,
+                            hintText: AppStrings.selectSlot,
+                            onSelected:
+                                (dynamic pickedSlot) =>
+                                    counselingProvider.selectSlotForCounseling(
+                                      pickedSlot: pickedSlot as String,
+                                    ),
+                            dropdownMenuEntries:
+                                counselingProvider.getSlotsForCounseling(),
+                            enabled: counselingProvider.isDatePicked,
+                          ),
+                      SizeHelper.height(),
 
-                    /// email
-                    CustomTextFormField(
-                      labelText: AppStrings.contactNo,
-                      // hintText: AppStrings.enterContact,
-                      maxLength: 10,
-                      controller: counselingProvider.contactController,
-                      enabled:
-                          counselingProvider.contactController.text.isEmpty,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
-                    ),
-                    SizeHelper.height(),
-                    CustomDropDownWidget<String>(
-                      label: AppStrings.preferredModeOfCounseling,
-                      hintText: AppStrings.selectMode,
-                      dropdownMenuEntries: <DropdownMenuEntry<String>>[
-                        DropdownMenuEntry<String>(
-                          value: AppStrings.onlineMode,
-                          label: AppStrings.onlineMode,
-                        ),
-                        DropdownMenuEntry<String>(
-                          value: AppStrings.offlineMode,
-                          label: AppStrings.offlineMode,
-                        ),
-                      ],
-                      onSelected:
-                          (dynamic pickedMode) =>
-                              counselingProvider.selectModeForCounseling(
-                                pickedMode: pickedMode as String,
-                              ),
-                    ),
-                    SizeHelper.height(),
-                    counselingProvider.isLoading
-                        ? Center(child: CustomLoader())
-                        : CustomDropDownWidget<String>(
-                          label: AppStrings.dateAndTime,
-                          hintText: AppStrings.selectDateForCounseling,
-                          dropdownMenuEntries:
-                              counselingProvider.getDatesForCounseling(),
-                          onSelected:
-                              (dynamic pickedDate) =>
-                                  counselingProvider.selectDateForCounseling(
-                                    pickedDate: pickedDate as String,
-                                  ),
-                        ),
-                    SizeHelper.height(),
-                    counselingProvider.isLoading
-                        ? Center(child: CustomLoader())
-                        : CustomDropDownWidget<String>(
-                          label: AppStrings.availableSlots,
-                          hintText: AppStrings.selectSlot,
-                          onSelected:
-                              (dynamic pickedSlot) =>
-                                  counselingProvider.selectSlotForCounseling(
-                                    pickedSlot: pickedSlot as String,
-                                  ),
-                          dropdownMenuEntries:
-                              counselingProvider.getSlotsForCounseling(),
-                          enabled: counselingProvider.isDatePicked,
-                        ),
-                    SizeHelper.height(),
-
-                    // /// reason
-                    // CustomTextFormField(
-                    //   labelText: AppStrings.reasonForCounseling,
-                    //   hintText: AppStrings.enterReason,
-                    //   minLines: 5,
-                    //   maxLines: 6,
-                    //   maxLength: 500,
-                    //   controller: TextEditingController(),
-                    //   validator:
-                    //       (value) => ValidatorHelper.validateValue(
-                    //         value: value,
-                    //         context: context,
-                    //       ),
-                    // ),
-                  ],
+                      // /// reason
+                      // CustomTextFormField(
+                      //   labelText: AppStrings.reasonForCounseling,
+                      //   hintText: AppStrings.enterReason,
+                      //   minLines: 5,
+                      //   maxLines: 6,
+                      //   maxLength: 500,
+                      //   controller: TextEditingController(),
+                      //   validator:
+                      //       (value) => ValidatorHelper.validateValue(
+                      //         value: value,
+                      //         context: context,
+                      //       ),
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: PrimaryBtn(
-          btnText: AppStrings.submit,
-          onTap:
-              () => counselingProvider.createCounselingAppointment(
-                context: context,
-              ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          child: PrimaryBtn(
+            btnText: AppStrings.submit,
+            onTap:
+                () => counselingProvider.createCounselingAppointment(
+                  context: context,
+                ),
+          ),
         ),
       ),
     );

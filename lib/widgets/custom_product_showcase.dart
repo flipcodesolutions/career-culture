@@ -31,6 +31,9 @@ class ProductShowCase extends StatelessWidget with NavigateHelper {
             },
           ),
         )
-        : Center(child: NoDataFoundIcon(h: 10.h));
+        : Center(
+          // child: NoDataFoundIcon(h: 10.h)
+          child: SizedBox.shrink(),
+        );
   }
 }

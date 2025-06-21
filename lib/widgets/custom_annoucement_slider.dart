@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
@@ -94,7 +95,8 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
           ),
         )
         : Center(
-          child: NoDataFoundIcon(icon: AppImageStrings.noDataFoundIcon2),
+          // child: NoDataFoundIcon(icon: AppImageStrings.noDataFoundIcon2),
+          child: SizedBox.shrink(),
         );
   }
 }
