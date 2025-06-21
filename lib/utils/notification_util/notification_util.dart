@@ -139,8 +139,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
+import 'package:mindful_youth/models/feedback_model/feedback_model.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
+import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/login/login_screen.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
@@ -346,6 +348,14 @@ class NotificationService with NavigateHelper {
           widget: IndividualWallPostScreen(
             slug: response['slug'],
             isFromWallScreen: false,
+          ),
+        );
+      }
+      if (type == 'feedback_screen') {
+        push(
+          context: context,
+          widget: FeedbackPage(
+            model: FeedbackModelPayload.fromJson(jsonDecode(message['data'])),
           ),
         );
       }

@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -19,6 +20,7 @@ import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../models/feedback_model/feedback_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../provider/product_provider/product_provider.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
@@ -105,6 +107,14 @@ class _HomeScreenState extends State<HomeScreen>
             child: Image.asset(AppImageStrings.imageOnlyLogo),
           ),
           actions: [
+            IconButton(
+              onPressed:
+                  () => push(
+                    context: context,
+                    widget: FeedbackPage(model: FeedbackModelPayload()),
+                  ),
+              icon: Icon(Icons.abc),
+            ),
             AppBarIcon(
               onTap:
                   () => push(

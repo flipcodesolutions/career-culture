@@ -136,4 +136,7 @@ class ApiHelper {
 
   /// get user notifications
   static String sentUserOpenNotification = "$baseUrl/user-read-notification";
+
+  /// get user notifications
+  static String feedback = "$baseUrl/feed-back";
 }

@@ -8,7 +8,6 @@ import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_profile_pic_circle.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
-import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../models/programs/programs_model.dart';
@@ -115,6 +114,6 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
             ],
           ),
         )
-        : Center(child: NoDataFoundIcon());
+        : Center(child: SizedBox.shrink());
   }
 }

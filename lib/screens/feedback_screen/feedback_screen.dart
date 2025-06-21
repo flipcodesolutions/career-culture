@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
+import 'package:mindful_youth/utils/border_helper/border_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
+import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_text_form_field.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+import '../../app_const/app_colors.dart';
+import '../../app_const/app_strings.dart';
+import '../../models/feedback_model/feedback_model.dart';
+import '../../provider/feedback_provider/feedback_provider.dart';
+import '../../widgets/custom_text.dart';
 
 class FeedbackPage extends StatefulWidget {
-  const FeedbackPage({super.key});
-
+  const FeedbackPage({super.key, required this.model});
+  final FeedbackModelPayload model;
   @override
   State<FeedbackPage> createState() => _FeedbackPageState();
 }
 
-class _FeedbackPageState extends State<FeedbackPage> {
+class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
   // State variables for the rating and checkboxes
   int? _selectedRating; // Stores the index of the selected emoji rating
-  bool _helpsGoalYes = false;
-  bool _helpsGoalNo = false;
-  bool _helpsGoalNotSure = false;
+  String? goal;
   final TextEditingController _commentController = TextEditingController();
 
   // Map to hold emoji icons and their descriptions
@@ -32,56 +50,46 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    FeedbackProvider feedbackProvider = context.watch<FeedbackProvider>();
+    final FeedbackModelPayload model = widget.model;
     return Scaffold(
-      // Custom AppBar with back button
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0, // No shadow for the app bar
-        leading: IconButton(
-          icon: const Icon(
-            Icons
-                .arrow_back_ios_new, // Use iOS style back arrow for closer match
-            color: Colors.black,
-          ),
-          onPressed: () {
-            // Handle back button press
-            Navigator.of(context).pop();
-          },
+        shape: Border(
+          bottom: BorderSide(color: AppColors.lightWhite, width: 0.01),
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // "We Care About Your Experience" Header Section
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomContainer(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    '💬', // Emoji icon
-                    style: TextStyle(fontSize: 28),
+                  CustomText(
+                    text: '💬', // Emoji icon
+                    style: TextStyleHelper.mediumHeading,
                   ),
-                  const SizedBox(width: 8),
+                  SizeHelper.width(),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'We Care About Your Experience',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[700], // Darker green for title
+                        CustomText(
+                          useOverflow: false,
+                          text: 'We Care About Your Experience',
+                          style: TextStyleHelper.mediumHeading.copyWith(
+                            color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Please take a moment to share your thoughts about today\'s session.',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
+                        SizeHelper.height(height: 1.h),
+                        CustomText(
+                          useOverflow: false,
+                          text:
+                              'Please take a moment to share your thoughts about today\'s session.',
+                          style: TextStyleHelper.smallText.copyWith(
+                            color: AppColors.grey,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -90,74 +98,61 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+            ),
+            SizeHelper.height(),
 
-              // Counselor Information Card
-              Card(
-                elevation: 2, // Slight shadow
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Rounded corners
-                ),
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
+            // Counselor Information Card
+            CustomContainer(
+              borderRadius: BorderRadius.circular(AppSize.size10),
+              margin: EdgeInsets.symmetric(horizontal: 5.w),
+              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+              boxShadow: ShadowHelper.scoreContainer,
+              backGroundColor: AppColors.body2,
+              child: Row(
+                children: [
+                  // Counselor Avatar/Icon
+                  CircleAvatar(
+                    radius: AppSize.size30,
+                    backgroundColor: AppColors.lightWhite,
+                    child: const Icon(
+                      Icons.person_outline, // Placeholder for counselor avatar
+                      size: AppSize.size30,
+                      color: AppColors.darkBlue,
+                    ),
+                  ),
+                  SizeHelper.width(width: 4.w),
+                  // Counselor Details
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Counselor Avatar/Icon
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor: Colors.blue.withOpacity(0.1),
-                        child: const Icon(
-                          Icons
-                              .person_outline, // Placeholder for counselor avatar
-                          size: 30,
-                          color: Colors.blue,
+                      titleWithInfo("Counselor:", model.counselingBy?.name),
+                      titleWithInfo(
+                        "Date:",
+                        MethodHelper.convertToDisplayFormat(
+                          inputDate: "${model.appointment?.appointmentDate}",
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      // Counselor Details
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Counselor: Meena Vyas',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Date: June 6, 2025',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Time Slot: 7:00 PM - 8:00 PM',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
+                      titleWithInfo("Time Slot:", model.appointment?.slot),
                     ],
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 24),
+            ),
+            SizeHelper.height(),
 
-              // "How would you rate this session?" Section
-              const Text(
-                'How would you rate this session?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            // "How would you rate this session?" Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomText(
+                useOverflow: false,
+                text: 'How would you rate this session?',
+                style: TextStyleHelper.mediumHeading,
               ),
-              const SizedBox(height: 16),
-              // Emoji Rating Row
-              Row(
+            ),
+            SizeHelper.height(),
+            // Emoji Rating Row
+            CustomContainer(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: List.generate(_ratings.length, (index) {
                   bool isSelected = _selectedRating == index;
@@ -170,36 +165,26 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     borderRadius: BorderRadius.circular(50),
                     child: Column(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                isSelected
-                                    ? Colors.orange.withOpacity(0.2)
-                                    : Colors.transparent,
-                            border: Border.all(
-                              color:
-                                  isSelected
-                                      ? Colors.orange
-                                      : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
+                        CustomContainer(
+                          padding: const EdgeInsets.all(AppSize.size10),
+                          shape: BoxShape.circle,
+                          backGroundColor:
+                              isSelected
+                                  ? AppColors.lightWhite
+                                  : Colors.transparent,
+                          borderColor:
+                              isSelected ? AppColors.black : Colors.transparent,
+                          borderWidth: 0.3,
                           child: Text(
                             _ratings[index]['icon'],
-                            style: const TextStyle(fontSize: 32),
+                            style: TextStyleHelper.largeHeading,
                           ),
                         ),
                         if (isSelected) // Show description only for the selected emoji
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              _ratings[index]['description'],
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.orange,
-                              ),
+                            child: CustomText(
+                              text: _ratings[index]['description'],
                             ),
                           ),
                       ],
@@ -207,26 +192,33 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   );
                 }),
               ),
-              const SizedBox(height: 24),
+            ),
+            SizeHelper.height(),
 
-              // "Do this session helps you to move closer to your goal?" Section
-              const Text(
-                'Do this session helps you to move closer to your goal?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            // "Do this session helps you to move closer to your goal?" Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomText(
+                useOverflow: false,
+                text: 'Do this session helps you to move closer to your goal?',
+                style: TextStyleHelper.mediumHeading,
               ),
-              // Checkbox options
-              Column(
+            ),
+            // Checkbox options
+            CustomContainer(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Column(
                 children: [
                   CheckboxListTile(
-                    title: const Text('Yes'),
-                    value: _helpsGoalYes,
+                    title: CustomText(text: 'Yes'),
+                    value: goal == "Yes",
                     onChanged: (bool? newValue) {
                       setState(() {
-                        _helpsGoalYes = newValue!;
-                        if (newValue) {
-                          _helpsGoalNo = false;
-                          _helpsGoalNotSure = false;
-                        }
+                        goal = "Yes";
+                        // if (newValue) {
+                        //   _helpsGoalNo = false;
+                        //   _helpsGoalNotSure = false;
+                        // }
                       });
                     },
                     controlAffinity:
@@ -238,15 +230,15 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     ),
                   ),
                   CheckboxListTile(
-                    title: const Text('No'),
-                    value: _helpsGoalNo,
+                    title: const CustomText(text: 'No'),
+                    value: goal == "No",
                     onChanged: (bool? newValue) {
                       setState(() {
-                        _helpsGoalNo = newValue!;
-                        if (newValue) {
-                          _helpsGoalYes = false;
-                          _helpsGoalNotSure = false;
-                        }
+                        goal = "No";
+                        // if (newValue) {
+                        //   _helpsGoalYes = false;
+                        //   _helpsGoalNotSure = false;
+                        // }
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
@@ -257,15 +249,15 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     ),
                   ),
                   CheckboxListTile(
-                    title: const Text('Not sure yet'),
-                    value: _helpsGoalNotSure,
+                    title: const CustomText(text: 'Not sure yet'),
+                    value: goal == "Not sure yet",
                     onChanged: (bool? newValue) {
                       setState(() {
-                        _helpsGoalNotSure = newValue!;
-                        if (newValue) {
-                          _helpsGoalYes = false;
-                          _helpsGoalNo = false;
-                        }
+                        goal = "Not sure yet";
+                        // if (newValue) {
+                        //   _helpsGoalYes = false;
+                        //   _helpsGoalNo = false;
+                        // }
                       });
                     },
                     controlAffinity: ListTileControlAffinity.leading,
@@ -277,90 +269,80 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+            ),
+            SizeHelper.height(),
 
-              // "Comment (Optional)" Section
-              const Text(
-                'Comment (Optional)',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            // "Comment (Optional)" Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomText(
+                text: 'Comment (Optional)',
+                style: TextStyleHelper.mediumHeading,
               ),
-              const SizedBox(height: 12),
-              TextField(
+            ),
+            SizeHelper.height(),
+            CustomContainer(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: CustomTextFormField(
                 controller: _commentController,
-                maxLines: 5, // Allow multiple lines for comments
-                decoration: InputDecoration(
-                  hintText: 'Enter your feedback here...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12), // Rounded corners
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
-                  contentPadding: const EdgeInsets.all(16.0),
+                maxLines: 5,
+                minLines: 3,
+                decoration: BorderHelper.containerLikeTextField(
+                  hintText: "Enter Your Message Here...",
                 ),
+                validator:
+                    (value) => ValidatorHelper.validateValue(value: value),
               ),
-              const SizedBox(height: 32),
-
-              // Submit Button
-              Center(
-                child: SizedBox(
-                  width: double.infinity, // Full width button
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle submit button press
-                      print(
-                        'Rating: ${_selectedRating != null ? _ratings[_selectedRating!]['description'] : 'Not rated'}',
-                      );
-                      print(
-                        'Helps Goal: Yes: $_helpsGoalYes, No: $_helpsGoalNo, Not sure: $_helpsGoalNotSure',
-                      );
-                      print('Comment: ${_commentController.text}');
-                      // You would typically send this data to a backend service here
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Feedback Submitted! (console logged)'),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary, // Orange/yellow color
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ), // Rounded corners
-                      ),
-                      elevation: 3, // Slight shadow for the button
-                    ),
-                    child: const Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+            SizeHelper.height(),
+          ],
         ),
       ),
+      bottomNavigationBar: CustomContainer(
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+        child:
+            feedbackProvider.isLoading
+                ? Center(child: CustomLoader())
+                : PrimaryBtn(
+                  btnText: AppStrings.submit,
+                  onTap: () async {
+                    if (_selectedRating == null || goal == null) {
+                      WidgetHelper.customSnackBar(
+                        title:
+                            "Must Provide Expression and Check one of the box",
+                        isError: true,
+                      );
+                    } else {
+                      final bool success = await feedbackProvider.feedback(
+                        context: context,
+                        mentorId: model.counselingBy?.id.toString() ?? "",
+                        counselingDate:
+                            model.appointment?.appointmentDate ?? "",
+                        slotTime: model.appointment?.slot ?? "",
+                        rating: _selectedRating.toString(),
+                        goal: goal ?? "",
+                        message: _commentController.text,
+                      );
+
+                      if (success) {
+                        _selectedRating = null;
+                        goal = null;
+                        _commentController.text = "";
+                        pop(context);
+                      }
+                    }
+                  },
+                ),
+      ),
+    );
+  }
+
+  Row titleWithInfo(String title, String? info) {
+    return Row(
+      children: [
+        CustomText(text: '$title ', style: TextStyleHelper.smallHeading),
+        CustomText(text: info ?? "Not Found"),
+      ],
     );
   }
 }

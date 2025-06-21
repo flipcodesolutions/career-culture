@@ -318,7 +318,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
   }
 }
 
-class CounselingContainer extends StatelessWidget {
+class CounselingContainer extends StatefulWidget {
   const CounselingContainer({
     super.key,
     required this.counselingCount,
@@ -331,11 +331,16 @@ class CounselingContainer extends StatelessWidget {
   final bool isSecondOpen;
 
   @override
+  State<CounselingContainer> createState() => _CounselingContainerState();
+}
+
+class _CounselingContainerState extends State<CounselingContainer> {
+  @override
   Widget build(BuildContext context) {
     ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
-    print("is fist ==> $isFirstOpen");
-    print("is second ==> $isSecondOpen");
-    print("is cousneling  ==> $counselingCount");
+    print("is fist ==> ${widget.isFirstOpen}");
+    print("is second ==> ${widget.isSecondOpen}");
+    print("is cousneling  ==> ${widget.counselingCount}");
     return IntrinsicHeight(
       child: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -359,7 +364,7 @@ class CounselingContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (counselingCount <= 1) ...[
+                    if (widget.counselingCount <= 1) ...[
                       CustomText(
                         text: AppStrings.bookAnAppointment,
                         style: TextStyleHelper.mediumHeading.copyWith(
@@ -373,24 +378,27 @@ class CounselingContainer extends StatelessWidget {
                       ),
                       SizeHelper.height(),
                     ],
-                    if (counselingCount == 0) ...[
+                    if (widget.counselingCount == 0) ...[
                       CounselingOptions(
                         description: AppStrings.bookAfter25,
                         heading: AppStrings.counseling1,
-                        isOpen: isFirstOpen,
-                        isDone: counselingCount == 1,
+                        isOpen: widget.isFirstOpen,
+                        isDone: widget.counselingCount == 1,
+                        setState: () => setState(() {}),
                       ),
                       SizeHelper.height(),
                     ],
-                    if (counselingCount == 1) ...[
+                    if (widget.counselingCount == 1) ...[
                       CounselingOptions(
                         description: AppStrings.bookAfter75,
                         heading: AppStrings.counseling2,
-                        isOpen: isSecondOpen,
-                        isDone: counselingCount == 2,
+                        isOpen: widget.isSecondOpen,
+                        isDone: widget.counselingCount == 2,
+                        setState: () => setState(() {}),
                       ),
                     ],
-                    if (counselingCount != 0 && counselingCount != 1)
+                    if (widget.counselingCount != 0 &&
+                        widget.counselingCount != 1)
                       CustomContainer(
                         backGroundColor: AppColors.white,
                         boxShadow: ShadowHelper.scoreContainer,
@@ -416,11 +424,13 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     required this.heading,
     required this.isOpen,
     required this.isDone,
+    this.setState,
   });
   final String heading;
   final String description;
   final bool isOpen;
   final bool isDone;
+  final void Function()? setState;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -437,7 +447,7 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
                         context: context,
                         widget: CousilingFormScreen(),
                         transition: ScaleFadePageTransitionsBuilder(),
-                      )
+                      ).then((v) => setState)
                   : WidgetHelper.customSnackBar(
                     autoClose: false,
                     title: AppStrings.mileStoneNotAchieved,
