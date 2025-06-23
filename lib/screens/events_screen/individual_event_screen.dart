@@ -59,7 +59,7 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>
                 ? await eventProvider.getAllUserEvents(context: context)
                 : await eventProvider.getAllEvents(context: context);
           });
-          pop(context);
+          pop(context, result: true);
         }
       },
       child: Scaffold(

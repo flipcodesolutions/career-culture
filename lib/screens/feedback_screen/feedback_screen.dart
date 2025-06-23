@@ -352,7 +352,9 @@ class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
                           _selectedRating = null;
                           goal = null;
                           _commentController.text = "";
-                          isFeedbackSubmitted = success;
+                          setState(() {
+                            isFeedbackSubmitted = success;
+                          });
                           pop(context, result: success);
                         } else {}
                       }

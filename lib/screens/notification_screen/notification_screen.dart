@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -65,7 +66,7 @@ class _NotificationScreenState extends State<NotificationScreen>
       body:
           userNotificationProvider.isLoading
               ? Center(child: CustomLoader())
-              : notifications.isNotEmpty && feedbackNotifications.isNotEmpty
+              : notifications.isNotEmpty || feedbackNotifications.isNotEmpty
               ? CustomRefreshIndicator(
                 onRefresh: () async {
                   await Future.wait([
@@ -162,7 +163,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                                         payload:
                                             notifications[index].payload ?? "",
                                       );
-                                  if (success && context.mounted) {
+                                  if (success) {
                                     await Future.wait([
                                       userNotificationProvider
                                           .getUserNotification(
