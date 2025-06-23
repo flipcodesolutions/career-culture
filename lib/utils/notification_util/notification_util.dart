@@ -355,7 +355,9 @@ class NotificationService with NavigateHelper {
         push(
           context: context,
           widget: FeedbackPage(
-            model: FeedbackModelPayload.fromJson(jsonDecode(message['data'])),
+            model: FeedbackModelPayload.fromJson(
+              jsonDecode(message['payload']),
+            ),
           ),
         );
       }

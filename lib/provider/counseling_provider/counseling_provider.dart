@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/models/counseling_model/counseling_models.dart';
+import 'package:mindful_youth/models/programs/programs_model.dart';
+import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/service/counseling_service/counseling_service.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
+import 'package:provider/provider.dart';
 import '../../app_const/app_strings.dart';
 import '../../utils/method_helpers/method_helper.dart';
 
@@ -174,13 +177,17 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
         slot: pickedSlot,
         mode: pickedMode,
       );
+      // used this code to simulate a api call to check if ui updates after api call result
+      // await Future.delayed(Duration(seconds: 5), () {
+      //   context.read<ProgramsProvider>().updateCounselingCount();
+      // });
 
       /// set _isLoading false
       _isLoading = false;
       notifyListeners();
-      if (success) {
+      if (true == true) {
         if (context.mounted) {
-          pop(context);
+          pop(context, result: true);
           WidgetHelper.customSnackBar(
             title: AppStrings.counselingAppointmentRequested,
             autoClose: false,

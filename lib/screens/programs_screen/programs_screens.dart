@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/chapters_model/chapters_model.dart';
+import 'package:mindful_youth/provider/counseling_provider/counseling_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
@@ -337,10 +338,7 @@ class CounselingContainer extends StatefulWidget {
 class _CounselingContainerState extends State<CounselingContainer> {
   @override
   Widget build(BuildContext context) {
-    ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
-    print("is fist ==> ${widget.isFirstOpen}");
-    print("is second ==> ${widget.isSecondOpen}");
-    print("is cousneling  ==> ${widget.counselingCount}");
+    CounselingProvider counselingProvider = context.watch<CounselingProvider>();
     return IntrinsicHeight(
       child: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -357,7 +355,7 @@ class _CounselingContainerState extends State<CounselingContainer> {
         ],
         width: 90.w,
         child:
-            programsProvider.isLoading
+            counselingProvider.isLoading
                 ? Center(child: CustomLoader())
                 : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -384,7 +382,6 @@ class _CounselingContainerState extends State<CounselingContainer> {
                         heading: AppStrings.counseling1,
                         isOpen: widget.isFirstOpen,
                         isDone: widget.counselingCount == 1,
-                        setState: () => setState(() {}),
                       ),
                       SizeHelper.height(),
                     ],
@@ -394,7 +391,6 @@ class _CounselingContainerState extends State<CounselingContainer> {
                         heading: AppStrings.counseling2,
                         isOpen: widget.isSecondOpen,
                         isDone: widget.counselingCount == 2,
-                        setState: () => setState(() {}),
                       ),
                     ],
                     if (widget.counselingCount != 0 &&
@@ -424,35 +420,46 @@ class CounselingOptions extends StatelessWidget with NavigateHelper {
     required this.heading,
     required this.isOpen,
     required this.isDone,
-    this.setState,
   });
   final String heading;
   final String description;
   final bool isOpen;
   final bool isDone;
-  final void Function()? setState;
   @override
   Widget build(BuildContext context) {
+    ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
     return InkWell(
-      onTap:
-          () async =>
-              isOpen
-                  ? isDone
-                      ? WidgetHelper.customSnackBar(
-                        autoClose: false,
-                        title: AppStrings.counselingAppointmentDone,
-                        isError: true,
-                      )
-                      : push(
-                        context: context,
-                        widget: CousilingFormScreen(),
-                        transition: ScaleFadePageTransitionsBuilder(),
-                      ).then((v) => setState)
-                  : WidgetHelper.customSnackBar(
-                    autoClose: false,
-                    title: AppStrings.mileStoneNotAchieved,
-                    isError: true,
-                  ),
+      onTap: () async {
+        if (isOpen) {
+          if (isDone) {
+            WidgetHelper.customSnackBar(
+              autoClose: false,
+              title: AppStrings.counselingAppointmentDone,
+              isError: true,
+            );
+          } else {
+            await push(
+              context: context,
+              widget: CousilingFormScreen(),
+              transition: ScaleFadePageTransitionsBuilder(),
+            ).then((v) async {
+              if (v) {
+                await Future.wait([
+                  programsProvider.getUserOverAllProgress(context: context),
+                  programsProvider.getUserProgress(context: context),
+                ]);
+              }
+            });
+          }
+        } else {
+          WidgetHelper.customSnackBar(
+            autoClose: false,
+            title: AppStrings.mileStoneNotAchieved,
+            isError: true,
+          );
+        }
+      },
+
       child: CustomContainer(
         height: 10.h,
         backGroundColor: AppColors.white,

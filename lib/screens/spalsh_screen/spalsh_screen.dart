@@ -1,20 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
-import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/main_screen/main_screen.dart';
-import 'package:mindful_youth/screens/on_boarding_screen/on_boarding_screen.dart';
-import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
+import 'package:mindful_youth/provider/notification_handler/notification_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
-import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_image_strings.dart';
-import '../../app_const/app_strings.dart';
-import '../../utils/method_helpers/method_helper.dart';
 
 /// --------------------------------------
 /// SPLASH SCREEN WIDGET OVERVIEW
@@ -49,7 +40,6 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
   double _scale = 0;
   double _opacity = 0.0;
   final int _animationDelay = 1;
-  StreamSubscription<Uri>? _deepLinkSub;
 
   @override
   void initState() {
@@ -59,7 +49,9 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
 
   Future<void> _initSplashSequence() async {
     await _startIntroAnimation();
-    await _handleInitialDeepLink();
+    await context.read<NotificationHelper>().handleInitialDeepLink(
+      context: context,
+    );
   }
 
   Future<void> _startIntroAnimation() async {
@@ -72,83 +64,9 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
     await Future.delayed(Duration(seconds: _animationDelay * 3));
   }
 
-  Future<void> _handleInitialDeepLink() async {
-    final appLinks = AppLinks();
-    final Uri? initialUri = await appLinks.getInitialLink();
-
-    if (initialUri != null) {
-      _handleDeepLink(initialUri);
-      return;
-    } else {
-      await _handleAuthAndNavigate(isFromLink: false);
-    }
-
-    _deepLinkSub = appLinks.uriLinkStream.listen(
-      (event) {
-        _handleDeepLink(event);
-      },
-      onError: (err) {
-        _handleAuthAndNavigate(isFromLink: false);
-      },
-    );
-  }
-
-  Future<void> _handleAuthAndNavigate({
-    required bool isFromLink,
-    String? slug,
-  }) async {
-    final userProvider = context.read<UserProvider>();
-    final token = await SharedPrefs.getToken();
-    final status = await SharedPrefs.getSharedString(AppStrings.status);
-
-    if (token.isNotEmpty) {
-      userProvider.setIsUserLoggedIn = true;
-
-      if (status != "active") {
-        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-          context: context,
-        );
-        return;
-      }
-
-      pushRemoveUntil(
-        context: context,
-        widget: MainScreen(),
-        transition: FadeForwardsPageTransitionsBuilder(),
-      );
-
-      if (isFromLink && slug?.isNotEmpty == true) {
-        push(
-          context: context,
-          widget: IndividualWallPostScreen(
-            slug: slug ?? "",
-            isFromWallScreen: false,
-          ),
-        );
-      }
-    } else {
-      pushRemoveUntil(
-        context: context,
-        widget: OnBoardingScreen(),
-        transition: FadeForwardsPageTransitionsBuilder(),
-      );
-    }
-  }
-
-  void _handleDeepLink(Uri uri) {
-    // WidgetHelper.customSnackBar(title: "Deep link: $uri");
-
-    if (uri.pathSegments.length >= 2 && uri.pathSegments.first == 'wall') {
-      final String slug = uri.pathSegments[1];
-      _handleAuthAndNavigate(isFromLink: true, slug: slug);
-    } else {
-      _handleAuthAndNavigate(isFromLink: false);
-    }
-  }
-
   @override
   void dispose() {
-    _deepLinkSub?.cancel();
+    // _deepLinkSub?.cancel();
     super.dispose();
   }
 

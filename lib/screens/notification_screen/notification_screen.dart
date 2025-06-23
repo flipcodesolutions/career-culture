@@ -5,14 +5,19 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
+import 'package:mindful_youth/models/feedback_model/feedback_model.dart';
 import 'package:mindful_youth/models/user_notification/user_notification_model.dart';
 import 'package:mindful_youth/provider/user_notification/user_notification_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
+import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
+import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +40,10 @@ class _NotificationScreenState extends State<NotificationScreen>
     final UserNotificationProvider userNotificationProvider =
         context.read<UserNotificationProvider>();
     Future.microtask(() async {
-      await userNotificationProvider.getUserNotification(context: context);
+      await Future.wait([
+        userNotificationProvider.getUserNotification(context: context),
+        userNotificationProvider.getUserFeedbackNotification(context: context),
+      ]);
     });
   }
 
@@ -45,6 +53,8 @@ class _NotificationScreenState extends State<NotificationScreen>
         context.watch<UserNotificationProvider>();
     List<UserNotificationsData> notifications =
         userNotificationProvider.userScrollNotification?.data ?? [];
+    List<FeedbackModelData> feedbackNotifications =
+        userNotificationProvider.userFeedbackModel?.data ?? [];
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -55,119 +65,135 @@ class _NotificationScreenState extends State<NotificationScreen>
       body:
           userNotificationProvider.isLoading
               ? Center(child: CustomLoader())
-              : notifications.isNotEmpty
-              ? SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                child: AnimationLimiter(
-                  child: Column(
-                    children: AnimationConfiguration.toStaggeredList(
-                      childAnimationBuilder:
-                          (widget) => SlideAnimation(
-                            horizontalOffset: 30.w,
-                            duration: Duration(milliseconds: 500),
-                            child: FadeInAnimation(
+              : notifications.isNotEmpty && feedbackNotifications.isNotEmpty
+              ? CustomRefreshIndicator(
+                onRefresh: () async {
+                  await Future.wait([
+                    userNotificationProvider.getUserNotification(
+                      context: context,
+                    ),
+                    userNotificationProvider.getUserFeedbackNotification(
+                      context: context,
+                    ),
+                  ]);
+                },
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  child: AnimationLimiter(
+                    child: Column(
+                      children: AnimationConfiguration.toStaggeredList(
+                        childAnimationBuilder:
+                            (widget) => SlideAnimation(
+                              horizontalOffset: 30.w,
                               duration: Duration(milliseconds: 500),
-                              child: widget,
+                              child: FadeInAnimation(
+                                duration: Duration(milliseconds: 500),
+                                child: widget,
+                              ),
+                            ),
+                        children: [
+                          if (feedbackNotifications.isNotEmpty) ...[
+                            ...List.generate(
+                              feedbackNotifications.length,
+                              (index) => InkWell(
+                                onTap: () async {
+                                  final bool success = await push(
+                                    context: context,
+                                    widget: FeedbackPage(
+                                      model:
+                                          feedbackNotifications[index]
+                                              .payload ??
+                                          FeedbackModelPayload(),
+                                    ),
+                                  );
+                                  if (success) {
+                                    await Future.wait([
+                                      userNotificationProvider
+                                          .getUserNotification(
+                                            context: context,
+                                          ),
+                                      userNotificationProvider
+                                          .getUserFeedbackNotification(
+                                            context: context,
+                                          ),
+                                    ]);
+                                  }
+                                },
+                                child: NotificationTile(
+                                  createdAt:
+                                      feedbackNotifications[index]
+                                          .payload
+                                          ?.counselingBy
+                                          ?.createdAt ??
+                                      '',
+                                  description:
+                                      feedbackNotifications[index]
+                                          .notificationDescription ??
+                                      "",
+                                  title:
+                                      feedbackNotifications[index]
+                                          .notificationTitle ??
+                                      '',
+                                ),
+                              ),
+                            ),
+                            Divider(endIndent: 5.w, indent: 5.w, height: 2.h),
+                            SizeHelper.height(height: 1.h),
+                          ],
+                          ...List.generate(
+                            notifications.length,
+                            (index) => InkWell(
+                              onTap: () async {
+                                final bool success =
+                                    await userNotificationProvider
+                                        .sentBackendThatNotificationIsOpened(
+                                          context: context,
+                                          notificationId:
+                                              notifications[index].id
+                                                  .toString(),
+                                        );
+                                if (success) {
+                                  final bool success =
+                                      await redirectUserToScreen(
+                                        redirect:
+                                            notifications[index]
+                                                .notificationNavigateScreen ??
+                                            "",
+                                        payload:
+                                            notifications[index].payload ?? "",
+                                      );
+                                  if (success && context.mounted) {
+                                    await Future.wait([
+                                      userNotificationProvider
+                                          .getUserNotification(
+                                            context: context,
+                                          ),
+                                      userNotificationProvider
+                                          .getUserFeedbackNotification(
+                                            context: context,
+                                          ),
+                                    ]);
+                                  }
+                                } else {
+                                  WidgetHelper.customSnackBar(
+                                    title: "Please Try Again...",
+                                    isError: true,
+                                  );
+                                }
+                              },
+                              child: NotificationTile(
+                                title:
+                                    notifications[index].notificationTitle ??
+                                    "",
+                                description:
+                                    notifications[index]
+                                        .notificationDescription ??
+                                    "",
+                                createdAt: notifications[index].createdAt ?? "",
+                              ),
                             ),
                           ),
-                      children: List.generate(
-                        notifications.length,
-                        (index) => InkWell(
-                          onTap: () async {
-                            await userNotificationProvider
-                                .sentBackendThatNotificationIsOpened(
-                                  context: context,
-                                  notificationId:
-                                      notifications[index].id.toString(),
-                                );
-                            final bool success = await redirectUserToScreen(
-                              redirect:
-                                  notifications[index]
-                                      .notificationNavigateScreen ??
-                                  "",
-                              payload: notifications[index].payload ?? "",
-                            );
-                            if (success && context.mounted) {
-                              await userNotificationProvider
-                                  .getUserNotification(context: context);
-                            }
-                          },
-                          child: CustomContainer(
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            margin: EdgeInsets.only(bottom: 1.h),
-                            backGroundColor: AppColors.lightWhite,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: CustomContainer(
-                                        padding: EdgeInsets.all(AppSize.size20),
-                                        child: Icon(Icons.notifications),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 5,
-                                      child: CustomContainer(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(
-                                            AppSize.size10,
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CustomText(
-                                                useOverflow: false,
-                                                text:
-                                                    notifications[index]
-                                                        .notificationTitle ??
-                                                    "",
-                                                style:
-                                                    TextStyleHelper
-                                                        .smallHeading,
-                                              ),
-                                              CustomText(
-                                                useOverflow: false,
-                                                text:
-                                                    notifications[index]
-                                                        .notificationDescription ??
-                                                    "",
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    CustomContainer(
-                                      padding: EdgeInsets.only(
-                                        right: AppSize.size10,
-                                      ),
-                                      child: CustomText(
-                                        text: MethodHelper.formatDateTime(
-                                          notifications[index].createdAt ?? "",
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -211,5 +237,75 @@ class _NotificationScreenState extends State<NotificationScreen>
       default:
     }
     return result;
+  }
+}
+
+class NotificationTile extends StatelessWidget {
+  const NotificationTile({
+    super.key,
+    required this.createdAt,
+    required this.description,
+    required this.title,
+  });
+  final String title;
+  final String description;
+  final String createdAt;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      margin: EdgeInsets.only(bottom: 1.h),
+      backGroundColor: AppColors.lightWhite,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: CustomContainer(
+                  padding: EdgeInsets.all(AppSize.size20),
+                  child: Icon(Icons.notifications),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: CustomContainer(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSize.size10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomText(
+                          useOverflow: false,
+                          text: title,
+                          style: TextStyleHelper.smallHeading,
+                        ),
+                        CustomText(useOverflow: false, text: description),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomContainer(
+                padding: EdgeInsets.only(right: AppSize.size10),
+                child: CustomText(text: MethodHelper.formatDateTime(createdAt)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

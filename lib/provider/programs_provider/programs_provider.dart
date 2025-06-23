@@ -79,4 +79,15 @@ class ProgramsProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  // void updateCounselingCount() {
+  //   /// set _isLoading true
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   _userOverAllScoreModel?.data?.counselingCount = 2;
+
+  //   /// set _isLoading false
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
 }

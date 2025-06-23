@@ -96,7 +96,7 @@ class CounselingBy {
   String? name;
   String? email;
   String? phone;
-
+  String? createdAt;
   CounselingBy({this.id, this.name, this.email, this.phone});
 
   CounselingBy.fromJson(Map<String, dynamic> json) {
@@ -104,6 +104,7 @@ class CounselingBy {
     name = json['name'];
     email = json['email'];
     phone = json['phone'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson() {

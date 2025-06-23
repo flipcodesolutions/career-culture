@@ -10,6 +10,7 @@ import 'package:mindful_youth/provider/counseling_provider/counseling_provider.d
 import 'package:mindful_youth/provider/faqs_provider.dart/faqs_provider.dart';
 import 'package:mindful_youth/provider/feedback_provider/feedback_provider.dart';
 import 'package:mindful_youth/provider/home_screen_provider/home_screen_provider.dart';
+import 'package:mindful_youth/provider/notification_handler/notification_helper.dart';
 import 'package:mindful_youth/provider/on_boarding_provider/on_boarding_provider.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
@@ -85,6 +86,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => SelfieProvider()),
         ChangeNotifierProvider(create: (context) => UserNotificationProvider()),
         ChangeNotifierProvider(create: (context) => FeedbackProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationHelper()),
       ],
       child: ToastificationWrapper(child: const MyApp()),
     ),

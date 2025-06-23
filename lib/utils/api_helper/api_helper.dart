@@ -1,6 +1,5 @@
 import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
 import 'package:mindful_youth/service/post_service/post_service.dart';
-
 import '../environment_helper/environment_helper.dart';
 
 class ApiHelper {
@@ -139,4 +138,11 @@ class ApiHelper {
 
   /// get user notifications
   static String feedback = "$baseUrl/feed-back";
+
+  /// get user notifications
+  static String getUserFeedbackNotification = "$baseUrl/feedback-notification";
+
+  /// get user notifications
+  static String sentUserFeedbackNotificationOpened =
+      "$baseUrl/user-read-feedback-notification";
 }
