@@ -30,6 +30,7 @@ class UserOverAllScoreModelData {
   String? name;
   String? image;
   int? totalPoints;
+  int? pendingPoints;
   int? counselingCount;
 
   UserOverAllScoreModelData({
@@ -38,6 +39,7 @@ class UserOverAllScoreModelData {
     this.image,
     this.totalPoints,
     this.counselingCount,
+    this.pendingPoints,
   });
 
   UserOverAllScoreModelData.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class UserOverAllScoreModelData {
     image = json['image'];
     totalPoints = json['total_points'];
     counselingCount = json['counselingCount'];
+    pendingPoints = json['pending_total_points'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,6 +58,7 @@ class UserOverAllScoreModelData {
     data['image'] = this.image;
     data['total_points'] = this.totalPoints;
     data['counselingCount'] = this.counselingCount;
+    data['pending_total_points'] = this.pendingPoints;
     return data;
   }
 }

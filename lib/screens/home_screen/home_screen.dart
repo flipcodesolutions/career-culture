@@ -185,6 +185,13 @@ class _HomeScreenState extends State<HomeScreen>
                                       ?.totalPoints
                                       .toString() ??
                                   "-",
+                              pendingScore:
+                                  homeScreenProvider
+                                      .overAllScoreModel
+                                      ?.data
+                                      ?.pendingPoints
+                                      .toString() ??
+                                  "",
                               animationDuration: Duration(seconds: 3),
                             ),
 

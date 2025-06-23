@@ -27,6 +27,7 @@ class AppStrings {
   static const skip = "Skip";
   static const programs = "MindFul Youth \nA Certificate Program";
   static const yourCoins = 'Your Coins';
+  static const yourPendingCoins = 'Your Pending Coins';
   static const recentActivity = "Recent Activity";
   static const announceMent = "Announcement";
   static const suggestedBooks = "Suggested Books";
