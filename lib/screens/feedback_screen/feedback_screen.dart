@@ -39,7 +39,7 @@ class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
     {'icon': '😠', 'description': 'Terrible'},
     {'icon': '😞', 'description': 'Bad'},
     {'icon': '😐', 'description': 'Neutral'},
-    {'icon': '😮', 'description': 'Good'},
+    {'icon': '😊', 'description': 'Good'},
     {'icon': '🥰', 'description': 'Excellent'},
   ];
 

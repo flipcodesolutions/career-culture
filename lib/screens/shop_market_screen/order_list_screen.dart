@@ -69,7 +69,7 @@ class _OrderListPageState extends State<OrderListPage> {
                       child: Center(
                         child: CustomContainer(
                           child: NoDataFoundIcon(
-                            icon: AppImageStrings.noDataFoundIcon2,
+                            icon: AppImageStrings.noProductFound,
                           ),
                         ),
                       ),

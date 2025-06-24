@@ -860,6 +860,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     collegeOrUniversity.clear();
     _areYouWorking.answer = "";
     companyOrBusiness.clear();
+    referCode.clear();
 
     /// important
     _isUpdatingProfile = false;

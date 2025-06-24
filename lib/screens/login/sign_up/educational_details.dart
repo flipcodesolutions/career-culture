@@ -132,7 +132,7 @@ class EducationalDetails extends StatelessWidget {
                         hintText: AppStrings.enterReferCodeIfAny,
                         controller: signUpProvider.referCode,
                         // keyboardType: TextInputType.numberWithOptions(),
-                        adaptiveTextSelectionToolbarChildren: [],
+                        // adaptiveTextSelectionToolbarChildren: [],
                         maxLength: 6,
                         validator:
                             (value) =>

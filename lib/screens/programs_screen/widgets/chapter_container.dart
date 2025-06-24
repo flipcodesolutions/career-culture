@@ -22,7 +22,7 @@ class ChapterContainer extends StatelessWidget with NavigateHelper {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () =>
+          () async=>
               chaptersInfo.isOpen != null && chaptersInfo.isOpen == true
                   ? push(
                     context: context,

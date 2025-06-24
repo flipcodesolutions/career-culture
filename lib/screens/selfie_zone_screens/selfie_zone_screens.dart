@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -189,8 +191,13 @@ class ExamplePhotos extends StatelessWidget with NavigateHelper {
                 // eventProvider.eventModel?.data
                 //     ?.where((e) => e.isAnnouncement == "yes")
                 selfieProvider.selfieZone?.data
-                    ?.where((e) => e.suggestedImage?.isNotEmpty == true)
+                    ?.where(
+                      (e) =>
+                          e.suggestedImage?.isNotEmpty == true ||
+                          e.suggestedImage != null,
+                    )
                     .map((image) {
+                      log("${AppStrings.assetsUrl}${image}");
                       return AspectRatio(
                         aspectRatio: 16 / 9,
                         child: CustomContainer(
@@ -205,7 +212,8 @@ class ExamplePhotos extends StatelessWidget with NavigateHelper {
                             child: CustomImageWithLoader(
                               showImageInPanel: false,
                               fit: BoxFit.cover,
-                              imageUrl: "${image}",
+                              imageUrl:
+                                  "${AppStrings.assetsUrl}${image.suggestedImage}",
                             ),
                           ),
                         ),

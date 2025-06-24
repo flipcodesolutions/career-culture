@@ -56,12 +56,14 @@ class SignUpService {
     request.fields['university'] = signUp.university ?? "";
     request.fields['workingStatus'] = signUp.workingStatus ?? "";
     request.fields['convener_id'] = signUp.convenerId.toString();
-    request.fields['referCode'] = signUp.referCode.toString();
+    request.fields['referral'] = signUp.referCode.toString();
     request.fields['nameOfCompanyOrBusiness'] =
         signUp.nameOfCompanyOrBusiness ?? "";
 
     final streamedResponse = await request.send();
-    // request.fields.forEach((e, f) => log("$e -> $f")); // for printing what is being sent
+    request.fields.forEach(
+      (e, f) => log("$e -> $f"),
+    ); // for printing what is being sent
     final data = await http.Response.fromStream(streamedResponse);
     log(signUp.toJson().toString());
     if (streamedResponse.statusCode == 200) {

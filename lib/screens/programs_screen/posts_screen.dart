@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
+import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/individual_program_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_screen.dart';
@@ -73,6 +74,7 @@ class _PostsScreenState extends State<PostsScreen>
   @override
   Widget build(BuildContext context) {
     PostProvider postProvider = context.watch<PostProvider>();
+    ProgramsProvider programsProvider = context.watch<ProgramsProvider>();
     RecentActivityProvider recentActivityProvider =
         context.watch<RecentActivityProvider>();
     final List<String> imageMedia =
@@ -82,187 +84,200 @@ class _PostsScreenState extends State<PostsScreen>
             .map((r) => r.thumbnail ?? "")
             .toList() ??
         [];
-    return Scaffold(
-      appBar: AppBar(
-        /// if only one post
-        title: CustomText(
-          text: postProvider.currentPost?.title ?? widget.chapterName,
-          style: TextStyleHelper.mediumHeading,
-        ),
-        actions: [
-          /// only load gallery if media have any gallery media to show
-          if (imageMedia.isNotEmpty)
-            IconButton(
-              onPressed:
-                  () => push(
-                    context: context,
-                    widget: GalleryPage(imagesStrings: imageMedia),
-                    transition: FadeForwardsPageTransitionsBuilder(),
-                  ),
-              icon: Icon(
-                Icons.photo_library_outlined,
-                color: AppColors.primary,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) async {
+        await programsProvider.getUserProgress(
+          context: context,
+          pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          /// if only one post
+          title: CustomText(
+            text: postProvider.currentPost?.title ?? widget.chapterName,
+            style: TextStyleHelper.mediumHeading,
+          ),
+          actions: [
+            /// only load gallery if media have any gallery media to show
+            if (imageMedia.isNotEmpty)
+              IconButton(
+                onPressed:
+                    () => push(
+                      context: context,
+                      widget: GalleryPage(imagesStrings: imageMedia),
+                      transition: FadeForwardsPageTransitionsBuilder(),
+                    ),
+                icon: Icon(
+                  Icons.photo_library_outlined,
+                  color: AppColors.primary,
+                ),
               ),
-            ),
-        ],
-      ),
-      body:
-          postProvider.isLoading
-              ? Center(child: CustomLoader())
-              : postProvider.postListModel?.data?.isNotEmpty == true
-              ? postProvider.currentPost != null
-                  ? SinglePostWIdget(post: postProvider.currentPost)
-                  : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: postProvider.postListModel?.data?.length,
-                    itemBuilder: (context, index) {
-                      PostInfo? post = postProvider.postListModel?.data?[index];
-                      return GestureDetector(
-                        onTap: () async {
-                          postProvider.setPostInfo = post;
-                          await recentActivityProvider.saveRecentActivity(post);
-                        },
-                        child: CustomContainer(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 0.5.h,
-                            horizontal: 5.w,
-                          ),
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          backGroundColor: AppColors.lightWhite,
-                          boxShadow: ShadowHelper.scoreContainer,
+          ],
+        ),
+        body:
+            postProvider.isLoading
+                ? Center(child: CustomLoader())
+                : postProvider.postListModel?.data?.isNotEmpty == true
+                ? postProvider.currentPost != null
+                    ? SinglePostWIdget(post: postProvider.currentPost)
+                    : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: postProvider.postListModel?.data?.length,
+                      itemBuilder: (context, index) {
+                        PostInfo? post =
+                            postProvider.postListModel?.data?[index];
+                        return GestureDetector(
+                          onTap: () async {
+                            postProvider.setPostInfo = post;
+                            await recentActivityProvider.saveRecentActivity(
+                              post,
+                            );
+                          },
                           child: CustomContainer(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    CustomContainer(
-                                      alignment: Alignment.topRight,
-                                      child: CustomAnimatedScore(
-                                        score: "${post?.points}",
-                                        lastText: "Points",
-                                        textStyle: TextStyleHelper.smallHeading,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                ImageContainer(
-                                  image:
-                                      "${AppStrings.assetsUrl}${post?.image}",
-                                  showImageInPanel: false,
-                                ),
-                                CustomContainer(
-                                  padding: EdgeInsets.only(left: 5.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                            margin: EdgeInsets.symmetric(
+                              vertical: 0.5.h,
+                              horizontal: 5.w,
+                            ),
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+                            backGroundColor: AppColors.lightWhite,
+                            boxShadow: ShadowHelper.scoreContainer,
+                            child: CustomContainer(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Expanded(
-                                        flex: 9,
-                                        child: CustomText(
-                                          text: post?.title ?? "",
-                                          useOverflow: false,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.keyboard_arrow_right,
-                                          color: AppColors.secondary,
+                                      CustomContainer(
+                                        alignment: Alignment.topRight,
+                                        child: CustomAnimatedScore(
+                                          score: "${post?.points}",
+                                          lastText: "Points",
+                                          textStyle:
+                                              TextStyleHelper.smallHeading,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                  ImageContainer(
+                                    image:
+                                        "${AppStrings.assetsUrl}${post?.image}",
+                                    showImageInPanel: false,
+                                  ),
+                                  CustomContainer(
+                                    padding: EdgeInsets.only(left: 5.w),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 9,
+                                          child: CustomText(
+                                            text: post?.title ?? "",
+                                            useOverflow: false,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Icon(
+                                            Icons.keyboard_arrow_right,
+                                            color: AppColors.secondary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  )
-              : CustomRefreshIndicator(
-                onRefresh:
-                    () async => postProvider.getPostById(
-                      context: context,
-                      id: widget.chapterId.toString(),
-                    ),
-                child: ListView(
-                  children: [
-                    NoDataFoundWidget(
-                      height: 80.h,
-                      text: AppStrings.noPostsFound,
-                    ),
-                  ],
+                        );
+                      },
+                    )
+                : CustomRefreshIndicator(
+                  onRefresh:
+                      () async => postProvider.getPostById(
+                        context: context,
+                        id: widget.chapterId.toString(),
+                      ),
+                  child: ListView(
+                    children: [
+                      NoDataFoundWidget(
+                        height: 80.h,
+                        text: AppStrings.noPostsFound,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-      bottomNavigationBar:
-          postProvider.currentPost != null
-              ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                child: PrimaryBtn(
-                  width: 90.w,
-                  btnText:
-                      postProvider.currentPost?.isSecondAssessmentDone == true
-                          ? "All Test Completed. Bravo"
-                          : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
-                  onTap: () async {
-                    context.read<AssessmentProvider>().setPostId =
-                        postProvider.currentPost?.id?.toString() ?? "";
-                    bool isFirstDone =
-                        postProvider.currentPost?.isFirstAssessmentDone == true;
-                    bool isSecondDone =
-                        postProvider.currentPost?.isSecondAssessmentDone ==
-                        true;
+        bottomNavigationBar:
+            postProvider.currentPost != null
+                ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  child: PrimaryBtn(
+                    width: 90.w,
+                    btnText:
+                        postProvider.currentPost?.isSecondAssessmentDone == true
+                            ? "All Test Completed. Bravo"
+                            : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
+                    onTap: () async {
+                      context.read<AssessmentProvider>().setPostId =
+                          postProvider.currentPost?.id?.toString() ?? "";
+                      bool isFirstDone =
+                          postProvider.currentPost?.isFirstAssessmentDone ==
+                          true;
+                      bool isSecondDone =
+                          postProvider.currentPost?.isSecondAssessmentDone ==
+                          true;
 
-                    if (!isFirstDone && !isSecondDone) {
-                      // Case 1: Neither assessment is done
-                      bool success = await push(
-                        context: context,
-                        widget: AssessmentScreen(
-                          isInReviewMode: false,
-                          postName:
-                              "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
-                        ),
-                        transition: FadeUpwardsPageTransitionsBuilder(),
-                      );
-                      if (success == true) {
-                        //// if completed successfully , get fresh data
-                        await postProvider.getPostById(
+                      if (!isFirstDone && !isSecondDone) {
+                        // Case 1: Neither assessment is done
+                        bool success = await push(
                           context: context,
-                          id: widget.chapterId.toString(),
+                          widget: AssessmentScreen(
+                            isInReviewMode: false,
+                            postName:
+                                "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
+                          ),
+                          transition: FadeUpwardsPageTransitionsBuilder(),
+                        );
+                        if (success == true) {
+                          //// if completed successfully , get fresh data
+                          await postProvider.getPostById(
+                            context: context,
+                            id: widget.chapterId.toString(),
+                          );
+                        }
+                      } else if (isFirstDone && !isSecondDone) {
+                        // Case 2: First done, second not done
+                        bool success = await push(
+                          context: context,
+                          widget: MediaAssessmentScreen(shouldPop3: false),
+                          transition: FadeUpwardsPageTransitionsBuilder(),
+                        );
+                        if (success == true) {
+                          //// if completed successfully , get fresh data
+                          await postProvider.getPostById(
+                            context: context,
+                            id: widget.chapterId.toString(),
+                          );
+                        }
+                      } else if (isFirstDone && isSecondDone) {
+                        // Case 3: Both assessments are done
+                        WidgetHelper.customSnackBar(
+                          title: AppStrings.yourAssessmentIsDoneAlready,
+                        );
+                      } else {
+                        // Fallback: Unexpected state
+                        WidgetHelper.customSnackBar(
+                          title:
+                              "Unexpected state: First Assessment = $isFirstDone, Second Assessment = $isSecondDone",
+                          isError: true,
                         );
                       }
-                    } else if (isFirstDone && !isSecondDone) {
-                      // Case 2: First done, second not done
-                      bool success = await push(
-                        context: context,
-                        widget: MediaAssessmentScreen(shouldPop3: false),
-                        transition: FadeUpwardsPageTransitionsBuilder(),
-                      );
-                      if (success == true) {
-                        //// if completed successfully , get fresh data
-                        await postProvider.getPostById(
-                          context: context,
-                          id: widget.chapterId.toString(),
-                        );
-                      }
-                    } else if (isFirstDone && isSecondDone) {
-                      // Case 3: Both assessments are done
-                      WidgetHelper.customSnackBar(
-                        title: AppStrings.yourAssessmentIsDoneAlready,
-                      );
-                    } else {
-                      // Fallback: Unexpected state
-                      WidgetHelper.customSnackBar(
-                        title:
-                            "Unexpected state: First Assessment = $isFirstDone, Second Assessment = $isSecondDone",
-                        isError: true,
-                      );
-                    }
-                  },
-                ),
-              )
-              : null,
+                    },
+                  ),
+                )
+                : null,
+      ),
     );
   }
 }

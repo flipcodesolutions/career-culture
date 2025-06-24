@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/models/product_model/create_order_model.dart';
 import 'package:mindful_youth/provider/product_provider/product_provider.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
@@ -97,8 +98,10 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
                             children: [
                               Center(
                                 child: CustomContainer(
-                                  margin: EdgeInsets.only(top: 30.h),
-                                  child: NoDataFoundIcon(),
+                                  margin: EdgeInsets.only(top: 35.h),
+                                  child: NoDataFoundIcon(
+                                    icon: AppImageStrings.noProductFound,
+                                  ),
                                 ),
                               ),
                             ],

@@ -107,14 +107,6 @@ class _HomeScreenState extends State<HomeScreen>
             child: Image.asset(AppImageStrings.imageOnlyLogo),
           ),
           actions: [
-            IconButton(
-              onPressed:
-                  () => push(
-                    context: context,
-                    widget: FeedbackPage(model: FeedbackModelPayload()),
-                  ),
-              icon: Icon(Icons.abc),
-            ),
             AppBarIcon(
               onTap:
                   () => push(
@@ -142,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen>
             onRefresh: () async {
               await homeScreenProvider.getHomeScreenSlider(context: context);
               await productProvider.getProductList(context: context);
+              await homeScreenProvider.getUserOverAllScore(context: context);
             },
             child: ListView(
               shrinkWrap: true,

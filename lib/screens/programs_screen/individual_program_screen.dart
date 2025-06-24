@@ -57,12 +57,10 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
         context: context,
         id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
       );
-      userProvider.isUserLoggedIn
-          ? programsProvider.getUserProgress(
-            context: context,
-            pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
-          )
-          : null;
+      programsProvider.getUserProgress(
+        context: context,
+        pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
+      );
     });
   }
 
@@ -93,12 +91,22 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
                 ? Center(child: CustomLoader())
                 : CustomRefreshIndicator(
                   onRefresh:
-                      () async => await chapterProvider.getChapterById(
-                        context: context,
-                        id:
-                            (programsProvider.currentProgramInfo?.id ?? 0)
-                                .toString(),
-                      ),
+                      () async => Future.wait([
+                        chapterProvider.getChapterById(
+                          context: context,
+                          id:
+                              (programsProvider.currentProgramInfo?.id ?? 0)
+                                  .toString(),
+                        ),
+                        programsProvider.getUserProgress(
+                          context: context,
+                          pId:
+                              programsProvider.currentProgramInfo?.id
+                                  .toString() ??
+                              "",
+                        ),
+                      ]),
+
                   child: ListView(
                     children: [
                       ImageContainer(
