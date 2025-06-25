@@ -38,5 +38,6 @@ class AppImageStrings {
   static const String eventTimingIcon = "assets/images/event_timing_icon.png";
   static const String noDataFoundIcon = "assets/images/no_data_found.png";
   static const String noDataFoundIcon2 = "assets/images/no_data_found_2.png";
-  static const String noProductFound = "assets/images/no_product_found_icon.png";
+  static const String noProductFound =
+      "assets/images/no_product_found_icon.png";
 }
