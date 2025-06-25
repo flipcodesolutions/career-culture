@@ -119,6 +119,8 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             AppBarIcon(
               icon: AppImageStrings.notificationBellIcon,
+              iconH: 3.5.h,
+              iconW: 3.5.h,
               onTap:
                   () => push(
                     context: context,
@@ -256,17 +258,25 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 class AppBarIcon extends StatelessWidget {
-  const AppBarIcon({super.key, required this.onTap, required this.icon});
+  const AppBarIcon({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    this.iconH,
+    this.iconW,
+  });
   final void Function()? onTap;
   final String icon;
+  final double? iconH;
+  final double? iconW;
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: CustomContainer(
         margin: EdgeInsets.symmetric(horizontal: 2.w),
-        width: 4.h,
-        height: 4.h,
+        width: iconW ?? 4.h,
+        height: iconH ?? 4.h,
         child: Image.asset(icon),
       ),
     );
