@@ -326,7 +326,18 @@ class MethodHelper with NavigateHelper {
   }) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    String? token = await messaging.getToken();
+    String? token;
+
+    /// ios needs apns token so bit change in handling apn token and fcm tokens
+    if (Platform.isIOS) {
+      String? apnsToken;
+      while ((apnsToken = await messaging.getAPNSToken()) == null) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+    } else {
+      token = await messaging.getToken();
+    }
+
     String uId = await SharedPrefs.getSharedString(AppStrings.userId);
     print("user Id: $uId");
 

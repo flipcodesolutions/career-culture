@@ -133,6 +133,7 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -213,8 +214,15 @@ class NotificationService with NavigateHelper {
     await _setupLocalNotifications();
 
     // Get the token each time the app launches.
-    String? token = await _messaging.getToken();
-    print('FCM Token: $token');
+    //   String? token;
+    // if (Platform.isIOS) {
+    //   while ((token = await _messaging.getAPNSToken()) == null) {
+    //     await Future.delayed(const Duration(milliseconds: 200));
+    //   }
+    // } else {
+    //   token = await _messaging.getToken();
+    //   print('FCM Token: $token');
+    // }
     // TODO: Optionally send the token to your backend server here.
 
     // Monitor token refresh.
