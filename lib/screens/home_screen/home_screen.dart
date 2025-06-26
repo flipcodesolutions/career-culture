@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -95,8 +97,10 @@ class _HomeScreenState extends State<HomeScreen>
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) {
-          showDialog(context: context, builder: (context) => ExitAppDialog());
+        if (Platform.isAndroid) {
+          if (!didPop) {
+            showDialog(context: context, builder: (context) => ExitAppDialog());
+          }
         }
       },
       child: Scaffold(
@@ -137,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen>
               await homeScreenProvider.getHomeScreenSlider(context: context);
               await productProvider.getProductList(context: context);
               await homeScreenProvider.getUserOverAllScore(context: context);
+              await eventProvider.getAllEvents(context: context);
             },
             child: ListView(
               shrinkWrap: true,
@@ -221,15 +226,23 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
 
                       /// recent activity text
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: CustomText(
-                          text: AppStrings.announceMent,
-                          style: TextStyleHelper.mediumHeading.copyWith(
-                            color: AppColors.primary,
+                      /// only show annoncement if available 
+                      if (eventProvider.eventModel?.data
+                              ?.where(
+                                (element) => element.isAnnouncement == "yes",
+                              )
+                              .toList()
+                              .isNotEmpty ==
+                          true)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: CustomText(
+                            text: AppStrings.announceMent,
+                            style: TextStyleHelper.mediumHeading.copyWith(
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
-                      ),
                       SizeHelper.height(),
                       CustomAnnouncementSlider(eventProvider: eventProvider),
                       SizeHelper.height(),

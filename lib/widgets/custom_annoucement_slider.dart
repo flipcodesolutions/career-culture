@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
+import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -22,69 +23,72 @@ class CustomAnnouncementSlider extends StatelessWidget with NavigateHelper {
   final AllEventProvider eventProvider;
   @override
   Widget build(BuildContext context) {
+    List<EventModel> events =
+        eventProvider.eventModel?.data
+            ?.where((e) => e.isAnnouncement == "yes")
+            .toList() ??
+        [];
     return eventProvider.isLoading
         ? Center(child: CustomLoader())
-        : eventProvider.eventModel?.data?.isNotEmpty == true
+        : events.isNotEmpty
         ? CustomContainer(
           child: CarouselSlider(
             items:
-                eventProvider.eventModel?.data
-                    ?.where((e) => e.isAnnouncement == "yes")
-                    .map((image) {
-                      return GestureDetector(
-                        onTap: () {
-                          push(
-                            context: context,
-                            widget: IndividualEventScreen(
-                              eventInfo: image,
-                              isMyEvents: false,
-                            ),
-                            transition: FadeForwardsPageTransitionsBuilder(),
-                          );
-                        },
-                        child: CustomContainer(
-                          boxShadow: ShadowHelper.scoreContainer,
-                          backGroundColor: AppColors.white,
-                          borderColor: AppColors.grey,
-                          borderWidth: 0.2,
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          margin: EdgeInsets.only(right: 5.w, bottom: 0.5.h),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: 16 / 9,
-                                  child: CustomImageWithLoader(
-                                    showImageInPanel: false,
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        "${AppStrings.assetsUrl}${image.poster}",
-                                  ),
-                                ),
-                                CustomContainer(
-                                  padding: EdgeInsets.only(top: 0.3.h),
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: AppColors.grey,
-                                      width: 0.2,
-                                    ),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: CustomText(
-                                    text: image.title ?? "",
-                                    style: TextStyleHelper.smallHeading
-                                        .copyWith(color: AppColors.primary),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                events.map((image) {
+                  return GestureDetector(
+                    onTap: () {
+                      push(
+                        context: context,
+                        widget: IndividualEventScreen(
+                          eventInfo: image,
+                          isMyEvents: false,
                         ),
+                        transition: FadeForwardsPageTransitionsBuilder(),
                       );
-                    })
-                    .toList(),
+                    },
+                    child: CustomContainer(
+                      boxShadow: ShadowHelper.scoreContainer,
+                      backGroundColor: AppColors.white,
+                      borderColor: AppColors.grey,
+                      borderWidth: 0.2,
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      margin: EdgeInsets.only(right: 5.w, bottom: 0.5.h),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: CustomImageWithLoader(
+                                showImageInPanel: false,
+                                fit: BoxFit.cover,
+                                imageUrl:
+                                    "${AppStrings.assetsUrl}${image.poster}",
+                              ),
+                            ),
+                            CustomContainer(
+                              padding: EdgeInsets.only(top: 0.3.h),
+                              border: Border(
+                                top: BorderSide(
+                                  color: AppColors.grey,
+                                  width: 0.2,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: CustomText(
+                                text: image.title ?? "",
+                                style: TextStyleHelper.smallHeading.copyWith(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
             options: CarouselOptions(
               enableInfiniteScroll: false,
               viewportFraction: 0.9,

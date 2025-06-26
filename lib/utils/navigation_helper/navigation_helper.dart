@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 mixin NavigateHelper {
@@ -37,9 +40,13 @@ mixin NavigateHelper {
     required Widget widget,
     PageTransitionsBuilder? transition,
   }) async {
-    return await Navigator.of(
-      context,
-    ).push(_customPageRoute(widget, transitionsBuilder: transition));
+    return Platform.isIOS
+        ? Navigator.of(
+          context,
+        ).push(CupertinoPageRoute(builder: (context) => widget))
+        : await Navigator.of(
+          context,
+        ).push(_customPageRoute(widget, transitionsBuilder: transition));
   }
 
   // for push remove navigation
@@ -49,10 +56,15 @@ mixin NavigateHelper {
     bool? isRoute,
     PageTransitionsBuilder? transition,
   }) async {
-    Navigator.of(context).pushAndRemoveUntil(
-      _customPageRoute(widget, transitionsBuilder: transition),
-      (route) => isRoute ?? false,
-    );
+    Platform.isIOS
+        ? Navigator.of(context).pushAndRemoveUntil(
+          CupertinoPageRoute(builder: (context) => widget),
+          (isRoute) => false,
+        )
+        : Navigator.of(context).pushAndRemoveUntil(
+          _customPageRoute(widget, transitionsBuilder: transition),
+          (route) => isRoute ?? false,
+        );
   }
 
   // for pop navigation
@@ -66,8 +78,12 @@ mixin NavigateHelper {
     required Widget widget,
     PageTransitionsBuilder? transition,
   }) async {
-    Navigator.of(
-      context,
-    ).pushReplacement(_customPageRoute(widget, transitionsBuilder: transition));
+    Platform.isIOS
+        ? Navigator.of(
+          context,
+        ).pushReplacement(CupertinoPageRoute(builder: (context) => widget))
+        : Navigator.of(context).pushReplacement(
+          _customPageRoute(widget, transitionsBuilder: transition),
+        );
   }
 }
