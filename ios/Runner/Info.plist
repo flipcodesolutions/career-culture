@@ -47,5 +47,24 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+        <array>
+            <!-- <string>sms</string> -->
+                 <string>tel</string>
+        </array>
+	<key>UIBackgroundModes</key>
+        <array>
+                 <string>fetch</string>
+                 <string>remote-notification</string>
+				 <string>audio</string>
+        </array>
+    <key>UISupportsDocumentBrowser</key>
+        <true/>
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+        <true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires access to your photo library.</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>This app needs access to the microphone to record audio.</string>
 </dict>
 </plist>
