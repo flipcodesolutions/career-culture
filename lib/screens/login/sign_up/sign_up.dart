@@ -216,44 +216,38 @@ class CustomFilePickerV2 extends StatefulWidget {
 
 class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
   Future<void> pickFiles({required SignUpProvider signUpProvider}) async {
-    try {
-      if (Platform.isAndroid) {
-        // Request Android-specific permissions
-        final hasPermission = await Permission.storage.request().isGranted;
-        if (!hasPermission) {
+    if (await Permission.storage.request().isGranted ||
+        await Permission.mediaLibrary.request().isGranted) {
+      try {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          allowMultiple: widget.allowMultiple,
+          type: FileType.custom,
+          withData: true,
+          allowedExtensions:
+              widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
+        );
+        if (result == null) {
           WidgetHelper.customSnackBar(
             autoClose: false,
-            title: AppStrings.noPermissionFound,
+            title: AppStrings.noFilePicked,
             isError: true,
           );
-          return;
         }
+        if (result != null) {
+          setState(() {
+            /// do after pick up
+            signUpProvider.signUpRequestModel.imageFile = result.files;
+          });
+        }
+      } catch (e) {
+        WidgetHelper.customSnackBar(title: e.toString(), isError: true);
       }
-
-      // For iOS: No manual permission needed (photo picker has its own prompt)
-
-      // Common picker code (works on both platforms)
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: widget.allowMultiple,
-        type: FileType.custom,
-        withData: true,
-        allowedExtensions:
-            widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
+    } else {
+      WidgetHelper.customSnackBar(
+        autoClose: false,
+        title: AppStrings.noPermissionFound,
+        isError: true,
       );
-
-      if (result == null) {
-        WidgetHelper.customSnackBar(
-          autoClose: false,
-          title: AppStrings.noFilePicked,
-          isError: true,
-        );
-      } else {
-        setState(() {
-          signUpProvider.signUpRequestModel.imageFile = result.files;
-        });
-      }
-    } catch (e) {
-      WidgetHelper.customSnackBar(title: e.toString(), isError: true);
     }
   }
 
