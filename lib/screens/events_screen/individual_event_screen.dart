@@ -127,12 +127,13 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>
                 text: widget.eventInfo.contact ?? "Not Provided",
               ),
               SizeHelper.height(height: 1.h),
-              if (widget.eventInfo.amount?.isNotEmpty == true) ...[
+              if (widget.eventInfo.amount?.isNotEmpty == true ||
+                  widget.eventInfo.amount != null) ...[
                 HeadingText(text: AppStrings.registration),
                 paddedText(
                   heading: "${AppStrings.registration} Fee:- ",
                   text:
-                      "${widget.eventInfo.amount ?? "Not Found"} ${AppStrings.rupee}",
+                      "${(int.tryParse(widget.eventInfo.amount ?? "0") ?? 0) == 0 ? "Free" : widget.eventInfo.amount} ${AppStrings.rupee}",
                 ),
                 SizeHelper.height(),
               ],
