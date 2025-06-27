@@ -66,5 +66,21 @@
     <string>This app requires access to your photo library.</string>
 	<key>NSMicrophoneUsageDescription</key>
     <string>This app needs access to the microphone to record audio.</string>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.454305239270-pvc7qv14lfes0bijorf04pdrokqp7j0u</string>
+    </array>
+  </dict>
+</array>
+
+<key>GoogleSignIn</key>
+<dict>
+  <key>ClientId</key>
+  <string>454305239270-pvc7qv14lfes0bijorf04pdrokqp7j0u.apps.googleusercontent.com</string>
+</dict>
+
 </dict>
 </plist>
