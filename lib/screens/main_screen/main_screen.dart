@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/provider/notification_handler/notification_helper.dart';
 import 'package:mindful_youth/screens/account_screen/account_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/home_screen/home_screen.dart';
@@ -30,6 +31,7 @@ class _MainScreenState extends State<MainScreen> with NavigateHelper {
           widget.setIndex ?? 0;
       await MethodHelper.getAndSendFcmTokenToBackend(context: context);
     });
+    NotificationHelper().processInitialUri();
   }
 
   final List<Widget> screenList = [

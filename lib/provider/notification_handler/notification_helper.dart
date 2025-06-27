@@ -3,94 +3,94 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
-import 'package:provider/provider.dart';
-import '../../app_const/app_strings.dart';
-import '../../screens/main_screen/main_screen.dart';
-import '../../screens/on_boarding_screen/on_boarding_screen.dart';
+import 'package:mindful_youth/utils/notification_util/notification_util.dart';
 import '../../screens/wall_screen/individual_wall_post_screen.dart';
-import '../../utils/method_helpers/method_helper.dart';
 import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
-import '../user_provider/user_provider.dart';
 
 class NotificationHelper extends ChangeNotifier with NavigateHelper {
   /// if provider is Loading
   ///
+  final _appLinks = AppLinks();
+  StreamSubscription<Uri?>? _sub;
+  Uri? _pendingUri;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Future<void> handleInitialDeepLink({required BuildContext context}) async {
-    final appLinks = AppLinks();
-    final Uri? initialUri = await appLinks.getInitialLink();
+  /// init deeplink and if uri is present store it for letter use
+  Future<void> init() async {
+    final Uri? uri = await _appLinks.getInitialLink();
+    if (uri != null) {
+      /// store it in pending uri
+      _pendingUri = uri;
+    }
+  }
 
-    if (initialUri != null) {
-      handleDeepLink(initialUri, context: context);
+  Future<void> processInitialUri() async {
+    /// get fresh token
+    final String token = await SharedPrefs.getToken();
+    // Listen if app is resumed from background
+    _sub = _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null && token.isNotEmpty) {
+        _pendingUri = uri;
+        _navigate(_pendingUri!);
+      }
+    });
+  }
+
+  void _navigate(Uri uri) {
+    final BuildContext? context =
+        NotificationService.instance.navigatorKey.currentContext;
+    final List<String> segments = uri.pathSegments;
+
+    if (segments.isEmpty) {
       return;
-    } else {
-      await handleAuthAndNavigate(isFromLink: false, context: context);
     }
-
-    appLinks.uriLinkStream.listen(
-      (event) {
-        handleDeepLink(event, context: context);
-      },
-      onError: (err) {
-        handleAuthAndNavigate(isFromLink: false, context: context);
-      },
-    );
-  }
-
-  Future<void> handleAuthAndNavigate({
-    required BuildContext context,
-    required bool isFromLink,
-    String? slug,
-  }) async {
-    final userProvider = context.read<UserProvider>();
-    final token = await SharedPrefs.getToken();
-    final status = await SharedPrefs.getSharedString(AppStrings.status);
-
-    if (token.isNotEmpty) {
-      userProvider.setIsUserLoggedIn = true;
-
-      if (status != "active") {
-        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
-          context: context,
-        );
-        return;
-      }
-
-      pushRemoveUntil(
-        context: context,
-        widget: MainScreen(),
-        transition: FadeForwardsPageTransitionsBuilder(),
-      );
-
-      if (isFromLink && slug?.isNotEmpty == true) {
-        push(
-          context: context,
-          widget: IndividualWallPostScreen(
-            slug: slug ?? "",
-            isFromWallScreen: false,
-          ),
-        );
-      }
-    } else {
-      pushRemoveUntil(
-        context: context,
-        widget: OnBoardingScreen(),
-        transition: FadeForwardsPageTransitionsBuilder(),
-      );
-    }
-  }
-
-  void handleDeepLink(Uri uri, {required BuildContext context}) {
-    // WidgetHelper.customSnackBar(title: "Deep link: $uri");
-
-    if (uri.pathSegments.length >= 2 && uri.pathSegments.first == 'wall') {
+    if (uri.pathSegments.length >= 2) {
+      final String segment = uri.pathSegments.first.trim().toLowerCase();
       final String slug = uri.pathSegments[1];
-      handleAuthAndNavigate(isFromLink: true, slug: slug, context: context);
-    } else {
-      handleAuthAndNavigate(isFromLink: false, context: context);
+      if (context != null) {
+        if (segment == 'wall') {
+          push(
+            context: context,
+            widget: IndividualWallPostScreen(
+              slug: slug,
+              isFromWallScreen: false,
+            ),
+          );
+        }
+
+        /// add other routes to navigate with slug
+      }
     }
   }
+
+  // Future<void> handleInitialDeepLink({required BuildContext context}) async {
+  //   if (_pendingUri != null) {
+  //     handleDeepLink(_pendingUri);
+  //     return;
+  //   } else {
+  //     await handleAuthAndNavigate(isFromLink: false);
+  //   }
+
+  //   _appLinks.uriLinkStream.listen(
+  //     (event) {
+  //       handleDeepLink(event);
+  //     },
+  //     onError: (err) {
+  //       handleAuthAndNavigate(isFromLink: false);
+  //     },
+  //   );
+  // }
+
+  // void handleDeepLink(Uri uri) {
+  //   // WidgetHelper.customSnackBar(title: "Deep link: $uri");
+
+  //   if (uri.pathSegments.length >= 2 && uri.pathSegments.first == 'wall') {
+  //     final String slug = uri.pathSegments[1];
+  //     handleAuthAndNavigate(isFromLink: true, slug: slug);
+  //   } else {
+  //     handleAuthAndNavigate(isFromLink: false);
+  //   }
+  // }
 }

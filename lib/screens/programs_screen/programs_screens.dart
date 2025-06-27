@@ -402,7 +402,7 @@ class _CounselingContainerState extends State<CounselingContainer> {
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         alignment: Alignment.center,
                         child: CustomText(
-                          text: "All Counseling is Done",
+                          text: "All Counselings is Done",
                           style: TextStyleHelper.smallHeading,
                         ),
                       ),

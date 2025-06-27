@@ -63,6 +63,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await dotenv.load(fileName: ".env");
+  NotificationHelper().init();
   runApp(
     MultiProvider(
       providers: [

@@ -6,6 +6,12 @@ import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_image_strings.dart';
+import '../../app_const/app_strings.dart';
+import '../../provider/user_provider/user_provider.dart';
+import '../../utils/method_helpers/method_helper.dart';
+import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
+import '../main_screen/main_screen.dart';
+import '../on_boarding_screen/on_boarding_screen.dart';
 
 /// --------------------------------------
 /// SPLASH SCREEN WIDGET OVERVIEW
@@ -49,9 +55,7 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
 
   Future<void> _initSplashSequence() async {
     await _startIntroAnimation();
-    await context.read<NotificationHelper>().handleInitialDeepLink(
-      context: context,
-    );
+    await handleAuthAndNavigate();
   }
 
   Future<void> _startIntroAnimation() async {
@@ -62,6 +66,36 @@ class _SplashScreenState extends State<SplashScreen> with NavigateHelper {
       _opacity = 1.0;
     });
     await Future.delayed(Duration(seconds: _animationDelay * 3));
+  }
+
+  ///
+  Future<void> handleAuthAndNavigate() async {
+    final userProvider = context.read<UserProvider>();
+    final token = await SharedPrefs.getToken();
+    final status = await SharedPrefs.getSharedString(AppStrings.status);
+
+    if (token.isNotEmpty) {
+      /// if there is token that means user have logged in so set flag to true
+      userProvider.setIsUserLoggedIn = true;
+
+      if (status != "active") {
+        MethodHelper().redirectDeletedOrInActiveUserToLoginPage(
+          context: context,
+        );
+        return;
+      }
+      pushRemoveUntil(
+        context: context,
+        widget: MainScreen(),
+        transition: FadeForwardsPageTransitionsBuilder(),
+      );
+    } else {
+      pushRemoveUntil(
+        context: context,
+        widget: OnBoardingScreen(),
+        transition: FadeForwardsPageTransitionsBuilder(),
+      );
+    }
   }
 
   @override
