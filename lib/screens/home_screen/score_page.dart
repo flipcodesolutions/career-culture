@@ -5,6 +5,7 @@ import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/score_model/score_board_model.dart';
 import 'package:mindful_youth/provider/score_board_provider/score_board_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:mindful_youth/widgets/custom_image.dart';
@@ -25,6 +26,8 @@ class ScoreboardPage extends StatefulWidget {
 class _ScoreboardPageState extends State<ScoreboardPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  String? userName;
+  String? userPic;
   @override
   void initState() {
     super.initState();
@@ -34,6 +37,7 @@ class _ScoreboardPageState extends State<ScoreboardPage>
       ScoreBoardProvider scoreBoardProvider =
           context.read<ScoreBoardProvider>();
       scoreBoardProvider.getScoreBoard(context: context);
+      getUserName();
       _tabController.addListener(() {
         setState(() {});
       });
@@ -44,6 +48,12 @@ class _ScoreboardPageState extends State<ScoreboardPage>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void getUserName() async {
+    userName = await SharedPrefs.getSharedString(AppStrings.userName);
+    userPic = await SharedPrefs.getSharedString(AppStrings.images);
+    setState(() {});
   }
 
   @override
@@ -99,7 +109,17 @@ class _ScoreboardPageState extends State<ScoreboardPage>
           2: userData.data?.monthly,
         }[tab];
 
-    if (userList?.isEmpty ?? true) return null;
+    if (userList?.isEmpty ?? true) {
+      return CustomContainer(
+        backGroundColor: AppColors.lightWhite,
+        child: TopPlayerCard(
+          isListTile: true,
+          name: userName?.split(" ").first ?? "-",
+          score: "0",
+          imageUrl: "${AppStrings.assetsUrl}${userPic ?? ""}",
+        ),
+      );
+    }
 
     ScorePlayer player = userList!.first;
     return CustomContainer(
