@@ -161,7 +161,8 @@ class AppStrings {
   static const agreeToTerms = "I agree to the terms Of This Event.";
   static const thisNumberIsTaken = "This Number Is Taken";
   static const dateAndTimeFormate = "YYYY MM DD MM:HH";
-  static const dateAndTime = "Date";
+  static const date = "Date";
+  static const dateAndTime = "Date And Time";
   static const preferredModeOfCounseling = "Preferred Mode Of Counseling";
   static const reasonForCounseling = "Reason For Counseling";
   static const enterReason = "Enter Reason";

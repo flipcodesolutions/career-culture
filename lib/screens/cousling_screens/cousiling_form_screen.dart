@@ -170,7 +170,7 @@ class _CousilingFormScreenState extends State<CousilingFormScreen>
                       counselingProvider.isLoading
                           ? Center(child: CustomLoader())
                           : CustomDropDownWidget<String>(
-                            label: AppStrings.dateAndTime,
+                            label: AppStrings.date,
                             hintText: AppStrings.selectDateForCounseling,
                             dropdownMenuEntries:
                                 counselingProvider.getDatesForCounseling(),
