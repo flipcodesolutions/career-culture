@@ -5,6 +5,8 @@ class AppThemeHelper {
   /// change the top status bar color
   static const SystemUiOverlayStyle systemTopStatusBar = SystemUiOverlayStyle(
     statusBarColor: AppColors.primary,
-    statusBarIconBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.dark,
+    systemStatusBarContrastEnforced: true,
+    systemNavigationBarIconBrightness: Brightness.dark,
   );
 }

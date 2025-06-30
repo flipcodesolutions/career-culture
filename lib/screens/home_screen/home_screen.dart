@@ -135,133 +135,136 @@ class _HomeScreenState extends State<HomeScreen>
           ],
           // ],
         ),
-        body: AnimationLimiter(
-          child: CustomRefreshIndicator(
-            onRefresh: () async {
-              await homeScreenProvider.getHomeScreenSlider(context: context);
-              await productProvider.getProductList(context: context);
-              await homeScreenProvider.getUserOverAllScore(context: context);
-              await eventProvider.getAllEvents(context: context);
-            },
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: AnimationConfiguration.toStaggeredList(
-                    childAnimationBuilder:
-                        (widget) => SlideAnimation(
-                          horizontalOffset: 10.w,
-                          duration: Duration(milliseconds: 300),
-                          child: FadeInAnimation(
+        body: SafeArea(
+          child: AnimationLimiter(
+            child: CustomRefreshIndicator(
+              onRefresh: () async {
+                await homeScreenProvider.getHomeScreenSlider(context: context);
+                await productProvider.getProductList(context: context);
+                await homeScreenProvider.getUserOverAllScore(context: context);
+                await eventProvider.getAllEvents(context: context);
+              },
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: AnimationConfiguration.toStaggeredList(
+                      childAnimationBuilder:
+                          (widget) => SlideAnimation(
+                            horizontalOffset: 10.w,
                             duration: Duration(milliseconds: 300),
-                            child: widget,
-                          ),
-                        ),
-                    children: [
-                      SizeHelper.height(),
-
-                      /// search bar
-                      // Padding(
-                      //   padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      //   child: SearchBar(leading: AppIcons.search),
-                      // ),
-                      // SizeHelper.height(height: 4.h),
-
-                      /// user score tracking
-                      if (userProvider.isUserLoggedIn)
-                        homeScreenProvider.isLoading
-                            ? Center(child: CustomLoader())
-                            : DashBoardUserScoreWidget(
-                              onTap:
-                                  () =>
-                                      homeScreenProvider.setNavigationIndex = 4,
-                              score:
-                                  homeScreenProvider
-                                      .overAllScoreModel
-                                      ?.data
-                                      ?.totalPoints
-                                      .toString() ??
-                                  "-",
-                              pendingScore:
-                                  homeScreenProvider
-                                      .overAllScoreModel
-                                      ?.data
-                                      ?.pendingPoints
-                                      .toString() ??
-                                  "",
-                              animationDuration: Duration(seconds: 3),
+                            child: FadeInAnimation(
+                              duration: Duration(milliseconds: 300),
+                              child: widget,
                             ),
+                          ),
+                      children: [
+                        SizeHelper.height(),
 
-                      SizeHelper.height(),
-                      Selector<HomeScreenProvider, bool>(
-                        builder:
-                            (context, value, child) => SliderRenderWidget(),
-                        selector:
-                            (p0, homeScreenProduct) =>
-                                homeScreenProduct.isLoading,
-                      ),
+                        /// search bar
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(horizontal: 5.w),
+                        //   child: SearchBar(leading: AppIcons.search),
+                        // ),
+                        // SizeHelper.height(height: 4.h),
 
-                      /// user pashes
-                      SizeHelper.height(),
-                      if (userProvider.isUserLoggedIn) ...[
+                        /// user score tracking
+                        if (userProvider.isUserLoggedIn)
+                          homeScreenProvider.isLoading
+                              ? Center(child: CustomLoader())
+                              : DashBoardUserScoreWidget(
+                                onTap:
+                                    () =>
+                                        homeScreenProvider.setNavigationIndex =
+                                            4,
+                                score:
+                                    homeScreenProvider
+                                        .overAllScoreModel
+                                        ?.data
+                                        ?.totalPoints
+                                        .toString() ??
+                                    "-",
+                                pendingScore:
+                                    homeScreenProvider
+                                        .overAllScoreModel
+                                        ?.data
+                                        ?.pendingPoints
+                                        .toString() ??
+                                    "",
+                                animationDuration: Duration(seconds: 3),
+                              ),
+
+                        SizeHelper.height(),
+                        Selector<HomeScreenProvider, bool>(
+                          builder:
+                              (context, value, child) => SliderRenderWidget(),
+                          selector:
+                              (p0, homeScreenProduct) =>
+                                  homeScreenProduct.isLoading,
+                        ),
+
+                        /// user pashes
+                        SizeHelper.height(),
+                        if (userProvider.isUserLoggedIn) ...[
+                          /// recent activity text
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: CustomText(
+                              text: AppStrings.recentActivity,
+                              style: TextStyleHelper.mediumHeading.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                          SizeHelper.height(),
+
+                          /// progress
+                          ChapterProgressWidget(),
+
+                          SizeHelper.height(),
+                        ],
+
                         /// recent activity text
+                        /// only show annoncement if available
+                        if (eventProvider.eventModel?.data
+                                ?.where(
+                                  (element) => element.isAnnouncement == "yes",
+                                )
+                                .toList()
+                                .isNotEmpty ==
+                            true)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: CustomText(
+                              text: AppStrings.announceMent,
+                              style: TextStyleHelper.mediumHeading.copyWith(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        SizeHelper.height(),
+                        CustomAnnouncementSlider(eventProvider: eventProvider),
+                        SizeHelper.height(),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: CustomText(
-                            text: AppStrings.recentActivity,
+                            text: AppStrings.products,
                             style: TextStyleHelper.mediumHeading.copyWith(
                               color: AppColors.primary,
                             ),
                           ),
                         ),
                         SizeHelper.height(),
-
-                        /// progress
-                        ChapterProgressWidget(),
-
+                        ProductShowCase(),
                         SizeHelper.height(),
                       ],
-
-                      /// recent activity text
-                      /// only show annoncement if available 
-                      if (eventProvider.eventModel?.data
-                              ?.where(
-                                (element) => element.isAnnouncement == "yes",
-                              )
-                              .toList()
-                              .isNotEmpty ==
-                          true)
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: CustomText(
-                            text: AppStrings.announceMent,
-                            style: TextStyleHelper.mediumHeading.copyWith(
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      SizeHelper.height(),
-                      CustomAnnouncementSlider(eventProvider: eventProvider),
-                      SizeHelper.height(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: CustomText(
-                          text: AppStrings.products,
-                          style: TextStyleHelper.mediumHeading.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                      SizeHelper.height(),
-                      ProductShowCase(),
-                      SizeHelper.height(),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

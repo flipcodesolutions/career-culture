@@ -135,64 +135,68 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
           itemCount: userProvider.signUpSteps.length,
           itemBuilder: (context, index) => userProvider.signUpSteps[index],
         ),
-        bottomNavigationBar: CustomContainer(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-          child:
-              signUpProvider.isLoading
-                  ? CustomContainer(
-                    alignment: Alignment.center,
-                    width: 90.w,
-                    height: 5.h,
-                    child: CustomLoader(),
-                  )
-                  : PrimaryBtn(
-                    width: 90.w,
-                    btnText:
-                        userProvider.currentSignUpPageIndex ==
-                                userProvider.signUpSteps.length - 1
-                            ? signUpProvider.isUpdatingProfile
-                                ? AppStrings.update
-                                : AppStrings.submit
-                            : AppStrings.continue_,
-                    onTap: () async {
-                      // log(
-                      //   "first ${signUpProvider.firstName.text} middle ${signUpProvider.middleName.text} last ${signUpProvider.lastName.text} birth ${signUpProvider.birthDate.text} convener ${signUpProvider.selectedConvener?.name} gender ${signUpProvider.genderQuestion.answer} image ${signUpProvider.signUpRequestModel.imageFile.length}",
-                      // );
-                      int currentPage = userProvider.currentSignUpPageIndex;
+        bottomNavigationBar: SafeArea(
+          child: CustomContainer(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+            child:
+                signUpProvider.isLoading
+                    ? CustomContainer(
+                      alignment: Alignment.center,
+                      width: 90.w,
+                      height: 5.h,
+                      child: CustomLoader(),
+                    )
+                    : PrimaryBtn(
+                      width: 90.w,
+                      btnText:
+                          userProvider.currentSignUpPageIndex ==
+                                  userProvider.signUpSteps.length - 1
+                              ? signUpProvider.isUpdatingProfile
+                                  ? AppStrings.update
+                                  : AppStrings.submit
+                              : AppStrings.continue_,
+                      onTap: () async {
+                        // log(
+                        //   "first ${signUpProvider.firstName.text} middle ${signUpProvider.middleName.text} last ${signUpProvider.lastName.text} birth ${signUpProvider.birthDate.text} convener ${signUpProvider.selectedConvener?.name} gender ${signUpProvider.genderQuestion.answer} image ${signUpProvider.signUpRequestModel.imageFile.length}",
+                        // );
+                        int currentPage = userProvider.currentSignUpPageIndex;
 
-                      bool isValid = false;
-                      switch (currentPage) {
-                        case 0:
-                          isValid = signUpProvider.validateFirstPage(context);
-                          break;
-                        case 1:
-                          isValid = await signUpProvider.validateSecondPage(
-                            context,
+                        bool isValid = false;
+                        switch (currentPage) {
+                          case 0:
+                            isValid = signUpProvider.validateFirstPage(context);
+                            break;
+                          case 1:
+                            isValid = await signUpProvider.validateSecondPage(
+                              context,
+                            );
+                            break;
+                          case 2:
+                            isValid = signUpProvider.validateThirdPage(context);
+                            break;
+                          // Add more cases for other pages
+                        }
+
+                        if (!isValid) return;
+                        if (currentPage ==
+                            userProvider.signUpSteps.length - 1) {
+                          signUpProvider.buildSignUpRequestModel(
+                            context: context,
                           );
-                          break;
-                        case 2:
-                          isValid = signUpProvider.validateThirdPage(context);
-                          break;
-                        // Add more cases for other pages
-                      }
+                        }
 
-                      if (!isValid) return;
-                      if (currentPage == userProvider.signUpSteps.length - 1) {
-                        signUpProvider.buildSignUpRequestModel(
-                          context: context,
-                        );
-                      }
-
-                      if (currentPage < (userProvider.signUpSteps.length - 1)) {
-                        userProvider.setCurrentSignupPageIndex =
-                            currentPage + 1;
-                        pageController.nextPage(
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    },
-                  ),
+                        if (currentPage <
+                            (userProvider.signUpSteps.length - 1)) {
+                          userProvider.setCurrentSignupPageIndex =
+                              currentPage + 1;
+                          pageController.nextPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    ),
+          ),
         ),
       ),
     );

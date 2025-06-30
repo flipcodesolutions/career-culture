@@ -64,6 +64,7 @@ void main() async {
   ]);
   await dotenv.load(fileName: ".env");
   NotificationHelper().init();
+  
   runApp(
     MultiProvider(
       providers: [

@@ -67,42 +67,46 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                 ),
               ],
             ),
-            body: PageView(
-              controller: pageController,
-              onPageChanged:
-                  (value) => onBoardingProvider.setCurrentPage = value,
-              physics: PageScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              children: onBoardingProvider.onBoardingSinglePageList(),
+            body: SafeArea(
+              child: PageView(
+                controller: pageController,
+                onPageChanged:
+                    (value) => onBoardingProvider.setCurrentPage = value,
+                physics: PageScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                children: onBoardingProvider.onBoardingSinglePageList(),
+              ),
             ),
-            bottomNavigationBar: CustomContainer(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-              child:
-                  (onBoardingProvider.currentPage <
-                              (onBoardingProvider
-                                          .onBoardingModel
-                                          ?.data
-                                          ?.length ??
-                                      0) -
-                                  1) ==
-                          true
-                      ? PrimaryBtn(
-                        btnText: AppStrings.next,
-                        onTap: () {
-                          pageController.nextPage(
-                            duration: Duration(milliseconds: 500),
-                            curve: Curves.easeInOut,
-                          );
-                          onBoardingProvider.setCurrentPage =
-                              onBoardingProvider.currentPage + 1;
-                        },
-                        textStyle: TextStyleHelper.mediumHeading,
-                      )
-                      : PrimaryBtn(
-                        btnText: AppStrings.letsBegin,
-                        onTap: () => redirectUserToLoginPage(),
-                        textStyle: TextStyleHelper.mediumHeading,
-                      ),
+            bottomNavigationBar: SafeArea(
+              child: CustomContainer(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child:
+                    (onBoardingProvider.currentPage <
+                                (onBoardingProvider
+                                            .onBoardingModel
+                                            ?.data
+                                            ?.length ??
+                                        0) -
+                                    1) ==
+                            true
+                        ? PrimaryBtn(
+                          btnText: AppStrings.next,
+                          onTap: () {
+                            pageController.nextPage(
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            );
+                            onBoardingProvider.setCurrentPage =
+                                onBoardingProvider.currentPage + 1;
+                          },
+                          textStyle: TextStyleHelper.mediumHeading,
+                        )
+                        : PrimaryBtn(
+                          btnText: AppStrings.letsBegin,
+                          onTap: () => redirectUserToLoginPage(),
+                          textStyle: TextStyleHelper.mediumHeading,
+                        ),
+              ),
             ),
           )
           : RedirectToLoginScreen();

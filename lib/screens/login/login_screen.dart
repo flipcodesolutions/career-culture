@@ -205,31 +205,33 @@ class _LoginScreenState extends State<LoginScreen> with NavigateHelper {
           ),
         ),
       ),
-      bottomNavigationBar: CustomContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              onTap: () {
-                context.read<UserProvider>().setCurrentSignupPageIndex = 0;
-                context.read<SignUpProvider>().setIsUpdatingProfile = false;
-                push(
-                  context: context,
-                  widget: SignUpScreen(),
-                  transition: OpenUpwardsPageTransitionsBuilder(),
-                );
-              },
-              child: CustomText(text: AppStrings.dontHaveAccount),
-            ),
-            SizeHelper.height(height: 1.h),
-            Divider(
-              color: AppColors.primary,
-              thickness: 3,
-              endIndent: 30.w,
-              indent: 30.w,
-            ),
-          ],
+      bottomNavigationBar: SafeArea(
+        child: CustomContainer(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InkWell(
+                onTap: () {
+                  context.read<UserProvider>().setCurrentSignupPageIndex = 0;
+                  context.read<SignUpProvider>().setIsUpdatingProfile = false;
+                  push(
+                    context: context,
+                    widget: SignUpScreen(),
+                    transition: OpenUpwardsPageTransitionsBuilder(),
+                  );
+                },
+                child: CustomText(text: AppStrings.dontHaveAccount),
+              ),
+              SizeHelper.height(height: 1.h),
+              Divider(
+                color: AppColors.primary,
+                thickness: 3,
+                endIndent: 30.w,
+                indent: 30.w,
+              ),
+            ],
+          ),
         ),
       ),
     );

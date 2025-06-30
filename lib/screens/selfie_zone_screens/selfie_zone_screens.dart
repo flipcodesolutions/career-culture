@@ -150,22 +150,24 @@ class _SelfieZoneScreenState extends State<SelfieZoneScreen>
                   ],
                 ),
               ),
-      bottomNavigationBar: CustomContainer(
-        margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-        child: PrimaryBtn(
-          onTap: () async {
-            final bool success = await push(
-              context: context,
-              widget: UploadSelfie(),
-              transition: OpenUpwardsPageTransitionsBuilder(),
-            );
-            if (success) {
-              await selfieProvider.getUploadedSelfieWithStatus(
+      bottomNavigationBar: SafeArea(
+        child: CustomContainer(
+          margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          child: PrimaryBtn(
+            onTap: () async {
+              final bool success = await push(
                 context: context,
+                widget: UploadSelfie(),
+                transition: OpenUpwardsPageTransitionsBuilder(),
               );
-            }
-          },
-          btnText: AppStrings.uploadSelfie,
+              if (success) {
+                await selfieProvider.getUploadedSelfieWithStatus(
+                  context: context,
+                );
+              }
+            },
+            btnText: AppStrings.uploadSelfie,
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mindful_youth/provider/notification_handler/notification_helper.dart';
 import 'package:mindful_youth/screens/account_screen/account_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
@@ -57,13 +58,15 @@ class _MainScreenState extends State<MainScreen> with NavigateHelper {
         child: Scaffold(
           body: screenList[homeScreenProvider.navigationIndex],
           floatingActionButton: CustomSpeedDial(),
-          bottomNavigationBar: Selector<HomeScreenProvider, int>(
-            builder:
-                (context, navIndex, child) =>
-                    NavigationBarWidget(navIndex: navIndex),
-            selector:
-                (context, homeScreenProvider) =>
-                    homeScreenProvider.navigationIndex,
+          bottomNavigationBar: SafeArea(
+            child: Selector<HomeScreenProvider, int>(
+              builder:
+                  (context, navIndex, child) =>
+                      NavigationBarWidget(navIndex: navIndex),
+              selector:
+                  (context, homeScreenProvider) =>
+                      homeScreenProvider.navigationIndex,
+            ),
           ),
         ),
       ),
