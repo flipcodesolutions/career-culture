@@ -41,9 +41,17 @@ class NoDataFoundIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      width: w ?? 30.w,
-      height: h ?? 15.h,
-      child: Image.asset(icon ?? AppImageStrings.noDataFoundIcon),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomContainer(
+            width: w ?? 30.w,
+            height: h ?? 15.h,
+            child: Image.asset(icon ?? AppImageStrings.noDataFoundIcon),
+          ),
+          NoDataFoundWidget(),
+        ],
+      ),
     );
   }
 }
