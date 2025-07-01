@@ -95,134 +95,146 @@ class _AssessmentScreenState extends State<AssessmentScreen>
           // ),
           shape: Border(bottom: BorderSide(color: AppColors.white)),
         ),
-        body:
-            assessmentProvider.isLoading
-                ? Center(child: CustomLoader())
-                : isQuestions
-                ? SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  child: AnimationLimiter(
-                    child: Column(
-                      children: AnimationConfiguration.toStaggeredList(
-                        childAnimationBuilder:
-                            (widget) => SlideAnimation(
-                              child: FadeInAnimation(child: widget),
-                            ),
-                        children: [
-                          /// assessment heading
-                          CustomContainer(
-                            alignment: Alignment.topLeft,
-                            child: CustomText(
-                              text: AppStrings.assessment,
-                              style: TextStyleHelper.largeHeading.copyWith(
-                                color: AppColors.primary,
-                                fontStyle: FontStyle.italic,
+        body: SafeArea(
+          child:
+              assessmentProvider.isLoading
+                  ? Center(child: CustomLoader())
+                  : isQuestions
+                  ? SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: AnimationLimiter(
+                      child: Column(
+                        children: AnimationConfiguration.toStaggeredList(
+                          childAnimationBuilder:
+                              (widget) => SlideAnimation(
+                                child: FadeInAnimation(child: widget),
+                              ),
+                          children: [
+                            /// assessment heading
+                            CustomContainer(
+                              alignment: Alignment.topLeft,
+                              child: CustomText(
+                                text: AppStrings.assessment,
+                                style: TextStyleHelper.largeHeading.copyWith(
+                                  color: AppColors.primary,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
-                          ),
-                          CustomContainer(
-                            alignment: Alignment.topLeft,
-                            child: CustomText(
-                              text: AppStrings.level1QuizTest,
-                              style: TextStyleHelper.smallText.copyWith(
-                                color: AppColors.blackShade75,
-                                fontStyle: FontStyle.italic,
+                            CustomContainer(
+                              alignment: Alignment.topLeft,
+                              child: CustomText(
+                                text: AppStrings.level1QuizTest,
+                                style: TextStyleHelper.smallText.copyWith(
+                                  color: AppColors.blackShade75,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
-                          ),
-                          SizeHelper.height(),
-                          QuestionRowAndColumInfoWithIcon(
-                            heading1:
-                                "${mediaList?.length ?? 0} ${AppStrings.questions}",
-                            heading2: AppStrings.multipleChoiceAnswer,
-                            icon: Icons.question_mark_outlined,
-                          ),
-                          SizeHelper.height(height: 1.h),
-                          QuestionRowAndColumInfoWithIcon(
-                            heading1: assessmentProvider.point.toString(),
-                            heading2: AppStrings.perQuestion,
-                            icon: Icons.checklist_rtl_rounded,
-                          ),
-                          SizeHelper.height(height: 1.h),
-                          Divider(),
-                          CustomContainer(
-                            child: IntrinsicHeight(
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    children: List.generate(
-                                      mediaList?.length ?? 0,
-                                      (index) {
-                                        AssessmentQuestion? item =
-                                            mediaList?[index];
-                                        if (!isMedia && item?.type == "video" ||
-                                            item?.type == "audio" ||
-                                            item?.type == "image") {
-                                          isMedia = true;
-                                        }
-                                        return QuestionWidget(
-                                          isInReviewMode: widget.isInReviewMode,
-                                          question:
-                                              item ?? AssessmentQuestion(),
-                                          questionIndex: index + 1,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  if (!assessmentProvider.isTestStarted &&
-                                      !widget.isInReviewMode)
-                                    ClipRect(
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                          sigmaX: 5.0,
-                                          sigmaY: 5.0,
-                                        ),
-                                        child: CustomContainer(),
+                            SizeHelper.height(),
+                            QuestionRowAndColumInfoWithIcon(
+                              heading1:
+                                  "${mediaList?.length ?? 0} ${AppStrings.questions}",
+                              heading2: AppStrings.multipleChoiceAnswer,
+                              icon: Icons.question_mark_outlined,
+                            ),
+                            SizeHelper.height(height: 1.h),
+                            QuestionRowAndColumInfoWithIcon(
+                              heading1: assessmentProvider.point.toString(),
+                              heading2: AppStrings.perQuestion,
+                              icon: Icons.checklist_rtl_rounded,
+                            ),
+                            SizeHelper.height(height: 1.h),
+                            Divider(),
+                            CustomContainer(
+                              child: IntrinsicHeight(
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      children: List.generate(
+                                        mediaList?.length ?? 0,
+                                        (index) {
+                                          AssessmentQuestion? item =
+                                              mediaList?[index];
+                                          if (!isMedia &&
+                                                  item?.type == "video" ||
+                                              item?.type == "audio" ||
+                                              item?.type == "image") {
+                                            isMedia = true;
+                                          }
+                                          return QuestionWidget(
+                                            isInReviewMode:
+                                                widget.isInReviewMode,
+                                            question:
+                                                item ?? AssessmentQuestion(),
+                                            questionIndex: index + 1,
+                                          );
+                                        },
                                       ),
                                     ),
-                                ],
+                                    if (!assessmentProvider.isTestStarted &&
+                                        !widget.isInReviewMode)
+                                      ClipRect(
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 5.0,
+                                            sigmaY: 5.0,
+                                          ),
+                                          child: CustomContainer(),
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
+                  )
+                  : CustomContainer(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 5.w),
+                    width: 90.w,
+                    height: 80.h,
+                    child: NoDataFoundWidget(),
                   ),
-                )
-                : CustomContainer(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 5.w),
-                  width: 90.w,
-                  height: 80.h,
-                  child: NoDataFoundWidget(),
-                ),
-        bottomNavigationBar:
-            isQuestions
-                ? CustomContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                  child: PrimaryBtn(
-                    btnText:
-                        /// if widget is build for review we assume the test is done or when user finish test on success will update it to
-                        isTestDone
-                            ? AppStrings.testCompleted
-                            : !assessmentProvider.isTestStarted
-                            ? AppStrings.startTheTest
-                            : AppStrings.submitAnswer,
-                    onTap:
-                        isTestDone
-                            ? null
-                            : () {
-                              /// logic to submit after finishing all questions
-                              assessmentProvider.isTestStarted
-                                  ? finishTest(
-                                    assessmentProvider: assessmentProvider,
-                                    ctx: context,
-                                  )
-                                  : assessmentProvider.startTest();
-                            },
-                  ),
-                )
-                : null,
+        ),
+        bottomNavigationBar: SafeArea(
+          child:
+              isQuestions
+                  ? CustomContainer(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.h,
+                    ),
+                    child: PrimaryBtn(
+                      btnText:
+                          /// if widget is build for review we assume the test is done or when user finish test on success will update it to
+                          isTestDone
+                              ? AppStrings.testCompleted
+                              : !assessmentProvider.isTestStarted
+                              ? AppStrings.startTheTest
+                              : AppStrings.submitAnswer,
+                      onTap:
+                          isTestDone
+                              ? null
+                              : () {
+                                /// logic to submit after finishing all questions
+                                assessmentProvider.isTestStarted
+                                    ? finishTest(
+                                      assessmentProvider: assessmentProvider,
+                                      ctx: context,
+                                    )
+                                    : assessmentProvider.startTest();
+                              },
+                    ),
+                  )
+                  : SizedBox.shrink(),
+        ),
       ),
     );
   }

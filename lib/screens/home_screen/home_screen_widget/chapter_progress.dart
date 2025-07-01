@@ -75,7 +75,8 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                         children: [
                           CustomText(
                             text:
-                                recentActivityProvider.recentPost?.title ?? "",
+                                recentActivityProvider.recentPost?.title ??
+                                "",
                             maxLines: 2,
                             style: TextStyleHelper.mediumHeading,
                           ),
@@ -103,7 +104,9 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                     ),
                   ],
                 )
-                : Center(child: CustomText(text: AppStrings.noRecentActivity)),
+                : Center(
+                  child: CustomText(text: AppStrings.noRecentActivity),
+                ),
       ),
     );
   }

@@ -57,57 +57,63 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
           ),
         ],
       ),
-      body:
-          productProvider.isLoading
-              ? Center(child: CustomLoader())
-              : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: CustomRefreshIndicator(
-                  onRefresh:
-                      () async => await productProvider.getProductList(
-                        context: context,
-                      ),
-                  child:
-                      productProvider.productModel?.data?.product?.isNotEmpty ==
-                              true
-                          ? GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 8,
-                                  crossAxisSpacing: 8,
-                                  childAspectRatio: 0.7,
-                                ),
-                            itemCount:
-                                productProvider
+      body: SafeArea(
+        child:
+            productProvider.isLoading
+                ? Center(child: CustomLoader())
+                : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomRefreshIndicator(
+                    onRefresh:
+                        () async => await productProvider.getProductList(
+                          context: context,
+                        ),
+                    child:
+                        productProvider
                                     .productModel
                                     ?.data
                                     ?.product
-                                    ?.length ??
-                                0,
-                            itemBuilder: (context, index) {
-                              Product? product =
+                                    ?.isNotEmpty ==
+                                true
+                            ? GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    childAspectRatio: 0.7,
+                                  ),
+                              itemCount:
                                   productProvider
                                       .productModel
                                       ?.data
-                                      ?.product?[index];
-                              return ProductCard(product: product);
-                            },
-                          )
-                          : ListView(
-                            children: [
-                              Center(
-                                child: CustomContainer(
-                                  margin: EdgeInsets.only(top: 35.h),
-                                  child: NoDataFoundIcon(
-                                    icon: AppImageStrings.noProductFound,
+                                      ?.product
+                                      ?.length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                Product? product =
+                                    productProvider
+                                        .productModel
+                                        ?.data
+                                        ?.product?[index];
+                                return ProductCard(product: product);
+                              },
+                            )
+                            : ListView(
+                              children: [
+                                Center(
+                                  child: CustomContainer(
+                                    margin: EdgeInsets.only(top: 35.h),
+                                    child: NoDataFoundIcon(
+                                      icon: AppImageStrings.noProductFound,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                  ),
                 ),
-              ),
+      ),
     );
   }
 }

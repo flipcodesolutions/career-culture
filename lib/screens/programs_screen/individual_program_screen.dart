@@ -86,127 +86,137 @@ class _IndividualProgramScreenState extends State<IndividualProgramScreen>
             text: program?.title ?? "",
           ),
         ),
-        body:
-            programsProvider.isLoading
-                ? Center(child: CustomLoader())
-                : CustomRefreshIndicator(
-                  onRefresh:
-                      () async => Future.wait([
-                        chapterProvider.getChapterById(
-                          context: context,
-                          id:
-                              (programsProvider.currentProgramInfo?.id ?? 0)
-                                  .toString(),
-                        ),
-                        programsProvider.getUserProgress(
-                          context: context,
-                          pId:
-                              programsProvider.currentProgramInfo?.id
-                                  .toString() ??
-                              "",
-                        ),
-                      ]),
-
-                  child: ListView(
-                    children: [
-                      ImageContainer(
-                        image: "${AppStrings.assetsUrl}${program?.image}",
-                        showImageInPanel: true,
-                      ),
-                      SizeHelper.height(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: Html(data: program?.description ?? ""),
-                        //  CustomText(
-                        //   text: program?.description ?? "",
-                        //   useOverflow: false,
-                        // ),
-                      ),
-                      SizeHelper.height(),
-                      ////
-                      CustomContainer(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 5.w,
-                          vertical: 1.h,
-                        ),
-                        backGroundColor: AppColors.lightWhite,
-                        child: CustomText(
-                          text: AppStrings.aspectForYourMentalWellBeing,
-                          style: TextStyleHelper.smallHeading.copyWith(
-                            color: AppColors.primary,
+        body: SafeArea(
+          child:
+              programsProvider.isLoading
+                  ? Center(child: CustomLoader())
+                  : CustomRefreshIndicator(
+                    onRefresh:
+                        () async => Future.wait([
+                          chapterProvider.getChapterById(
+                            context: context,
+                            id:
+                                (programsProvider.currentProgramInfo?.id ?? 0)
+                                    .toString(),
                           ),
-                        ),
-                      ),
-                      SizeHelper.height(),
-                      if (programsProvider.userProgressModel?.data != null) ...[
-                        CustomContainer(
-                          margin: EdgeInsets.symmetric(horizontal: 5.w),
-                          boxShadow: ShadowHelper.scoreContainer,
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          backGroundColor: AppColors.lightWhite,
-                          padding: EdgeInsets.all(AppSize.size10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomContainer(
-                                padding: EdgeInsets.only(left: AppSize.size10),
-                                child: AnimatedCircularProgress(
-                                  percentage: programsProvider.getPercentage(),
-                                  size: AppSize.size100,
-                                  duration: Duration(seconds: 2),
-                                ),
-                              ),
-                              SizeHelper.width(),
-                              Expanded(
-                                child: CustomContainer(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: AppSize.size10,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CustomText(
-                                        text: "Overall Progress",
-                                        useOverflow: false,
-                                        style: TextStyleHelper.mediumHeading
-                                            .copyWith(color: AppColors.primary),
-                                      ),
-                                      CustomText(
-                                        text:
-                                            AppStrings.getMessageAccordingToProgress(
-                                              percentage:
-                                                  programsProvider
-                                                      .getPercentage(),
-                                            ),
-                                        useOverflow: false,
-                                        style: TextStyleHelper.smallText,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                          programsProvider.getUserProgress(
+                            context: context,
+                            pId:
+                                programsProvider.currentProgramInfo?.id
+                                    .toString() ??
+                                "",
                           ),
-                        ),
+                        ]),
 
+                    child: ListView(
+                      children: [
+                        ImageContainer(
+                          image: "${AppStrings.assetsUrl}${program?.image}",
+                          showImageInPanel: true,
+                        ),
                         SizeHelper.height(),
-                      ],
-
-                      /// load if any chapter available
-                      if (chapterProvider.isLoading) ...[
-                        Center(child: CustomLoader()),
-                      ] else ...[
-                        ...chapterProvider.renderChapterList(
-                          isUserLoggedIn: userProvider.isUserLoggedIn,
-                          userProgressModel: programsProvider.userProgressModel,
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Html(data: program?.description ?? ""),
+                          //  CustomText(
+                          //   text: program?.description ?? "",
+                          //   useOverflow: false,
+                          // ),
                         ),
+                        SizeHelper.height(),
+                        ////
+                        CustomContainer(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 1.h,
+                          ),
+                          backGroundColor: AppColors.lightWhite,
+                          child: CustomText(
+                            text: AppStrings.aspectForYourMentalWellBeing,
+                            style: TextStyleHelper.smallHeading.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        SizeHelper.height(),
+                        if (programsProvider.userProgressModel?.data !=
+                            null) ...[
+                          CustomContainer(
+                            margin: EdgeInsets.symmetric(horizontal: 5.w),
+                            boxShadow: ShadowHelper.scoreContainer,
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+                            backGroundColor: AppColors.lightWhite,
+                            padding: EdgeInsets.all(AppSize.size10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomContainer(
+                                  padding: EdgeInsets.only(
+                                    left: AppSize.size10,
+                                  ),
+                                  child: AnimatedCircularProgress(
+                                    percentage:
+                                        programsProvider.getPercentage(),
+                                    size: AppSize.size100,
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                ),
+                                SizeHelper.width(),
+                                Expanded(
+                                  child: CustomContainer(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: AppSize.size10,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CustomText(
+                                          text: "Overall Progress",
+                                          useOverflow: false,
+                                          style: TextStyleHelper.mediumHeading
+                                              .copyWith(
+                                                color: AppColors.primary,
+                                              ),
+                                        ),
+                                        CustomText(
+                                          text:
+                                              AppStrings.getMessageAccordingToProgress(
+                                                percentage:
+                                                    programsProvider
+                                                        .getPercentage(),
+                                              ),
+                                          useOverflow: false,
+                                          style: TextStyleHelper.smallText,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizeHelper.height(),
+                        ],
+
+                        /// load if any chapter available
+                        if (chapterProvider.isLoading) ...[
+                          Center(child: CustomLoader()),
+                        ] else ...[
+                          ...chapterProvider.renderChapterList(
+                            isUserLoggedIn: userProvider.isUserLoggedIn,
+                            userProgressModel:
+                                programsProvider.userProgressModel,
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
+        ),
       ),
     );
   }

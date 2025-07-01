@@ -45,118 +45,122 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
           }
           return false;
         },
-        child: CustomScrollView(
-          primary: true,
-          slivers: [
-            SliverAppBar(
-              expandedHeight: _expandedHeight,
-              pinned: true,
-              elevation: AppSize.size10,
-              backgroundColor: AppColors.white,
-              flexibleSpace: FlexibleSpaceBar(
-                title: CustomText(
-                  text: widget.product?.title ?? "",
-                  style: TextStyleHelper.mediumHeading.copyWith(
-                    color: _collapsed ? AppColors.primary : Colors.white,
+        child: SafeArea(
+          child: CustomScrollView(
+            primary: true,
+            slivers: [
+              SliverAppBar(
+                expandedHeight: _expandedHeight,
+                pinned: true,
+                elevation: AppSize.size10,
+                backgroundColor: AppColors.white,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: CustomText(
+                    text: widget.product?.title ?? "",
+                    style: TextStyleHelper.mediumHeading.copyWith(
+                      color: _collapsed ? AppColors.primary : Colors.white,
+                    ),
                   ),
-                ),
-                background: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    PageView.builder(
-                      itemCount:
-                          productProvider
-                              .getListImage(product: widget.product)
-                              .length,
-                      itemBuilder:
-                          (context, index) => DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Colors.transparent, Colors.black26],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      PageView.builder(
+                        itemCount:
+                            productProvider
+                                .getListImage(product: widget.product)
+                                .length,
+                        itemBuilder:
+                            (context, index) => DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Colors.transparent, Colors.black26],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                              child: CustomImageWithLoader(
+                                fit: BoxFit.cover,
+                                imageUrl:
+                                    "${AppStrings.assetsUrl}${productProvider.getListImage(product: widget.product)[index]}",
                               ),
                             ),
-                            child: CustomImageWithLoader(
-                              fit: BoxFit.cover,
-                              imageUrl:
-                                  "${AppStrings.assetsUrl}${productProvider.getListImage(product: widget.product)[index]}",
-                            ),
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: widget.product?.title ?? "",
-                      useOverflow: false,
-                      style: TextStyleHelper.mediumHeading,
-                    ),
-                    SizeHelper.height(),
-                    CustomText(
-                      text:
-                          '${AppStrings.rupee} ${productProvider.orderModel?.price}',
-                      style: TextStyleHelper.smallHeading.copyWith(
-                        color: AppColors.primary,
                       ),
-                    ),
-                    SizeHelper.height(),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SliverFillRemaining(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                child: CustomText(
-                  text: widget.product?.description ?? "",
-                  style: TextStyleHelper.smallText,
-                  useOverflow: false,
+
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(
+                        text: widget.product?.title ?? "",
+                        useOverflow: false,
+                        style: TextStyleHelper.mediumHeading,
+                      ),
+                      SizeHelper.height(),
+                      CustomText(
+                        text:
+                            '${AppStrings.rupee} ${productProvider.orderModel?.price}',
+                        style: TextStyleHelper.smallHeading.copyWith(
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizeHelper.height(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              SliverFillRemaining(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                  child: CustomText(
+                    text: widget.product?.description ?? "",
+                    style: TextStyleHelper.smallText,
+                    useOverflow: false,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      bottomNavigationBar: CustomContainer(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomText(
-                  text: AppStrings.qty,
-                  style: TextStyleHelper.smallHeading.copyWith(
-                    color: AppColors.primary,
+      bottomNavigationBar: SafeArea(
+        child: CustomContainer(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomText(
+                    text: AppStrings.qty,
+                    style: TextStyleHelper.smallHeading.copyWith(
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-                QtyIncrementDecrement(product: widget.product),
-              ],
-            ),
-            SizeHelper.height(height: 1.h),
-            PrimaryBtn(
-              btnText: AppStrings.buyNow,
-              width: 90.w,
-              onTap:
-                  () => showModalBottomSheet(
-                    backgroundColor: AppColors.white,
-                    context: context,
-                    builder: (context) => OrderSheet(product: widget.product),
-                  ),
-            ),
-          ],
+                  QtyIncrementDecrement(product: widget.product),
+                ],
+              ),
+              SizeHelper.height(height: 1.h),
+              PrimaryBtn(
+                btnText: AppStrings.buyNow,
+                width: 90.w,
+                onTap:
+                    () => showModalBottomSheet(
+                      backgroundColor: AppColors.white,
+                      context: context,
+                      builder: (context) => OrderSheet(product: widget.product),
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -274,23 +278,26 @@ class OrderSheet extends StatelessWidget with NavigateHelper {
 
                 productProvider.isLoading
                     ? Center(child: CustomLoader())
-                    : PrimaryBtn(
-                      width: 90.w,
-                      btnText:
-                          "${AppStrings.placeOrder} (${AppStrings.rupee} ${productProvider.orderModel?.price ?? ""})",
-                      onTap: () async {
-                        if (productProvider.formKey.currentState?.validate() ??
-                            false) {
-                          bool success = await productProvider.order(
-                            context: context,
-                            product: product,
-                            qty: productProvider.orderModel?.qty ?? 1,
-                          );
-                          if (success) {
-                            pop(context);
+                    : SafeArea(
+                      child: PrimaryBtn(
+                        width: 90.w,
+                        btnText:
+                            "${AppStrings.placeOrder} (${AppStrings.rupee} ${productProvider.orderModel?.price ?? ""})",
+                        onTap: () async {
+                          if (productProvider.formKey.currentState
+                                  ?.validate() ??
+                              false) {
+                            bool success = await productProvider.order(
+                              context: context,
+                              product: product,
+                              qty: productProvider.orderModel?.qty ?? 1,
+                            );
+                            if (success) {
+                              pop(context);
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
               ],
             ),

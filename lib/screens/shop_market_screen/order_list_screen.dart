@@ -45,38 +45,42 @@ class _OrderListPageState extends State<OrderListPage> {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body:
-          productProvider.isLoading
-              ? Center(child: CustomLoader())
-              : productProvider.orderListModel?.data?.orders?.isNotEmpty == true
-              ? ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount:
-                    productProvider.orderListModel?.data?.orders?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final Orders? order =
-                      productProvider.orderListModel?.data?.orders?[index];
-                  return OrderCard(order: order);
-                },
-              )
-              : CustomRefreshIndicator(
-                onRefresh:
-                    () async => productProvider.getOrderList(context: context),
-                child: ListView(
-                  children: [
-                    CustomContainer(
-                      height: 90.h,
-                      child: Center(
-                        child: CustomContainer(
-                          child: NoDataFoundIcon(
-                            icon: AppImageStrings.noProductFound,
+      body: SafeArea(
+        child:
+            productProvider.isLoading
+                ? Center(child: CustomLoader())
+                : productProvider.orderListModel?.data?.orders?.isNotEmpty ==
+                    true
+                ? ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount:
+                      productProvider.orderListModel?.data?.orders?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final Orders? order =
+                        productProvider.orderListModel?.data?.orders?[index];
+                    return OrderCard(order: order);
+                  },
+                )
+                : CustomRefreshIndicator(
+                  onRefresh:
+                      () async =>
+                          productProvider.getOrderList(context: context),
+                  child: ListView(
+                    children: [
+                      CustomContainer(
+                        height: 90.h,
+                        child: Center(
+                          child: CustomContainer(
+                            child: NoDataFoundIcon(
+                              icon: AppImageStrings.noProductFound,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+      ),
     );
   }
 }

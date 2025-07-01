@@ -208,75 +208,81 @@ class _PostsScreenState extends State<PostsScreen>
                     ],
                   ),
                 ),
-        bottomNavigationBar:
-            postProvider.currentPost != null
-                ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  child: PrimaryBtn(
-                    width: 90.w,
-                    btnText:
-                        postProvider.currentPost?.isSecondAssessmentDone == true
-                            ? "All Test Completed. Bravo"
-                            : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
-                    onTap: () async {
-                      context.read<AssessmentProvider>().setPostId =
-                          postProvider.currentPost?.id?.toString() ?? "";
-                      bool isFirstDone =
-                          postProvider.currentPost?.isFirstAssessmentDone ==
-                          true;
-                      bool isSecondDone =
+        bottomNavigationBar: SafeArea(
+          child:
+              postProvider.currentPost != null
+                  ? CustomContainer(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
+                    child: PrimaryBtn(
+                      width: 90.w,
+                      btnText:
                           postProvider.currentPost?.isSecondAssessmentDone ==
-                          true;
+                                  true
+                              ? "All Test Completed. Bravo"
+                              : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
+                      onTap: () async {
+                        context.read<AssessmentProvider>().setPostId =
+                            postProvider.currentPost?.id?.toString() ?? "";
+                        bool isFirstDone =
+                            postProvider.currentPost?.isFirstAssessmentDone ==
+                            true;
+                        bool isSecondDone =
+                            postProvider.currentPost?.isSecondAssessmentDone ==
+                            true;
 
-                      if (!isFirstDone && !isSecondDone) {
-                        // Case 1: Neither assessment is done
-                        bool success = await push(
-                          context: context,
-                          widget: AssessmentScreen(
-                            isInReviewMode: false,
-                            postName:
-                                "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
-                          ),
-                          transition: FadeUpwardsPageTransitionsBuilder(),
-                        );
-                        if (success == true) {
-                          //// if completed successfully , get fresh data
-                          await postProvider.getPostById(
+                        if (!isFirstDone && !isSecondDone) {
+                          // Case 1: Neither assessment is done
+                          bool success = await push(
                             context: context,
-                            id: widget.chapterId.toString(),
+                            widget: AssessmentScreen(
+                              isInReviewMode: false,
+                              postName:
+                                  "${postProvider.currentPost?.title}_${postProvider.currentPost?.id}",
+                            ),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          );
+                          if (success == true) {
+                            //// if completed successfully , get fresh data
+                            await postProvider.getPostById(
+                              context: context,
+                              id: widget.chapterId.toString(),
+                            );
+                          }
+                        } else if (isFirstDone && !isSecondDone) {
+                          // Case 2: First done, second not done
+                          bool success = await push(
+                            context: context,
+                            widget: MediaAssessmentScreen(shouldPop3: false),
+                            transition: FadeUpwardsPageTransitionsBuilder(),
+                          );
+                          if (success == true) {
+                            //// if completed successfully , get fresh data
+                            await postProvider.getPostById(
+                              context: context,
+                              id: widget.chapterId.toString(),
+                            );
+                          }
+                        } else if (isFirstDone && isSecondDone) {
+                          // Case 3: Both assessments are done
+                          WidgetHelper.customSnackBar(
+                            title: AppStrings.yourAssessmentIsDoneAlready,
+                          );
+                        } else {
+                          // Fallback: Unexpected state
+                          WidgetHelper.customSnackBar(
+                            title:
+                                "Unexpected state: First Assessment = $isFirstDone, Second Assessment = $isSecondDone",
+                            isError: true,
                           );
                         }
-                      } else if (isFirstDone && !isSecondDone) {
-                        // Case 2: First done, second not done
-                        bool success = await push(
-                          context: context,
-                          widget: MediaAssessmentScreen(shouldPop3: false),
-                          transition: FadeUpwardsPageTransitionsBuilder(),
-                        );
-                        if (success == true) {
-                          //// if completed successfully , get fresh data
-                          await postProvider.getPostById(
-                            context: context,
-                            id: widget.chapterId.toString(),
-                          );
-                        }
-                      } else if (isFirstDone && isSecondDone) {
-                        // Case 3: Both assessments are done
-                        WidgetHelper.customSnackBar(
-                          title: AppStrings.yourAssessmentIsDoneAlready,
-                        );
-                      } else {
-                        // Fallback: Unexpected state
-                        WidgetHelper.customSnackBar(
-                          title:
-                              "Unexpected state: First Assessment = $isFirstDone, Second Assessment = $isSecondDone",
-                          isError: true,
-                        );
-                      }
-                    },
-                  ),
-                )
-                : null,
+                      },
+                    ),
+                  )
+                  : SizedBox.shrink(),
+        ),
       ),
     );
   }

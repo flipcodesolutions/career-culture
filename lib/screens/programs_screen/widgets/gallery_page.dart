@@ -29,22 +29,24 @@ class _GalleryPageState extends State<GalleryPage> {
           ),
         ),
       ),
-      body: CustomListWidget(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        data: widget.imagesStrings,
-        itemBuilder:
-            (item, index) => CustomContainer(
-              margin: EdgeInsets.only(bottom: 2.h),
-              borderRadius: BorderRadius.circular(AppSize.size10),
-              backGroundColor: AppColors.lightWhite,
-              child: ClipRRect(
+      body: SafeArea(
+        child: CustomListWidget(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          data: widget.imagesStrings,
+          itemBuilder:
+              (item, index) => CustomContainer(
+                margin: EdgeInsets.only(bottom: 2.h),
                 borderRadius: BorderRadius.circular(AppSize.size10),
-                child: CustomImageWithLoader(
-                  skeletonHeight: 20.h,
-                  imageUrl: "${AppStrings.assetsUrl}${item}",
+                backGroundColor: AppColors.lightWhite,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSize.size10),
+                  child: CustomImageWithLoader(
+                    skeletonHeight: 20.h,
+                    imageUrl: "${AppStrings.assetsUrl}${item}",
+                  ),
                 ),
               ),
-            ),
+        ),
       ),
     );
   }

@@ -32,27 +32,29 @@ class ReferralPage extends StatelessWidget {
           style: TextStyleHelper.mediumHeading,
         ),
       ),
-      body: Column(
-        children: [
-          CustomContainer(
-            width: 100.w,
-            height: 30.h,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(AppImageStrings.referPage),
+      body: SafeArea(
+        child: Column(
+          children: [
+            CustomContainer(
+              width: 100.w,
+              height: 30.h,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(AppImageStrings.referPage),
+              ),
             ),
-          ),
-          ReferralHeader(),
-          SizeHelper.height(height: 4.h),
-          ReferralTimeline(),
-          SizeHelper.height(height: 3.h),
-          CustomText(text: "Your Referral Code"),
-          SizeHelper.height(),
-          ReferralCodeCard(referCode: referCode),
-          SizedBox(height: 2.h),
-        ],
+            ReferralHeader(),
+            SizeHelper.height(height: 4.h),
+            ReferralTimeline(),
+            SizeHelper.height(height: 3.h),
+            CustomText(text: "Your Referral Code"),
+            SizeHelper.height(),
+            ReferralCodeCard(referCode: referCode),
+            SizedBox(height: 2.h),
+          ],
+        ),
       ),
-      bottomNavigationBar: ShareButton(referCode: referCode),
+      bottomNavigationBar: SafeArea(child: ShareButton(referCode: referCode)),
     );
   }
 }

@@ -55,117 +55,124 @@ class _UploadSelfieState extends State<UploadSelfie> with NavigateHelper {
             ),
           ),
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                selfieProvider.isLoading
-                    ? Center(child: CustomLoader())
-                    : CustomDropDownWidget<int?>(
-                      hintText: AppStrings.selectQuestion,
-                      dropdownMenuEntries: selfieProvider.dropdownMenuEntries(),
-                      onSelected:
-                          (dynamic questionId) => selfieProvider
-                              .setSelectedQuestion(data: questionId as int?),
-                    ),
-                SizeHelper.height(height: 1.h),
-                CustomContainer(
-                  height: 25.h,
-                  width: 90.w,
-                  backGroundColor: AppColors.lightWhite,
-                  borderRadius: BorderRadius.circular(AppSize.size10),
-                  padding: EdgeInsets.all(AppSize.size10),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: CustomContainer(
-                          child:
-                              selfieProvider.selectedImage != null
-                                  ? Image.file(
-                                    selfieProvider.selectedImage ?? File(""),
-                                  )
-                                  : Image.asset(
-                                    AppImageStrings.uploadIcon,
-                                    width: 20.w,
-                                    height: 5.h,
-                                  ),
-                        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  selfieProvider.isLoading
+                      ? Center(child: CustomLoader())
+                      : CustomDropDownWidget<int?>(
+                        hintText: AppStrings.selectQuestion,
+                        dropdownMenuEntries:
+                            selfieProvider.dropdownMenuEntries(),
+                        onSelected:
+                            (dynamic questionId) => selfieProvider
+                                .setSelectedQuestion(data: questionId as int?),
                       ),
-                      SizeHelper.height(height: 1.h),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(AppSize.size10),
-                          onTap:
-                              () => ImagePickerHelper.showImagePicker(
-                                context,
-                                (image) async =>
-                                    selfieProvider.setSelectedImage = image,
-                              ),
+                  SizeHelper.height(height: 1.h),
+                  CustomContainer(
+                    height: 25.h,
+                    width: 90.w,
+                    backGroundColor: AppColors.lightWhite,
+                    borderRadius: BorderRadius.circular(AppSize.size10),
+                    padding: EdgeInsets.all(AppSize.size10),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 3,
                           child: CustomContainer(
-                            alignment: Alignment.center,
-                            borderRadius: BorderRadius.circular(AppSize.size10),
-                            backGroundColor: AppColors.body2,
-                            width: 87.w,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 5.w,
-                              vertical: 1.h,
-                            ),
-                            child: CustomText(text: AppStrings.uploadSelfie),
+                            child:
+                                selfieProvider.selectedImage != null
+                                    ? Image.file(
+                                      selfieProvider.selectedImage ?? File(""),
+                                    )
+                                    : Image.asset(
+                                      AppImageStrings.uploadIcon,
+                                      width: 20.w,
+                                      height: 5.h,
+                                    ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizeHelper.height(height: 1.h),
-                CustomContainer(
-                  width: 90.w,
-                  padding: EdgeInsets.all(AppSize.size10),
-                  backGroundColor: AppColors.lightWhite,
-                  borderRadius: BorderRadius.circular(AppSize.size10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        text: "Disclaimer :",
-                        style: TextStyleHelper.smallHeading.copyWith(
-                          fontStyle: FontStyle.italic,
+                        SizeHelper.height(height: 1.h),
+                        Expanded(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(AppSize.size10),
+                            onTap:
+                                () => ImagePickerHelper.showImagePicker(
+                                  context,
+                                  (image) async =>
+                                      selfieProvider.setSelectedImage = image,
+                                ),
+                            child: CustomContainer(
+                              alignment: Alignment.center,
+                              borderRadius: BorderRadius.circular(
+                                AppSize.size10,
+                              ),
+                              backGroundColor: AppColors.body2,
+                              width: 87.w,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 5.w,
+                                vertical: 1.h,
+                              ),
+                              child: CustomText(text: AppStrings.uploadSelfie),
+                            ),
+                          ),
                         ),
-                      ),
-                      SizeHelper.height(height: 1.h),
-                      CustomText(
-                        text:
-                            "If Your Selfie gets Approved , It Will be Displayed In Wall Feed Posts, Please take note of this before you upload !!",
-                        useOverflow: false,
-                        style: TextStyleHelper.smallText.copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  SizeHelper.height(height: 1.h),
+                  CustomContainer(
+                    width: 90.w,
+                    padding: EdgeInsets.all(AppSize.size10),
+                    backGroundColor: AppColors.lightWhite,
+                    borderRadius: BorderRadius.circular(AppSize.size10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Disclaimer :",
+                          style: TextStyleHelper.smallHeading.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        SizeHelper.height(height: 1.h),
+                        CustomText(
+                          text:
+                              "If Your Selfie gets Approved , It Will be Displayed In Wall Feed Posts, Please take note of this before you upload !!",
+                          useOverflow: false,
+                          style: TextStyleHelper.smallText.copyWith(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        bottomNavigationBar: CustomContainer(
-          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-          child:
-              selfieProvider.isLoading
-                  ? Center(child: CustomLoader())
-                  : PrimaryBtn(
-                    btnText: AppStrings.submit,
-                    onTap: () {
-                      if (formKey.currentState?.validate() == true) {
-                        selfieProvider.uploadSelfie();
-                      }
-                    },
-                  ),
+        bottomNavigationBar: SafeArea(
+          child: CustomContainer(
+            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+            child:
+                selfieProvider.isLoading
+                    ? Center(child: CustomLoader())
+                    : PrimaryBtn(
+                      btnText: AppStrings.submit,
+                      onTap: () {
+                        if (formKey.currentState?.validate() == true) {
+                          selfieProvider.uploadSelfie();
+                        }
+                      },
+                    ),
+          ),
         ),
       ),
     );

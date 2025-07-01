@@ -70,14 +70,14 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>
           ),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          padding: EdgeInsets.symmetric(vertical: 2.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomContainer(
-                width: 90.w,
+                width: 100.w,
                 height: 30.h,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(AppSize.size10),
@@ -88,9 +88,13 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>
                 ),
               ),
               SizeHelper.height(),
-              CustomText(
-                text: widget.eventInfo.description ?? "No Description To Show ",
-                useOverflow: false,
+              CustomContainer(
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child: CustomText(
+                  text:
+                      widget.eventInfo.description ?? "No Description To Show ",
+                  useOverflow: false,
+                ),
               ),
               SizeHelper.height(),
               HeadingText(text: AppStrings.dateAndTime),
@@ -188,9 +192,20 @@ class HeadingText extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) {
-    return CustomText(
-      text: text,
-      style: TextStyleHelper.mediumHeading.copyWith(color: AppColors.primary),
+    return CustomContainer(
+      backGroundColor: AppColors.lightWhite,
+      margin: EdgeInsets.only(left: 5.w),
+      padding: EdgeInsets.symmetric(vertical: 0.5.h),
+      child: Row(
+        children: [
+          CustomText(
+            text: text,
+            style: TextStyleHelper.smallHeading.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -201,8 +216,9 @@ class paddedText extends StatelessWidget {
   final String heading;
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return CustomContainer(
       padding: EdgeInsets.only(left: 3.w),
+      margin: EdgeInsets.only(left: 3.w),
       child: RichText(
         text: TextSpan(
           text: "• $heading",
