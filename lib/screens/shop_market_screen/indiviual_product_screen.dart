@@ -27,101 +27,79 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> with NavigateHelper {
-  bool _collapsed = false;
-  // match your expandedHeight:
-  final double _expandedHeight = 30.h;
   @override
   Widget build(BuildContext context) {
     ProductProvider productProvider = context.watch<ProductProvider>();
     return Scaffold(
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (n) {
-          if (n.metrics.axis == Axis.vertical) {
-            final shouldCollapse =
-                n.metrics.pixels > (_expandedHeight - kToolbarHeight);
-            if (shouldCollapse != _collapsed) {
-              setState(() => _collapsed = shouldCollapse);
-            }
-          }
-          return false;
-        },
-        child: SafeArea(
-          child: CustomScrollView(
-            primary: true,
-            slivers: [
-              SliverAppBar(
-                expandedHeight: _expandedHeight,
-                pinned: true,
-                elevation: AppSize.size10,
-                backgroundColor: AppColors.white,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: CustomText(
-                    text: widget.product?.title ?? "",
-                    style: TextStyleHelper.mediumHeading.copyWith(
-                      color: _collapsed ? AppColors.primary : Colors.white,
-                    ),
-                  ),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      PageView.builder(
-                        itemCount:
-                            productProvider
-                                .getListImage(product: widget.product)
-                                .length,
-                        itemBuilder:
-                            (context, index) => DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Colors.transparent, Colors.black26],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                              child: CustomImageWithLoader(
-                                fit: BoxFit.cover,
-                                imageUrl:
-                                    "${AppStrings.assetsUrl}${productProvider.getListImage(product: widget.product)[index]}",
-                              ),
-                            ),
+      appBar: AppBar(
+        title: CustomText(
+          text: widget.product?.title ?? "",
+          style: TextStyleHelper.mediumHeading.copyWith(
+            color: AppColors.primary,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: PageView.builder(
+                  itemCount:
+                      productProvider
+                          .getListImage(product: widget.product)
+                          .length,
+                  itemBuilder:
+                      (context, index) => DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.transparent, Colors.black26],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                        child: CustomImageWithLoader(
+                          fit: BoxFit.cover,
+                          imageUrl:
+                              "${AppStrings.assetsUrl}${productProvider.getListImage(product: widget.product)[index]}",
+                        ),
                       ),
-                    ],
-                  ),
                 ),
               ),
 
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        text: widget.product?.title ?? "",
-                        useOverflow: false,
-                        style: TextStyleHelper.mediumHeading,
+              CustomContainer(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: widget.product?.title ?? "",
+                      useOverflow: false,
+                      style: TextStyleHelper.mediumHeading,
+                    ),
+                    SizeHelper.height(),
+                    CustomText(
+                      text:
+                          '${AppStrings.rupee} ${productProvider.orderModel?.price}',
+                      style: TextStyleHelper.smallHeading.copyWith(
+                        color: AppColors.primary,
                       ),
-                      SizeHelper.height(),
-                      CustomText(
-                        text:
-                            '${AppStrings.rupee} ${productProvider.orderModel?.price}',
-                        style: TextStyleHelper.smallHeading.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                      SizeHelper.height(),
-                    ],
-                  ),
+                    ),
+                    SizeHelper.height(),
+                  ],
                 ),
               ),
-              SliverFillRemaining(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                  child: CustomText(
-                    text: widget.product?.description ?? "",
-                    style: TextStyleHelper.smallText,
-                    useOverflow: false,
-                  ),
+              CustomContainer(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                child: CustomText(
+                  text: widget.product?.description ?? "",
+                  style: TextStyleHelper.smallText,
+                  useOverflow: false,
                 ),
               ),
             ],

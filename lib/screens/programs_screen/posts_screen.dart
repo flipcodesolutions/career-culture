@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -288,15 +290,33 @@ class _PostsScreenState extends State<PostsScreen>
   }
 }
 
-class SinglePostWIdget extends StatelessWidget with NavigateHelper {
+class SinglePostWIdget extends StatefulWidget {
   const SinglePostWIdget({super.key, required this.post});
 
   final PostInfo? post;
 
   @override
+  State<SinglePostWIdget> createState() => _SinglePostWIdgetState();
+}
+
+class _SinglePostWIdgetState extends State<SinglePostWIdget>
+    with NavigateHelper {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() async {
+      await context.read<RecentActivityProvider>().saveRecentActivity(
+        context.read<PostProvider>().currentPost,
+      );
+      log("saving done");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     PostProvider postProvider = context.watch<PostProvider>();
-    if (post == null) return Center(child: NoDataFoundWidget());
+    if (widget.post == null) return Center(child: NoDataFoundWidget());
 
     return PopScope(
       canPop: false,
@@ -313,7 +333,7 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
         onRefresh:
             () async => postProvider.getPostById(
               context: context,
-              id: post?.chapterId.toString() ?? "",
+              id: widget.post?.chapterId.toString() ?? "",
             ),
         child: SingleChildScrollView(
           // padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -324,15 +344,15 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
             children: [
               ImageContainer(
                 showImageInPanel: true,
-                image: "${AppStrings.assetsUrl}${post?.image}",
+                image: "${AppStrings.assetsUrl}${widget.post?.image}",
               ),
               SizeHelper.height(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: Html(data: post?.description ?? ""),
+                child: Html(data: widget.post?.description ?? ""),
               ),
               SizeHelper.height(),
-              if (post?.video?.isNotEmpty == true &&
+              if (widget.post?.video?.isNotEmpty == true &&
                   YoutubePlayer.convertUrlToId(
                         postProvider.currentPost?.video ?? "",
                       )?.isNotEmpty ==
@@ -348,20 +368,20 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
                       boxShadow: ShadowHelper.scoreContainer,
                       child: VideoPreviewScreen(
                         videoUrl: postProvider.currentPost?.video ?? "",
-                        description: post?.description,
+                        description: widget.post?.description,
                       ),
                     ),
                   ),
                 ),
                 SizeHelper.height(),
               ],
-              if (post?.audio?.isNotEmpty == true) ...[
+              if (widget.post?.audio?.isNotEmpty == true) ...[
                 HeadingTextWidget(heading: AppStrings.mustListen),
                 SizeHelper.height(),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: CustomAudioPlayer(
-                    audioUrl: "${AppStrings.assetsUrl}${post?.audio}",
+                    audioUrl: "${AppStrings.assetsUrl}${widget.post?.audio}",
                   ),
                 ),
                 SizeHelper.height(),
@@ -374,7 +394,9 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               MediaRender(
                 heading: AppStrings.video,
                 data:
-                    post?.media?.where((e) => e.type == 'video').toList() ??
+                    widget.post?.media
+                        ?.where((e) => e.type == 'video')
+                        .toList() ??
                     <Media>[],
                 itemBuilder:
                     (item, index) => GestureDetector(
@@ -401,7 +423,9 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               MediaRender(
                 heading: AppStrings.articles,
                 data:
-                    post?.media?.where((e) => e.type == 'article').toList() ??
+                    widget.post?.media
+                        ?.where((e) => e.type == 'article')
+                        .toList() ??
                     [],
                 itemBuilder:
                     (item, index) => GestureDetector(
@@ -423,7 +447,10 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               MediaRender(
                 heading: AppStrings.audio,
                 data:
-                    post?.media?.where((e) => e.type == 'audio').toList() ?? [],
+                    widget.post?.media
+                        ?.where((e) => e.type == 'audio')
+                        .toList() ??
+                    [],
                 itemBuilder:
                     (item, index) => GestureDetector(
                       onTap:
@@ -444,7 +471,10 @@ class SinglePostWIdget extends StatelessWidget with NavigateHelper {
               MediaRender(
                 heading: AppStrings.recommendedBooks,
                 data:
-                    post?.media?.where((e) => e.type == 'book').toList() ?? [],
+                    widget.post?.media
+                        ?.where((e) => e.type == 'book')
+                        .toList() ??
+                    [],
                 itemBuilder:
                     (item, index) => GestureDetector(
                       onTap:
