@@ -190,6 +190,7 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                                 ),
                               ),
                             ),
+                            SizeHelper.height(height: 10.h),
                           ],
                         ),
                       ),
