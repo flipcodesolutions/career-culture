@@ -182,6 +182,7 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                               ),
                             ),
                           ),
+                          if(!widget.isAssessmentPhase2)
                         InkWell(
                           borderRadius: BorderRadius.circular(AppSize.size30),
                           onTap:

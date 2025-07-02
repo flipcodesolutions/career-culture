@@ -173,4 +173,19 @@ class SignUpService {
       return null;
     }
   }
+
+  Future<UserModel?> getUserDetails({required BuildContext context}) async {
+    try {
+      Map<String, dynamic> response = await HttpHelper.get(
+        context: context,
+        uri: ApiHelper.getUserDetails,
+      );
+      if (response.isNotEmpty) {
+        return UserModel.fromJson(response);
+      }
+    } catch (e) {
+      log("error while getting user details => $e");
+      return null;
+    }
+  }
 }

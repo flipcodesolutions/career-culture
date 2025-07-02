@@ -44,7 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
     // if (signUpProvider.isUpdatingProfile) {
     Future.microtask(() async {
       userProvider.setCurrentSignupPageIndex = 0;
-      await signUpProvider.initControllerWithLocalStorage();
+      await signUpProvider.initControllerWithLocalStorage(context: context);
     });
     // }
   }

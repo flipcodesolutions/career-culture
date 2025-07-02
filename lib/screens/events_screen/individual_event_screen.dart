@@ -141,41 +141,47 @@ class _IndividualEventScreenState extends State<IndividualEventScreen>
                 ),
                 SizeHelper.height(),
               ],
-              PrimaryBtn(
-                width: 90.w,
-                btnText: AppStrings.participate,
-                onTap: () {
-                  if (userProvider.isUserLoggedIn) {
-                    userProvider.isUserApproved
-                        ? showDialog(
-                          context: context,
-                          builder:
-                              (context) => ContestAgreementWidget(
-                                id: widget.eventInfo.id.toString(),
-                                termsText:
-                                    widget.eventInfo.terms ??
-                                    "No Terms Found!!",
-                              ),
-                        )
-                        : WidgetHelper.customSnackBar(
-                          autoClose: false,
-                          title: AppStrings.yourAreNotApprovedYet,
-                          isError: true,
-                        );
-                    ;
-                  } else {
-                    push(
-                      context: context,
-                      widget: LoginScreen(),
-                      transition: ScaleFadePageTransitionsBuilder(),
-                    );
-                    WidgetHelper.customSnackBar(
-                      autoClose: false,
-                      title: AppStrings.pleaseLoginFirst,
-                      isError: true,
-                    );
-                  }
-                },
+              CustomContainer(
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                child:
+                    widget.isMyEvents
+                        ? null
+                        : PrimaryBtn(
+                          width: 90.w,
+                          btnText: AppStrings.participate,
+                          onTap: () {
+                            if (userProvider.isUserLoggedIn) {
+                              userProvider.isUserApproved
+                                  ? showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) => ContestAgreementWidget(
+                                          id: widget.eventInfo.id.toString(),
+                                          termsText:
+                                              widget.eventInfo.terms ??
+                                              "No Terms Found!!",
+                                        ),
+                                  )
+                                  : WidgetHelper.customSnackBar(
+                                    autoClose: false,
+                                    title: AppStrings.yourAreNotApprovedYet,
+                                    isError: true,
+                                  );
+                              ;
+                            } else {
+                              push(
+                                context: context,
+                                widget: LoginScreen(),
+                                transition: ScaleFadePageTransitionsBuilder(),
+                              );
+                              WidgetHelper.customSnackBar(
+                                autoClose: false,
+                                title: AppStrings.pleaseLoginFirst,
+                                isError: true,
+                              );
+                            }
+                          },
+                        ),
               ),
               SizeHelper.height(),
             ],

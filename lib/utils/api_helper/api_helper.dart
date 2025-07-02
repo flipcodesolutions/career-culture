@@ -145,4 +145,7 @@ class ApiHelper {
   /// get user notifications
   static String sentUserFeedbackNotificationOpened =
       "$baseUrl/user-read-feedback-notification";
+  /// get user info to update before rendering profile page but should not when user is being registerd
+  static String getUserDetails = "$baseUrl/getUserDetails";
+
 }

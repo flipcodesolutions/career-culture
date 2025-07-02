@@ -867,9 +867,17 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
-  Future<void> initControllerWithLocalStorage() async {
+  Future<void> initControllerWithLocalStorage({
+    required BuildContext context,
+  }) async {
     // print('\n🔄 Initializing SignUpProvider from local storage...');
-
+    if (_isUpdatingProfile) {
+      _isLoading = true;
+      notifyListeners();
+      await signUpService.getUserDetails(context: context);
+      _isLoading = false;
+      notifyListeners();
+    }
     // Reset image file
     _signUpRequestModel.imageFile = [];
     _signUpRequestModel.images = await SharedPrefs.getSharedString(
