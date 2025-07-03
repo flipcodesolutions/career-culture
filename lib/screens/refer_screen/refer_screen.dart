@@ -197,53 +197,55 @@ class ReferralTimeline extends StatelessWidget {
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(_steps.length, (index) {
           final step = _steps[index];
-          return TimelineTile(
-            axis: TimelineAxis.horizontal,
-            alignment: TimelineAlign.start,
-            isFirst: index == 0,
-            isLast: index == _steps.length - 1,
-            beforeLineStyle: LineStyle(color: Colors.teal, thickness: 2),
-            afterLineStyle: LineStyle(color: Colors.teal, thickness: 2),
-            indicatorStyle: IndicatorStyle(
-              width: 20.w,
-              height: 10.h,
-              indicator: CustomContainer(
-                child: Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    CustomContainer(
-                      gradient: LinearGradient(
-                        colors: [Colors.blue, Colors.teal],
+          return Expanded(
+            child: TimelineTile(
+              axis: TimelineAxis.horizontal,
+              alignment: TimelineAlign.start,
+              isFirst: index == 0,
+              isLast: index == _steps.length - 1,
+              beforeLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+              afterLineStyle: LineStyle(color: Colors.teal, thickness: 2),
+              indicatorStyle: IndicatorStyle(
+                width: 20.w,
+                height: 10.h,
+                indicator: CustomContainer(
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      CustomContainer(
+                        gradient: LinearGradient(
+                          colors: [Colors.blue, Colors.teal],
+                        ),
+                        shape: BoxShape.circle,
+                        padding: const EdgeInsets.all(AppSize.size20),
+                        child: step.icon,
                       ),
-                      shape: BoxShape.circle,
-                      padding: const EdgeInsets.all(AppSize.size20),
-                      child: step.icon,
-                    ),
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      child: CircleAvatar(
-                        radius: AppSize.size10,
-                        backgroundColor: Colors.red,
-                        child: CustomText(
-                          text: '${index + 1}',
-                          style: TextStyleHelper.smallText.copyWith(
-                            color: AppColors.white,
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: CircleAvatar(
+                          radius: AppSize.size10,
+                          backgroundColor: Colors.red,
+                          child: CustomText(
+                            text: '${index + 1}',
+                            style: TextStyleHelper.smallText.copyWith(
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            endChild: CustomContainer(
-              width: 29.99.w,
-              padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-              child: CustomText(
-                text: step.label,
-                textAlign: TextAlign.center,
-                useOverflow: false,
+              endChild: CustomContainer(
+                width: 29.99.w,
+                padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                child: CustomText(
+                  text: step.label,
+                  textAlign: TextAlign.center,
+                  useOverflow: false,
+                ),
               ),
             ),
           );
