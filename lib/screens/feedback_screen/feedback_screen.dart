@@ -52,12 +52,12 @@ class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     FeedbackProvider feedbackProvider = context.watch<FeedbackProvider>();
+    final UserNotificationProvider userNotificationProvider =
+        context.read<UserNotificationProvider>();
     final FeedbackModelPayload model = widget.model;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        final UserNotificationProvider userNotificationProvider =
-            context.read<UserNotificationProvider>();
         if (!didPop) {
           if (isFeedbackSubmitted) {
             final bool success = await userNotificationProvider
@@ -360,7 +360,19 @@ class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
                             setState(() {
                               isFeedbackSubmitted = success;
                             });
-                            pop(context, result: success);
+                            final bool isRead = await userNotificationProvider
+                                .sentBackendThatFeedbackNotificationIsOpened(
+                                  context: context,
+                                  notificationId:
+                                      model.appointment?.id.toString() ?? "",
+                                );
+                            if (isRead) {
+                              pop(context, result: success);
+                            } else {
+                              WidgetHelper.customSnackBar(
+                                title: "Please Try again later",
+                              );
+                            }
                           } else {}
                         }
                       },
