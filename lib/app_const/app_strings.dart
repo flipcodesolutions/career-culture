@@ -1,6 +1,6 @@
 class AppStrings {
   //// important strings
-  static const appName = "Career Culture";
+  static const appName = "Career And Culture";
 
   ///
   /// urls
