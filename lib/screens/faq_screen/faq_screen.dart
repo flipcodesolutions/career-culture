@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindful_youth/provider/faqs_provider.dart/faqs_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:mindful_youth/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
@@ -109,7 +110,16 @@ class _FaqScreenState extends State<FaqScreen> {
                   );
                 },
               )
-              : const Center(child: CustomText(text: 'No FAQs available.')),
+              : ListView(
+                shrinkWrap: true,
+                children: [
+                  CustomContainer(
+                    alignment: Alignment.center,
+                    height: 80.h,
+                    child: NoDataFoundIcon(),
+                  ),
+                ],
+              ),
     );
   }
 }

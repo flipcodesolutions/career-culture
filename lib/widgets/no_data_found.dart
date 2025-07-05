@@ -34,10 +34,11 @@ class NoDataFoundWidget extends StatelessWidget {
 }
 
 class NoDataFoundIcon extends StatelessWidget {
-  const NoDataFoundIcon({super.key, this.w, this.h, this.icon});
+  const NoDataFoundIcon({super.key, this.w, this.h, this.icon,this.text});
   final double? w;
   final double? h;
   final String? icon;
+  final String? text;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
@@ -49,7 +50,7 @@ class NoDataFoundIcon extends StatelessWidget {
             height: h ?? 15.h,
             child: Image.asset(icon ?? AppImageStrings.noDataFoundIcon),
           ),
-          NoDataFoundWidget(),
+          NoDataFoundWidget(text: text,),
         ],
       ),
     );

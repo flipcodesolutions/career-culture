@@ -248,18 +248,25 @@ class _HomeScreenState extends State<HomeScreen>
                         SizeHelper.height(),
                         CustomAnnouncementSlider(eventProvider: eventProvider),
                         SizeHelper.height(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
-                          child: CustomText(
-                            text: AppStrings.products,
-                            style: TextStyleHelper.mediumHeading.copyWith(
-                              color: AppColors.primary,
+                        if (productProvider
+                                .productModel
+                                ?.data
+                                ?.product
+                                ?.isNotEmpty ==
+                            true) ...[
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: CustomText(
+                              text: AppStrings.products,
+                              style: TextStyleHelper.mediumHeading.copyWith(
+                                color: AppColors.primary,
+                              ),
                             ),
                           ),
-                        ),
-                        SizeHelper.height(),
-                        ProductShowCase(),
-                        SizeHelper.height(),
+                          SizeHelper.height(),
+                          ProductShowCase(),
+                          SizeHelper.height(),
+                        ],
                       ],
                     ),
                   ),

@@ -445,13 +445,10 @@ class _EventsScreenState extends State<EventsScreen>
                     children: [
                       CustomContainer(
                         alignment: Alignment.center,
-                        height: 90.h,
+                        height: 80.h,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            NoDataFoundIcon(),
-                            CustomText(text: "No Events Found"),
-                          ],
+                          children: [NoDataFoundIcon(text: "No Events Found")],
                         ),
                       ),
                     ],

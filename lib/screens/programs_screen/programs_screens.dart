@@ -281,10 +281,9 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                   child: ListView(
                     children: [
                       CustomContainer(
-                        margin: EdgeInsets.only(top: 30.h),
-                        child: NoDataFoundIcon(
-                          icon: AppImageStrings.noDataFoundIcon2,
-                        ),
+                        alignment: Alignment.center,
+                        height: 80.h,
+                        child: NoDataFoundIcon(),
                       ),
                     ],
                   ),

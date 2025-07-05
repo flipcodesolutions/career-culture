@@ -120,11 +120,11 @@ class _WallScreenState extends State<WallScreen>
                   onRefresh: () async => wallProvider.getWall(context: context),
                   child: ListView(
                     children: [
-                      Center(
-                        child: CustomContainer(
-                          height: 70.h,
-                          child: NoDataFoundIcon(),
-                        ),
+                      CustomContainer(
+                        alignment: Alignment.center,
+                        // backGroundColor: AppColors.body2,
+                        height: 80.h,
+                        child: NoDataFoundIcon(),
                       ),
                     ],
                   ),

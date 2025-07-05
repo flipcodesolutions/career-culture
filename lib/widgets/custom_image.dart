@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/widgets/photo_view.dart';
 import 'package:shimmer/shimmer.dart';
 import '../app_const/app_colors.dart';
 import '../app_const/app_image_strings.dart';
 import '../app_const/app_size.dart';
 import 'custom_container.dart';
-import 'cutom_loader.dart';
 
-class CustomImageWithLoader extends StatelessWidget {
+class CustomImageWithLoader extends StatelessWidget with NavigateHelper {
   const CustomImageWithLoader({
     super.key,
     required this.imageUrl,
@@ -59,13 +60,9 @@ class CustomImageWithLoader extends StatelessWidget {
     return showImageInPanel
         ? GestureDetector(
           onTap:
-              () => showDialog(
+              () => push(
                 context: context,
-                builder:
-                    (context) => Dialog(
-                      backgroundColor: Colors.transparent,
-                      child: InteractiveViewer(child: Image.network(imageUrl),),
-                    ),
+                widget: PhotoViewWidget(imageUrl: imageUrl),
               ),
           child: image,
         )
