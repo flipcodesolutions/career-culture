@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/widgets/custom_grid.dart';
 import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../utils/method_helpers/size_helper.dart';
 import '../../../utils/text_style_helper/text_style_helper.dart';
 import '../../../widgets/custom_container.dart';
-import '../../../widgets/custom_listview.dart';
 import '../../../widgets/custom_text.dart';
 
 class MediaRender<T> extends StatelessWidget {
-  const MediaRender({
+  MediaRender({
     super.key,
     required this.heading,
     this.isList = true,
@@ -23,13 +23,19 @@ class MediaRender<T> extends StatelessWidget {
   final int? axisCountForGrid;
   final List<T> data;
   final bool isNotScroll;
-  final Widget Function(T item, int index) itemBuilder; // Custom widget builder
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
+  // Custom widget builder
+  final PageController pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       return SizedBox.shrink();
     }
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         CustomContainer(
           width: 100.w,
@@ -45,22 +51,94 @@ class MediaRender<T> extends StatelessWidget {
         SizeHelper.height(),
         isList
             ? CustomContainer(
-              height: 25.h,
-              child: CustomListWidget(
-                scrollAxis: Axis.horizontal,
-                isNotScroll: isNotScroll,
-                data: data,
-                itemBuilder: itemBuilder,
+              child: Stack(
+                children: [
+                  CustomContainer(
+                    height: 25.h,
+                    width: 100.w,
+                    child: PageView.builder(
+                      controller: pageController,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final T item = data[index];
+                        return itemBuilder(context, item, index);
+                      },
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ArrowWidget(
+                          isForword: false,
+                          onPressed:
+                              () => pageController.previousPage(
+                                duration: Durations.medium1,
+                                curve: Curves.decelerate,
+                              ),
+                        ),
+                        ArrowWidget(
+                          isForword: true,
+                          onPressed:
+                              () => pageController.nextPage(
+                                duration: Durations.medium1,
+                                curve: Curves.decelerate,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             )
             : CustomGridWidget(
               isNotScroll: isNotScroll,
               axisCount: axisCountForGrid ?? 2,
               data: data,
-              itemBuilder: itemBuilder,
+              itemBuilder: (item, index) {
+                final T item = data[index];
+                return itemBuilder(context, item, index);
+              },
             ),
         SizeHelper.height(),
       ],
+    );
+  }
+}
+
+class ArrowWidget extends StatelessWidget {
+  const ArrowWidget({
+    super.key,
+    required this.onPressed,
+    required this.isForword,
+  });
+  final bool isForword;
+  final void Function()? onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return IconButton.outlined(
+      constraints: BoxConstraints(
+        maxHeight: AppSize.size40,
+        maxWidth: AppSize.size40,
+      ),
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(AppColors.white),
+        side: WidgetStatePropertyAll(
+          BorderSide(
+            color: AppColors.grey.withOpacity(0.4),
+            width: 1.5,
+          ), // <-- Border color here
+        ),
+      ),
+      color: AppColors.black,
+
+      onPressed: onPressed,
+      icon: Icon(
+        isForword ? Icons.arrow_forward : Icons.arrow_back,
+        size: AppSize.size20,
+      ),
     );
   }
 }

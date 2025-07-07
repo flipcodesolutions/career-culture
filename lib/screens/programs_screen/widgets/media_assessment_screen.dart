@@ -64,13 +64,16 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
         appBar: AppBar(
           shape: Border(bottom: BorderSide(color: AppColors.white)),
         ),
-        body:
-            SafeArea(
-              child: assessmentProvider.isLoading
+        body: SafeArea(
+          child:
+              assessmentProvider.isLoading
                   ? Center(child: CustomLoader())
                   : mediaList?.isNotEmpty == true
                   ? SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 2.h,
+                    ),
                     child: AnimationLimiter(
                       child: Column(
                         children: AnimationConfiguration.toStaggeredList(
@@ -109,21 +112,27 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                             ),
                             Divider(),
                             CustomContainer(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: List.generate(mediaList?.length ?? 0, (
-                                  index,
-                                ) {
-                                  mediaList?[index];
-                                  return QuestionWidget(
-                                    isInReviewMode: false,
-                                    question:
-                                        mediaList?[index] ?? AssessmentQuestion(),
-                                    questionIndex: index + 1,
-                                  );
-                                }),
+                              child: Form(
+                                key: assessmentProvider.videoTextFieldKey,
+                                autovalidateMode: AutovalidateMode.always,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: List.generate(
+                                    mediaList?.length ?? 0,
+                                    (index) {
+                                      mediaList?[index];
+                                      return QuestionWidget(
+                                        isInReviewMode: false,
+                                        question:
+                                            mediaList?[index] ??
+                                            AssessmentQuestion(),
+                                        questionIndex: index + 1,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -138,7 +147,7 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                     height: 80.h,
                     child: NoDataFoundWidget(),
                   ),
-            ),
+        ),
         bottomNavigationBar: SafeArea(
           child: CustomContainer(
             margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
@@ -156,7 +165,7 @@ class _MediaAssessmentScreenState extends State<MediaAssessmentScreen>
                       isAssessmentPhase2: true,
                     ),
                   );
-          
+
                   /// this will determine if the page should pop once or 3 times
                   if (success) {
                     widget.shouldPop3

@@ -399,7 +399,7 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                         .toList() ??
                     <Media>[],
                 itemBuilder:
-                    (item, index) => GestureDetector(
+                    (context, item, index) => GestureDetector(
                       onTap:
                           () => push(
                             context: context,
@@ -410,11 +410,14 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                       //     launchUrl(url: item.url ?? "", context: context),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
-                        margin: EdgeInsets.only(right: 5.w),
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
                         borderRadius: BorderRadius.circular(AppSize.size10),
-                        child: ImageContainer(
-                          image: "${AppStrings.assetsUrl}${item.thumbnail}",
-                          showImageInPanel: false,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          child: ImageContainer(
+                            image: "${AppStrings.assetsUrl}${item.thumbnail}",
+                            showImageInPanel: false,
+                          ),
                         ),
                       ),
                     ),
@@ -428,13 +431,13 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                         .toList() ??
                     [],
                 itemBuilder:
-                    (item, index) => GestureDetector(
+                    (context, item, index) => GestureDetector(
                       onTap:
                           () async =>
                               launchUrl(url: item.url ?? "", context: context),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
-                        margin: EdgeInsets.only(right: 5.w),
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         child: ImageContainer(
                           image: "${AppStrings.assetsUrl}${item.thumbnail}",
@@ -452,13 +455,13 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                         .toList() ??
                     [],
                 itemBuilder:
-                    (item, index) => GestureDetector(
+                    (context, item, index) => GestureDetector(
                       onTap:
                           () async =>
                               launchUrl(url: item.url ?? "", context: context),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
-                        margin: EdgeInsets.only(right: 5.w),
+                        margin: EdgeInsets.symmetric(horizontal: 5.w),
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         child: ImageContainer(
                           image: "${AppStrings.assetsUrl}${item.thumbnail}",
@@ -469,6 +472,8 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
               ),
 
               MediaRender(
+                isList: false,
+                isNotScroll: true,
                 heading: AppStrings.recommendedBooks,
                 data:
                     widget.post?.media
@@ -476,7 +481,7 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                         .toList() ??
                     [],
                 itemBuilder:
-                    (item, index) => GestureDetector(
+                    (context, item, index) => GestureDetector(
                       onTap:
                           () async =>
                               launchUrl(url: item.url ?? "", context: context),
@@ -484,7 +489,7 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                         borderRadius: BorderRadius.circular(AppSize.size10),
                         child: CustomContainer(
                           backGroundColor: AppColors.lightWhite,
-                          margin: EdgeInsets.only(right: 5.w),
+                          margin: EdgeInsets.symmetric(horizontal: 5.w),
                           borderRadius: BorderRadius.circular(AppSize.size10),
                           child: ImageContainer(
                             image: "${AppStrings.assetsUrl}${item.thumbnail}",

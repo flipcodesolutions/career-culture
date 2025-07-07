@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
@@ -480,37 +481,33 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
               ),
             ] else if (widget.question.type == "video") ...[
               SizeHelper.height(height: 1.h),
-              Form(
-                key: assessmentProvider.videoTextFieldKey,
-                autovalidateMode: AutovalidateMode.always,
-                child: CustomTextFormField(
-                  enabled:
-                      /// on init check if this answer is already done or not, if there is answer already then just show it in field
-                      !isAnswerProvided,
-                  controller: answerController,
-                  decoration: BorderHelper.containerLikeTextField(
-                    hintText: AppStrings.yourVideoUrl,
-                  ),
-                  maxLines: 1,
-                  maxLength: 200,
-                  onChanged:
-                      (value) =>
-                          ValidatorHelper.validateYoutubeLink(value: value),
-                  validator: (value) {
-                    final validate = ValidatorHelper.validateYoutubeLink(
-                      value: value,
-                    );
-
-                    /// if validation passed check if this question is already answered, if so than not update it in check user answer
-                    if (validate == null && !isAnswerProvided) {
-                      assessmentProvider.textAreaAnswer(
-                        questionId: widget.question.id ?? -1,
-                        selection: answerController.text,
-                      );
-                    }
-                    return validate;
-                  },
+              CustomTextFormField(
+                enabled:
+                    /// on init check if this answer is already done or not, if there is answer already then just show it in field
+                    !isAnswerProvided,
+                controller: answerController,
+                decoration: BorderHelper.containerLikeTextField(
+                  hintText: AppStrings.yourVideoUrl,
                 ),
+                maxLines: 1,
+                maxLength: 200,
+                onChanged:
+                    (value) =>
+                        ValidatorHelper.validateYoutubeLink(value: value),
+                validator: (value) {
+                  final validate = ValidatorHelper.validateYoutubeLink(
+                    value: value,
+                  );
+
+                  /// if validation passed check if this question is already answered, if so than not update it in check user answer
+                  if (validate == null && !isAnswerProvided) {
+                    assessmentProvider.textAreaAnswer(
+                      questionId: widget.question.id ?? -1,
+                      selection: answerController.text,
+                    );
+                  }
+                  return validate;
+                },
               ),
             ] else if (widget.question.type == "audio") ...[
               CustomContainer(
