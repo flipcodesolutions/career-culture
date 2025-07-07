@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen>
         appBar: AppBar(
           shape: Border(),
           leading: CustomContainer(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.only(left: 4.w),
             child: Image.asset(AppImageStrings.imageOnlyLogo),
           ),
           actions: [

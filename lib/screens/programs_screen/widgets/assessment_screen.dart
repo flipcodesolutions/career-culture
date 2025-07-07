@@ -153,37 +153,43 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                               child: IntrinsicHeight(
                                 child: Stack(
                                   children: [
-                                    Column(
-                                      children: List.generate(
-                                        mediaList?.length ?? 0,
-                                        (index) {
-                                          AssessmentQuestion? item =
-                                              mediaList?[index];
-                                          if (!isMedia &&
-                                                  item?.type == "video" ||
-                                              item?.type == "audio" ||
-                                              item?.type == "image") {
-                                            isMedia = true;
-                                          }
-                                          return QuestionWidget(
-                                            isInReviewMode:
-                                                widget.isInReviewMode,
-                                            question:
-                                                item ?? AssessmentQuestion(),
-                                            questionIndex: index + 1,
-                                          );
-                                        },
+                                    SingleChildScrollView(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      child: Column(
+                                        children: List.generate(
+                                          mediaList?.length ?? 0,
+                                          (index) {
+                                            AssessmentQuestion? item =
+                                                mediaList?[index];
+                                            if (!isMedia &&
+                                                    item?.type == "video" ||
+                                                item?.type == "audio" ||
+                                                item?.type == "image") {
+                                              isMedia = true;
+                                            }
+                                            return QuestionWidget(
+                                              isInReviewMode:
+                                                  widget.isInReviewMode,
+                                              question:
+                                                  item ?? AssessmentQuestion(),
+                                              questionIndex: index + 1,
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                     if (!assessmentProvider.isTestStarted &&
                                         !widget.isInReviewMode)
-                                      ClipRect(
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                            sigmaX: 5.0,
-                                            sigmaY: 5.0,
+                                      Positioned.fill(
+                                        child: ClipRect(
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                              sigmaX: 5.0,
+                                              sigmaY: 5.0,
+                                            ),
+                                            child: CustomContainer(),
                                           ),
-                                          child: CustomContainer(),
                                         ),
                                       ),
                                   ],
