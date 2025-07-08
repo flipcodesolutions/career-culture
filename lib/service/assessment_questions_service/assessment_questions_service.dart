@@ -42,6 +42,7 @@ class AssessmentQuestionsService {
 
   Future<bool> postAssessmentQuestionsByPostId({
     required AssessmentQuestionModel? assessmentAnswer,
+    required String totalPoints
   }) async {
     try {
       // Create the multipart request
@@ -95,6 +96,8 @@ class AssessmentQuestionsService {
         //   }
         // }
       }
+        request.fields['totalPoint'] = totalPoints;
+
       // log(" ==========??????????? ${request.fields}");
       // Send the request with timeout
       final streamed = await request.send().timeout(

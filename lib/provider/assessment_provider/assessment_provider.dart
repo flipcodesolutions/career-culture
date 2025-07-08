@@ -300,6 +300,7 @@ class AssessmentProvider extends ChangeNotifier with NavigateHelper {
         .postAssessmentQuestionsByPostId(
           // context: context,
           assessmentAnswer: _assessmentQuestions,
+          totalPoints: coinsEarned(),
         );
 
     /// set _isLoading false
