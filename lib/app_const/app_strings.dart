@@ -39,6 +39,7 @@ class AppStrings {
   static const audio = "$recommended Audios";
   static const assessment = "Assessment";
   static const takeATest = "Take A Test";
+  static const finishMediaAssessment = "Finish Media Assessment";
   static const submit = "Submit";
   static const notifications = "Notifications";
   static const eventActivity = "Events";

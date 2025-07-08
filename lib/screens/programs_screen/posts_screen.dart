@@ -86,6 +86,18 @@ class _PostsScreenState extends State<PostsScreen>
             .map((r) => r.thumbnail ?? "")
             .toList() ??
         [];
+
+    /// used for the title showing in bottom sheet
+    final post = postProvider.currentPost;
+
+    final statusText =
+        (post?.isFirstAssessmentDone == true &&
+                post?.isSecondAssessmentDone == true)
+            ? "All Test Completed. Bravo"
+            : (post?.isFirstAssessmentDone == true &&
+                post?.isSecondAssessmentDone != true)
+            ? AppStrings.finishMediaAssessment
+            : "${AppStrings.takeATest} (Earn ${post?.points ?? 0} Coins)";
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
         await programsProvider.getUserProgress(
@@ -210,6 +222,7 @@ class _PostsScreenState extends State<PostsScreen>
                     ],
                   ),
                 ),
+
         bottomNavigationBar: SafeArea(
           child:
               postProvider.currentPost != null
@@ -220,11 +233,8 @@ class _PostsScreenState extends State<PostsScreen>
                     ),
                     child: PrimaryBtn(
                       width: 90.w,
-                      btnText:
-                          postProvider.currentPost?.isSecondAssessmentDone ==
-                                  true
-                              ? "All Test Completed. Bravo"
-                              : "${AppStrings.takeATest} (Earn ${postProvider.currentPost?.points ?? 0} Coins)",
+                      btnText: statusText,
+
                       onTap: () async {
                         context.read<AssessmentProvider>().setPostId =
                             postProvider.currentPost?.id?.toString() ?? "";
