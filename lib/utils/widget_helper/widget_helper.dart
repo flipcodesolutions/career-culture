@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/utils/list_helper/list_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toastification/toastification.dart';
@@ -201,5 +202,20 @@ mixin WidgetHelper {
         }
       }
     }
+  }
+  /// get 
+  static String alphabet({required int index}) {
+    if (index < 0) {
+      throw ArgumentError('Index must be a non-negative integer.');
+    }
+    String result = "";
+    int base = ListHelper.alphabats.length; // Which is 26
+
+    do {
+      int remainder = index % base;
+      result = ListHelper.alphabats[remainder] + result;
+      index = (index ~/ base) - 1; // Integer division
+    } while (index >= 0);
+    return result;
   }
 }

@@ -28,6 +28,7 @@ import 'dart:async';
 import 'dart:io';
 import '../../../provider/programs_provider/post_provider/post_provider.dart';
 import '../../../utils/navigation_helper/navigation_helper.dart';
+import '../../../utils/widget_helper/widget_helper.dart';
 import '../../../widgets/audio_record_container.dart';
 import 'assessment_result_screen.dart';
 
@@ -395,6 +396,7 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                     String option = entry.value.trim();
 
                     return OptionTile(
+                      index: entry.key,
                       option: option,
                       isSelected:
                           widget.question.userAnswer?.contains(entry.value) ??
@@ -420,6 +422,7 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
                     String option = entry.value.trim();
 
                     return OptionTile(
+                      index: entry.key,
                       option: option,
                       isSelected: widget.question.userAnswer == option,
                       isCorrect:
@@ -625,6 +628,7 @@ class OptionTile extends StatelessWidget {
   final bool isCorrect; // whether this option is a correct answer
   final bool isReviewMode; // whether we are in review mode
   final bool isMultiSelect; // true = checkbox, false = radio
+  final int index; // get index to get releated alphabate char
   final ValueChanged<String>? onRadioSelected;
   final ValueChanged<bool?>? onCheckboxToggled;
 
@@ -635,6 +639,7 @@ class OptionTile extends StatelessWidget {
     required this.isCorrect,
     required this.isReviewMode,
     required this.isMultiSelect,
+    required this.index,
     this.onRadioSelected,
     this.onCheckboxToggled,
   });
@@ -669,7 +674,10 @@ class OptionTile extends StatelessWidget {
                 dense: true,
                 activeColor:
                     isReviewMode ? AppColors.primary : AppColors.secondary,
-                title: CustomText(text: option, useOverflow: false),
+                title: CustomText(
+                  text: "${WidgetHelper.alphabet(index: index)}. $option",
+                  useOverflow: false,
+                ),
                 value: isSelected,
                 onChanged: isReviewMode ? null : onCheckboxToggled,
               )
@@ -680,7 +688,10 @@ class OptionTile extends StatelessWidget {
                 dense: true,
                 activeColor:
                     isReviewMode ? AppColors.primary : AppColors.secondary,
-                title: CustomText(text: option, useOverflow: false),
+                title: CustomText(
+                  text: "${WidgetHelper.alphabet(index: index)}. $option",
+                  useOverflow: false,
+                ),
                 value: option,
                 groupValue: isSelected ? option : null,
                 onChanged:
