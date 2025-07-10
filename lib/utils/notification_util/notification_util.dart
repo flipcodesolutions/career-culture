@@ -163,6 +163,29 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await NotificationService.instance._showNotification(message);
 }
 
+// 2. TOP-LEVEL FUNCTION for Flutter Local Notifications background tap handler
+@pragma('vm:entry-point')
+void localNotificationsBackgroundTapHandler(
+  NotificationResponse response,
+) async {
+  print(
+    'Local notification tapped in background with payload: ${response.payload}',
+  );
+
+  if (response.payload != null) {
+    try {
+      // Store the payload in SharedPreferences for the foreground app to pick up
+      await SharedPrefs.saveString(
+        'pendingNotificationPayload',
+        response.payload!,
+      );
+      print('Stored pending notification payload: ${response.payload}');
+    } catch (e) {
+      print('Error storing background notification payload: $e');
+    }
+  }
+}
+
 /// A singleton service class that manages Firebase Cloud Messaging and local notifications.
 class NotificationService with NavigateHelper {
   ///
@@ -246,6 +269,27 @@ class NotificationService with NavigateHelper {
     if (initialMessage != null) {
       _handleMessageTap(initialMessage.data);
     }
+    
+    // Check if the app was opened via a LOCAL notification (terminated/background state)
+    // This must be done AFTER local notifications are initialized.
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await _localNotifications.getNotificationAppLaunchDetails();
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      if (notificationAppLaunchDetails!.notificationResponse?.payload != null) {
+        try {
+          Map<String, dynamic> responseJson = jsonDecode(
+            notificationAppLaunchDetails.notificationResponse!.payload!,
+          );
+          _handleMessageTap(responseJson);
+        } catch (e) {
+          print('Error decoding initial local notification payload: $e');
+        }
+      }
+    }
+
+    // Check for any pending payloads from background local notification taps
+    // that occurred while the app was terminated or in background.
+    await _checkAndHandlePendingLocalNotificationPayload();
   }
 
   /// Internal helper to initialize local notifications (only once).
@@ -268,6 +312,9 @@ class NotificationService with NavigateHelper {
     // Initialize the plugin. Handle taps via onDidReceiveNotificationResponse.
     await _localNotifications.initialize(
       const InitializationSettings(android: androidSettings, iOS: iOSSettings),
+      // Use the TOP-LEVEL function for background local notification taps
+      onDidReceiveBackgroundNotificationResponse:
+          localNotificationsBackgroundTapHandler,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         // Handle local notification tap (if needed).
         // You can add logic to navigate to specific screens using payload from response.payload.
@@ -280,6 +327,26 @@ class NotificationService with NavigateHelper {
     );
 
     _initialized = true;
+  }
+
+  /// Checks SharedPreferences for a pending local notification payload
+  /// and handles it if found.
+  Future<void> _checkAndHandlePendingLocalNotificationPayload() async {
+    final String? payload = await SharedPrefs.getSharedString(
+      'pendingNotificationPayload',
+    );
+    if (payload != null) {
+      print('Found pending local notification payload: $payload');
+      await SharedPrefs.removeSharedString(
+        'pendingNotificationPayload',
+      ); // Clear it after reading
+      try {
+        Map<String, dynamic> responseJson = jsonDecode(payload);
+        _handleMessageTap(responseJson);
+      } catch (e) {
+        print('Error decoding pending local notification payload: $e');
+      }
+    }
   }
 
   /// Displays a local notification using flutter_local_notifications.
