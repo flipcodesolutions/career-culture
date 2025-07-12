@@ -113,46 +113,6 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               titleText: AppStrings.profile,
                             ),
 
-                            /// event history
-                            ProfilePageListTiles(
-                              leading: Icons.event_note_rounded,
-                              onTap:
-                                  () => push(
-                                    context: context,
-                                    widget: EventsScreen(isMyEvents: true),
-                                    transition:
-                                        OpenUpwardsPageTransitionsBuilder(),
-                                  ),
-                              titleText: AppStrings.myParticipants,
-                            ),
-
-                            /// certificates
-                            ProfilePageListTiles(
-                              leading: Icons.workspace_premium,
-                              onTap:
-                                  () => WidgetHelper.customSnackBar(
-                                    title: "Coming Soon !!",
-                                  ),
-                              // () => push(
-                              //   context: context,
-                              //   widget: CousilingFormScreen(),
-                              //   transition:
-                              //       OpenUpwardsPageTransitionsBuilder(),
-                              // ),
-                              titleText: AppStrings.myCertificates,
-                            ),
-
-                            /// saved
-                            // ProfilePageListTiles(
-                            //   leading: Icons.folder_special,
-                            //   onTap: () {},
-                            //   // () => push(
-                            //   //   context: context,
-                            //   //   widget: ChipSelector(),
-                            //   // ),
-                            //   titleText: AppStrings.saved,
-                            // ),
-
                             /// refer
                             ProfilePageListTiles(
                               leading: Icons.share,
@@ -176,21 +136,61 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               titleText: AppStrings.refer,
                             ),
 
-                            /// purchase history
+                            /// event history
                             ProfilePageListTiles(
-                              leading: Icons.shopping_bag_outlined,
-                              // onTap: () {},
-                              onTap: () async {
-                                push(
-                                  context: context,
-                                  widget: OrderListPage(),
-                                  transition:
-                                      FadeUpwardsPageTransitionsBuilder(),
-                                );
-                              },
-
-                              titleText: AppStrings.purchaseHistory,
+                              leading: Icons.event_note_rounded,
+                              onTap:
+                                  () => push(
+                                    context: context,
+                                    widget: EventsScreen(isMyEvents: true),
+                                    transition:
+                                        OpenUpwardsPageTransitionsBuilder(),
+                                  ),
+                              titleText: AppStrings.myParticipants,
                             ),
+
+                            /// certificates
+                            // ProfilePageListTiles(
+                            //   leading: Icons.workspace_premium,
+                            //   onTap:
+                            //       () => WidgetHelper.customSnackBar(
+                            //         title: "Coming Soon !!",
+                            //       ),
+                            //   // () => push(
+                            //   //   context: context,
+                            //   //   widget: CousilingFormScreen(),
+                            //   //   transition:
+                            //   //       OpenUpwardsPageTransitionsBuilder(),
+                            //   // ),
+                            //   titleText: AppStrings.myCertificates,
+                            // ),
+
+                            /// saved
+                            // ProfilePageListTiles(
+                            //   leading: Icons.folder_special,
+                            //   onTap: () {},
+                            //   // () => push(
+                            //   //   context: context,
+                            //   //   widget: ChipSelector(),
+                            //   // ),
+                            //   titleText: AppStrings.saved,
+                            // ),
+
+                            // /// purchase history
+                            // ProfilePageListTiles(
+                            //   leading: Icons.shopping_bag_outlined,
+                            //   // onTap: () {},
+                            //   onTap: () async {
+                            //     push(
+                            //       context: context,
+                            //       widget: OrderListPage(),
+                            //       transition:
+                            //           FadeUpwardsPageTransitionsBuilder(),
+                            //     );
+                            //   },
+
+                            //   titleText: AppStrings.purchaseHistory,
+                            // ),
 
                             /// faq history
                             ProfilePageListTiles(

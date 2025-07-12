@@ -152,50 +152,42 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                             SizeHelper.height(height: 1.h),
                             Divider(),
                             CustomContainer(
-                              child: IntrinsicHeight(
-                                child: Stack(
-                                  children: [
-                                    SingleChildScrollView(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      child: Column(
-                                        children: List.generate(
-                                          mediaList?.length ?? 0,
-                                          (index) {
-                                            AssessmentQuestion? item =
-                                                mediaList?[index];
-                                            if (!isMedia &&
-                                                    item?.type == "video" ||
-                                                item?.type == "audio" ||
-                                                item?.type == "image") {
-                                              isMedia = true;
-                                            }
-                                            return QuestionWidget(
-                                              isInReviewMode:
-                                                  widget.isInReviewMode,
-                                              question:
-                                                  item ?? AssessmentQuestion(),
-                                              questionIndex: index + 1,
-                                            );
-                                          },
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    children: List.generate(
+                                      mediaList?.length ?? 0,
+                                      (index) {
+                                        AssessmentQuestion? item =
+                                            mediaList?[index];
+                                        if (!isMedia && item?.type == "video" ||
+                                            item?.type == "audio" ||
+                                            item?.type == "image") {
+                                          isMedia = true;
+                                        }
+                                        return QuestionWidget(
+                                          isInReviewMode: widget.isInReviewMode,
+                                          question:
+                                              item ?? AssessmentQuestion(),
+                                          questionIndex: index + 1,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  if (!assessmentProvider.isTestStarted &&
+                                      !widget.isInReviewMode)
+                                    Positioned.fill(
+                                      child: ClipRect(
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 5.0,
+                                            sigmaY: 5.0,
+                                          ),
+                                          child: CustomContainer(),
                                         ),
                                       ),
                                     ),
-                                    if (!assessmentProvider.isTestStarted &&
-                                        !widget.isInReviewMode)
-                                      Positioned.fill(
-                                        child: ClipRect(
-                                          child: BackdropFilter(
-                                            filter: ImageFilter.blur(
-                                              sigmaX: 5.0,
-                                              sigmaY: 5.0,
-                                            ),
-                                            child: CustomContainer(),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                             SizeHelper.height(height: 10.h),

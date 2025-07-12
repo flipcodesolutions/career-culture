@@ -114,11 +114,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
               ),
             ),
           ],
-          title: CustomText(
-            textAlign: TextAlign.center,
-            text: AppStrings.programs,
-            style: TextStyleHelper.mediumHeading,
-          ),
+          title: MIndFulYouthACertificateProgramTitle(),
         ),
         body:
             programsProvider.isLoading
@@ -314,6 +310,19 @@ class _ProgramsScreensState extends State<ProgramsScreens>
       autoClose: false,
       title: AppStrings.pleaseLoginFirst,
       isError: true,
+    );
+  }
+}
+
+class MIndFulYouthACertificateProgramTitle extends StatelessWidget {
+  const MIndFulYouthACertificateProgramTitle({super.key, this.style});
+  final TextStyle? style;
+  @override
+  Widget build(BuildContext context) {
+    return CustomText(
+      textAlign: TextAlign.center,
+      text: AppStrings.programs,
+      style: style ?? TextStyleHelper.mediumHeading,
     );
   }
 }

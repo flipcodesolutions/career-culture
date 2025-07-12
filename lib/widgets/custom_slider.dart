@@ -13,6 +13,7 @@ import 'package:sizer/sizer.dart';
 import '../models/programs/programs_model.dart';
 import '../provider/programs_provider/programs_provider.dart';
 import '../provider/user_provider/user_provider.dart';
+import '../screens/programs_screen/programs_screens.dart';
 import '../utils/navigation_helper/navigation_helper.dart';
 import 'custom_container.dart';
 
@@ -51,13 +52,16 @@ class _SliderRenderWidgetState extends State<SliderRenderWidget>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomText(
-                      text: AppStrings.program,
-                      style: TextStyleHelper.mediumHeading.copyWith(
-                        color: AppColors.primary,
+                    Expanded(child: CustomContainer()),
+                    Expanded(
+                      flex: 9,
+                      child: MIndFulYouthACertificateProgramTitle(
+                        style: TextStyleHelper.smallHeading.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
-                    Icon(Icons.keyboard_arrow_right),
+                    Expanded(child: Icon(Icons.keyboard_arrow_right)),
                   ],
                 ),
               ),

@@ -39,7 +39,7 @@ class AppStrings {
   static const audio = "$recommended Audios";
   static const assessment = "Assessment";
   static const takeATest = "Take A Test";
-  static const finishMediaAssessment = "Finish Media Assessment";
+  static const finishMediaAssessment = "Complete Media Assessment";
   static const submit = "Submit";
   static const notifications = "Notifications";
   static const eventActivity = "Events";
@@ -134,7 +134,7 @@ class AppStrings {
   static const district = "District";
   static const account = "Account";
   static const profile = "Profile";
-  static const myParticipants = "My Participants";
+  static const myParticipants = "My Participation";
   static const programsHistory = "Programs History";
   static const myCertificates = "My Certificates";
   static const saved = "Saved";
@@ -143,7 +143,7 @@ class AppStrings {
   static const counselingAppointment = " Counseling Appointment";
   static const deleteAccount = "Delete Account";
   static const delete = "Delete";
-  static const logOut = "LogOut";
+  static const logOut = "Log Out";
   static const camera = "Camera";
   static const gallery = "Gallery";
   static const editAccount = "Edit Account";
@@ -171,7 +171,7 @@ class AppStrings {
   static const enterContact = "Enter Contact";
   static const products = "Products";
   static const purchaseHistory = "Purchase History";
-  static const faq = "Frequently Asked Questions";
+  static const faq = "FAQs";
   static const rupee = "₹";
   static const buyNow = "Buy Now";
   static const today = "Today";

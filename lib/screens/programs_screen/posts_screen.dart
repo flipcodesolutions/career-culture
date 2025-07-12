@@ -319,7 +319,6 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
       await context.read<RecentActivityProvider>().saveRecentActivity(
         context.read<PostProvider>().currentPost,
       );
-      log("saving done");
     });
   }
 

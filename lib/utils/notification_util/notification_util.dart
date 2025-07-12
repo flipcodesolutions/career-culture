@@ -152,6 +152,160 @@ import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart
 import 'package:provider/provider.dart';
 
 import '../../app_const/app_strings.dart';
+// import 'dart:convert';
+// import 'dart:io';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+// @pragma('vm:entry-point')
+// Future<void> onBackGroundMessage(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   FirebaseMessagingUtils.handleMessage(message);
+// }
+
+// class FirebaseMessagingUtils {
+//   static final String NOTIFICATION_CHANNEL = 'notification_channel';
+//   static final String SCHEDULE_CHANNEL = 'schedule_channel';
+//   static final firebaseMessaging = FirebaseMessaging.instance;
+//   static final localNotifications = FlutterLocalNotificationsPlugin();
+//   static final androidChannel = AndroidNotificationChannel(
+//     NOTIFICATION_CHANNEL,
+//     'General Alerts',
+//     importance: Importance.high,
+//   );
+
+//   static Future<void> initNotifications() async {
+//     await firebaseMessaging.requestPermission();
+
+//     initPushNotifications();
+//     initLocalNotifications();
+//   }
+
+//   static Future<void> initPushNotifications() async {
+//     await firebaseMessaging.setForegroundNotificationPresentationOptions(
+//       alert: true,
+//       badge: true,
+//       sound: true,
+//     );
+//     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+//     FirebaseMessaging.onBackgroundMessage(onBackGroundMessage);
+//     FirebaseMessaging.onMessage.listen((message) {
+//       // print('onMessgaeFireBase ${message.toString()}');
+//       FirebaseMessagingUtils.handleMessage(message);
+//       FirebaseMessagingUtils.showLocalNotification(message);
+//     });
+
+//     // final fcmToken = await firebaseMessaging.getToken();
+//     // await SharedPrefs.saveFCMToken(fcmToken ?? '');
+//     // print('Firebase FCM Token $fcmToken');
+//   }
+
+//   static Future<void> initLocalNotifications() async {
+//     const ios = DarwinInitializationSettings();
+//     const android = AndroidInitializationSettings('mipmap/ic_launcher');
+//     const settings = InitializationSettings(android: android, iOS: ios);
+
+//     await localNotifications.initialize(
+//       settings,
+//       onDidReceiveNotificationResponse: (NotificationResponse response) {},
+//     );
+
+//     await _requestPermissions();
+//   }
+
+//   static Future<void> _requestPermissions() async {
+//     if (Platform.isIOS) {
+//       await localNotifications
+//           .resolvePlatformSpecificImplementation<
+//             IOSFlutterLocalNotificationsPlugin
+//           >()
+//           ?.requestPermissions(alert: true, badge: true, sound: true);
+//     } else {
+//       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+//           localNotifications
+//               .resolvePlatformSpecificImplementation<
+//                 AndroidFlutterLocalNotificationsPlugin
+//               >();
+
+//       await androidImplementation?.requestNotificationsPermission();
+//     }
+//   }
+
+//   static void handleMessage(RemoteMessage? message) {
+//     if (message != null) {
+//       if (message.notification?.body == "Please Take New Appointment") {
+//         // print('${message.notification?.body}');
+//         return;
+//       }
+//       // print('cant handle');
+//     }
+//   }
+
+//   static void showLocalNotification(RemoteMessage remoteMessage) {
+//     // print('showLocalNotification ${remoteMessage.notification}');
+//     RemoteNotification? notification = remoteMessage.notification;
+//     if (notification != null) {
+//       localNotifications.show(
+//         notification.hashCode,
+//         notification.title,
+//         notification.body,
+//         NotificationDetails(
+//           android: AndroidNotificationDetails(
+//             androidChannel.id,
+//             androidChannel.name,
+//             channelDescription: androidChannel.description,
+//           ),
+//         ),
+//         payload: jsonEncode(remoteMessage.toMap()),
+//       );
+//     }
+//   }
+
+//   static Future<bool> checkIfNotificationsAreEnabled() async {
+//     if (Platform.isAndroid) {
+//       final bool granted =
+//           await localNotifications
+//               .resolvePlatformSpecificImplementation<
+//                 AndroidFlutterLocalNotificationsPlugin
+//               >()
+//               ?.areNotificationsEnabled() ??
+//           false;
+//       return granted;
+//     } else {
+//       final bool granted =
+//           await localNotifications
+//               .resolvePlatformSpecificImplementation<
+//                 IOSFlutterLocalNotificationsPlugin
+//               >()
+//               ?.requestPermissions(alert: true, badge: true, sound: true) ??
+//           false;
+//       return granted;
+//     }
+//   }
+// }
+
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
+import 'package:mindful_youth/models/feedback_model/feedback_model.dart';
+import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
+import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
+import 'package:mindful_youth/screens/login/login_screen.dart';
+import 'package:mindful_youth/screens/main_screen/main_screen.dart';
+import 'package:mindful_youth/screens/wall_screen/individual_wall_post_screen.dart';
+import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
+import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
+import 'package:provider/provider.dart';
+
+import '../../app_const/app_strings.dart';
 
 @pragma(
   'vm:entry-point',
