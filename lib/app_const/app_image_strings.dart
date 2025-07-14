@@ -40,4 +40,10 @@ class AppImageStrings {
   static const String noDataFoundIcon2 = "assets/images/no_data_found_2.png";
   static const String noProductFound =
       "assets/images/no_product_found_icon.png";
+  static const String dishartaunk =
+      "assets/images/DISHA R TAUNK, Coimbatore.jpeg";
+  static const String jitendraUpadhyay = "assets/images/jitendraUpadhyay.jpeg";
+  static const String alpaShah = "assets/images/alpaShah.jpeg";
+  static const String trikaldash = "assets/images/trikaldash.jpeg";
+  static const String dashrathPatel = "assets/images/dashrathPatel.jpeg";
 }

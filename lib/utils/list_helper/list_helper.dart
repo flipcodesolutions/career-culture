@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
+import 'package:mindful_youth/screens/home_screen/home_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/educational_details.dart';
 import 'package:mindful_youth/utils/method_helpers/gradient_helper.dart';
 import '../../app_const/app_colors.dart';
@@ -154,4 +156,44 @@ class ListHelper {
     'Y',
     'Z',
   ];
+
+ static List<TestimonialCard> testimonialList() {
+    return [
+      TestimonialCard(
+        name: "DISHA R TAUNK, Coimbatore",
+        designation: "Yoga & Sports Motivator",
+        testimonial:
+            "The youth enrichment program is the need of the hour. Going by the changes that our youth below 30 are seen, it becomes imperative to get them into Hindusim , our festivals, and not be drawn towards fake narratives circulated This program would help our youth to garner in terest in our cultures, festivals, becoming strong holistically- 360° acceptance and becoming in a similar manner ,as mentioned in this unique program. A must for all age groups!",
+        imageUrl: AppImageStrings.dishartaunk,
+      ),
+      TestimonialCard(
+        name: "Jitendra Upadhyay, Ahmedabad",
+        designation: "Educationist",
+        testimonial:
+            'The Mindful Youth Program will be very helpful to college students to develop their overall skills which will help them attract bright placement opportunities. I strongly recommend all students to join this application.',
+        imageUrl: AppImageStrings.jitendraUpadhyay,
+      ),
+      TestimonialCard(
+        name: "Alpa Shah, Ahmedabad",
+        designation: "Media Influencer ",
+        testimonial:
+            'Self learning is the best learning. I am sure this journey will help subscribers to rediscover their ownselves.',
+        imageUrl: AppImageStrings.alpaShah,
+      ),
+      TestimonialCard(
+        name: "Dr. Trikaldash Bapu",
+        designation: "Saint & Philospher",
+        testimonial:
+            'Journey is as important as destination. Life is all about celebrating every single moment. My best wishes & Jay SiyaRam to all Sanatani Learners.',
+        imageUrl: AppImageStrings.trikaldash,
+      ),
+      TestimonialCard(
+        name: "Dasharath Patel",
+        designation: "Philanthoropist",
+        testimonial:
+            'Mindful Youth is a unique program for all young professionals, teachers and students to make their understanding about key topics more deeper and sensible.',
+        imageUrl: AppImageStrings.dashrathPatel,
+      ),
+    ];
+  }
 }

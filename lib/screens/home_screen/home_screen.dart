@@ -1,14 +1,18 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_image_strings.dart';
+import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
+import 'package:mindful_youth/utils/list_helper/list_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/transitions/scale_fade_transiation.dart';
@@ -27,6 +31,7 @@ import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../provider/product_provider/product_provider.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
 import '../../widgets/custom_annoucement_slider.dart';
+import '../../widgets/custom_crousal.dart';
 import '../../widgets/custom_slider.dart';
 import '../../widgets/exit_app_dialogbox.dart';
 import '../shop_market_screen/products_screen.dart';
@@ -267,6 +272,16 @@ class _HomeScreenState extends State<HomeScreen>
                           ProductShowCase(),
                           SizeHelper.height(),
                         ],
+
+                        ///
+                        CarouselSlider(
+                          items: ListHelper.testimonialList(),
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            viewportFraction: 0.9,
+                            enlargeCenterPage: true,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -301,6 +316,86 @@ class AppBarIcon extends StatelessWidget {
         width: iconW ?? 4.h,
         height: iconH ?? 4.h,
         child: Image.asset(icon),
+      ),
+    );
+  }
+}
+
+/// using in testimonials in home screen
+class TestimonialCard extends StatelessWidget {
+  final String name;
+  final String designation;
+  final String testimonial;
+  final String imageUrl;
+  final bool isImageOnline;
+  const TestimonialCard({
+    super.key,
+    required this.name,
+    required this.designation,
+    required this.testimonial,
+    required this.imageUrl,
+    this.isImageOnline = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomContainer(
+      borderColor: AppColors.black,
+      borderWidth: 0.5,
+      margin: EdgeInsets.only(bottom: 3.h),
+      backGroundColor: AppColors.white,
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      padding: EdgeInsets.all(AppSize.size10),
+      boxShadow: ShadowHelper.scoreContainer,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AppColors.lightPrimary,
+                radius: AppSize.size30,
+                backgroundImage: AssetImage(imageUrl),
+                // child:
+                //     isImageOnline
+                //         ? Image.network(imageUrl)
+                //         : Image.asset(imageUrl),
+              ),
+              SizeHelper.width(width: 1.h),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomText(
+                      text: name,
+                      style: TextStyleHelper.mediumHeading,
+                    ),
+                    CustomText(
+                      text: designation,
+                      style: TextStyleHelper.smallText.copyWith(
+                        color: AppColors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizeHelper.height(height: 1.h),
+          Expanded(
+            child: CustomText(
+              text: '“$testimonial”',
+              textAlign: TextAlign.center,
+              style: TextStyleHelper.smallText.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+              useOverflow: false,
+              maxLines: 6,
+            ),
+          ),
+        ],
       ),
     );
   }
