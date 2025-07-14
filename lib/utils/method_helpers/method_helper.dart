@@ -26,6 +26,7 @@ import '../../widgets/custom_text.dart';
 import '../shared_prefs_helper/shared_prefs_helper.dart';
 import '../widget_helper/widget_helper.dart';
 import 'dart:typed_data';
+import 'package:html/parser.dart' show parse;
 
 class MethodHelper with NavigateHelper {
   /// launch urls
@@ -628,5 +629,10 @@ class MethodHelper with NavigateHelper {
     final today = DateTime(now.year, now.month, now.day);
     final target = DateTime(dateTime.year, dateTime.month, dateTime.day);
     return target.difference(today).inDays;
+  }
+
+  static String parseHtmlString(String htmlString) {
+    final document = parse(htmlString);
+    return parse(document.body?.text ?? "").documentElement?.text ?? "";
   }
 }

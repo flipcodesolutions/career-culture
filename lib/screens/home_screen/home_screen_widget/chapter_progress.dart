@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_size.dart';
 import '../../../app_const/app_strings.dart';
+import '../../../utils/method_helpers/method_helper.dart';
 import '../../../utils/method_helpers/shadow_helper.dart';
 import '../../../utils/text_style_helper/text_style_helper.dart';
 import '../../../widgets/custom_container.dart';
@@ -75,8 +76,7 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                         children: [
                           CustomText(
                             text:
-                                recentActivityProvider.recentPost?.title ??
-                                "",
+                                recentActivityProvider.recentPost?.title ?? "",
                             maxLines: 2,
                             style: TextStyleHelper.mediumHeading,
                           ),
@@ -85,11 +85,12 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                             children: [
                               Expanded(
                                 child: CustomText(
-                                  text:
-                                      recentActivityProvider
-                                          .recentPost
-                                          ?.description ??
-                                      "",
+                                  text: MethodHelper.parseHtmlString(
+                                    recentActivityProvider
+                                            .recentPost
+                                            ?.description ??
+                                        "",
+                                  ),
                                   maxLines: 3,
                                 ),
                               ),
@@ -104,9 +105,7 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                     ),
                   ],
                 )
-                : Center(
-                  child: CustomText(text: AppStrings.noRecentActivity),
-                ),
+                : Center(child: CustomText(text: AppStrings.noRecentActivity)),
       ),
     );
   }
