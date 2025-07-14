@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../cousling_screens/cousiling_form_screen.dart';
+import '../profile_view_screen/profile_view_page.dart';
 import '../refer_screen/refer_screen.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -90,7 +91,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                           children: [
                             /// profile circle avatar
                             SizeHelper.height(),
-                            CustomProfileAvatar(),
+                            Hero(tag: "profile", child: CustomProfileAvatar()),
                             SizeHelper.height(),
 
                             /// profile btn
@@ -105,7 +106,7 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                                     .setIsUpdatingProfile = true;
                                 push(
                                   context: context,
-                                  widget: SignUpScreen(),
+                                  widget: ProfileViewPage(),
                                   transition:
                                       OpenUpwardsPageTransitionsBuilder(),
                                 );

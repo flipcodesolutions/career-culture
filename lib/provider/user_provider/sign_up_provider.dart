@@ -992,4 +992,50 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // print('✅ Initialization complete.');
     notifyListeners();
   }
+
+  Map<String, dynamic> buildUserMap() {
+    String fullName = [
+      firstName.text.trim(),
+      if (middleName.text.trim().isNotEmpty) middleName.text.trim(),
+      lastName.text.trim(),
+    ].join(" ");
+
+    return {
+      "profileImage": _signUpConfirmModel?.data?.user?.profile?.images ?? "",
+      "firstName": firstName.text.trim(),
+      "middleName": middleName.text.trim(),
+      "lastName": lastName.text.trim(),
+      "fullName": fullName,
+      "birthdate": birthDate.text.trim(),
+      "gender": _genderQuestion.answer?.trim() ?? "",
+
+      // Contact Info
+      "email": email.text.trim(),
+      "isEmailVerified": isEmailVerified,
+      "contact1": contactNo1.text.trim(),
+      "isContact1Verified": isContactNo1Verified,
+      "contact2": contactNo2.text.trim(),
+      "isContact2Verified": isContactNo2Verified,
+
+      // Address
+      "address1": address1.text.trim(),
+      "address2": address2.text.trim(),
+      "city": city.trim(),
+      "district": district.text.trim(),
+      "state": state.trim(),
+      "country": country.text.trim(),
+
+      // Education
+      "currentStudy": presentStudy.text.trim(),
+      "degree": lastStudy.text.trim(),
+      "college": collegeOrUniversity.text.trim(),
+
+      // Work
+      "isWorking": areYouWorking.answer == "Yes",
+      "company": companyOrBusiness.text.trim(),
+
+      // Optional
+      "coordinatorId": coordinatorIdFromLocal,
+    };
+  }
 }

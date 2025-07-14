@@ -8,7 +8,7 @@ class ListHelper {
   static final List<Map<String, dynamic>> navDestinations = [
     {'icon': AppIconsData.home, 'label': 'Home'},
     {'icon': AppIconsData.wall, 'label': 'Wall'},
-    {'icon': AppIconsData.programs, 'label': 'Course'},
+    {'icon': AppIconsData.programs, 'label': 'Program'},
     {'icon': AppIconsData.event, 'label': 'Events'},
     {'icon': AppIconsData.profile, 'label': 'Account'},
   ];
