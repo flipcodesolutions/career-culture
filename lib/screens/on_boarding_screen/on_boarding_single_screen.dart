@@ -66,23 +66,23 @@ class _OnBoardingSinglePageState extends State<OnBoardingSinglePage> {
           if (imageLink.isNotEmpty)
             CustomContainer(
               // backGroundColor: AppColors.error,
-              width: 90.w,
-              height: 25.h,
+              // width: 90.w,
+              // height: 25.h,
               child: CustomImageWithLoader(
                 fit: BoxFit.contain,
                 imageUrl: "${AppStrings.assetsUrl}$imageLink",
               ),
             ),
-          SizeHelper.height(height: 10.h),
-          CustomText(
-            text: widget.onBoardingInfo.title ?? "",
-            useOverflow: false,
-            style: TextStyleHelper.largeHeading.copyWith(
-              color: AppColors.primary,
-            ),
-          ),
-          SizeHelper.height(),
-          Html(data: widget.onBoardingInfo.description ?? ""),
+          // SizeHelper.height(height: 10.h),
+          // CustomText(
+          //   text: widget.onBoardingInfo.title ?? "",
+          //   useOverflow: false,
+          //   style: TextStyleHelper.largeHeading.copyWith(
+          //     color: AppColors.primary,
+          //   ),
+          // ),
+          // SizeHelper.height(),
+          // Html(data: widget.onBoardingInfo.description ?? ""),
         ],
       ),
     );
