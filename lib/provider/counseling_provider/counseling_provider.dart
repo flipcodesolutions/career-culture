@@ -17,6 +17,13 @@ class CounselingProvider extends ChangeNotifier with NavigateHelper {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  /// is options is collapesed in program screen
+  bool _isOptionCollapsed = false;
+  bool get isOptionCollapsed => _isOptionCollapsed;
+  set setOptionCollapsed(bool toggle) {
+    _isOptionCollapsed = toggle;
+    notifyListeners();
+  }
   // /// selectable topics
   // final topics = [
   //   "Depression",

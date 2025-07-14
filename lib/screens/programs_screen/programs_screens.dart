@@ -317,6 +317,7 @@ class _ProgramsScreensState extends State<ProgramsScreens>
 class MIndFulYouthACertificateProgramTitle extends StatelessWidget {
   const MIndFulYouthACertificateProgramTitle({super.key, this.style});
   final TextStyle? style;
+
   @override
   Widget build(BuildContext context) {
     return CustomText(
@@ -338,7 +339,6 @@ class CounselingContainer extends StatefulWidget {
   final int counselingCount;
   final bool isFirstOpen;
   final bool isSecondOpen;
-
   @override
   State<CounselingContainer> createState() => _CounselingContainerState();
 }
@@ -348,74 +348,82 @@ class _CounselingContainerState extends State<CounselingContainer> {
   Widget build(BuildContext context) {
     CounselingProvider counselingProvider = context.watch<CounselingProvider>();
     return IntrinsicHeight(
-      child: CustomContainer(
-        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        padding: EdgeInsets.all(AppSize.size10),
-        backGroundColor: AppColors.counselingBox,
-        borderRadius: BorderRadius.circular(AppSize.size10),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x000000).withOpacity(1),
-            offset: Offset(0, 0),
-            blurRadius: 15,
-            spreadRadius: -9,
-          ),
-        ],
-        width: 90.w,
-        child:
-            counselingProvider.isLoading
-                ? Center(child: CustomLoader())
-                : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (widget.counselingCount <= 1) ...[
-                      CustomText(
-                        text: AppStrings.bookAnAppointment,
-                        style: TextStyleHelper.mediumHeading.copyWith(
-                          color: AppColors.primary,
+      child: InkWell(
+        onTap:
+            () =>
+                counselingProvider.setOptionCollapsed =
+                    !counselingProvider.isOptionCollapsed,
+        child: CustomContainer(
+          margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          padding: EdgeInsets.all(AppSize.size10),
+          backGroundColor: AppColors.counselingBox,
+          borderRadius: BorderRadius.circular(AppSize.size10),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x000000).withOpacity(1),
+              offset: Offset(0, 0),
+              blurRadius: 15,
+              spreadRadius: -9,
+            ),
+          ],
+          width: 90.w,
+          child:
+              counselingProvider.isLoading
+                  ? Center(child: CustomLoader())
+                  : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.counselingCount <= 1) ...[
+                        CustomText(
+                          text: AppStrings.bookAnAppointment,
+                          style: TextStyleHelper.mediumHeading.copyWith(
+                            color: AppColors.primary,
+                          ),
                         ),
-                      ),
-                      SizeHelper.height(height: 1.h),
-                      CustomText(
-                        text: AppStrings.takeAMomentToTalkWithUs,
-                        useOverflow: false,
-                      ),
-                      SizeHelper.height(),
-                    ],
-                    if (widget.counselingCount == 0) ...[
-                      CounselingOptions(
-                        description: AppStrings.bookAfter25,
-                        heading: AppStrings.counseling1,
-                        isOpen: widget.isFirstOpen,
-                        isDone: widget.counselingCount == 1,
-                      ),
-                      SizeHelper.height(),
-                    ],
-                    if (widget.counselingCount == 1) ...[
-                      CounselingOptions(
-                        description: AppStrings.bookAfter75,
-                        heading: AppStrings.counseling2,
-                        isOpen: widget.isSecondOpen,
-                        isDone: widget.counselingCount == 2,
-                      ),
-                    ],
-                    if (widget.counselingCount != 0 &&
-                        widget.counselingCount != 1)
-                      CustomContainer(
-                        backGroundColor: AppColors.white,
-                        boxShadow: ShadowHelper.scoreContainer,
-                        height: 4.h,
-                        borderRadius: BorderRadius.circular(AppSize.size10),
-                        alignment: Alignment.center,
-                        child: CustomText(
-                          text: "All Counselings is Done",
-                          style: TextStyleHelper.smallHeading,
+                        SizeHelper.height(height: 1.h),
+                        CustomText(
+                          text: AppStrings.takeAMomentToTalkWithUs,
+                          useOverflow: false,
                         ),
-                      ),
-                  ],
-                ),
+                        SizeHelper.height(),
+                      ],
+                      if (counselingProvider.isOptionCollapsed)
+                        if (widget.counselingCount == 0) ...[
+                          CounselingOptions(
+                            description: AppStrings.bookAfter25,
+                            heading: AppStrings.counseling1,
+                            isOpen: widget.isFirstOpen,
+                            isDone: widget.counselingCount == 1,
+                          ),
+                          SizeHelper.height(),
+                        ],
+                      if (counselingProvider.isOptionCollapsed)
+                        if (widget.counselingCount == 1) ...[
+                          CounselingOptions(
+                            description: AppStrings.bookAfter75,
+                            heading: AppStrings.counseling2,
+                            isOpen: widget.isSecondOpen,
+                            isDone: widget.counselingCount == 2,
+                          ),
+                        ],
+                      if (widget.counselingCount != 0 &&
+                          widget.counselingCount != 1)
+                        CustomContainer(
+                          backGroundColor: AppColors.white,
+                          boxShadow: ShadowHelper.scoreContainer,
+                          height: 4.h,
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          alignment: Alignment.center,
+                          child: CustomText(
+                            text: "All Counselings is Done",
+                            style: TextStyleHelper.smallHeading,
+                          ),
+                        ),
+                    ],
+                  ),
+        ),
       ),
     );
   }
