@@ -6,6 +6,7 @@ import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/widgets/custom_container.dart';
+import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
@@ -19,7 +20,7 @@ class ProfileViewPage extends StatelessWidget with NavigateHelper {
   @override
   Widget build(BuildContext context) {
     final SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    final Map<String, dynamic> profileData = signUpProvider.buildUserMap();
+
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -42,40 +43,49 @@ class ProfileViewPage extends StatelessWidget with NavigateHelper {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          children: [
-            Hero(tag: "profile", child: CustomProfileAvatar()),
-            const SizedBox(height: 24),
-            _buildSection("Personal Info", [
-              _buildField("First Name", profileData['firstName']),
-              _buildField("Middle Name", profileData['middleName']),
-              _buildField("Last Name", profileData['lastName']),
-              _buildField("Birthdate", profileData['birthdate']),
-              _buildField("Gender", profileData['gender']),
-            ]),
-            _buildSection("Contact", [
-              _buildField("Email", profileData['email']),
-              _buildField("Contact 1", profileData['contact1']),
-              if (profileData['contact2'] != null)
-                _buildField("Contact 2", profileData['contact2']),
-            ]),
-            _buildSection("Address", [
-              _buildField("Address Line 1", profileData['address1']),
-              if (profileData['address2'] != null)
-                _buildField("Address Line 2", profileData['address2']),
-              _buildField("City", profileData['city']),
-              _buildField("District", profileData['district']),
-              _buildField("State", profileData['state']),
-            ]),
-            _buildSection("Education / Work", [
-              _buildField("Current Study", profileData['currentStudy']),
-              _buildField("Degree", profileData['degree']),
-              _buildField("College", profileData['college']),
-              if (profileData['company'] != null)
-                _buildField("Company", profileData['company']),
-            ]),
-          ],
+        child: FutureBuilder(
+          future: signUpProvider.buildUserMap(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final Map<String, dynamic> profileData = snapshot.data ?? {};
+              return ListView(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                children: [
+                  Hero(tag: "profile", child: CustomProfileAvatar()),
+                  const SizedBox(height: 24),
+                  _buildSection("Personal Info", [
+                    _buildField("First Name", profileData['firstName']),
+                    _buildField("Middle Name", profileData['middleName']),
+                    _buildField("Last Name", profileData['lastName']),
+                    _buildField("Birthdate", profileData['birthdate']),
+                    _buildField("Gender", profileData['gender']),
+                  ]),
+                  _buildSection("Contact", [
+                    _buildField("Email", profileData['email']),
+                    _buildField("Contact 1", profileData['contact1']),
+                    if (profileData['contact2'] != null)
+                      _buildField("Contact 2", profileData['contact2']),
+                  ]),
+                  _buildSection("Address", [
+                    _buildField("Address Line 1", profileData['address1']),
+                    if (profileData['address2'] != null)
+                      _buildField("Address Line 2", profileData['address2']),
+                    _buildField("City", profileData['city']),
+                    _buildField("District", profileData['district']),
+                    _buildField("State", profileData['state']),
+                  ]),
+                  _buildSection("Education / Work", [
+                    _buildField("Current Study", profileData['currentStudy']),
+                    _buildField("Degree", profileData['degree']),
+                    _buildField("College", profileData['college']),
+                    if (profileData['company'] != null)
+                      _buildField("Company", profileData['company']),
+                  ]),
+                ],
+              );
+            }
+            return Center(child: CustomLoader());
+          },
         ),
       ),
     );

@@ -114,6 +114,22 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
                               titleText: AppStrings.profile,
                             ),
 
+                            /// faq history
+                            ProfilePageListTiles(
+                              leading: Icons.question_mark_sharp,
+                              // onTap: () {},
+                              onTap: () async {
+                                push(
+                                  context: context,
+                                  widget: FaqScreen(),
+                                  transition:
+                                      FadeUpwardsPageTransitionsBuilder(),
+                                );
+                              },
+
+                              titleText: AppStrings.faq,
+                            ),
+
                             /// refer
                             ProfilePageListTiles(
                               leading: Icons.share,
@@ -192,22 +208,6 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
 
                             //   titleText: AppStrings.purchaseHistory,
                             // ),
-
-                            /// faq history
-                            ProfilePageListTiles(
-                              leading: Icons.question_mark_sharp,
-                              // onTap: () {},
-                              onTap: () async {
-                                push(
-                                  context: context,
-                                  widget: FaqScreen(),
-                                  transition:
-                                      FadeUpwardsPageTransitionsBuilder(),
-                                );
-                              },
-
-                              titleText: AppStrings.faq,
-                            ),
                             ProfilePageListTiles(
                               leading: Icons.delete_forever,
                               color: AppColors.error,

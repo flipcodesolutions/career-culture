@@ -993,49 +993,51 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
-  Map<String, dynamic> buildUserMap() {
-    String fullName = [
-      firstName.text.trim(),
-      if (middleName.text.trim().isNotEmpty) middleName.text.trim(),
-      lastName.text.trim(),
-    ].join(" ");
+  Future<Map<String, dynamic>> buildUserMap() async {
+    String name = await SharedPrefs.getSharedString(AppStrings.userName);
+    // print('🧑 Full name from storage: "$name"');
+    String first = '';
+    String middle = '';
+    String last = '';
+    List<String> parts = name.trim().split(RegExp(r'\s+'));
+    // print('🔍 Name parts: $parts');
 
+    if (parts.length == 1) {
+      first = parts[0];
+      middle = '';
+      last = '';
+    } else if (parts.length == 2) {
+      first = parts[0];
+      middle = '';
+      last = parts[1];
+    } else {
+      first = parts.first;
+      middle = parts.sublist(1, parts.length - 1).join(' ');
+      last = parts.last;
+    }
     return {
-      "profileImage": _signUpConfirmModel?.data?.user?.profile?.images ?? "",
-      "firstName": firstName.text.trim(),
-      "middleName": middleName.text.trim(),
-      "lastName": lastName.text.trim(),
-      "fullName": fullName,
-      "birthdate": birthDate.text.trim(),
-      "gender": _genderQuestion.answer?.trim() ?? "",
-
-      // Contact Info
-      "email": email.text.trim(),
-      "isEmailVerified": isEmailVerified,
-      "contact1": contactNo1.text.trim(),
-      "isContact1Verified": isContactNo1Verified,
-      "contact2": contactNo2.text.trim(),
-      "isContact2Verified": isContactNo2Verified,
-
-      // Address
-      "address1": address1.text.trim(),
-      "address2": address2.text.trim(),
-      "city": city.trim(),
-      "district": district.text.trim(),
-      "state": state.trim(),
-      "country": country.text.trim(),
-
-      // Education
-      "currentStudy": presentStudy.text.trim(),
-      "degree": lastStudy.text.trim(),
-      "college": collegeOrUniversity.text.trim(),
-
-      // Work
-      "isWorking": areYouWorking.answer == "Yes",
-      "company": companyOrBusiness.text.trim(),
-
-      // Optional
-      "coordinatorId": coordinatorIdFromLocal,
+      "firstName": first,
+      "middleName": middle,
+      "lastName": last,
+      'birthdate': MethodHelper.convertToDisplayFormat(
+        inputDate: await SharedPrefs.getSharedString(AppStrings.dateOfBirth),
+      ),
+      'gender': await SharedPrefs.getSharedString(AppStrings.userGender),
+      'email': await SharedPrefs.getSharedString(AppStrings.userEmail),
+      'contact1': await SharedPrefs.getSharedString(AppStrings.userContactNo1),
+      'contact2': await SharedPrefs.getSharedString(AppStrings.userContactNo2),
+      'address1': await SharedPrefs.getSharedString(AppStrings.addressLine1),
+      'address2': await SharedPrefs.getSharedString(AppStrings.addressLine2),
+      'state': await SharedPrefs.getSharedString(AppStrings.userState),
+      'district': await SharedPrefs.getSharedString(AppStrings.userCity),
+      'city': await SharedPrefs.getSharedString(AppStrings.userDistrict),
+      'currentStudy': await SharedPrefs.getSharedString(AppStrings.study),
+      'degree': await SharedPrefs.getSharedString(AppStrings.degree),
+      'college': await SharedPrefs.getSharedString(AppStrings.university),
+      'company': await SharedPrefs.getSharedString(
+        AppStrings.userNameOfCompanyOrBusiness,
+      ),
+      'profileImage': _signUpConfirmModel?.data?.user?.profile?.images ?? "",
     };
   }
 }
