@@ -4,6 +4,7 @@ import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/provider/user_provider/login_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
 import 'package:mindful_youth/utils/widget_helper/widget_helper.dart';
@@ -112,9 +113,25 @@ class _OtpScreen extends State<OtpScreen> with NavigateHelper {
                                     ? loginProvider.sentOtpToMobileNumber(
                                       context: context,
                                     )
-                                    : loginProvider.verifyOtpToMobileNumber(
+                                    : ValidatorHelper.validateOtp(
+                                          value:
+                                              loginProvider.otpController.text,
+                                        ) ==
+                                        null
+                                    ? loginProvider.verifyOtpToMobileNumber(
                                       context: context,
                                       isNavigateHome: widget.isNavigateHome,
+                                    )
+                                    : WidgetHelper.customSnackBar(
+                                      title:
+                                          ValidatorHelper.validateOtp(
+                                            value:
+                                                loginProvider
+                                                    .otpController
+                                                    .text,
+                                          ) ??
+                                          "",
+                                      isError: true,
                                     ),
                       ),
                   SizeHelper.height(),

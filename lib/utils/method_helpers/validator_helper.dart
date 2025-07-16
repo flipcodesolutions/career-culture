@@ -160,4 +160,14 @@ class ValidatorHelper with NavigateHelper {
 
     return null; // Valid
   }
+
+  static String? validateOtp({required String? value}) {
+    if (value?.trim().isEmpty == true) {
+      return "Please Provide A OTP";
+    }
+    if ((value?.trim().length ?? 0) < 4) {
+      return "Please Enter A Valid OTP !!";
+    }
+    return null;
+  }
 }
