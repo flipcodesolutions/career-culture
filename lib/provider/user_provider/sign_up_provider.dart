@@ -9,10 +9,12 @@ import 'package:mindful_youth/models/login_model/send_email_otp_model.dart';
 import 'package:mindful_youth/models/login_model/sent_otp_model.dart';
 import 'package:mindful_youth/models/login_model/user_signup_request_model.dart';
 import 'package:intl/intl.dart';
+import 'package:mindful_youth/models/login_model/verify_otp_model.dart';
 import 'package:mindful_youth/screens/main_screen/main_screen.dart';
 import 'package:mindful_youth/service/get_conveners_service/get_conveners_service.dart';
 import 'package:mindful_youth/service/send_otp_services/send_otp_service.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/validator_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
 import 'package:mindful_youth/utils/shared_prefs_helper/shared_prefs_helper.dart';
 import 'package:mindful_youth/utils/text_style_helper/text_style_helper.dart';
@@ -410,8 +412,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
     // 1) Email OTP
     if (!_isEmailVerified) {
-      await sendEmailOtp(context: context);
-      final ok = await _showEmailOtpDialog(context);
+      final bool sent = await sendEmailOtp(context: context);
+      final ok = sent ? await _showEmailOtpDialog(context) : false;
       if (!ok) return false;
       setIsEmailVerified = ok;
       _signUpRequestModel.isEmailVerified = ok ? 'yes' : 'no';
@@ -470,7 +472,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // Create a local TextEditingController for OTP input
     final TextEditingController otpController = TextEditingController();
     // Create a local form key for OTP verification
-    final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
 
     _isEmailVerified =
         await showDialog<bool>(
@@ -485,16 +486,20 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   color: AppColors.primary,
                 ),
               ),
-              content: Form(
-                key: otpFormKey,
-                child: CustomContainer(
-                  height: AppSize.size100,
-                  child: CustomPinPut(
-                    controller: otpController,
-                    height: AppSize.size70,
-                    width: AppSize.size80,
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomContainer(
+                    height: AppSize.size100,
+                    child: CustomPinPut(
+                      controller: otpController,
+                      height: AppSize.size70,
+                      width: AppSize.size80,
+                    ),
                   ),
-                ),
+                ],
               ),
               actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
@@ -502,14 +507,20 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.resendOtp,
                   onTap: () async {
-                    await sendEmailOtp(context: context);
+                    final bool sent = await sendEmailOtp(context: context);
+                    if (!sent) {
+                      Navigator.of(builderContext).pop(false);
+                    }
                   },
                 ),
                 PrimaryBtn(
                   width: 30.w,
                   btnText: AppStrings.verifyOtp,
                   onTap: () async {
-                    if (otpFormKey.currentState?.validate() == true) {
+                    if (ValidatorHelper.validateOtp(
+                          value: otpController.text,
+                        ) ==
+                        null) {
                       bool success = await verifyEmailOtp(
                         context: context,
                         email: email.text,
@@ -518,6 +529,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                       if (success) {
                         Navigator.of(builderContext).pop(true);
                       }
+                    } else {
+                      WidgetHelper.customSnackBar(
+                        title:
+                            ValidatorHelper.validateOtp(
+                              value: otpController.text,
+                            ) ??
+                            "",
+                        isError: true,
+                      );
                     }
                   },
                 ),
@@ -530,7 +550,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   /// Method to send the OTP
-  Future<void> sendEmailOtp({required BuildContext context}) async {
+  Future<bool> sendEmailOtp({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();
 
@@ -541,6 +561,13 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _isLoading = false;
     notifyListeners();
+    if (_emailOtpModel?.success == true) {
+      WidgetHelper.customSnackBar(title: _emailOtpModel?.message ?? "");
+    } else {
+      email.clear();
+      notifyListeners();
+    }
+    return _emailOtpModel?.success == true;
   }
 
   Future<bool> sendMobileOtp({
@@ -584,15 +611,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       return true;
     } else {
       WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.thisNumberIsTaken,
+        title: AppStrings.otpVerificationFailed,
         isError: true,
       );
       return false;
     }
   }
 
-  Future<bool> verifyMobileOtp({
+  Future<bool?> verifyMobileOtp({
     required BuildContext context,
     required String contactNo,
     required String otp,
@@ -600,7 +626,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _isLoading = true;
     notifyListeners();
 
-    _verifyMobile = await otpService.verifyMobileOtp(
+    // _verifyMobile = await otpService.verifyMobileOtp(
+    //   context: context,
+    //   contactNo: contactNo,
+    //   otp: otp,
+    // );
+    final OtpVerifyModel? otpModel = await otpService.verifyMobileOtp(
       context: context,
       contactNo: contactNo,
       otp: otp,
@@ -608,15 +639,27 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     _isLoading = false;
     notifyListeners();
-    if (_verifyMobile == true) {
+    if (otpModel != null && otpModel.data?.isNewUser == true) {
+      _verifyMobile = true;
       return true;
+    } else if (otpModel?.data == null && otpModel?.success == false) {
+      return null;
     } else {
-      WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.thisNumberIsTaken,
-        isError: true,
-      );
-      return false;
+      if (otpModel?.success == true && otpModel?.data?.isNewUser == false) {
+        WidgetHelper.customSnackBar(
+          autoClose: false,
+          title: AppStrings.thisNumberIsTaken,
+          isError: true,
+        );
+        return false;
+      } else {
+        WidgetHelper.customSnackBar(
+          title: AppStrings.somethingWentWrong,
+          isError: true,
+        );
+      }
+
+      return null;
     }
   }
 
@@ -628,7 +671,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     // Create a local TextEditingController for OTP input
     final TextEditingController otpController = TextEditingController();
     // Create a local form key for OTP verification
-    final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
+    // final GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
 
     bool success =
         await showDialog<bool>(
@@ -643,23 +686,19 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   color: AppColors.primary,
                 ),
               ),
-              content: Form(
-                key: otpFormKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomContainer(
-                      height: AppSize.size100,
-                      child: CustomPinPut(
-                        controller: otpController,
-                        height: AppSize.size70,
-                        width: AppSize.size80,
-                      ),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomContainer(
+                    child: CustomPinPut(
+                      controller: otpController,
+                      height: AppSize.size70,
+                      width: AppSize.size80,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               actionsAlignment: MainAxisAlignment.spaceBetween,
               actions: [
@@ -674,17 +713,29 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
                   width: 30.w,
                   btnText: AppStrings.verifyOtp,
                   onTap: () async {
-                    if (otpFormKey.currentState?.validate() == true) {
-                      bool success = await verifyMobileOtp(
+                    if (ValidatorHelper.validateOtp(
+                          value: otpController.text,
+                        ) ==
+                        null) {
+                      bool? success = await verifyMobileOtp(
                         context: context,
                         contactNo: contact,
                         otp: otpController.text,
                       );
-                      if (success) {
+                      if (success == true) {
                         Navigator.of(builderContext).pop(true);
-                      } else {
+                      } else if (success == false) {
                         Navigator.of(builderContext).pop(false);
                       }
+                    } else {
+                      WidgetHelper.customSnackBar(
+                        title:
+                            ValidatorHelper.validateOtp(
+                              value: otpController.text,
+                            ) ??
+                            "",
+                        isError: true,
+                      );
                     }
                   },
                 ),

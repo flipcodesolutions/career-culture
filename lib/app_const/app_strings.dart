@@ -156,11 +156,12 @@ class AppStrings {
   static const cancel = "Cancel";
   static const exit = "Exit";
   static const dateFormate = "YYYY-MM-DD";
-  static const ddMmmYyyy = "day-month-year";
+  static const ddMmmYyyy = "ex. 01-Jan-2000";
   static const acceptTerms = "Accept Terms Before Proceeding !!";
   static const mustAcceptTerms = "Must Accept Terms Before Proceeding !!";
   static const agreeToTerms = "I agree to the terms Of This Event.";
-  static const thisNumberIsTaken = "This Number Is Taken";
+  static const thisNumberIsTaken = "This Number Is All Ready Registered !!";
+  static const otpVerificationFailed = "Otp Verification Failed !!";
   static const dateAndTimeFormate = "YYYY MM DD MM:HH";
   static const date = "Date";
   static const dateAndTime = "Date And Time";

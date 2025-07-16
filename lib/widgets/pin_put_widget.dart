@@ -9,16 +9,19 @@ class CustomPinPut extends StatelessWidget {
   final TextEditingController controller;
   final double? width;
   final double? height;
+  final String? Function(String?)? validator;
   const CustomPinPut({
     super.key,
     required this.controller,
     this.height,
     this.width,
+    this.validator
   });
   @override
   Widget build(BuildContext context) {
     return Pinput(
       controller: controller,
+      validator: validator,
       defaultPinTheme: PinTheme(
         width: width ?? 15.w,
         height: height ?? 8.h,

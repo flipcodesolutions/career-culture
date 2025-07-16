@@ -21,7 +21,6 @@ class SendOtpService {
       );
       if (response.isNotEmpty) {
         SendEmailOtpModel model = SendEmailOtpModel.fromJson(response);
-        WidgetHelper.customSnackBar(title: model.message ?? "");
         return model;
       }
       return null;
@@ -76,7 +75,7 @@ class SendOtpService {
   }
 
   /// verify mobile otp
-  Future<bool> verifyMobileOtp({
+  Future<OtpVerifyModel?> verifyMobileOtp({
     required BuildContext context,
     required String contactNo,
     required String otp,
@@ -88,13 +87,14 @@ class SendOtpService {
         body: {"contactNo": contactNo, "otp": otp},
       );
       if (response.isNotEmpty) {
-        OtpVerifyModel model = OtpVerifyModel.fromJson(response);
-        return model.data?.isNewUser ?? false;
+        // OtpVerifyModel model = OtpVerifyModel.fromJson(response);
+        // return model.data?.isNewUser ?? false;
+        return OtpVerifyModel.fromJson(response);
       }
-      return false;
+      return null;
     } catch (e) {
       log("error while verify mobile otp => $e");
-      return false;
+      return null;
     }
   }
 }
