@@ -6,6 +6,7 @@ import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/refer_provider/refer_provider.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
+import 'package:mindful_youth/screens/about_us_screen/about_us_screen.dart';
 import 'package:mindful_youth/screens/events_screen/events_screen.dart';
 import 'package:mindful_youth/screens/faq_screen/faq_screen.dart';
 import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
@@ -208,6 +209,18 @@ class _AccountScreenState extends State<AccountScreen> with NavigateHelper {
 
                             //   titleText: AppStrings.purchaseHistory,
                             // ),
+                            ProfilePageListTiles(
+                              leading: Icons.info_outline_rounded,
+
+                              onTap:
+                                  () => push(
+                                    context: context,
+                                    widget: AboutUsPage(),
+                                    transition:
+                                        OpenUpwardsPageTransitionsBuilder(),
+                                  ),
+                              titleText: AppStrings.aboutUs,
+                            ),
                             ProfilePageListTiles(
                               leading: Icons.delete_forever,
                               color: AppColors.error,

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -7,6 +6,7 @@ import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/models/all_events_model.dart/all_events_model.dart';
 import 'package:mindful_youth/models/feedback_model/feedback_model.dart';
+import 'package:mindful_youth/models/user_notification/counseling_schedual_change_model.dart';
 import 'package:mindful_youth/models/user_notification/user_notification_model.dart';
 import 'package:mindful_youth/provider/user_notification/user_notification_provider.dart';
 import 'package:mindful_youth/screens/events_screen/individual_event_screen.dart';
@@ -24,6 +24,7 @@ import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
+import '../../utils/api_helper/api_helper.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -44,6 +45,9 @@ class _NotificationScreenState extends State<NotificationScreen>
       await Future.wait([
         userNotificationProvider.getUserNotification(context: context),
         userNotificationProvider.getUserFeedbackNotification(context: context),
+        userNotificationProvider.getCounselingChangesNotifications(
+          context: context,
+        ),
       ]);
     });
   }
@@ -56,6 +60,9 @@ class _NotificationScreenState extends State<NotificationScreen>
         userNotificationProvider.userScrollNotification?.data ?? [];
     List<FeedbackModelData> feedbackNotifications =
         userNotificationProvider.userFeedbackModel?.data ?? [];
+    CounselingSchedualChangeNotificationModel?
+    counselingSchedualChangeNotificationModel =
+        userNotificationProvider.counselingChangesNotifications;
     return Scaffold(
       appBar: AppBar(
         title: CustomText(
@@ -66,7 +73,12 @@ class _NotificationScreenState extends State<NotificationScreen>
       body:
           userNotificationProvider.isLoading
               ? Center(child: CustomLoader())
-              : notifications.isNotEmpty || feedbackNotifications.isNotEmpty
+              : notifications.isNotEmpty ||
+                  feedbackNotifications.isNotEmpty ||
+                  counselingSchedualChangeNotificationModel
+                          ?.data
+                          ?.notificationTitle !=
+                      null
               ? CustomRefreshIndicator(
                 onRefresh: () async {
                   await Future.wait([
@@ -74,6 +86,9 @@ class _NotificationScreenState extends State<NotificationScreen>
                       context: context,
                     ),
                     userNotificationProvider.getUserFeedbackNotification(
+                      context: context,
+                    ),
+                    userNotificationProvider.getCounselingChangesNotifications(
                       context: context,
                     ),
                   ]);
@@ -93,6 +108,66 @@ class _NotificationScreenState extends State<NotificationScreen>
                               ),
                             ),
                         children: [
+                          /// load the notification that is releated to counseling scheduals
+                          if (counselingSchedualChangeNotificationModel
+                                  ?.data
+                                  ?.notificationTitle !=
+                              null)
+                            InkWell(
+                              onTap: () async {
+                                final bool
+                                success = await userNotificationProvider
+                                    .sentBackendThatNotificationIsOpened(
+                                      context: context,
+                                      apiUrl:
+                                          ApiHelper
+                                              .userReadStatusChangeNotification,
+                                      body: {
+                                        "appointmentId":
+                                            (counselingSchedualChangeNotificationModel
+                                                        ?.data
+                                                        ?.appointmentId ??
+                                                    -1)
+                                                .toString(),
+                                      },
+                                    );
+                                if (success) {
+                                  await Future.wait([
+                                    userNotificationProvider
+                                        .getUserNotification(context: context),
+                                    userNotificationProvider
+                                        .getUserFeedbackNotification(
+                                          context: context,
+                                        ),
+                                    userNotificationProvider
+                                        .getCounselingChangesNotifications(
+                                          context: context,
+                                        ),
+                                  ]);
+                                } else {
+                                  WidgetHelper.customSnackBar(
+                                    title: "Please Try Again...",
+                                    isError: true,
+                                  );
+                                }
+                              },
+                              child: NotificationTile(
+                                title:
+                                    counselingSchedualChangeNotificationModel
+                                        ?.data
+                                        ?.notificationTitle ??
+                                    "",
+                                description:
+                                    counselingSchedualChangeNotificationModel
+                                        ?.data
+                                        ?.notificationDescription ??
+                                    "",
+                                createdAt:
+                                    DateTime.timestamp().toIso8601String(),
+                              ),
+                            ),
+
+                          /// load any feedback notification about expreince with counseling
                           if (feedbackNotifications.isNotEmpty) ...[
                             ...List.generate(
                               feedbackNotifications.length,
@@ -141,18 +216,23 @@ class _NotificationScreenState extends State<NotificationScreen>
                             Divider(endIndent: 5.w, indent: 5.w, height: 2.h),
                             SizeHelper.height(height: 1.h),
                           ],
+
+                          /// notification that are commans
                           ...List.generate(
                             notifications.length,
                             (index) => InkWell(
                               onTap: () async {
-                                final bool success =
-                                    await userNotificationProvider
-                                        .sentBackendThatNotificationIsOpened(
-                                          context: context,
-                                          notificationId:
-                                              notifications[index].id
-                                                  .toString(),
-                                        );
+                                final bool
+                                success = await userNotificationProvider
+                                    .sentBackendThatNotificationIsOpened(
+                                      context: context,
+                                      apiUrl:
+                                          ApiHelper.sentUserOpenNotification,
+                                      body: {
+                                        "notificationId":
+                                            notifications[index].id.toString(),
+                                      },
+                                    );
                                 if (success) {
                                   final bool success =
                                       await redirectUserToScreen(
@@ -171,6 +251,10 @@ class _NotificationScreenState extends State<NotificationScreen>
                                           ),
                                       userNotificationProvider
                                           .getUserFeedbackNotification(
+                                            context: context,
+                                          ),
+                                      userNotificationProvider
+                                          .getCounselingChangesNotifications(
                                             context: context,
                                           ),
                                     ]);

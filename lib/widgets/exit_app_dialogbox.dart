@@ -54,6 +54,7 @@ class ExitAppDialog extends StatelessWidget with NavigateHelper {
                   children: [
                     PrimaryBtn(
                       width: 30.w,
+                      height: 5.h,
                       btnText: AppStrings.cancel,
                       onTap: () => pop(context),
                     ),
@@ -61,6 +62,7 @@ class ExitAppDialog extends StatelessWidget with NavigateHelper {
                       borderColor: AppColors.error,
                       backGroundColor: AppColors.error,
                       width: 30.w,
+                      height: 5.h,
                       btnText: AppStrings.exit,
                       textStyle: TextStyleHelper.smallHeading.copyWith(
                         color: AppColors.white,
@@ -105,6 +107,8 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
               children: [
                 CustomText(
                   text: AppStrings.areYouSureWantToLogout,
+                  textAlign: TextAlign.center,
+                  useOverflow: false,
                   style: TextStyleHelper.mediumHeading.copyWith(
                     color: AppColors.primary,
                   ),
@@ -115,6 +119,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                   children: [
                     PrimaryBtn(
                       width: 30.w,
+                      height: 5.h,
                       btnText: AppStrings.cancel,
                       onTap: () => pop(context),
                     ),
@@ -122,6 +127,7 @@ class LogoutDialog extends StatelessWidget with NavigateHelper {
                       borderColor: AppColors.error,
                       backGroundColor: AppColors.error,
                       width: 30.w,
+                      height: 5.h,
                       btnText: AppStrings.logOut,
                       textStyle: TextStyleHelper.smallHeading.copyWith(
                         color: AppColors.white,
@@ -209,6 +215,7 @@ class DeleteAccount extends StatelessWidget with NavigateHelper {
                       children: [
                         PrimaryBtn(
                           width: 30.w,
+                          height: 5.h,
                           backGroundColor: AppColors.primary,
                           borderColor: AppColors.primary,
                           btnText: AppStrings.cancel,
@@ -221,6 +228,7 @@ class DeleteAccount extends StatelessWidget with NavigateHelper {
                           borderColor: AppColors.error,
                           backGroundColor: AppColors.error,
                           width: 30.w,
+                          height: 5.h,
                           btnText: AppStrings.delete,
                           textStyle: TextStyleHelper.smallHeading.copyWith(
                             color: AppColors.white,

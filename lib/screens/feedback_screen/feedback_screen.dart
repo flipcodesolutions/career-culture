@@ -348,7 +348,7 @@ class _FeedbackPageState extends State<FeedbackPage> with NavigateHelper {
                             counselingDate:
                                 model.appointment?.appointmentDate ?? "",
                             slotTime: model.appointment?.slot ?? "",
-                            rating: _selectedRating.toString(),
+                            rating: ((_selectedRating ?? 0) + 1).toString(),
                             goal: goal ?? "",
                             message: _commentController.text,
                           );

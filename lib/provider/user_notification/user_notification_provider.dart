@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/models/user_notification/counseling_schedual_change_model.dart';
 import 'package:mindful_youth/models/user_notification/user_notification_model.dart';
 import 'package:mindful_youth/service/user_notification_service/user_notification_service.dart';
 import '../../models/feedback_model/feedback_model.dart';
@@ -47,7 +48,8 @@ class UserNotificationProvider extends ChangeNotifier {
   /// sent backend request that user have opened the
   Future<bool> sentBackendThatNotificationIsOpened({
     required BuildContext context,
-    required String notificationId,
+    required String apiUrl,
+    required Map<String,dynamic> body,
   }) async {
     /// set _isLoading true
     _isLoading = true;
@@ -55,7 +57,8 @@ class UserNotificationProvider extends ChangeNotifier {
     final bool success = await userNotificationService
         .sentUserOpenedNotification(
           context: context,
-          notificationId: notificationId,
+          apiUrl:  apiUrl,
+          body: body,
         );
 
     /// set _isLoading false
@@ -84,4 +87,21 @@ class UserNotificationProvider extends ChangeNotifier {
     notifyListeners();
     return succes;
   }
+
+  ////// get notification releated to counseling schedual changes
+  CounselingSchedualChangeNotificationModel? _counselingChangesNotifications;
+  CounselingSchedualChangeNotificationModel?
+  get counselingChangesNotifications => _counselingChangesNotifications;
+
+  Future<void> getCounselingChangesNotifications({
+    required BuildContext context,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+    _counselingChangesNotifications = await userNotificationService
+        .getCounselingSchedualChangeNotificationModel(context: context);
+    _isLoading = false;
+    notifyListeners();
+  }
+  
 }

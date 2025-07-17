@@ -46,7 +46,7 @@ class CustomTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.style,
     this.textAlign = TextAlign.start,
-    required this.validator,
+    this.validator,
     this.decoration,
     this.enabled = true,
     this.hintText,

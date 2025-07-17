@@ -46,15 +46,15 @@ class _ProductListPageState extends State<ProductListPage> with NavigateHelper {
           style: TextStyleHelper.mediumHeading,
         ),
         actions: [
-          IconButton(
-            onPressed:
-                () => push(
-                  context: context,
-                  widget: OrderListPage(),
-                  transition: FadeUpwardsPageTransitionsBuilder(),
-                ),
-            icon: Icon(Icons.list_alt, color: AppColors.primary),
-          ),
+          // IconButton(
+          //   onPressed:
+          //       () => push(
+          //         context: context,
+          //         widget: OrderListPage(),
+          //         transition: FadeUpwardsPageTransitionsBuilder(),
+          //       ),
+          //   icon: Icon(Icons.list_alt, color: AppColors.primary),
+          // ),
         ],
       ),
       body: SafeArea(

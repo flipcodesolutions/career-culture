@@ -15,6 +15,7 @@ class AppColors {
   static const Color black = Colors.black;
   static Color blackShade75 = Colors.black.withOpacity(0.75);
   static const Color counselingBox = Color(0xffF9F9EE);
+  static const Color counselingBoxV2 = Color.fromARGB(255, 244, 244, 216);
   static const Color faqQuestion = Color.fromRGBO(229, 229, 229, 0.5);
   static const Color faqAnswer = Color.fromRGBO(250, 250, 250, 1);
 
@@ -29,4 +30,8 @@ class AppColors {
   /// soul gradient color
   static const Color soul1 = Color(0xffF7F7F4);
   static const Color soul2 = Color(0xffFEE9C7);
+
+  /// new registration page field color
+  static const Color darkPurple = Color(0xff210C6F);
+  static const Color testimonialColor = Color.fromARGB(255, 182, 175, 209);
 }

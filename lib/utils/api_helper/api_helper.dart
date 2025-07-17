@@ -147,5 +147,9 @@ class ApiHelper {
       "$baseUrl/user-read-feedback-notification";
   /// get user info to update before rendering profile page but should not when user is being registerd
   static String getUserDetails = "$baseUrl/getUserDetails";
+  /// get notification which is for status change in counseling schedual 
+  static String getAppointmentStatusChangeNotification = "$baseUrl/appointment-status-change-notification";
+  /// get notification which is for status change in counseling schedual 
+  static String userReadStatusChangeNotification = "$baseUrl/user-read-status-change-notification";
 
 }

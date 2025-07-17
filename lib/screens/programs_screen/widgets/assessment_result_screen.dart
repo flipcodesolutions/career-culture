@@ -74,8 +74,10 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                   CustomContainer(
                     alignment: Alignment.center,
                     child: CustomText(
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
                       text: AppStrings.youHaveCompletedAssessmentQuiz,
-                      style: TextStyleHelper.xSmallText.copyWith(
+                      style: TextStyleHelper.smallText.copyWith(
                         color: AppColors.grey,
                         fontStyle: FontStyle.italic,
                       ),
@@ -182,37 +184,40 @@ class _AssessmentResultScreenState extends State<AssessmentResultScreen>
                               ),
                             ),
                           ),
-                          if(!widget.isAssessmentPhase2)
-                        InkWell(
-                          borderRadius: BorderRadius.circular(AppSize.size30),
-                          onTap:
-                              () => MethodHelper.shareAssessmentResultScreen(
-                                screenShotController: screenshotController,
-                              ),
-                          child: CustomContainer(
-                            width: 44.w,
-                            height: 5.h,
+                        if (!widget.isAssessmentPhase2)
+                          InkWell(
                             borderRadius: BorderRadius.circular(AppSize.size30),
-                            backGroundColor: AppColors.secondary,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizeHelper.width(),
-                                CustomText(
-                                  text: AppStrings.shareScore(
-                                    show: !widget.isAssessmentPhase2,
+                            onTap:
+                                () => MethodHelper.shareAssessmentResultScreen(
+                                  screenShotController: screenshotController,
+                                ),
+                            child: CustomContainer(
+                              width: 44.w,
+                              height: 5.h,
+                              borderRadius: BorderRadius.circular(
+                                AppSize.size30,
+                              ),
+                              backGroundColor: AppColors.secondary,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizeHelper.width(),
+                                  CustomText(
+                                    text: AppStrings.shareScore(
+                                      show: !widget.isAssessmentPhase2,
+                                    ),
+                                    style: TextStyleHelper.smallHeading,
                                   ),
-                                  style: TextStyleHelper.smallHeading,
-                                ),
-                                Image.asset(
-                                  AppImageStrings.shareIcon,
-                                  width: 9.w,
-                                  height: 3.h,
-                                ),
-                              ],
+                                  Image.asset(
+                                    AppImageStrings.shareIcon,
+                                    width: 9.w,
+                                    height: 3.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),

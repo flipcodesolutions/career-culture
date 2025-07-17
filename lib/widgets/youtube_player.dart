@@ -201,6 +201,7 @@ class _YoutubePlayerScreenState extends State<YoutubePlayerScreen> {
                     if (!_isFullScreen) ...[
                       _videoTitle.isNotEmpty
                           ? CustomContainer(
+                            width: 100.w,
                             boxShadow: ShadowHelper.scoreContainer,
                             backGroundColor: AppColors.white,
                             padding: EdgeInsets.symmetric(

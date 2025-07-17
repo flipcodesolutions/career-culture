@@ -29,6 +29,8 @@ class AppStrings {
   static const yourCoins = 'Your Coins';
   static const yourPendingCoins = 'Your Pending Coins';
   static const recentActivity = "Recent Activity";
+  static const seeWhatExpertsSays = "See What Experts Says";
+  static const meetOurMentors = "Meet Our Mentors";
   static const announceMent = "Announcement";
   static const suggestedBooks = "Suggested Books";
   static const scoreBoard = "Scoreboard";
@@ -62,7 +64,7 @@ class AppStrings {
   static const startYourJourney = "Start Your Journey";
   static const updateYourInfo = "Update Your Profile";
   static const update = "Update";
-  static const createAnAccountToJoinUS = "Create An Account To Join US";
+  static const createAnAccount = "Create An Account";
   static const onlyChangeWhatYouMust = "Only Change What You Must";
   static const name = "Name";
   static const studentID = "Student ID";
@@ -142,13 +144,14 @@ class AppStrings {
   static const bookCounselingAppointment = "Book Counseling Appointment";
   static const counselingAppointment = " Counseling Appointment";
   static const deleteAccount = "Delete Account";
+  static const aboutUs = "About Us";
   static const delete = "Delete";
   static const logOut = "Log Out";
   static const camera = "Camera";
   static const gallery = "Gallery";
   static const editAccount = "Edit Account";
   static const areYouSureWantToExit = "Are You Sure Want To Exit ?";
-  static const areYouSureWantToLogout = "Are You Sure Want To Logout ?";
+  static const areYouSureWantToLogout = "Are you sure want to \nLog out ?";
   static const areYouSureWantToDeleteYourAccount =
       "Are You Sure Want To Delete Your Account ?";
   static const thisWillActionIsIrreversible =

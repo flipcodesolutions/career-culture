@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -11,6 +10,7 @@ import 'package:mindful_youth/provider/user_provider/user_provider.dart';
 import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
+import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/utils/list_helper/list_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
@@ -23,6 +23,7 @@ import 'package:mindful_youth/widgets/custom_product_showcase.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
+import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
@@ -273,6 +274,18 @@ class _HomeScreenState extends State<HomeScreen>
                           SizeHelper.height(),
                         ],
 
+                        /// testimonial crousal
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: CustomText(
+                            text: AppStrings.seeWhatExpertsSays,
+                            style: TextStyleHelper.mediumHeading.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        SizeHelper.height(),
+
                         ///
                         CarouselSlider(
                           items: ListHelper.testimonialList(),
@@ -343,7 +356,7 @@ class TestimonialCard extends StatelessWidget {
       borderColor: AppColors.black,
       borderWidth: 0.5,
       margin: EdgeInsets.only(bottom: 3.h),
-      backGroundColor: AppColors.white,
+      backGroundColor: AppColors.counselingBox,
       borderRadius: BorderRadius.circular(AppSize.size10),
       padding: EdgeInsets.all(AppSize.size10),
       boxShadow: ShadowHelper.scoreContainer,

@@ -115,39 +115,58 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                                 child: FadeInAnimation(child: widget),
                               ),
                           children: [
-                            /// assessment heading
                             CustomContainer(
-                              alignment: Alignment.topLeft,
-                              child: CustomText(
-                                text: AppStrings.assessment,
-                                style: TextStyleHelper.largeHeading.copyWith(
-                                  color: AppColors.primary,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                              borderRadius: BorderRadius.circular(
+                                AppSize.size10,
                               ),
-                            ),
-                            CustomContainer(
-                              alignment: Alignment.topLeft,
-                              child: CustomText(
-                                text: AppStrings.level1QuizTest,
-                                style: TextStyleHelper.smallText.copyWith(
-                                  color: AppColors.blackShade75,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSize.size20,
+                                vertical: AppSize.size20,
                               ),
-                            ),
-                            SizeHelper.height(),
-                            QuestionRowAndColumInfoWithIcon(
-                              heading1:
-                                  "${mediaList?.length ?? 0} ${AppStrings.questions}",
-                              heading2: AppStrings.multipleChoiceAnswer,
-                              icon: Icons.question_mark_outlined,
-                            ),
-                            SizeHelper.height(height: 1.h),
-                            QuestionRowAndColumInfoWithIcon(
-                              heading1: assessmentProvider.point.toString(),
-                              heading2: AppStrings.perQuestion,
-                              icon: Icons.checklist_rtl_rounded,
+                              backGroundColor: AppColors.counselingBoxV2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  /// assessment heading
+                                  CustomContainer(
+                                    alignment: Alignment.topLeft,
+                                    child: CustomText(
+                                      text: AppStrings.assessment,
+                                      style: TextStyleHelper.largeHeading
+                                          .copyWith(
+                                            color: AppColors.primary,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                    ),
+                                  ),
+                                  CustomContainer(
+                                    alignment: Alignment.topLeft,
+                                    child: CustomText(
+                                      text: AppStrings.level1QuizTest,
+                                      style: TextStyleHelper.smallText.copyWith(
+                                        color: AppColors.blackShade75,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                  SizeHelper.height(),
+                                  QuestionRowAndColumInfoWithIcon(
+                                    heading1:
+                                        "${mediaList?.length ?? 0} ${AppStrings.questions}",
+                                    heading2: AppStrings.multipleChoiceAnswer,
+                                    icon: Icons.question_mark_outlined,
+                                  ),
+                                  SizeHelper.height(height: 1.h),
+                                  QuestionRowAndColumInfoWithIcon(
+                                    heading1:
+                                        assessmentProvider.point.toString(),
+                                    heading2: AppStrings.perQuestion,
+                                    icon: Icons.checklist_rtl_rounded,
+                                  ),
+                                ],
+                              ),
                             ),
                             SizeHelper.height(height: 1.h),
                             Divider(),
