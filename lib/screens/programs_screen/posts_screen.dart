@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
+import 'package:mindful_youth/provider/programs_provider/chapter_provider/chapter_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/programs_provider/programs_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
@@ -100,9 +101,14 @@ class _PostsScreenState extends State<PostsScreen>
             : "${AppStrings.takeATest} (Earn ${post?.points ?? 0} Coins)";
     return PopScope(
       onPopInvokedWithResult: (didPop, result) async {
+        /// get refreshed current user progress
         await programsProvider.getUserProgress(
           context: context,
           pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
+        );
+        await context.read<ChapterProvider>().getChapterById(
+          context: context,
+          id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
         );
       },
       child: Scaffold(

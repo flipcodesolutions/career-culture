@@ -61,39 +61,6 @@ class ChapterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool canAccessChapter({
-    required int totalChapters,
-    required double totalAllMarks,
-    required double correctPoints,
-    required int requestedChapter,
-  }) {
-    // invalid requests are always denied
-    if (requestedChapter < 1 || requestedChapter > totalChapters) {
-      return false;
-    }
 
-    // chapter 1 is always open
-    if (requestedChapter == 1) {
-      return true;
-    }
-
-    // prevent division by zero or invalid values
-    if (totalChapters <= 0 || totalAllMarks <= 0) {
-      return false;
-    }
-
-    final marksPerChapter = totalAllMarks / totalChapters;
-
-    // prevent further math issues
-    if (marksPerChapter.isNaN ||
-        marksPerChapter.isInfinite ||
-        marksPerChapter <= 0) {
-      return false;
-    }
-
-    final completedChapters = (correctPoints / marksPerChapter).floor();
-
-    // to open chapter N, you must have completed N-1
-    return completedChapters >= (requestedChapter - 1);
-  }
+  
 }
