@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
-  const CustomContainer(
-      {super.key,
-      this.alignment,
-      this.child,
-      this.constraints,
-      this.height,
-      this.width,
-      this.margin,
-      this.padding,
-      this.borderColor,
-      this.borderWidth,
-      this.image,
-      this.backGroundColor,
-      this.borderRadius,
-      this.boxShadow,
-      this.shape = BoxShape.rectangle,
-      this.gradient,
-      this.border});
+  const CustomContainer({
+    super.key,
+    this.alignment,
+    this.child,
+    this.constraints,
+    this.height,
+    this.width,
+    this.margin,
+    this.padding,
+    this.borderColor,
+    this.borderWidth,
+    this.image,
+    this.backGroundColor,
+    this.borderRadius,
+    this.boxShadow,
+    this.shape = BoxShape.rectangle,
+    this.gradient,
+    this.border,
+    this.decoration,
+  });
   final AlignmentGeometry? alignment;
   final Widget? child;
   final BoxConstraints? constraints;
@@ -35,6 +37,7 @@ class CustomContainer extends StatelessWidget {
   final BoxShape shape;
   final Gradient? gradient;
   final BoxBorder? border;
+  final Decoration? decoration;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,43 +47,48 @@ class CustomContainer extends StatelessWidget {
       width: width,
       margin: margin,
       padding: padding,
-      decoration: BoxDecoration(
-          border: border ??
-              Border.all(
-                color: borderColor ?? Colors.transparent,
-                width: borderWidth ?? 2,
-              ),
-          borderRadius: borderRadius,
-          color: backGroundColor,
-          image: image,
-          shape: shape,
-          gradient: gradient,
-          boxShadow: boxShadow),
+      decoration:
+          decoration ??
+          BoxDecoration(
+            border:
+                border ??
+                Border.all(
+                  color: borderColor ?? Colors.transparent,
+                  width: borderWidth ?? 2,
+                ),
+            borderRadius: borderRadius,
+            color: backGroundColor,
+            image: image,
+            shape: shape,
+            gradient: gradient,
+            boxShadow: boxShadow,
+          ),
       child: child,
     );
   }
 }
 
 class CustomAnimatedContainer extends StatelessWidget {
-  const CustomAnimatedContainer(
-      {super.key,
-      this.alignment,
-      this.child,
-      this.constraints,
-      this.height,
-      this.width,
-      this.margin,
-      this.padding,
-      this.borderColor,
-      this.borderWidth,
-      this.image,
-      this.backGroundColor,
-      this.borderRadius,
-      this.boxShadow,
-      this.shape = BoxShape.rectangle,
-      this.gradient,
-      this.duration,
-      this.curve});
+  const CustomAnimatedContainer({
+    super.key,
+    this.alignment,
+    this.child,
+    this.constraints,
+    this.height,
+    this.width,
+    this.margin,
+    this.padding,
+    this.borderColor,
+    this.borderWidth,
+    this.image,
+    this.backGroundColor,
+    this.borderRadius,
+    this.boxShadow,
+    this.shape = BoxShape.rectangle,
+    this.gradient,
+    this.duration,
+    this.curve,
+  });
   final AlignmentGeometry? alignment;
   final Widget? child;
   final BoxConstraints? constraints;
@@ -110,16 +118,17 @@ class CustomAnimatedContainer extends StatelessWidget {
       padding: padding,
       curve: curve ?? Curves.ease,
       decoration: BoxDecoration(
-          border: Border.all(
-            color: borderColor ?? Colors.transparent,
-            width: borderWidth ?? 2,
-          ),
-          borderRadius: borderRadius,
-          color: backGroundColor,
-          image: image,
-          shape: shape,
-          gradient: gradient,
-          boxShadow: boxShadow),
+        border: Border.all(
+          color: borderColor ?? Colors.transparent,
+          width: borderWidth ?? 2,
+        ),
+        borderRadius: borderRadius,
+        color: backGroundColor,
+        image: image,
+        shape: shape,
+        gradient: gradient,
+        boxShadow: boxShadow,
+      ),
       child: child,
     );
   }

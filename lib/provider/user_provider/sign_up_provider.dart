@@ -59,51 +59,63 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   UserSignUpRequestModel _signUpRequestModel = UserSignUpRequestModel();
   UserSignUpRequestModel get signUpRequestModel => _signUpRequestModel;
 
+  /// profile pic error
+  String? isProfilePicErr;
+
   ///=================================================================
   ///
   /// first page form key
   ///
   /// ================================================================
-  GlobalKey<FormState> firstPageFormKey = GlobalKey<FormState>();
+  // GlobalKey<FormState> firstPageFormKey = GlobalKey<FormState>();
 
   // Page-wise validation logic
   bool validateFirstPage(BuildContext context) {
-    bool isValid = firstPageFormKey.currentState?.validate() ?? false;
+    /// run all validation so the next check can find if any err
+    validateFirstName();
+    validateMiddleName();
+    validateLastName();
+    validteBirthdate();
+    validateConvener();
+    validateGender();
+    bool isValid = [
+      isFirstNameErr,
+      isMiddleNameErr,
+      isLastNameErr,
+      isBirthDateErr,
+      isConvenerErr,
+      isGenderErr,
+    ].every((s) => s?.trim().isEmpty == true);
 
-    if (genderQuestion.answer?.isEmpty ?? true) {
-      WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.genderNeeded,
-        isError: true,
-      );
-      isValid = false;
-    }
     if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
-      WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.mustSelectProfilePic,
-        isError: true,
-      );
+      isProfilePicErr = AppStrings.mustSelectProfilePic;
       isValid = false;
+      notifyListeners();
     }
-    if (!_isUpdatingProfile
-        ? _selectedConvener?.id == null || _selectedConvener?.name == null
-        : false) {
-      WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.mustSelectCoordinator,
-        isError: true,
-      );
-      isValid = false;
-    }
-
     return isValid;
   }
 
   /// user full name
   TextEditingController firstName = TextEditingController();
+  String? isFirstNameErr;
+  void validateFirstName() {
+    isFirstNameErr = ValidatorHelper.validateName(value: firstName.text);
+    notifyListeners();
+  }
+
   TextEditingController middleName = TextEditingController();
+  String? isMiddleNameErr;
+  void validateMiddleName() {
+    isMiddleNameErr = ValidatorHelper.validateName(value: middleName.text);
+    notifyListeners();
+  }
+
   TextEditingController lastName = TextEditingController();
+  String? isLastNameErr;
+  void validateLastName() {
+    isLastNameErr = ValidatorHelper.validateName(value: lastName.text);
+    notifyListeners();
+  }
 
   /// convener
   /// Service and getter and setter
@@ -112,10 +124,20 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   ConvenerListModel? get convenerListModel => _convenerListModel;
   String? coordinatorIdFromLocal;
   Convener? _selectedConvener;
+  String? isConvenerErr;
   Convener? get selectedConvener => _selectedConvener;
   set setConvener(Convener? convener) {
     _selectedConvener = convener;
     notifyListeners();
+  }
+
+  void validateConvener() {
+    isConvenerErr =
+        _selectedConvener == null ||
+                _selectedConvener?.id == null ||
+                _selectedConvener?.name?.trim().isEmpty == true
+            ? AppStrings.selectConvener
+            : null;
   }
 
   Future<void> getConveners({required BuildContext context}) async {
@@ -143,6 +165,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     extractedOptions: [AppStrings.male, AppStrings.female],
   );
   AssessmentQuestion get genderQuestion => _genderQuestion;
+  String? isGenderErr;
+  void validateGender() {
+    isGenderErr =
+        _genderQuestion.answer?.trim().isEmpty == true
+            ? AppStrings.genderNeeded
+            : null;
+    notifyListeners();
+  }
+
   void setGender({String? gender}) {
     _genderQuestion.answer = gender;
     notifyListeners();
@@ -150,6 +181,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// user birth date
   TextEditingController birthDate = TextEditingController();
+  String? isBirthDateErr;
+  String? validteBirthdate() {
+    isBirthDateErr = ValidatorHelper.validateDateFormate(value: birthDate.text);
+    notifyListeners();
+  }
+
   int _lastLength = 0;
 
   void addHyphen() {
@@ -258,7 +295,20 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     }
   }
 
-  /// In your Provider (or ViewModel)
+  void resetErrAllPage() {
+    resetErrVarsFirstPage();
+  }
+
+  void resetErrVarsFirstPage() {
+    isFirstNameErr = null;
+    isMiddleNameErr = null;
+    isLastNameErr = null;
+    isBirthDateErr = null;
+    isConvenerErr = null;
+    isGenderErr = null;
+    // isProfilePicErr = null;
+    notifyListeners();
+  }
 
   /// Second page form key
   GlobalKey<FormState> secondPageFormKey = GlobalKey<FormState>();
@@ -878,9 +928,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _convenerListModel = null;
 
     /// reset form keys
-    firstPageFormKey.currentState?.reset();
-    secondPageFormKey.currentState?.reset();
-    thirdPageFormKey.currentState?.reset();
+    // firstPageFormKey.currentState?.reset();
+    // secondPageFormKey.currentState?.reset();
+    // thirdPageFormKey.currentState?.reset();
 
     /// second page
     email.clear();

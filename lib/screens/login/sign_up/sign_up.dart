@@ -18,6 +18,7 @@ import '../../../app_const/app_icons.dart';
 import '../../../app_const/app_size.dart';
 import '../../../app_const/app_strings.dart';
 import '../../../utils/method_helpers/method_helper.dart';
+import '../../../utils/text_style_helper/text_style_helper.dart';
 import '../../../utils/widget_helper/widget_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -86,11 +87,13 @@ class _SignUpScreenState extends State<SignUpScreen> with NavigateHelper {
       canPop:
           userProvider.currentSignUpPageIndex == 0 && !widget.isFromHomeScreen,
       onPopInvokedWithResult: (didPop, result) {
+        signUpProvider.resetErrAllPage();
         if (!didPop) {
           _handleBackNavigation(context);
         }
       },
       child: Scaffold(
+        backgroundColor: AppColors.xLightGrey,
         appBar: AppBar(
           leading: IconButton(
             onPressed: () => _handleBackNavigation(context),
@@ -254,72 +257,95 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
       );
     }
   }
+@override
+Widget build(BuildContext context) {
+  SignUpProvider signUpProvider = context.watch<SignUpProvider>();
+  log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}");
 
-  @override
-  Widget build(BuildContext context) {
-    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-    log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}");
-    return GestureDetector(
-      onTap: () => pickFiles(signUpProvider: signUpProvider),
-      child:
-          signUpProvider.isUpdatingProfile &&
-                  signUpProvider.signUpRequestModel.imageFile.isEmpty
-              ? CustomContainer(
-                width: 90.w,
-                height: 15.h,
+  bool hasUploadedFiles = signUpProvider.signUpRequestModel.imageFile.isNotEmpty;
+
+  return GestureDetector(
+    onTap: () => pickFiles(signUpProvider: signUpProvider),
+    child: Material(
+      borderRadius: BorderRadius.circular(AppSize.size10),
+      elevation: 1,
+      color: Colors.transparent,
+      child: CustomContainer(
+        padding: EdgeInsets.all(2.h),
+        width: 90.w,
+        decoration: BoxDecoration(
+          color: AppColors.lightWhite,
+          borderRadius: BorderRadius.circular(AppSize.size10),
+          border: Border.all(color: AppColors.grey.withOpacity(0.4)),
+        ),
+        child: signUpProvider.isUpdatingProfile &&
+                !hasUploadedFiles
+            ? ClipRRect(
                 borderRadius: BorderRadius.circular(AppSize.size10),
                 child: CustomImageWithLoader(
                   icon: widget.icon,
                   imageUrl:
                       "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
                   showImageInPanel: false,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               )
-              : CustomContainer(
-                alignment: Alignment.center,
-                width: 90.w,
-                height:
-                    signUpProvider.signUpRequestModel.imageFile.isEmpty == true
-                        ? 15.h
-                        : null,
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                backGroundColor: AppColors.lightWhite,
-                child:
-                    signUpProvider.signUpRequestModel.imageFile.isNotEmpty ==
-                            true
-                        ? ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          children: [
-                            ...signUpProvider.signUpRequestModel.imageFile.map(
-                              (file) => ListTile(
-                                leading: MethodHelper.buildFilePreview(file),
-                                title: CustomText(text: file.name),
-                                subtitle: CustomText(
-                                  text:
-                                      '${(file.size / 1024).toStringAsFixed(2)} KB',
-                                ),
-                                trailing: GestureDetector(
-                                  onTap: () {
-                                    signUpProvider.signUpRequestModel.imageFile
-                                        .removeWhere(
-                                          (e) => e.name == file.name,
-                                        );
-                                    setState(() {});
-                                  },
-                                  child: AppIcons.delete,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                        : Icon(
-                          widget.icon ?? Icons.add,
-                          size: AppSize.size30,
-                          color: AppColors.primary,
+            : hasUploadedFiles
+                ? ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: signUpProvider.signUpRequestModel.imageFile.length,
+                    separatorBuilder: (_, __) => SizedBox(height: 1.h),
+                    itemBuilder: (context, index) {
+                      final file = signUpProvider.signUpRequestModel.imageFile[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.grey.withOpacity(0.3)),
                         ),
-              ),
-    );
-  }
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          leading: MethodHelper.buildFilePreview(file),
+                          title: CustomText(
+                            text: file.name,
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: CustomText(
+                            text: '${(file.size / 1024).toStringAsFixed(2)} KB',
+                          ),
+                          trailing: IconButton(
+                            icon: AppIcons.delete,
+                            onPressed: () {
+                              signUpProvider.signUpRequestModel.imageFile
+                                  .removeWhere((e) => e.name == file.name);
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        widget.icon ?? Icons.upload_file,
+                        size: 40,
+                        color: AppColors.primary,
+                      ),
+                      SizedBox(height: 1.h),
+                      CustomText(
+                        text: "Tap to upload your file",
+                        style: TextStyleHelper.smallText.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+      ),
+    ),
+  );
+}
+
 }

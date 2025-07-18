@@ -12,6 +12,7 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color grey = Colors.grey;
   static const Color lightGrey = Color.fromARGB(255, 211, 211, 211);
+  static const Color xLightGrey = Color.fromARGB(255, 230, 230, 230);
   static const Color black = Colors.black;
   static Color blackShade75 = Colors.black.withOpacity(0.75);
   static const Color counselingBox = Color(0xffF9F9EE);

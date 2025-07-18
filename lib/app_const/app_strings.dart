@@ -115,6 +115,7 @@ class AppStrings {
   static const male = "Male";
   static const female = "Female";
   static const birthDate = "BirthDate";
+  static const selectConvener = "Select Convener";
   static const areYouWorking = "Are You Working ?";
   static const participate = "Participate";
   static const needProperDateFormate = "Please enter a valid date format !!";

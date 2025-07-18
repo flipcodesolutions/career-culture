@@ -17,6 +17,7 @@ import '../../../widgets/custom_radio_question_widget_wtih_heading.dart';
 import '../../../widgets/custom_searchable_drop_down.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/custom_text_form_field.dart';
+import '../../../widgets/new_custom_text_field.dart';
 import 'sign_up.dart';
 
 class StartYourJourney extends StatefulWidget {
@@ -44,140 +45,151 @@ class _StartYourJourneyState extends State<StartYourJourney> {
     return CustomContainer(
       child: SingleChildScrollView(
         child: AnimationLimiter(
-          child: Form(
-            key: signUpProvider.firstPageFormKey,
-            child: Column(
-              children: AnimationConfiguration.toStaggeredList(
-                childAnimationBuilder:
-                    (widget) => SlideAnimation(
-                      horizontalOffset: 30.w,
+          child: Column(
+            children: AnimationConfiguration.toStaggeredList(
+              childAnimationBuilder:
+                  (widget) => SlideAnimation(
+                    horizontalOffset: 30.w,
+                    duration: Duration(milliseconds: 500),
+                    child: FadeInAnimation(
                       duration: Duration(milliseconds: 500),
-                      child: FadeInAnimation(
-                        duration: Duration(milliseconds: 500),
-                        child: widget,
-                      ),
+                      child: widget,
                     ),
-                children: [
-                  SizeHelper.height(height: 5.h),
-                  CustomText(
-                    text:
-                        signUpProvider.isUpdatingProfile
-                            ? AppStrings.updateYourInfo
-                            : AppStrings.startYourJourney,
-                    style: TextStyleHelper.largeHeading,
                   ),
-                  SizeHelper.height(height: 3.h),
-                  CustomText(
-                    text:
-                        signUpProvider.isUpdatingProfile
-                            // ? AppStrings.onlyChangeWhatYouMust
-                            ? ""
-                            : AppStrings.createAnAccountToJoinUS,
-                    style: TextStyleHelper.smallText,
-                  ),
-                  SizeHelper.height(height: 5.h),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+              children: [
+                SizeHelper.height(height: 5.h),
+                CustomText(
+                  text:
+                      signUpProvider.isUpdatingProfile
+                          ? AppStrings.updateYourInfo
+                          : AppStrings.startYourJourney,
+                  style: TextStyleHelper.largeHeading,
+                ),
+                SizeHelper.height(height: 3.h),
+                CustomText(
+                  text:
+                      signUpProvider.isUpdatingProfile
+                          // ? AppStrings.onlyChangeWhatYouMust
+                          ? ""
+                          : AppStrings.createAnAccount,
+                  style: TextStyleHelper.smallText,
+                ),
+                SizeHelper.height(height: 5.h),
+                CustomContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomFormFieldContainer(
+                    label: AppStrings.firstName,
+                    icon: Icons.person,
+                    errorText: signUpProvider.isFirstNameErr,
                     child: CustomTextFormField(
-                      labelText: AppStrings.firstName,
+                      onChanged: (s) => signUpProvider.validateFirstName(),
+                      decoration: InputDecoration(border: InputBorder.none),
                       controller: signUpProvider.firstName,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
-                  SizeHelper.height(),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                ),
+                SizeHelper.height(),
+                CustomContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomFormFieldContainer(
+                    label: AppStrings.middleName,
+                    icon: Icons.person,
+                    errorText: signUpProvider.isMiddleNameErr,
                     child: CustomTextFormField(
+                      onChanged: (s) => signUpProvider.validateMiddleName(),
+                      decoration: InputDecoration(border: InputBorder.none),
                       labelText: AppStrings.middleName,
                       controller: signUpProvider.middleName,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
-                  SizeHelper.height(),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                ),
+                SizeHelper.height(),
+                CustomContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomFormFieldContainer(
+                    label: AppStrings.lastName,
+                    icon: Icons.person,
+                    errorText: signUpProvider.isLastNameErr,
                     child: CustomTextFormField(
+                      onChanged: (s) => signUpProvider.validateLastName(),
+                      decoration: InputDecoration(border: InputBorder.none),
                       labelText: AppStrings.lastName,
                       controller: signUpProvider.lastName,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateValue(value: value),
                     ),
                   ),
-                  SizeHelper.height(),
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                ),
+                SizeHelper.height(),
+                CustomContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child: CustomFormFieldContainer(
+                    label: AppStrings.birthDate,
+                    icon: Icons.date_range,
+                    onLeadingTap:
+                        () => signUpProvider.selectBirthDateByDatePicker(
+                          context: context,
+                        ),
+                    errorText: signUpProvider.isBirthDateErr,
                     child: CustomTextFormField(
+                      decoration: InputDecoration(border: InputBorder.none),
                       labelText: AppStrings.birthDate,
                       hintText: AppStrings.ddMmmYyyy,
                       onChanged:
                           (value) => {
                             signUpProvider.addHyphen(),
-                            signUpProvider.firstPageFormKey.currentState
-                                ?.validate(),
+                            signUpProvider.validteBirthdate(),
                           },
                       maxLength: 11,
-                      suffix: CustomContainer(
-                        width: 10.w,
-                        child: GestureDetector(
-                          child: AppIcons.calender,
-                          onTap:
-                              () => signUpProvider.selectBirthDateByDatePicker(
-                                context: context,
-                              ),
-                        ),
-                      ),
                       keyboardType: TextInputType.text,
                       controller: signUpProvider.birthDate,
-                      validator:
-                          (value) =>
-                              ValidatorHelper.validateDateFormate(value: value),
                     ),
                   ),
-                  SizeHelper.height(),
+                ),
+                SizeHelper.height(),
 
-                  /// searchable convener drop down
-                  if (!signUpProvider.isUpdatingProfile)
-                    CustomContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w),
-                      child:
-                          signUpProvider.isLoading
-                              ? Center(child: CustomLoader())
-                              : ConvenerDropDown(
-                                signUpProvider: signUpProvider,
-                              ),
-                    ),
-                  SizeHelper.height(),
-                  RadioQuestionWidgetWithHeading(
-                    question: signUpProvider.genderQuestion,
-                    onChanged:
-                        (value) => signUpProvider.setGender(gender: value),
+                /// searchable convener drop down
+                if (!signUpProvider.isUpdatingProfile)
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child:
+                        signUpProvider.isLoading
+                            ? Center(child: CustomLoader())
+                            : ConvenerDropDown(signUpProvider: signUpProvider),
                   ),
-
-                  SizeHelper.height(),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                        child: CustomText(
-                          text: AppStrings.uploadPhoto,
-                          style: TextStyleHelper.smallHeading,
-                        ),
+                SizeHelper.height(),
+                RadioQuestionWidgetWithHeading(
+                  question: signUpProvider.genderQuestion,
+                  onChanged: (value) => signUpProvider.setGender(gender: value),
+                ),
+                if (signUpProvider.isGenderErr != null)
+                  CustomContainer(
+                    width: 90.w,
+                    padding: const EdgeInsets.only(top: 5, left: 5),
+                    child: CustomText(
+                      text: signUpProvider.isGenderErr ?? "",
+                      style: TextStyleHelper.xSmallText.copyWith(
+                        color: AppColors.error,
                       ),
-                    ],
+                    ),
                   ),
-                  SizeHelper.height(),
-                  CustomFilePickerV2(
-                    allowMultiple: false,
-                    allowedExtensions: ["jpg", "png", "jpeg"],
-                    icon: AppIconsData.profile,
-                  ),
-                ],
-              ),
+                SizeHelper.height(),
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: CustomText(
+                        text: AppStrings.uploadPhoto,
+                        style: TextStyleHelper.smallHeading,
+                      ),
+                    ),
+                  ],
+                ),
+                SizeHelper.height(),
+                CustomFilePickerV2(
+                  allowMultiple: false,
+                  allowedExtensions: ["jpg", "png", "jpeg"],
+                  icon: AppIconsData.profile,
+                ),
+              ],
             ),
           ),
         ),
@@ -193,52 +205,61 @@ class ConvenerDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomSearchableDropDown<Convener>(
-      list: signUpProvider.convenerListModel?.data?.convener ?? [],
-      itemAsString: (p0) => p0.name ?? "",
-      itemBuilder:
-          (context, convener, isDisabled, isSelected) => CustomContainer(
-            padding: EdgeInsets.all(AppSize.size10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomText(
-                  text: convener.name ?? "",
-                  style: TextStyleHelper.smallHeading.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-                CustomText(text: convener.city ?? "Not Provided"),
-              ],
-            ),
-          ),
-      compareFn: (p0, p1) => p0.name?.contains(p1.name ?? "") ?? false,
-      onChanged: (p0) => signUpProvider.setConvener = p0,
-      selectedItem: signUpProvider.selectedConvener,
-      dropdownBuilder:
-          (context, convener) =>
-              convener != null
-                  ? CustomContainer(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomText(
-                          text: convener.name ?? "",
-                          style: TextStyleHelper.smallHeading.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        CustomText(text: convener.city ?? "Not Provided"),
-                      ],
+    return CustomFormFieldContainer(
+      label: AppStrings.selectConvener,
+      icon: Icons.assignment_ind,
+      errorText: signUpProvider.isConvenerErr,
+      child: CustomSearchableDropDown<Convener>(
+        decoration: InputDecoration(border: InputBorder.none),
+        list: signUpProvider.convenerListModel?.data?.convener ?? [],
+        itemAsString: (p0) => p0.name ?? "",
+        itemBuilder:
+            (context, convener, isDisabled, isSelected) => CustomContainer(
+              padding: EdgeInsets.all(AppSize.size10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: convener.name ?? "",
+                    style: TextStyleHelper.smallHeading.copyWith(
+                      color: AppColors.primary,
                     ),
-                  )
-                  : SizedBox.shrink(),
-      validator:
-          (value) => ValidatorHelper.validateValue(value: value?.name ?? ""),
+                  ),
+                  CustomText(text: convener.city ?? "Not Provided"),
+                ],
+              ),
+            ),
+        compareFn: (p0, p1) => p0.name?.contains(p1.name ?? "") ?? false,
+        onChanged: (convener) {
+          signUpProvider.setConvener = convener;
+          signUpProvider.validateConvener();
+        },
+        selectedItem: signUpProvider.selectedConvener,
+        dropdownBuilder:
+            (context, convener) =>
+                convener != null
+                    ? CustomContainer(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomText(
+                            text: convener.name ?? "",
+                            style: TextStyleHelper.smallHeading.copyWith(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          CustomText(text: convener.city ?? "Not Provided"),
+                        ],
+                      ),
+                    )
+                    : SizedBox.shrink(),
+        validator:
+            (value) => ValidatorHelper.validateValue(value: value?.name ?? ""),
+      ),
     );
   }
 }

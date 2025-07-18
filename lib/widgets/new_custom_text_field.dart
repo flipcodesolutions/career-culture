@@ -12,12 +12,14 @@ class CustomFormFieldContainer extends StatelessWidget {
   final String label;
   final Widget child;
   final String? errorText;
+  final void Function()? onLeadingTap;
   const CustomFormFieldContainer({
     super.key,
     this.icon,
     this.errorText,
     required this.label,
     required this.child,
+    this.onLeadingTap,
   });
 
   @override
@@ -35,21 +37,24 @@ class CustomFormFieldContainer extends StatelessWidget {
           borderWidth: 0.5,
           backGroundColor: AppColors.faqAnswer,
           // padding: EdgeInsets.all(5),
-          child: Row(
-            children: [
-              if (icon != null)
-                CustomContainer(
-                  constraints: BoxConstraints(
-                    minHeight: AppSize.size50,
-                    minWidth: AppSize.size50,
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (icon != null)
+                  InkWell(
+                    onTap: onLeadingTap,
+                    child: CustomContainer(
+                      width: AppSize.size50,
+                      backGroundColor: AppColors.darkPurple,
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      child: Icon(icon, color: Colors.white),
+                    ),
                   ),
-                  backGroundColor: AppColors.darkPurple,
-                  borderRadius: BorderRadius.circular(AppSize.size10),
-                  child: Icon(icon, color: Colors.white),
-                ),
-              SizeHelper.width(),
-              Expanded(child: child),
-            ],
+                SizeHelper.width(),
+                Expanded(child: child),
+              ],
+            ),
           ),
         ),
 

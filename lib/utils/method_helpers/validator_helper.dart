@@ -140,7 +140,7 @@ class ValidatorHelper with NavigateHelper {
 
   static String? validateDateFormate({required String? value}) {
     if (value == null || value.trim().isEmpty) {
-      return AppStrings.pleaseEnterMessage;
+      return AppStrings.needProperDateFormate;
     }
 
     final trimmedValue = value.trim();

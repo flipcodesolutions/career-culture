@@ -19,6 +19,7 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
     required this.validator,
     required this.onChanged,
     this.selectedItem,
+    this.decoration,
   });
   final void Function(T?)? onSaved;
   final bool Function(T, T)? compareFn;
@@ -29,6 +30,7 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
   final String? Function(T?)? validator;
   final void Function(T?)? onChanged;
   final T? selectedItem;
+  final InputDecoration? decoration;
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<T>(
@@ -53,7 +55,9 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
         ),
       ),
       decoratorProps: DropDownDecoratorProps(
-        decoration: inputDecoration(labelText: AppStrings.selectCoordinator),
+        decoration:
+            decoration ??
+            inputDecoration(labelText: AppStrings.selectCoordinator),
       ),
       dropdownBuilder: dropdownBuilder,
       validator: validator,
