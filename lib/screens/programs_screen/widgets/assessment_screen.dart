@@ -48,18 +48,37 @@ class _AssessmentScreenState extends State<AssessmentScreen>
     with NavigateHelper {
   bool isMedia = false;
   bool isTestDone = false;
+  int currentPageIndex = 0;
+  final PageController pageController = PageController(initialPage: 0);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     isTestDone = widget.isInReviewMode;
     AssessmentProvider assessmentProvider = context.read<AssessmentProvider>();
+
+    /// listen events on page change
+    pageController.addListener(() {
+      final newPage = pageController.page?.round() ?? 0;
+      if (newPage != currentPageIndex) {
+        setState(() {
+          currentPageIndex = newPage;
+        });
+      }
+    });
     Future.microtask(() {
       assessmentProvider.getAssessmentQuestionsByPostId(
         context: context,
         isInReviewMode: widget.isInReviewMode,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    pageController.dispose();
   }
 
   @override
@@ -102,117 +121,114 @@ class _AssessmentScreenState extends State<AssessmentScreen>
               assessmentProvider.isLoading
                   ? Center(child: CustomLoader())
                   : isQuestions
-                  ? SingleChildScrollView(
+                  ? Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
                       vertical: 2.h,
                     ),
-                    child: AnimationLimiter(
-                      child: Column(
-                        children: AnimationConfiguration.toStaggeredList(
-                          childAnimationBuilder:
-                              (widget) => SlideAnimation(
-                                child: FadeInAnimation(child: widget),
-                              ),
-                          children: [
-                            CustomContainer(
-                              borderRadius: BorderRadius.circular(
-                                AppSize.size10,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSize.size20,
-                                vertical: AppSize.size20,
-                              ),
-                              backGroundColor: AppColors.counselingBoxV2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  /// assessment heading
-                                  CustomContainer(
-                                    alignment: Alignment.topLeft,
-                                    child: CustomText(
-                                      text: AppStrings.assessment,
-                                      style: TextStyleHelper.largeHeading
-                                          .copyWith(
-                                            color: AppColors.primary,
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomContainer(
+                          borderRadius: BorderRadius.circular(AppSize.size10),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.size20,
+                            vertical: AppSize.size20,
+                          ),
+                          backGroundColor: AppColors.counselingBoxV2,
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              /// assessment heading
+                              CustomContainer(
+                                alignment: Alignment.topLeft,
+                                child: CustomText(
+                                  text: AppStrings.assessment,
+                                  style: TextStyleHelper.largeHeading.copyWith(
+                                    color: AppColors.primary,
+                                    fontStyle: FontStyle.italic,
                                   ),
-                                  CustomContainer(
-                                    alignment: Alignment.topLeft,
-                                    child: CustomText(
-                                      text: AppStrings.level1QuizTest,
-                                      style: TextStyleHelper.smallText.copyWith(
-                                        color: AppColors.blackShade75,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
-                                  SizeHelper.height(),
-                                  QuestionRowAndColumInfoWithIcon(
-                                    heading1:
-                                        "${mediaList?.length ?? 0} ${AppStrings.questions}",
-                                    heading2: AppStrings.multipleChoiceAnswer,
-                                    icon: Icons.question_mark_outlined,
-                                  ),
-                                  SizeHelper.height(height: 1.h),
-                                  QuestionRowAndColumInfoWithIcon(
-                                    heading1:
-                                        assessmentProvider.point.toString(),
-                                    heading2: AppStrings.perQuestion,
-                                    icon: Icons.checklist_rtl_rounded,
-                                  ),
-                                ],
+                                ),
                               ),
+                              CustomContainer(
+                                alignment: Alignment.topLeft,
+                                child: CustomText(
+                                  text: AppStrings.level1QuizTest,
+                                  style: TextStyleHelper.smallText.copyWith(
+                                    color: AppColors.blackShade75,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                              SizeHelper.height(),
+                              QuestionRowAndColumInfoWithIcon(
+                                heading1:
+                                    "${mediaList?.length ?? 0} ${AppStrings.questions}",
+                                heading2: AppStrings.multipleChoiceAnswer,
+                                icon: Icons.question_mark_outlined,
+                              ),
+                              SizeHelper.height(height: 1.h),
+                              QuestionRowAndColumInfoWithIcon(
+                                heading1: assessmentProvider.point.toString(),
+                                heading2: AppStrings.perQuestion,
+                                icon: Icons.checklist_rtl_rounded,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizeHelper.height(height: 1.h),
+                        // Divider(),
+                        Expanded(
+                          child: CustomContainer(
+                            constraints: BoxConstraints.tightForFinite(
+                              height: 45.h,
                             ),
-                            SizeHelper.height(height: 1.h),
-                            Divider(),
-                            CustomContainer(
-                              child: Stack(
-                                children: [
-                                  Column(
-                                    children: List.generate(
-                                      mediaList?.length ?? 0,
-                                      (index) {
-                                        AssessmentQuestion? item =
-                                            mediaList?[index];
-                                        if (!isMedia && item?.type == "video" ||
-                                            item?.type == "audio" ||
-                                            item?.type == "image") {
-                                          isMedia = true;
-                                        }
-                                        return QuestionWidget(
-                                          isInReviewMode: widget.isInReviewMode,
-                                          question:
-                                              item ?? AssessmentQuestion(),
-                                          questionIndex: index + 1,
-                                        );
-                                      },
+                            child: PageView.builder(
+                              controller: pageController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              pageSnapping: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: mediaList?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                AssessmentQuestion? item = mediaList?[index];
+                                if (!isMedia && item?.type == "video" ||
+                                    item?.type == "audio" ||
+                                    item?.type == "image") {
+                                  isMedia = true;
+                                }
+
+                                return Stack(
+                                  children: [
+                                    QuestionWidget(
+                                      isInReviewMode: widget.isInReviewMode,
+                                      question: item ?? AssessmentQuestion(),
+                                      questionIndex: index + 1,
                                     ),
-                                  ),
-                                  if (!assessmentProvider.isTestStarted &&
-                                      !widget.isInReviewMode)
-                                    Positioned.fill(
-                                      child: ClipRect(
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(
-                                            sigmaX: 5.0,
-                                            sigmaY: 5.0,
+
+                                    if (!assessmentProvider.isTestStarted &&
+                                        !widget.isInReviewMode)
+                                      Positioned.fill(
+                                        child: ClipRect(
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                              sigmaX: 5.0,
+                                              sigmaY: 5.0,
+                                            ),
+                                            child: CustomContainer(),
                                           ),
-                                          child: CustomContainer(),
                                         ),
                                       ),
-                                    ),
-                                ],
-                              ),
+                                  ],
+                                );
+                              },
                             ),
-                            SizeHelper.height(height: 10.h),
-                          ],
+                          ),
                         ),
-                      ),
+                        // SizeHelper.height(height: 10.h),
+                      ],
                     ),
                   )
                   : CustomContainer(
@@ -231,27 +247,74 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                       horizontal: 5.w,
                       vertical: 1.h,
                     ),
-                    child: PrimaryBtn(
-                      btnText:
-                          /// if widget is build for review we assume the test is done or when user finish test on success will update it to
-                          isTestDone
-                              ? AppStrings.testCompleted
-                              : !assessmentProvider.isTestStarted
-                              ? AppStrings.startTheTest
-                              : AppStrings.submitAnswer,
-                      onTap:
-                          isTestDone
-                              ? null
-                              : () {
-                                /// logic to submit after finishing all questions
-                                assessmentProvider.isTestStarted
-                                    ? finishTest(
-                                      assessmentProvider: assessmentProvider,
-                                      ctx: context,
-                                    )
-                                    : assessmentProvider.startTest();
-                              },
-                    ),
+                    child:
+                        isTestDone
+                            ? PrimaryBtn(
+                              btnText: AppStrings.testCompleted,
+                              onTap: null, // disabled button
+                            )
+                            : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // START TEST (only one button if test not started)
+                                if (!assessmentProvider.isTestStarted)
+                                  Expanded(
+                                    child: PrimaryBtn(
+                                      btnText: AppStrings.startTheTest,
+                                      onTap: () {
+                                        assessmentProvider.startTest();
+                                      },
+                                    ),
+                                  )
+                                else ...[
+                                  // PREVIOUS
+                                  if (currentPageIndex > 0)
+                                    Expanded(
+                                      child: PrimaryBtn(
+                                        btnText: "Previous",
+                                        onTap: () {
+                                          pageController.previousPage(
+                                            duration: Duration(
+                                              milliseconds: 300,
+                                            ),
+                                            curve: Curves.easeInOut,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  if (currentPageIndex > 0) SizeHelper.width(),
+
+                                  // NEXT or SUBMIT
+                                  Expanded(
+                                    child: PrimaryBtn(
+                                      btnText:
+                                          currentPageIndex <
+                                                  ((mediaList?.length ?? 1) - 1)
+                                              ? "Next"
+                                              : AppStrings.submitAnswer,
+                                      onTap:
+                                          currentPageIndex <
+                                                  ((mediaList?.length ?? 1) - 1)
+                                              ? () {
+                                                pageController.nextPage(
+                                                  duration: Duration(
+                                                    milliseconds: 300,
+                                                  ),
+                                                  curve: Curves.easeInOut,
+                                                );
+                                              }
+                                              : () {
+                                                finishTest(
+                                                  assessmentProvider:
+                                                      assessmentProvider,
+                                                  ctx: context,
+                                                );
+                                              },
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
                   )
                   : SizedBox.shrink(),
         ),
@@ -370,10 +433,13 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
     final bool isAnswerProvided = widget.question.userAnswers != null;
     final String providedAnswer = widget.question.userAnswers?.answer ?? "";
     return CustomContainer(
+      constraints: BoxConstraints.tightForFinite(),
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             CustomText(
               useOverflow: false,
