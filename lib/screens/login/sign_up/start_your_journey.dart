@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/models/login_model/convener_list_model.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
+import 'package:mindful_youth/utils/border_helper/border_helper.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -83,7 +84,9 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                     errorText: signUpProvider.isFirstNameErr,
                     child: CustomTextFormField(
                       onChanged: (s) => signUpProvider.validateFirstName(),
-                      decoration: InputDecoration(border: InputBorder.none),
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.firstName,
+                      ),
                       controller: signUpProvider.firstName,
                     ),
                   ),
@@ -97,7 +100,9 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                     errorText: signUpProvider.isMiddleNameErr,
                     child: CustomTextFormField(
                       onChanged: (s) => signUpProvider.validateMiddleName(),
-                      decoration: InputDecoration(border: InputBorder.none),
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.middleName,
+                      ),
                       labelText: AppStrings.middleName,
                       controller: signUpProvider.middleName,
                     ),
@@ -112,7 +117,9 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                     errorText: signUpProvider.isLastNameErr,
                     child: CustomTextFormField(
                       onChanged: (s) => signUpProvider.validateLastName(),
-                      decoration: InputDecoration(border: InputBorder.none),
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.lastName,
+                      ),
                       labelText: AppStrings.lastName,
                       controller: signUpProvider.lastName,
                     ),
@@ -130,7 +137,9 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                         ),
                     errorText: signUpProvider.isBirthDateErr,
                     child: CustomTextFormField(
-                      decoration: InputDecoration(border: InputBorder.none),
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.ddMmmYyyy,
+                      ),
                       labelText: AppStrings.birthDate,
                       hintText: AppStrings.ddMmmYyyy,
                       onChanged:
@@ -189,6 +198,17 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                   allowedExtensions: ["jpg", "png", "jpeg"],
                   icon: AppIconsData.profile,
                 ),
+                if (signUpProvider.isProfilePicErr != null)
+                  CustomContainer(
+                    width: 90.w,
+                    padding: const EdgeInsets.only(top: 5, left: 5),
+                    child: CustomText(
+                      text: signUpProvider.isProfilePicErr ?? "",
+                      style: TextStyleHelper.xSmallText.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

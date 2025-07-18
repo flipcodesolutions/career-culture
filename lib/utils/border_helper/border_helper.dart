@@ -74,4 +74,10 @@ class BorderHelper {
     disabledBorder: containerLikeBorder(borderRadius: borderRadius),
     hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.grey),
   );
+
+  static noBorder({String? hintText}) => InputDecoration(
+    border: InputBorder.none,
+    hintText: hintText,
+    hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.lightGrey),
+  );
 }

@@ -61,6 +61,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// profile pic error
   String? isProfilePicErr;
+  void setProfilePicErr(String? err) {
+    isProfilePicErr = err;
+    notifyListeners();
+  }
 
   ///=================================================================
   ///
@@ -88,7 +92,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     ].every((s) => s?.trim().isEmpty == true);
 
     if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
-      isProfilePicErr = AppStrings.mustSelectProfilePic;
+      setProfilePicErr(AppStrings.mustSelectProfilePic);
       isValid = false;
       notifyListeners();
     }

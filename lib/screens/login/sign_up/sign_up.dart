@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -234,13 +233,14 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
               widget.allowedExtensions ?? ["jpg", "pdf", "doc", "mp4"],
         );
         if (result == null) {
+          signUpProvider.setProfilePicErr(AppStrings.noFilePicked);
           WidgetHelper.customSnackBar(
-            autoClose: false,
             title: AppStrings.noFilePicked,
             isError: true,
           );
         }
         if (result != null) {
+          signUpProvider.setProfilePicErr(null);
           setState(() {
             /// do after pick up
             signUpProvider.signUpRequestModel.imageFile = result.files;
@@ -257,55 +257,64 @@ class _CustomFilePickerV2State extends State<CustomFilePickerV2> {
       );
     }
   }
-@override
-Widget build(BuildContext context) {
-  SignUpProvider signUpProvider = context.watch<SignUpProvider>();
-  log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}");
 
-  bool hasUploadedFiles = signUpProvider.signUpRequestModel.imageFile.isNotEmpty;
+  @override
+  Widget build(BuildContext context) {
+    SignUpProvider signUpProvider = context.watch<SignUpProvider>();
+    log("${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}");
 
-  return GestureDetector(
-    onTap: () => pickFiles(signUpProvider: signUpProvider),
-    child: Material(
-      borderRadius: BorderRadius.circular(AppSize.size10),
-      elevation: 1,
-      color: Colors.transparent,
-      child: CustomContainer(
-        padding: EdgeInsets.all(2.h),
-        width: 90.w,
-        decoration: BoxDecoration(
-          color: AppColors.lightWhite,
-          borderRadius: BorderRadius.circular(AppSize.size10),
-          border: Border.all(color: AppColors.grey.withOpacity(0.4)),
-        ),
-        child: signUpProvider.isUpdatingProfile &&
-                !hasUploadedFiles
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(AppSize.size10),
-                child: CustomImageWithLoader(
-                  icon: widget.icon,
-                  imageUrl:
-                      "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
-                  showImageInPanel: false,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : hasUploadedFiles
-                ? ListView.separated(
+    bool hasUploadedFiles =
+        signUpProvider.signUpRequestModel.imageFile.isNotEmpty;
+
+    return GestureDetector(
+      onTap: () => pickFiles(signUpProvider: signUpProvider),
+      child: Material(
+        borderRadius: BorderRadius.circular(AppSize.size10),
+        elevation: 1,
+        color: Colors.transparent,
+        child: CustomContainer(
+          padding: EdgeInsets.all(2.h),
+          width: 90.w,
+          decoration: BoxDecoration(
+            color: AppColors.lightWhite,
+            borderRadius: BorderRadius.circular(AppSize.size10),
+            border: Border.all(color: AppColors.grey.withOpacity(0.4)),
+          ),
+          child:
+              signUpProvider.isUpdatingProfile && !hasUploadedFiles
+                  ? ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSize.size10),
+                    child: CustomImageWithLoader(
+                      icon: widget.icon,
+                      imageUrl:
+                          "${AppStrings.assetsUrl}${signUpProvider.signUpRequestModel.images}",
+                      showImageInPanel: false,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                  : hasUploadedFiles
+                  ? ListView.separated(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: signUpProvider.signUpRequestModel.imageFile.length,
+                    itemCount:
+                        signUpProvider.signUpRequestModel.imageFile.length,
                     separatorBuilder: (_, __) => SizedBox(height: 1.h),
                     itemBuilder: (context, index) {
-                      final file = signUpProvider.signUpRequestModel.imageFile[index];
+                      final file =
+                          signUpProvider.signUpRequestModel.imageFile[index];
                       return Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.grey.withOpacity(0.3)),
+                          border: Border.all(
+                            color: AppColors.grey.withOpacity(0.3),
+                          ),
                         ),
                         child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                           leading: MethodHelper.buildFilePreview(file),
                           title: CustomText(
                             text: file.name,
@@ -326,7 +335,7 @@ Widget build(BuildContext context) {
                       );
                     },
                   )
-                : Column(
+                  : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -343,9 +352,8 @@ Widget build(BuildContext context) {
                       ),
                     ],
                   ),
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
