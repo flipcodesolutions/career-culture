@@ -879,12 +879,56 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   /// page third form key
   ///
   /// =========================================================================
-  GlobalKey<FormState> thirdPageFormKey = GlobalKey<FormState>();
+  // GlobalKey<FormState> thirdPageFormKey = GlobalKey<FormState>();
   TextEditingController presentStudy = TextEditingController();
+  String? isPresentStudyErr;
+  void validatePresentStudy() {
+    isPresentStudyErr = ValidatorHelper.validateValue(
+      value: presentStudy.text.trim(),
+    );
+    notifyListeners();
+  }
+
   TextEditingController lastStudy = TextEditingController();
+  String? isLastStudyErr;
+  void validateLastStudy() {
+    isLastStudyErr = ValidatorHelper.validateValue(
+      value: lastStudy.text.trim(),
+    );
+    notifyListeners();
+  }
+
   TextEditingController collegeOrUniversity = TextEditingController();
+  String? isCollegeUniErr;
+  void validateCollegeUni() {
+    isCollegeUniErr = ValidatorHelper.validateValue(
+      value: lastStudy.text.trim(),
+    );
+    notifyListeners();
+  }
+
   TextEditingController companyOrBusiness = TextEditingController();
+  String? isCompanyOrBussinessErr;
+  void validateCompanyOrBussiness() {
+    isCompanyOrBussinessErr =
+        _areYouWorking.answer?.trim() == "Yes"
+            ? ValidatorHelper.validateValue(
+              value: companyOrBusiness.text,
+              message: AppStrings.enterCompanyOrBuissness,
+            )
+            : null;
+    notifyListeners();
+  }
+
   TextEditingController referCode = TextEditingController();
+  String? isReferCodeErr;
+  void validateReferCode() {
+    isReferCodeErr =
+        referCode.text.trim().isNotEmpty && referCode.text.trim().length < 6
+            ? AppStrings.provideValidReferCode
+            : null;
+  }
+
   final AssessmentQuestion _areYouWorking = AssessmentQuestion(
     question: AppStrings.areYouWorking,
     extractedOptions: ["Yes", "No"],
@@ -895,9 +939,23 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     notifyListeners();
   }
 
+  String? isWorkingErr;
+  void validateWorkingOrNot() {
+    isWorkingErr =
+        _areYouWorking.answer?.trim().isEmpty == true
+            ? AppStrings.pleaseSpecifyThis
+            : null;
+  }
+
   // Page-wise validation logic
   bool validateThirdPage(BuildContext context) {
-    bool isValid = thirdPageFormKey.currentState?.validate() ?? false;
+    validatePresentStudy();
+    validateLastStudy();
+    validateCollegeUni();
+    validateWorkingOrNot();
+    validateCompanyOrBussiness();
+    validateReferCode();
+    bool isValid = [].every((e) => e == null);
 
     if (_areYouWorking.answer?.isEmpty ?? true) {
       WidgetHelper.customSnackBar(

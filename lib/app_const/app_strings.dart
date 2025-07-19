@@ -302,6 +302,9 @@ class AppStrings {
   static const examplePhotosNotFound = "Example Photos NotFound";
   static const provideValidEmail = "Provide A Valid Email";
   static const addressIsMust = "Address Is Must";
+  static const enterCompanyOrBuissness = "Enter Company Or Buissness";
+  static const provideValidReferCode = "Provide Valid Refer Code";
+  static const pleaseSpecifyThis = "Please Specify This";
   static const selfieWebViewURL =
       "https://career-culture.flipcodesolutions.com/gallery-description";
   static String getMessageAccordingToProgress({required double percentage}) {
