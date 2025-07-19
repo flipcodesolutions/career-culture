@@ -41,14 +41,14 @@ class ValidatorHelper with NavigateHelper {
     }
     final emailRegex = AppRegex.emailReg;
     if (!emailRegex.hasMatch(value)) {
-      return AppStrings.nameReq3Char;
+      return AppStrings.provideValidEmail;
     }
     return null;
   }
 
-  static String? validateValue({required String? value}) {
+  static String? validateValue({required String? value,String? message}) {
     if (value == null || value.trim().isEmpty) {
-      return AppStrings.pleaseEnterMessage;
+      return message ?? AppStrings.pleaseEnterMessage;
     }
     return null;
   }

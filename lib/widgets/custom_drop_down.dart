@@ -15,6 +15,7 @@ class CustomDropDownWidget<T> extends StatefulWidget {
     this.onSelected,
     this.enabled = true,
     this.initialSelection,
+    this.decoration
   });
   final String? label;
   final String? hintText;
@@ -23,6 +24,7 @@ class CustomDropDownWidget<T> extends StatefulWidget {
   final void Function(T?)? onSelected;
   final bool enabled;
   final T? initialSelection;
+  final InputDecorationTheme? decoration;
   @override
   State<CustomDropDownWidget> createState() => _CustomDropDownWidgetState();
 }
@@ -46,12 +48,14 @@ class _CustomDropDownWidgetState<T> extends State<CustomDropDownWidget<T>> {
           initialSelection: widget.initialSelection,
           width: widget.width ?? 90.w,
           hintText: widget.hintText,
-          inputDecorationTheme: InputDecorationTheme(
-            border: BorderHelper.inputBorder,
-            errorBorder: BorderHelper.inputBorderError,
-            focusedBorder: BorderHelper.inputBorderFocused,
-            disabledBorder: BorderHelper.inputBorderDisabled,
-          ),
+          inputDecorationTheme:
+              widget.decoration ??
+              InputDecorationTheme(
+                border: BorderHelper.inputBorder,
+                errorBorder: BorderHelper.inputBorderError,
+                focusedBorder: BorderHelper.inputBorderFocused,
+                disabledBorder: BorderHelper.inputBorderDisabled,
+              ),
           dropdownMenuEntries: widget.dropdownMenuEntries,
           onSelected: widget.onSelected,
           enabled: widget.enabled,

@@ -301,6 +301,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   void resetErrAllPage() {
     resetErrVarsFirstPage();
+    resetErrVarsSecondPage();
   }
 
   void resetErrVarsFirstPage() {
@@ -315,7 +316,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   /// Second page form key
-  GlobalKey<FormState> secondPageFormKey = GlobalKey<FormState>();
+  // GlobalKey<FormState> secondPageFormKey = GlobalKey<FormState>();
   AppStatesAndCity statesAndCity = AppStatesAndCity();
 
   /// OTP verification form key is now local to the dialog function
@@ -323,6 +324,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   // Other fields
   TextEditingController email = TextEditingController();
+  String? isEmailErr;
+  void validateEmail() {
+    isEmailErr = ValidatorHelper.validateEmail(value: email.text);
+    notifyListeners();
+  }
+
   TextEditingController emailOtp = TextEditingController();
 
   bool _isEmailVerified = false;
@@ -333,6 +340,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   TextEditingController contactNo1 = TextEditingController();
+  String? isContactNo1Err;
+  void validateContactNo1() {
+    isContactNo1Err = ValidatorHelper.validateMobileNumber(
+      value: contactNo1.text,
+    );
+    notifyListeners();
+  }
+
   TextEditingController contactNo1Otp = TextEditingController();
   bool _isContactNo1Verified = false;
   bool get isContactNo1Verified => _isContactNo1Verified;
@@ -342,6 +357,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   TextEditingController contactNo2 = TextEditingController();
+  String? isContactNo2Err;
+  void validateContactNo2() {
+    isContactNo2Err =
+        contactNo2.text.trim().isNotEmpty
+            ? ValidatorHelper.validateMobileNumber(value: contactNo2.text)
+            : null;
+    notifyListeners();
+  }
+
   TextEditingController contactNo2Otp = TextEditingController();
   bool _isContactNo2Verified = false;
   bool get isContactNo2Verified => _isContactNo2Verified;
@@ -352,9 +376,35 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// address
   TextEditingController address1 = TextEditingController();
+  String? isAddressL1Err;
+  void validateAddressL1() {
+    isAddressL1Err = ValidatorHelper.validateValue(
+      value: address1.text,
+      message: AppStrings.addressIsMust,
+    );
+    notifyListeners();
+  }
+
   TextEditingController address2 = TextEditingController();
+  String? isAddressL2Err;
+  void validateAddressL2() {
+    isAddressL2Err =
+        address2.text.trim().isNotEmpty
+            ? ValidatorHelper.validateValue(value: address2.text)
+            : null;
+    notifyListeners();
+  }
+
   // TextEditingController city = TextEditingController();
   String city = "";
+  String? isCityErr;
+  void validateCity() {
+    isCityErr = ValidatorHelper.validateValue(
+      value: district.text,
+      message: AppStrings.noCitiesFound,
+    );
+    notifyListeners();
+  }
 
   /// if provider is Loading
   bool _cityLoader = false;
@@ -363,7 +413,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   /// get drop down list for states
   void selectCity({required String citySelected}) {
     city = citySelected;
-    notifyListeners();
+    validateCity();
   }
 
   List<DropdownMenuEntry<String>> availableCity() {
@@ -392,6 +442,14 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   TextEditingController country = TextEditingController();
   // TextEditingController state = TextEditingController();
   String state = "";
+  String? isStateErr;
+  void validateState() {
+    isStateErr = ValidatorHelper.validateValue(
+      value: state,
+      message: AppStrings.noStateFound,
+    );
+    notifyListeners();
+  }
 
   /// get drop down list for states
   void selectState({required String stateSelected}) async {
@@ -404,7 +462,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     /// set _isLoading false
     _cityLoader = false;
-    notifyListeners();
+    validateState();
   }
 
   List<DropdownMenuEntry<String>> availableStates() {
@@ -425,6 +483,15 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   TextEditingController district = TextEditingController();
 
+  String? isDistrictErr;
+  void validateDistrict() {
+    isDistrictErr = ValidatorHelper.validateValue(
+      value: district.text,
+      message: AppStrings.noDistrictFound,
+    );
+    notifyListeners();
+  }
+
   SendOtpService otpService = SendOtpService();
   SendEmailOtpModel? _emailOtpModel;
   SendEmailOtpModel? get emailOtpModel => _emailOtpModel;
@@ -437,31 +504,37 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// Main validation method for the second page
   Future<bool> validateSecondPage(BuildContext context) async {
-    final isValid = secondPageFormKey.currentState?.validate() ?? false;
+    // final isValid = secondPageFormKey.currentState?.validate() ?? false;
+    validateEmail();
+    validateContactNo1();
+    validateContactNo2();
+    validateAddressL1();
+    validateAddressL2();
+    validateState();
+    validateDistrict();
+    validateCity();
+    bool isValid = [
+      isEmailErr,
+      isContactNo1Err,
+      isContactNo2Err,
+      isAddressL1Err,
+      isAddressL2Err,
+      isStateErr,
+      isCityErr,
+      isDistrictErr,
+    ].every((s) => s == null);
     if (!isValid) return false;
     if (state == "" || state == AppStrings.noStateFound) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.noStateFound,
-        isError: true,
-        autoClose: false,
-      );
+      validateState();
       return false;
     }
     if (city == "" || city == AppStrings.noCitiesFound) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.noCitiesFound,
-        isError: true,
-        autoClose: false,
-      );
+      validateCity();
       return false;
     }
 
     if (district.text == "" || district.text == AppStrings.noDistrictFound) {
-      WidgetHelper.customSnackBar(
-        title: AppStrings.noDistrictFound,
-        isError: true,
-        autoClose: false,
-      );
+      validateDistrict();
       return false;
     }
     // 1) Email OTP
@@ -835,6 +908,18 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       isValid = false;
     }
     return isValid;
+  }
+
+  void resetErrVarsSecondPage() {
+    isEmailErr = null;
+    isContactNo1Err = null;
+    isContactNo2Err = null;
+    isAddressL1Err = null;
+    isAddressL2Err = null;
+    isStateErr = null;
+    isDistrictErr = null;
+    isCityErr = null;
+    notifyListeners();
   }
 
   ///==========================================================================

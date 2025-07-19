@@ -75,9 +75,22 @@ class BorderHelper {
     hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.grey),
   );
 
-  static noBorder({String? hintText}) => InputDecoration(
+  static InputDecoration noBorder({String? hintText, Widget? suffix}) =>
+      InputDecoration(
+        border: InputBorder.none,
+        hintText: hintText,
+        suffix: suffix,
+        hintStyle: TextStyleHelper.smallText.copyWith(
+          color: AppColors.lightGrey,
+        ),
+      );
+  static InputDecorationTheme noBorderDropDown({
+    String? hintText,
+    Widget? suffix,
+  }) => InputDecorationTheme(
     border: InputBorder.none,
-    hintText: hintText,
-    hintStyle: TextStyleHelper.smallText.copyWith(color: AppColors.lightGrey),
+    errorBorder: InputBorder.none,
+    focusedBorder: InputBorder.none,
+    disabledBorder: InputBorder.none,
   );
 }

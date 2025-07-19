@@ -132,6 +132,7 @@ class AppStrings {
   static const address2 = "Address Line 2";
   static const address = "Address";
   static const city = "City";
+  static const provideCity = "Provide City";
   static const state = "State";
   static const country = "Country";
   static const district = "District";
@@ -299,6 +300,8 @@ class AppStrings {
   static const mustProvideSelfie = "Must Provide Selfie";
   static const selectQuestion = "Select Question";
   static const examplePhotosNotFound = "Example Photos NotFound";
+  static const provideValidEmail = "Provide A Valid Email";
+  static const addressIsMust = "Address Is Must";
   static const selfieWebViewURL =
       "https://career-culture.flipcodesolutions.com/gallery-description";
   static String getMessageAccordingToProgress({required double percentage}) {
