@@ -89,7 +89,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       isBirthDateErr,
       isConvenerErr,
       isGenderErr,
-    ].every((s) => s?.trim().isEmpty == true);
+    ].every((s) => s == null);
 
     if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
       setProfilePicErr(AppStrings.mustSelectProfilePic);
@@ -180,13 +180,13 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   void setGender({String? gender}) {
     _genderQuestion.answer = gender;
-    notifyListeners();
+    validateGender();
   }
 
   /// user birth date
   TextEditingController birthDate = TextEditingController();
   String? isBirthDateErr;
-  String? validteBirthdate() {
+  void validteBirthdate() {
     isBirthDateErr = ValidatorHelper.validateDateFormate(value: birthDate.text);
     notifyListeners();
   }
@@ -295,7 +295,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     if (date != null) {
       /// set the controller text in string like "1999-01-12"
       birthDate.text = DateFormat('dd-MMM-yyyy').format(date);
-      notifyListeners();
+      validteBirthdate();
     }
   }
 
