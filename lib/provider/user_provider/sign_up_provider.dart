@@ -344,7 +344,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
   /// Second page form key
   // GlobalKey<FormState> secondPageFormKey = GlobalKey<FormState>();
-  AppStatesAndCity statesAndCity = AppStatesAndCity();
+  AppStatesAndCity statesAndDistrict = AppStatesAndCity();
 
   /// OTP verification form key is now local to the dialog function
   /// GlobalKey<FormState> verifyOtpFormKey = GlobalKey<FormState>(); // no longer needed globally
@@ -423,12 +423,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   }
 
   // TextEditingController city = TextEditingController();
-  String city = "";
-  String? isCityErr;
-  void validateCity() {
-    isCityErr = ValidatorHelper.validateValue(
-      value: district.text,
-      message: AppStrings.noCitiesFound,
+  String district = "";
+  String? isDistrictErr;
+  void validateDistrict() {
+    isDistrictErr = ValidatorHelper.validateValue(
+      value: district,
+      message: AppStrings.noDistrictFound,
     );
     notifyListeners();
   }
@@ -438,28 +438,29 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   bool get cityLoader => _cityLoader;
 
   /// get drop down list for states
-  void selectCity({required String citySelected}) {
-    city = citySelected;
-    validateCity();
+  void selectDistrict({required String district}) {
+    district = district;
+    validateDistrict();
   }
 
-  List<DropdownMenuEntry<String>> availableCity() {
-    MapEntry<String, List<String>> stateWithCity = statesAndCity
+
+  List<DropdownMenuEntry<String>> availableDistrict() {
+    MapEntry<String, List<String>> stateWithDistrict = statesAndDistrict
         .stateAndCity
         .entries
         .firstWhere(
           (e) => e.key == state,
           orElse:
               () => MapEntry(AppStrings.noDataFound, <String>[
-                AppStrings.noCitiesFound,
+                AppStrings.noDistrictFound,
               ]),
         );
     List<DropdownMenuEntry<String>> cities =
         List<DropdownMenuEntry<String>>.generate(
-          stateWithCity.value.length,
+          stateWithDistrict.value.length,
           (index) => DropdownMenuEntry(
-            value: stateWithCity.value.elementAt(index),
-            label: stateWithCity.value.elementAt(index),
+            value: stateWithDistrict.value.elementAt(index),
+            label: stateWithDistrict.value.elementAt(index),
           ),
         );
     cities.sort((a, b) => a.label.compareTo(b.label));
@@ -484,7 +485,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _cityLoader = true;
     notifyListeners();
     state = stateSelected;
-    city = AppStrings.noCitiesFound;
+    district = AppStrings.noCitiesFound;
     await Future.delayed(Duration(milliseconds: 300));
 
     /// set _isLoading false
@@ -495,10 +496,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   List<DropdownMenuEntry<String>> availableStates() {
     List<DropdownMenuEntry<String>> states =
         List<DropdownMenuEntry<String>>.generate(
-          statesAndCity.stateAndCity.keys.length,
+          statesAndDistrict.stateAndCity.keys.length,
           (index) => DropdownMenuEntry(
-            value: statesAndCity.stateAndCity.keys.elementAt(index),
-            label: statesAndCity.stateAndCity.keys.elementAt(index),
+            value: statesAndDistrict.stateAndCity.keys.elementAt(index),
+            label: statesAndDistrict.stateAndCity.keys.elementAt(index),
           ),
         );
 
@@ -508,13 +509,13 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     return states;
   }
 
-  TextEditingController district = TextEditingController();
+  TextEditingController city = TextEditingController();
 
-  String? isDistrictErr;
-  void validateDistrict() {
-    isDistrictErr = ValidatorHelper.validateValue(
-      value: district.text,
-      message: AppStrings.noDistrictFound,
+  String? isCityErr;
+  void validateCity() {
+    isCityErr = ValidatorHelper.validateValue(
+      value: city.text,
+      message: AppStrings.noCitiesFound,
     );
     notifyListeners();
   }
@@ -555,12 +556,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       validateState();
       return false;
     }
-    if (city == "" || city == AppStrings.noCitiesFound) {
+    if (city.text == "" || city.text == AppStrings.noCitiesFound) {
       validateCity();
       return false;
     }
 
-    if (district.text == "" || district.text == AppStrings.noDistrictFound) {
+    if (district == "" || district == AppStrings.noDistrictFound) {
       validateDistrict();
       return false;
     }
@@ -984,6 +985,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
         _areYouWorking.answer?.trim().isEmpty == true
             ? AppStrings.pleaseSpecifyThis
             : null;
+    notifyListeners();
   }
 
   // Page-wise validation logic
@@ -1060,12 +1062,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _signUpRequestModel.addressLine1 = address1.text;
     _signUpRequestModel.addressLine2 = address2.text;
     // _signUpRequestModel.city = city.text;
-    _signUpRequestModel.city = city;
+    _signUpRequestModel.city = city.text;
     // _signUpRequestModel.state = state.text; instead using string to select state
     _signUpRequestModel.state = state;
     // _signUpRequestModel.country = country.text; // for now making india as default country
     _signUpRequestModel.country = AppStrings.india;
-    _signUpRequestModel.district = district.text;
+    _signUpRequestModel.district = district;
     _signUpRequestModel.study = presentStudy.text;
     _signUpRequestModel.degree = lastStudy.text;
     _signUpRequestModel.university = collegeOrUniversity.text;
@@ -1133,8 +1135,8 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     address1.clear();
     address2.clear();
     // city.clear();
-    city = "";
-    district.clear();
+    city.text = "";
+    district = "";
     // state.clear();
     state = "";
     country.clear();
@@ -1252,10 +1254,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
 
     address1.text = await SharedPrefs.getSharedString(AppStrings.addressLine1);
     address2.text = await SharedPrefs.getSharedString(AppStrings.addressLine2);
-    city = await SharedPrefs.getSharedString(AppStrings.userCity);
+    city.text = await SharedPrefs.getSharedString(AppStrings.userCity);
     state = await SharedPrefs.getSharedString(AppStrings.userState);
     country.text = await SharedPrefs.getSharedString(AppStrings.userCountry);
-    district.text = await SharedPrefs.getSharedString(AppStrings.userDistrict);
+    district = await SharedPrefs.getSharedString(AppStrings.userDistrict);
 
     // print('🏠 Address:');
     // print('  Line 1: ${address1.text}');

@@ -125,9 +125,8 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                             ),
                             maxLength: 10,
                             onChanged:
-                                (value) =>
-                                    signUpProvider.validateContactNo2(),
-                                       
+                                (value) => signUpProvider.validateContactNo2(),
+
                             enabled:
                                 signUpProvider.contactNo2.text.isEmpty ||
                                 !signUpProvider.isContactNo2Verified,
@@ -197,14 +196,13 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         label: AppStrings.district,
                         icon: Icons.place,
                         child: CustomDropDownWidget<String>(
-                          initialSelection: signUpProvider.city,
+                          initialSelection: signUpProvider.district,
                           decoration: BorderHelper.noBorderDropDown(),
                           onSelected:
-                              (dynamic citySelected) =>
-                                  signUpProvider.selectCity(
-                                    citySelected: citySelected as String,
-                                  ),
-                          dropdownMenuEntries: signUpProvider.availableCity(),
+                              (dynamic district) => signUpProvider
+                                  .selectDistrict(district: district as String),
+                          dropdownMenuEntries:
+                              signUpProvider.availableDistrict(),
                         ),
                       ),
                   SizeHelper.height(),
@@ -217,7 +215,7 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                         hintText: AppStrings.city,
                       ),
                       labelText: AppStrings.city,
-                      controller: signUpProvider.district,
+                      controller: signUpProvider.city,
                       onChanged: (value) => signUpProvider.validateCity(),
                     ),
                   ),

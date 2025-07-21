@@ -6,8 +6,7 @@ import 'package:sizer/sizer.dart';
 import '../app_const/app_colors.dart';
 import '../utils/border_helper/border_helper.dart'; // For keyboard input types
 
-// Custom Text Form Field widget
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final bool autocorrect;
@@ -28,8 +27,6 @@ class CustomTextFormField extends StatelessWidget {
   final void Function(String)? onChanged;
   final Widget? suffix;
   final List<Widget>? adaptiveTextSelectionToolbarChildren;
-
-  // 🔽 New autocomplete parameter
   final List<String>? suggestions;
 
   const CustomTextFormField({
@@ -54,56 +51,78 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.suffix,
     this.adaptiveTextSelectionToolbarChildren,
-    this.suggestions, // ✅ Add this
+    this.suggestions,
   });
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+
+    if (widget.onChanged != null) {
+      _controller.addListener(() {
+        widget.onChanged!(_controller.text);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) _controller.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final inputDecoration =
-        decoration ??
+        widget.decoration ??
         BorderHelper.textFormFieldPrimary(
-          suffix: suffix,
-          label: labelText,
-          hintText: hintText ?? "",
+          suffix: widget.suffix,
+          label: widget.labelText,
+          hintText: widget.hintText ?? "",
         );
 
-    if (suggestions != null && suggestions!.isNotEmpty) {
+    if (widget.suggestions != null && widget.suggestions!.isNotEmpty) {
       return RawAutocomplete<String>(
-        textEditingController: controller ?? TextEditingController(),
-        focusNode: focusNode ?? FocusNode(),
-        optionsBuilder: (TextEditingValue textEditingValue) {
-          if (textEditingValue.text == '') {
-            return const Iterable<String>.empty();
-          }
-          return suggestions?.where((String option) {
-                return option.toLowerCase().contains(
-                  textEditingValue.text.toLowerCase(),
-                );
-              }) ??
-              const Iterable<String>.empty();
+        textEditingController: _controller,
+        focusNode: _focusNode,
+        optionsBuilder: (TextEditingValue value) {
+          if (value.text.isEmpty) return const Iterable<String>.empty();
+          return widget.suggestions!.where(
+            (option) => option.toLowerCase().contains(value.text.toLowerCase()),
+          );
         },
         fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
           return TextFormField(
             controller: controller,
             focusNode: focusNode,
-            autocorrect: autocorrect,
-            onFieldSubmitted: (value) => onFieldSubmitted(),
+            autocorrect: widget.autocorrect,
+            onFieldSubmitted: (_) => onFieldSubmitted(),
             decoration: inputDecoration,
             cursorColor: AppColors.primary,
-            keyboardType: keyboardType,
-            obscureText: obscureText,
-            onTapOutside: (event) => Navigator.of(context).focusNode.unfocus(),
-            maxLength: maxLength,
-            maxLines: maxLines,
-            minLines: minLines,
-            readOnly: readOnly,
-            style: style,
-            textAlign: textAlign,
-            validator: validator,
-            onChanged: onChanged,
+            keyboardType: widget.keyboardType,
+            obscureText: widget.obscureText,
+            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+            maxLength: widget.maxLength,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            readOnly: widget.readOnly,
+            style: widget.style,
+            textAlign: widget.textAlign,
+            validator: widget.validator,
             buildCounter:
                 (
-                  context, {
+                  _, {
                   required currentLength,
                   required isFocused,
                   required maxLength,
@@ -141,76 +160,71 @@ class CustomTextFormField extends StatelessWidget {
           );
         },
       );
-    } else {
-      return TextFormField(
-        autocorrect: autocorrect,
-        controller: controller,
-        contextMenuBuilder: (context, editableTextState) {
-          return AdaptiveTextSelectionToolbar(
-            anchors: editableTextState.contextMenuAnchors,
-            children:
-                adaptiveTextSelectionToolbarChildren ??
-                [
-                  TextSelectionToolbarTextButton(
-                    padding: const EdgeInsets.all(8),
-                    onPressed: () async {
-                      final clipboardData = await Clipboard.getData(
-                        'text/plain',
-                      );
-                      final textToPaste = clipboardData?.text ?? '';
-                      final controller = editableTextState.textEditingValue;
-                      final selection = controller.selection;
-
-                      if (selection.isValid) {
-                        final newText = controller.text.replaceRange(
-                          selection.start,
-                          selection.end,
-                          textToPaste,
-                        );
-
-                        editableTextState.userUpdateTextEditingValue(
-                          TextEditingValue(
-                            text: newText,
-                            selection: TextSelection.collapsed(
-                              offset: selection.start + textToPaste.length,
-                            ),
-                          ),
-                          SelectionChangedCause.toolbar,
-                        );
-                      }
-
-                      // Hide toolbar after paste
-                      editableTextState.hideToolbar();
-                    },
-                    child: const Text('Paste'),
-                  ),
-                ],
-          );
-        },
-        buildCounter:
-            (
-              context, {
-              required currentLength,
-              required isFocused,
-              required maxLength,
-            }) => null,
-        cursorColor: AppColors.primary,
-        cursorErrorColor: AppColors.error,
-        enabled: enabled,
-        onChanged: onChanged,
-        decoration: inputDecoration,
-        focusNode: focusNode,
-        keyboardType: keyboardType ?? TextInputType.text,
-        obscureText: obscureText,
-        onTapOutside: (event) => Navigator.of(context).focusNode.unfocus(),
-        maxLength: maxLength,
-        maxLines: maxLines,
-        minLines: minLines,
-        readOnly: readOnly,
-        style: style,
-        textAlign: textAlign,
-        validator: validator,
-      );
     }
+
+    return TextFormField(
+      controller: _controller,
+      focusNode: _focusNode,
+      autocorrect: widget.autocorrect,
+      cursorColor: AppColors.primary,
+      cursorErrorColor: AppColors.error,
+      keyboardType: widget.keyboardType ?? TextInputType.text,
+      obscureText: widget.obscureText,
+      readOnly: widget.readOnly,
+      enabled: widget.enabled,
+      maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
+      style: widget.style,
+      textAlign: widget.textAlign,
+      validator: widget.validator,
+      decoration: inputDecoration,
+      onTapOutside: (_) => FocusScope.of(context).unfocus(),
+      buildCounter:
+          (
+            _, {
+            required currentLength,
+            required isFocused,
+            required maxLength,
+          }) => null,
+      contextMenuBuilder: (context, editableTextState) {
+        return AdaptiveTextSelectionToolbar(
+          anchors: editableTextState.contextMenuAnchors,
+          children:
+              widget.adaptiveTextSelectionToolbarChildren ??
+              [
+                TextSelectionToolbarTextButton(
+                  padding: const EdgeInsets.all(8),
+                  onPressed: () async {
+                    final clipboardData = await Clipboard.getData('text/plain');
+                    final textToPaste = clipboardData?.text ?? '';
+                    final currentValue = editableTextState.textEditingValue;
+                    final selection = currentValue.selection;
+
+                    if (selection.isValid) {
+                      final newText = currentValue.text.replaceRange(
+                        selection.start,
+                        selection.end,
+                        textToPaste,
+                      );
+                      editableTextState.userUpdateTextEditingValue(
+                        TextEditingValue(
+                          text: newText,
+                          selection: TextSelection.collapsed(
+                            offset: selection.start + textToPaste.length,
+                          ),
+                        ),
+                        SelectionChangedCause.toolbar,
+                      );
+                    }
+
+                    editableTextState.hideToolbar();
+                  },
+                  child: const Text('Paste'),
+                ),
+              ],
+        );
+      },
+    );
   }
 }
