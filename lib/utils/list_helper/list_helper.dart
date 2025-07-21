@@ -180,6 +180,12 @@ class ListHelper {
             'Self learning is the best learning. I am sure this journey will help subscribers to rediscover their ownselves.',
         imageUrl: AppImageStrings.alpaShah,
       ),
+    ];
+  }
+
+  static List<TestimonialCard> mentorsList() {
+    return [
+      
       TestimonialCard(
         name: "Dr. Trikaldash Bapu",
         designation: "Saint & Philospher",
@@ -193,6 +199,13 @@ class ListHelper {
         testimonial:
             'Mindful Youth is a unique program for all young professionals, teachers and students to make their understanding about key topics more deeper and sensible.',
         imageUrl: AppImageStrings.dashrathPatel,
+      ),
+      TestimonialCard(
+        name: "Dr. K G Mehta",
+        designation: "Director, Ved Bhavan",
+        testimonial:
+            'Mindful Youth is a unique program for all young professionals, teachers and students to make their understanding about key topics more deeper and sensible.',
+        imageUrl: AppImageStrings.kgMehta,
       ),
     ];
   }

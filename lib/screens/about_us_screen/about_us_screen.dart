@@ -84,7 +84,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
 
               ///
               CarouselSlider(
-                items: ListHelper.testimonialList(),
+                items: ListHelper.mentorsList(),
                 options: CarouselOptions(
                   autoPlay: true,
                   viewportFraction: 0.9,
