@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
@@ -62,7 +60,26 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   /// profile pic error
   String? isProfilePicErr;
   void setProfilePicErr(String? err) {
-    isProfilePicErr = err;
+    // isProfilePicErr = _signUpRequestModel.imageFile.isEmpty ? err : null;
+    validateProfilePic(err);
+  }
+
+  void validateProfilePic(String? err) {
+    if (isUpdatingProfile) {
+      // On update: check if 'images' has an image string (i.e., not empty)
+      if (_signUpRequestModel.images?.isEmpty == true) {
+        isProfilePicErr = err; // Assign error if images list is empty
+      } else {
+        isProfilePicErr = null; // No error if images list is not empty
+      }
+    } else {
+      // Not updating (e.g., new signup): 'imageFile' should not be empty
+      if (_signUpRequestModel.imageFile.isEmpty) {
+        isProfilePicErr = err; // Assign error if imageFile is empty
+      } else {
+        isProfilePicErr = null; // No error if imageFile is not empty
+      }
+    }
     notifyListeners();
   }
 
@@ -82,6 +99,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     validteBirthdate();
     validateConvener();
     validateGender();
+    validateProfilePic(AppStrings.mustSelectProfilePic);
     bool isValid = [
       isFirstNameErr,
       isMiddleNameErr,
@@ -89,13 +107,12 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
       isBirthDateErr,
       isConvenerErr,
       isGenderErr,
+      isProfilePicErr,
     ].every((s) => s == null);
-
-    if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
-      setProfilePicErr(AppStrings.mustSelectProfilePic);
-      isValid = false;
-      notifyListeners();
-    }
+    // if ((!_isUpdatingProfile ? _signUpRequestModel.imageFile.isEmpty : false)) {
+    //   isValid = false;
+    //   notifyListeners();
+    // }
     return isValid;
   }
 
@@ -103,21 +120,30 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   TextEditingController firstName = TextEditingController();
   String? isFirstNameErr;
   void validateFirstName() {
-    isFirstNameErr = ValidatorHelper.validateName(value: firstName.text);
+    isFirstNameErr = ValidatorHelper.validateName(
+      value: firstName.text,
+      name: AppStrings.firstName,
+    );
     notifyListeners();
   }
 
   TextEditingController middleName = TextEditingController();
   String? isMiddleNameErr;
   void validateMiddleName() {
-    isMiddleNameErr = ValidatorHelper.validateName(value: middleName.text);
+    isMiddleNameErr = ValidatorHelper.validateName(
+      value: middleName.text,
+      name: AppStrings.middleName,
+    );
     notifyListeners();
   }
 
   TextEditingController lastName = TextEditingController();
   String? isLastNameErr;
   void validateLastName() {
-    isLastNameErr = ValidatorHelper.validateName(value: lastName.text);
+    isLastNameErr = ValidatorHelper.validateName(
+      value: lastName.text,
+      name: AppStrings.lastName,
+    );
     notifyListeners();
   }
 
@@ -302,6 +328,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   void resetErrAllPage() {
     resetErrVarsFirstPage();
     resetErrVarsSecondPage();
+    resetErrVarsThirdPage();
   }
 
   void resetErrVarsFirstPage() {
@@ -874,6 +901,18 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     return success;
   }
 
+  void resetErrVarsSecondPage() {
+    isEmailErr = null;
+    isContactNo1Err = null;
+    isContactNo2Err = null;
+    isAddressL1Err = null;
+    isAddressL2Err = null;
+    isStateErr = null;
+    isDistrictErr = null;
+    isCityErr = null;
+    notifyListeners();
+  }
+
   ///==========================================================================
   ///
   /// page third form key
@@ -936,7 +975,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   AssessmentQuestion get areYouWorking => _areYouWorking;
   void setWorking({String? working}) {
     _areYouWorking.answer = working;
-    notifyListeners();
+    validateWorkingOrNot();
   }
 
   String? isWorkingErr;
@@ -955,28 +994,33 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     validateWorkingOrNot();
     validateCompanyOrBussiness();
     validateReferCode();
-    bool isValid = [].every((e) => e == null);
+    bool isValid = [
+      isPresentStudyErr,
+      isLastStudyErr,
+      isCollegeUniErr,
+      isWorkingErr,
+      isCompanyOrBussinessErr,
+      isReferCodeErr,
+    ].every((e) => e == null);
 
-    if (_areYouWorking.answer?.isEmpty ?? true) {
-      WidgetHelper.customSnackBar(
-        autoClose: false,
-        title: AppStrings.mustGiveAllAnswer,
-        isError: true,
-      );
-      isValid = false;
-    }
+    // if (_areYouWorking.answer?.isEmpty ?? true) {
+    //   WidgetHelper.customSnackBar(
+    //     autoClose: false,
+    //     title: AppStrings.mustGiveAllAnswer,
+    //     isError: true,
+    //   );
+    //   isValid = false;
+    // }
     return isValid;
   }
 
-  void resetErrVarsSecondPage() {
-    isEmailErr = null;
-    isContactNo1Err = null;
-    isContactNo2Err = null;
-    isAddressL1Err = null;
-    isAddressL2Err = null;
-    isStateErr = null;
-    isDistrictErr = null;
-    isCityErr = null;
+  void resetErrVarsThirdPage() {
+    isPresentStudyErr = null;
+    isLastStudyErr = null;
+    isCollegeUniErr = null;
+    isWorkingErr = null;
+    isCompanyOrBussinessErr = null;
+    isReferCodeErr = null;
     notifyListeners();
   }
 
@@ -1174,6 +1218,9 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     _selectedConvener = null;
     coordinatorIdFromLocal = await SharedPrefs.getSharedString(
       AppStrings.coordinatorId,
+    );
+    _selectedConvener = Convener(
+      id: int.tryParse(coordinatorIdFromLocal ?? "0"),
     );
     // print('🚻 Gender: ${_genderQuestion.answer}');
 

@@ -7,6 +7,7 @@ import 'package:mindful_youth/widgets/custom_radio_question_widget_wtih_heading.
 import 'package:mindful_youth/widgets/new_custom_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../../../app_const/app_colors.dart';
 import '../../../app_const/app_strings.dart';
 import '../../../provider/user_provider/sign_up_provider.dart';
 import '../../../utils/method_helpers/size_helper.dart';
@@ -57,78 +58,97 @@ class EducationalDetails extends StatelessWidget {
                 CustomFormFieldContainer(
                   label: AppStrings.presentStudy,
                   icon: Icons.school,
+                  errorText: signUpProvider.isPresentStudyErr,
                   child: CustomTextFormField(
                     maxLength: 50,
-                    decoration: BorderHelper.noBorder(hintText:  AppStrings.nameOfPresentStudy),
-
+                    decoration: BorderHelper.noBorder(
+                      hintText: AppStrings.nameOfPresentStudy,
+                    ),
+                    onChanged: (value) => signUpProvider.validatePresentStudy(),
                     controller: signUpProvider.presentStudy,
                     suggestions: ListHelper.degreesList,
-                    validator:
-                        (value) => ValidatorHelper.validateValue(value: value),
                   ),
                 ),
                 SizeHelper.height(),
-                CustomContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                CustomFormFieldContainer(
+                  label: AppStrings.lastStudy,
+                  errorText: signUpProvider.isLastStudyErr,
+                  icon: Icons.school,
                   child: CustomTextFormField(
                     maxLength: 50,
-                    // hintText: AppStrings.nameOfLastStudy,
-                    labelText: AppStrings.lastStudy,
+                    decoration: BorderHelper.noBorder(
+                      hintText: AppStrings.nameOfLastStudy,
+                    ),
                     suggestions: ListHelper.degreesList,
                     controller: signUpProvider.lastStudy,
-                    validator:
-                        (value) => ValidatorHelper.validateValue(value: value),
+                    onChanged: (value) => signUpProvider.validateLastStudy(),
                   ),
                 ),
                 SizeHelper.height(),
-                CustomContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                CustomFormFieldContainer(
+                  label: AppStrings.collegeOrUniversity,
+                  errorText: signUpProvider.isCollegeUniErr,
+                  icon: Icons.school,
                   child: CustomTextFormField(
                     maxLines: 5,
-                    labelText: AppStrings.collegeOrUniversity,
-                    // hintText: AppStrings.nameOfCollegeOrUniversity,
+                    decoration: BorderHelper.noBorder(
+                      hintText: AppStrings.nameOfCollegeOrUniversity,
+                    ),
                     controller: signUpProvider.collegeOrUniversity,
-                    validator:
-                        (value) => ValidatorHelper.validateValue(value: value),
+                    onChanged: (value) => signUpProvider.validateCollegeUni(),
                   ),
                 ),
                 SizeHelper.height(),
-                CustomContainer(
-                  child: RadioQuestionWidgetWithHeading(
-                    question: signUpProvider.areYouWorking,
-                    onChanged:
-                        (value) => signUpProvider.setWorking(working: value),
-                  ),
+                RadioQuestionWidgetWithHeading(
+                  padding: EdgeInsets.all(0),
+                  question: signUpProvider.areYouWorking,
+                  onChanged:
+                      (value) => signUpProvider.setWorking(working: value),
                 ),
+                if (signUpProvider.isWorkingErr != null)
+                  CustomContainer(
+                    width: 90.w,
+                    padding: const EdgeInsets.only(top: 5, left: 5),
+                    child: CustomText(
+                      text: signUpProvider.isWorkingErr ?? "",
+                      style: TextStyleHelper.xSmallText.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
                 SizeHelper.height(),
                 if (signUpProvider.areYouWorking.answer?.toLowerCase() ==
                     "yes") ...[
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  CustomFormFieldContainer(
+                    label: AppStrings.companyOrBusiness,
+                    errorText: signUpProvider.isCompanyOrBussinessErr,
+                    icon: Icons.work,
                     child: CustomTextFormField(
-                      maxLines: 5,
-                      labelText: AppStrings.companyOrBusiness,
-                      hintText: AppStrings.nameOfCompanyOrBusiness,
+                      maxLines: 3,
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.nameOfCompanyOrBusiness,
+                      ),
                       controller: signUpProvider.companyOrBusiness,
-                      validator:
+                      onChanged:
                           (value) =>
-                              signUpProvider.areYouWorking.answer
-                                          ?.toLowerCase() ==
-                                      "yes"
-                                  ? ValidatorHelper.validateValue(value: value)
-                                  : null,
+                              signUpProvider.validateCompanyOrBussiness(),
                     ),
                   ),
                   SizeHelper.height(),
                 ],
                 if (!signUpProvider.isUpdatingProfile) ...[
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  CustomFormFieldContainer(
+                    errorText: signUpProvider.isReferCodeErr,
+                    label: AppStrings.referCode,
+                    icon: Icons.share,
                     child: CustomTextFormField(
                       labelText: AppStrings.referCode,
-                      hintText: AppStrings.enterReferCodeIfAny,
+                      decoration: BorderHelper.noBorder(
+                        hintText: AppStrings.enterReferCodeIfAny,
+                      ),
                       controller: signUpProvider.referCode,
                       maxLength: 6,
+                      onChanged: (value) => signUpProvider.validateReferCode(),
                     ),
                   ),
                   SizeHelper.height(),

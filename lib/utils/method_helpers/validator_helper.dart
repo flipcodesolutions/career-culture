@@ -22,10 +22,10 @@ class ValidatorHelper with NavigateHelper {
   }
 
   /// validate name of user
-  static String? validateName({required String? value}) {
+  static String? validateName({required String? value,String? name}) {
     if (value == null || value.trim().isEmpty) {
       /// locale error text for no name
-      return AppStrings.nameRequired;
+      return AppStrings.nameRequired(name ?? "Name");
     }
     if (value.length < 3) {
       /// locale error text for name char need 3

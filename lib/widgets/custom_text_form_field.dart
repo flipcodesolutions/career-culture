@@ -114,6 +114,7 @@ class CustomTextFormField extends StatelessWidget {
           return Align(
             alignment: Alignment.topLeft,
             child: CustomContainer(
+              width: 70.w,
               constraints: BoxConstraints(maxHeight: 25.h),
               backGroundColor: AppColors.lightPrimary,
               margin: EdgeInsets.only(right: 12.w),

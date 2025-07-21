@@ -18,7 +18,7 @@ class AppStrings {
   static const numberRequired = "Number Required !!";
   static const numberValidReq = "Required Valid Number !!";
   static const numberInvalid = "Number Is Not Valid !!";
-  static const nameRequired = "Name Required !!";
+  static  nameRequired(String name) => "$name Required !!";
   static const nameReq3Char = "Have At least 3 Characters !!";
   static const enterEmail = "Enter Email";
   static const pleaseEnterMessage = "Please Enter A Value !!";
@@ -87,7 +87,7 @@ class AppStrings {
   static const collegeOrUniversity = "College / University";
   static const nameOfCollegeOrUniversity = "Name Of College Or University";
   static const companyOrBusiness = "Company / Business Name";
-  static const nameOfCompanyOrBusiness = "Name Of Company / Business Name";
+  static const nameOfCompanyOrBusiness = "Name Of Company / Business";
   static const whatYouDoInFreeTime = "What You Do In Free Time?";
   static const dreamWhatYouWantToBe = "Dream : What You Want To Be ?";
   static const educationalDetails = "Educational Details";

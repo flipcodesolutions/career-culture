@@ -11,14 +11,16 @@ class RadioQuestionWidgetWithHeading extends StatelessWidget {
     super.key,
     required this.question,
     required this.onChanged,
+    this.padding
   });
 
   final AssessmentQuestion question;
   final void Function(String?)? onChanged;
+  final EdgeInsetsGeometry? padding;
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 5.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
