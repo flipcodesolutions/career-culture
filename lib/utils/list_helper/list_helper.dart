@@ -157,7 +157,7 @@ class ListHelper {
     'Z',
   ];
 
- static List<TestimonialCard> testimonialList() {
+  static List<TestimonialCard> testimonialList() {
     return [
       TestimonialCard(
         name: "DISHA R TAUNK, Coimbatore",
@@ -185,7 +185,6 @@ class ListHelper {
 
   static List<TestimonialCard> mentorsList() {
     return [
-      
       TestimonialCard(
         name: "Dr. Trikaldash Bapu",
         designation: "Saint & Philospher",
@@ -204,7 +203,7 @@ class ListHelper {
         name: "Dr. K G Mehta",
         designation: "Director, Ved Bhavan",
         testimonial:
-            'Mindful Youth is a unique program for all young professionals, teachers and students to make their understanding about key topics more deeper and sensible.',
+            'Mindful Youth is a unique program for all young professionals, teachers and students to make their understanding about key topics more deeper and sensible. It is our duty & responsibility.',
         imageUrl: AppImageStrings.kgMehta,
       ),
     ];

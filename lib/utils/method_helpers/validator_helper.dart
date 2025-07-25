@@ -22,15 +22,25 @@ class ValidatorHelper with NavigateHelper {
   }
 
   /// validate name of user
-  static String? validateName({required String? value,String? name}) {
+  static String? validateName({required String? value, String? name}) {
+    final fieldName = name ?? "Name";
+
     if (value == null || value.trim().isEmpty) {
-      /// locale error text for no name
-      return AppStrings.nameRequired(name ?? "Name");
+      return AppStrings.nameRequired(fieldName);
     }
-    if (value.length < 3) {
-      /// locale error text for name char need 3
+
+    final trimmedValue = value.trim();
+
+    if (trimmedValue.length < 3) {
       return AppStrings.nameReq3Char;
     }
+
+    final nameRegex = RegExp(r'^[A-Za-z]+$'); // Only A-Z and a-z
+
+    if (!nameRegex.hasMatch(trimmedValue)) {
+      return "$fieldName can only contain alphabets.";
+    }
+
     return null;
   }
 
@@ -46,7 +56,7 @@ class ValidatorHelper with NavigateHelper {
     return null;
   }
 
-  static String? validateValue({required String? value,String? message}) {
+  static String? validateValue({required String? value, String? message}) {
     if (value == null || value.trim().isEmpty) {
       return message ?? AppStrings.pleaseEnterMessage;
     }

@@ -64,13 +64,21 @@ class _UploadSelfieState extends State<UploadSelfie> with NavigateHelper {
                 children: [
                   selfieProvider.isLoading
                       ? Center(child: CustomLoader())
-                      : CustomDropDownWidget<int?>(
+                      : selfieProvider.dropdownMenuEntries().isNotEmpty
+                      ? CustomDropDownWidget<int?>(
                         hintText: AppStrings.selectQuestion,
                         dropdownMenuEntries:
                             selfieProvider.dropdownMenuEntries(),
                         onSelected:
                             (dynamic questionId) => selfieProvider
                                 .setSelectedQuestion(data: questionId as int?),
+                      )
+                      : CustomContainer(
+                        borderRadius: BorderRadius.circular(AppSize.size10),
+                        alignment: Alignment.center,
+                        backGroundColor: AppColors.lightWhite,
+                        height: 10.h,
+                        child: CustomText(text: AppStrings.noQuestionsFound),
                       ),
                   SizeHelper.height(height: 1.h),
                   CustomContainer(
