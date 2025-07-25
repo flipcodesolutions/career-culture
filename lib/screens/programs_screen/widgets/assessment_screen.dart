@@ -1,9 +1,7 @@
-import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/app_const/app_strings.dart';
 import 'package:mindful_youth/provider/assessment_provider/assessment_provider.dart';
@@ -31,6 +29,7 @@ import '../../../utils/navigation_helper/navigation_helper.dart';
 import '../../../utils/widget_helper/widget_helper.dart';
 import '../../../widgets/audio_record_container.dart';
 import 'assessment_result_screen.dart';
+import 'render_media_data.dart';
 
 class AssessmentScreen extends StatefulWidget {
   const AssessmentScreen({
@@ -249,9 +248,14 @@ class _AssessmentScreenState extends State<AssessmentScreen>
                     ),
                     child:
                         isTestDone
-                            ? PrimaryBtn(
-                              btnText: AppStrings.testCompleted,
-                              onTap: null, // disabled button
+                            ? LeftRIghtArrowPageViewBtn(
+                              pageController: pageController,
+                              middleWidget: Expanded(
+                                child: PrimaryBtn(
+                                  btnText: AppStrings.testCompleted,
+                                  onTap: null, // disabled button
+                                ),
+                              ),
                             )
                             : Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -436,186 +440,196 @@ class _QuestionWidgetState<T> extends State<QuestionWidget<T>> {
       constraints: BoxConstraints.tightForFinite(),
       child: Padding(
         padding: const EdgeInsets.all(AppSize.size10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText(
-              useOverflow: false,
-              text: "Question - ${widget.questionIndex}",
-              style: TextStyleHelper.smallText.copyWith(
-                color: AppColors.blackShade75,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            SizeHelper.height(height: 0.5.h),
-            CustomText(
-              useOverflow: false,
-              text: "${widget.question.question?.trim()}",
-              style: TextStyleHelper.smallHeading,
-              // textAlign: TextAlign.justify,
-            ),
-            SizeHelper.height(height: 0.5.h),
-            if (isAnswerProvided) ...[
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
               CustomText(
                 useOverflow: false,
-                text: "This is the Answer You Provided...",
+                text: "Question - ${widget.questionIndex}",
                 style: TextStyleHelper.smallText.copyWith(
+                  color: AppColors.blackShade75,
                   fontStyle: FontStyle.italic,
                 ),
+              ),
+              SizeHelper.height(height: 0.5.h),
+              CustomText(
+                useOverflow: false,
+                text: "${widget.question.question?.trim()}",
+                style: TextStyleHelper.smallHeading,
                 // textAlign: TextAlign.justify,
               ),
-              SizeHelper.height(height: 1.h),
+              SizeHelper.height(height: 0.5.h),
+              if (isAnswerProvided) ...[
+                CustomText(
+                  useOverflow: false,
+                  text: "This is the Answer You Provided...",
+                  style: TextStyleHelper.smallText.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  // textAlign: TextAlign.justify,
+                ),
+                SizeHelper.height(height: 1.h),
+              ],
+              if (widget.question.type == "checkbox") ...[
+                ...widget.question.extractedOptions?.asMap().entries.map((
+                      entry,
+                    ) {
+                      String option = entry.value.trim();
+
+                      return OptionTile(
+                        index: entry.key,
+                        option: option,
+                        isSelected:
+                            widget.question.userAnswer?.contains(entry.value) ??
+                            false,
+                        isCorrect:
+                            widget.question.correctAnswer?.contains(option) ==
+                            true,
+                        isReviewMode: widget.isInReviewMode,
+                        isMultiSelect: true,
+                        onCheckboxToggled: (value) {
+                          if (value != null) {
+                            assessmentProvider.makeOptionSelection(
+                              questionId: widget.question.id ?? -1,
+                              selection: entry.value,
+                            );
+                          }
+                        },
+                      );
+                    }) ??
+                    [SizedBox.shrink()],
+              ] else if (widget.question.type == "radio") ...[
+                ...widget.question.extractedOptions?.asMap().entries.map((
+                      entry,
+                    ) {
+                      String option = entry.value.trim();
+
+                      return OptionTile(
+                        index: entry.key,
+                        option: option,
+                        isSelected: widget.question.userAnswer == option,
+                        isCorrect:
+                            widget.question.correctAnswer?.contains(option) ==
+                            true,
+                        isReviewMode: widget.isInReviewMode,
+                        isMultiSelect: false,
+                        onRadioSelected: (value) {
+                          if (value.isNotEmpty) {
+                            assessmentProvider.makeRadioSelection(
+                              questionId: widget.question.id ?? -1,
+                              selection: option,
+                            );
+                          }
+                        },
+                      );
+                    }) ??
+                    [SizedBox.shrink()],
+              ] else if (widget.question.type == "text") ...[
+                SizeHelper.height(height: 1.h),
+                CustomTextFormField(
+                  controller: answerController,
+                  decoration: BorderHelper.containerLikeTextField(
+                    hintText: AppStrings.yourAnswer,
+                  ),
+                  maxLines: 1,
+                  maxLength: 200,
+                  validator: (value) {
+                    final validate = ValidatorHelper.validateValue(
+                      value: value,
+                    );
+                    if (validate == null) {
+                      assessmentProvider.textAreaAnswer(
+                        questionId: widget.question.id ?? -1,
+                        selection: answerController.text,
+                      );
+                    }
+                    return validate;
+                  },
+                ),
+              ] else if (widget.question.type == "textArea") ...[
+                SizeHelper.height(height: 1.h),
+                CustomTextFormField(
+                  controller: answerController,
+                  decoration: BorderHelper.containerLikeTextField(
+                    hintText: AppStrings.yourAnswer,
+                  ),
+                  minLines: 5,
+                  maxLines: 5,
+                  maxLength: 500,
+                  validator: (value) {
+                    final validate = ValidatorHelper.validateValue(
+                      value: value,
+                    );
+                    if (validate == null) {
+                      assessmentProvider.textAreaAnswer(
+                        questionId: widget.question.id ?? -1,
+                        selection: answerController.text,
+                      );
+                    }
+                    return validate;
+                  },
+                ),
+              ] else if (widget.question.type == "video") ...[
+                SizeHelper.height(height: 1.h),
+                CustomTextFormField(
+                  enabled:
+                      /// on init check if this answer is already done or not, if there is answer already then just show it in field
+                      !isAnswerProvided,
+                  controller: answerController,
+                  decoration: BorderHelper.containerLikeTextField(
+                    hintText: AppStrings.yourVideoUrl,
+                  ),
+                  maxLines: 1,
+                  maxLength: 200,
+                  onChanged:
+                      (value) =>
+                          ValidatorHelper.validateYoutubeLink(value: value),
+                  validator: (value) {
+                    final validate = ValidatorHelper.validateYoutubeLink(
+                      value: value,
+                    );
+
+                    /// if validation passed check if this question is already answered, if so than not update it in check user answer
+                    if (validate == null && !isAnswerProvided) {
+                      assessmentProvider.textAreaAnswer(
+                        questionId: widget.question.id ?? -1,
+                        selection: answerController.text,
+                      );
+                    }
+                    return validate;
+                  },
+                ),
+              ] else if (widget.question.type == "audio") ...[
+                CustomContainer(
+                  child:
+                      isAnswerProvided
+                          ? CustomAudioPlayer(
+                            audioUrl: "${AppStrings.assetsUrl}$providedAnswer",
+                          )
+                          : AudioRecorderPlayer(questionId: widget.question.id),
+                ),
+              ] else if (widget.question.type == "image") ...[
+                SizeHelper.height(height: 1.h),
+                isAnswerProvided
+                    ? CustomContainer(
+                      padding: EdgeInsets.all(AppSize.size10),
+
+                      borderRadius: BorderRadius.circular(AppSize.size10),
+                      backGroundColor: AppColors.lightWhite,
+                      child: CustomImageWithLoader(
+                        showImageInPanel: false,
+                        imageUrl: "${AppStrings.assetsUrl}$providedAnswer",
+                      ),
+                    )
+                    : PickImage(question: widget.question),
+              ] else ...[
+                CustomText(text: AppStrings.somethingWentWrong),
+              ],
             ],
-            if (widget.question.type == "checkbox") ...[
-              ...widget.question.extractedOptions?.asMap().entries.map((entry) {
-                    String option = entry.value.trim();
-
-                    return OptionTile(
-                      index: entry.key,
-                      option: option,
-                      isSelected:
-                          widget.question.userAnswer?.contains(entry.value) ??
-                          false,
-                      isCorrect:
-                          widget.question.correctAnswer?.contains(option) ==
-                          true,
-                      isReviewMode: widget.isInReviewMode,
-                      isMultiSelect: true,
-                      onCheckboxToggled: (value) {
-                        if (value != null) {
-                          assessmentProvider.makeOptionSelection(
-                            questionId: widget.question.id ?? -1,
-                            selection: entry.value,
-                          );
-                        }
-                      },
-                    );
-                  }) ??
-                  [SizedBox.shrink()],
-            ] else if (widget.question.type == "radio") ...[
-              ...widget.question.extractedOptions?.asMap().entries.map((entry) {
-                    String option = entry.value.trim();
-
-                    return OptionTile(
-                      index: entry.key,
-                      option: option,
-                      isSelected: widget.question.userAnswer == option,
-                      isCorrect:
-                          widget.question.correctAnswer?.contains(option) ==
-                          true,
-                      isReviewMode: widget.isInReviewMode,
-                      isMultiSelect: false,
-                      onRadioSelected: (value) {
-                        if (value.isNotEmpty) {
-                          assessmentProvider.makeRadioSelection(
-                            questionId: widget.question.id ?? -1,
-                            selection: option,
-                          );
-                        }
-                      },
-                    );
-                  }) ??
-                  [SizedBox.shrink()],
-            ] else if (widget.question.type == "text") ...[
-              SizeHelper.height(height: 1.h),
-              CustomTextFormField(
-                controller: answerController,
-                decoration: BorderHelper.containerLikeTextField(
-                  hintText: AppStrings.yourAnswer,
-                ),
-                maxLines: 1,
-                maxLength: 200,
-                validator: (value) {
-                  final validate = ValidatorHelper.validateValue(value: value);
-                  if (validate == null) {
-                    assessmentProvider.textAreaAnswer(
-                      questionId: widget.question.id ?? -1,
-                      selection: answerController.text,
-                    );
-                  }
-                  return validate;
-                },
-              ),
-            ] else if (widget.question.type == "textArea") ...[
-              SizeHelper.height(height: 1.h),
-              CustomTextFormField(
-                controller: answerController,
-                decoration: BorderHelper.containerLikeTextField(
-                  hintText: AppStrings.yourAnswer,
-                ),
-                minLines: 5,
-                maxLines: 5,
-                maxLength: 500,
-                validator: (value) {
-                  final validate = ValidatorHelper.validateValue(value: value);
-                  if (validate == null) {
-                    assessmentProvider.textAreaAnswer(
-                      questionId: widget.question.id ?? -1,
-                      selection: answerController.text,
-                    );
-                  }
-                  return validate;
-                },
-              ),
-            ] else if (widget.question.type == "video") ...[
-              SizeHelper.height(height: 1.h),
-              CustomTextFormField(
-                enabled:
-                    /// on init check if this answer is already done or not, if there is answer already then just show it in field
-                    !isAnswerProvided,
-                controller: answerController,
-                decoration: BorderHelper.containerLikeTextField(
-                  hintText: AppStrings.yourVideoUrl,
-                ),
-                maxLines: 1,
-                maxLength: 200,
-                onChanged:
-                    (value) =>
-                        ValidatorHelper.validateYoutubeLink(value: value),
-                validator: (value) {
-                  final validate = ValidatorHelper.validateYoutubeLink(
-                    value: value,
-                  );
-
-                  /// if validation passed check if this question is already answered, if so than not update it in check user answer
-                  if (validate == null && !isAnswerProvided) {
-                    assessmentProvider.textAreaAnswer(
-                      questionId: widget.question.id ?? -1,
-                      selection: answerController.text,
-                    );
-                  }
-                  return validate;
-                },
-              ),
-            ] else if (widget.question.type == "audio") ...[
-              CustomContainer(
-                child:
-                    isAnswerProvided
-                        ? CustomAudioPlayer(
-                          audioUrl: "${AppStrings.assetsUrl}$providedAnswer",
-                        )
-                        : AudioRecorderPlayer(questionId: widget.question.id),
-              ),
-            ] else if (widget.question.type == "image") ...[
-              SizeHelper.height(height: 1.h),
-              isAnswerProvided
-                  ? CustomContainer(
-                    padding: EdgeInsets.all(AppSize.size10),
-
-                    borderRadius: BorderRadius.circular(AppSize.size10),
-                    backGroundColor: AppColors.lightWhite,
-                    child: CustomImageWithLoader(
-                      showImageInPanel: false,
-                      imageUrl: "${AppStrings.assetsUrl}$providedAnswer",
-                    ),
-                  )
-                  : PickImage(question: widget.question),
-            ] else ...[
-              CustomText(text: AppStrings.somethingWentWrong),
-            ],
-          ],
+          ),
         ),
       ),
     );

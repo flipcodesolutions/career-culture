@@ -67,27 +67,8 @@ class MediaRender<T> extends StatelessWidget {
                     ),
                   ),
                   Positioned.fill(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ArrowWidget(
-                          isForword: false,
-                          onPressed:
-                              () => pageController.previousPage(
-                                duration: Durations.medium1,
-                                curve: Curves.decelerate,
-                              ),
-                        ),
-                        ArrowWidget(
-                          isForword: true,
-                          onPressed:
-                              () => pageController.nextPage(
-                                duration: Durations.medium1,
-                                curve: Curves.decelerate,
-                              ),
-                        ),
-                      ],
+                    child: LeftRIghtArrowPageViewBtn(
+                      pageController: pageController,
                     ),
                   ),
                 ],
@@ -139,6 +120,43 @@ class ArrowWidget extends StatelessWidget {
         isForword ? Icons.arrow_forward : Icons.arrow_back,
         size: AppSize.size20,
       ),
+    );
+  }
+}
+
+class LeftRIghtArrowPageViewBtn extends StatelessWidget {
+  const LeftRIghtArrowPageViewBtn({
+    super.key,
+    required this.pageController,
+    this.middleWidget,
+  });
+
+  final PageController pageController;
+  final Widget? middleWidget;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ArrowWidget(
+          isForword: false,
+          onPressed:
+              () => pageController.previousPage(
+                duration: Durations.medium1,
+                curve: Curves.decelerate,
+              ),
+        ),
+        middleWidget ?? SizedBox.shrink(),
+        ArrowWidget(
+          isForword: true,
+          onPressed:
+              () => pageController.nextPage(
+                duration: Durations.medium1,
+                curve: Curves.decelerate,
+              ),
+        ),
+      ],
     );
   }
 }
