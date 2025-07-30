@@ -130,26 +130,43 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: CustomFormFieldContainer(
                     label: AppStrings.birthDate,
-                    icon: Icons.date_range,
+                    icon: Icons.cake,
                     onLeadingTap:
                         () => signUpProvider.selectBirthDateByDatePicker(
                           context: context,
                         ),
                     errorText: signUpProvider.isBirthDateErr,
-                    child: CustomTextFormField(
-                      decoration: BorderHelper.noBorder(
-                        hintText: AppStrings.ddMmmYyyy,
-                      ),
-                      labelText: AppStrings.birthDate,
-                      hintText: AppStrings.ddMmmYyyy,
-                      onChanged:
-                          (value) => {
-                            signUpProvider.addHyphen(),
-                            signUpProvider.validteBirthdate(),
-                          },
-                      maxLength: 11,
-                      keyboardType: TextInputType.text,
-                      controller: signUpProvider.birthDate,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: CustomTextFormField(
+                            decoration: BorderHelper.noBorder(
+                              hintText: AppStrings.ddMmmYyyy,
+                            ),
+                            labelText: AppStrings.birthDate,
+                            hintText: AppStrings.ddMmmYyyy,
+                            onChanged:
+                                (value) => {
+                                  signUpProvider.addHyphen(),
+                                  signUpProvider.validteBirthdate(),
+                                },
+                            maxLength: 11,
+                            keyboardType: TextInputType.text,
+                            controller: signUpProvider.birthDate,
+                          ),
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap:
+                                () =>
+                                    signUpProvider.selectBirthDateByDatePicker(
+                                      context: context,
+                                    ),
+                            child: Icon(Icons.calendar_month),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -247,7 +264,7 @@ class ConvenerDropDown extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                   ),
-                  CustomText(text: convener.city ?? "Not Provided"),
+                  CustomText(text: convener.city ?? AppStrings.city),
                 ],
               ),
             ),
@@ -259,7 +276,7 @@ class ConvenerDropDown extends StatelessWidget {
         selectedItem: signUpProvider.selectedConvener,
         dropdownBuilder:
             (context, convener) =>
-                convener != null
+                convener != null && convener.name?.isNotEmpty == true
                     ? CustomContainer(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -272,7 +289,9 @@ class ConvenerDropDown extends StatelessWidget {
                               color: AppColors.primary,
                             ),
                           ),
-                          CustomText(text: convener.city ?? "Not Provided"),
+                          CustomText(
+                            text: convener.city ?? AppStrings.cityNotProvided,
+                          ),
                         ],
                       ),
                     )

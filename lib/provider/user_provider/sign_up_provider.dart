@@ -131,6 +131,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   String? isMiddleNameErr;
   void validateMiddleName() {
     isMiddleNameErr = ValidatorHelper.validateName(
+      minLength: 1,
       value: middleName.text,
       name: AppStrings.middleName,
     );
@@ -442,7 +443,6 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
     district = district;
     validateDistrict();
   }
-
 
   List<DropdownMenuEntry<String>> availableDistrict() {
     MapEntry<String, List<String>> stateWithDistrict = statesAndDistrict

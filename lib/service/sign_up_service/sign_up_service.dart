@@ -68,10 +68,10 @@ class SignUpService {
     log(signUp.toJson().toString());
     if (streamedResponse.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(data.body);
-      WidgetHelper.customSnackBar(
-        title: "${jsonResponse['message']}",
-        isError: !jsonResponse['success'],
-      );
+      // WidgetHelper.customSnackBar(
+      //   title: "${jsonResponse['message']}",
+      //   isError: !jsonResponse['success'],
+      // );
       UserModel model = UserModel.fromJson(jsonResponse);
 
       /// save model info to local
@@ -148,10 +148,10 @@ class SignUpService {
       final data = await http.Response.fromStream(streamedResponse);
       if (streamedResponse.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(data.body);
-        WidgetHelper.customSnackBar(
-          title: "${jsonResponse['message']}",
-          isError: !jsonResponse['success'],
-        );
+        // WidgetHelper.customSnackBar(
+        //   title: "${jsonResponse['message']}",
+        //   isError: !jsonResponse['success'],
+        // );
         UserModel model = UserModel.fromJson(jsonResponse);
         model.data?.token = token;
 

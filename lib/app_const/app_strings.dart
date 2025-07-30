@@ -18,8 +18,8 @@ class AppStrings {
   static const numberRequired = "Number Required !!";
   static const numberValidReq = "Required Valid Number !!";
   static const numberInvalid = "Number Is Not Valid !!";
-  static  nameRequired(String name) => "$name Required !!";
-  static const nameReq3Char = "Have At least 3 Characters !!";
+  static nameRequired(String name) => "$name Required !!";
+  static nameReqChar({int? minL}) => "Have At least $minL Characters !!";
   static const enterEmail = "Enter Email";
   static const pleaseEnterMessage = "Please Enter A Value !!";
   static const next = "Next";
@@ -305,6 +305,7 @@ class AppStrings {
   static const enterCompanyOrBuissness = "Enter Company Or Buissness";
   static const provideValidReferCode = "Provide Valid Refer Code";
   static const pleaseSpecifyThis = "Please Specify This";
+  static const cityNotProvided = "City Not Provided";
   static const selfieWebViewURL =
       "https://career-culture.flipcodesolutions.com/gallery-description";
   static String getMessageAccordingToProgress({required double percentage}) {

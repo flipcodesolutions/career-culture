@@ -22,7 +22,11 @@ class ValidatorHelper with NavigateHelper {
   }
 
   /// validate name of user
-  static String? validateName({required String? value, String? name}) {
+  static String? validateName({
+    required String? value,
+    String? name,
+    int minLength = 3,
+  }) {
     final fieldName = name ?? "Name";
 
     if (value == null || value.trim().isEmpty) {
@@ -31,8 +35,8 @@ class ValidatorHelper with NavigateHelper {
 
     final trimmedValue = value.trim();
 
-    if (trimmedValue.length < 3) {
-      return AppStrings.nameReq3Char;
+    if (trimmedValue.length < minLength) {
+      return AppStrings.nameReqChar(minL: minLength);
     }
 
     final nameRegex = RegExp(r'^[A-Za-z]+$'); // Only A-Z and a-z
