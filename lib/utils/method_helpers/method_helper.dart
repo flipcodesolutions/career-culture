@@ -641,4 +641,13 @@ class MethodHelper with NavigateHelper {
     final document = parse(htmlString);
     return parse(document.body?.text ?? "").documentElement?.text ?? "";
   }
+
+  /// parse date from [YYYY-MM-DD] to `DateTime`
+ static DateTime? parseDateFromString(String dateString) {
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
+      return null;
+    }
+  }
 }

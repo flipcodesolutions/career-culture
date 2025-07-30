@@ -12,6 +12,7 @@ import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
 import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/utils/list_helper/list_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/size_helper.dart';
 import 'package:mindful_youth/utils/navigation_helper/navigation_helper.dart';
@@ -31,6 +32,7 @@ import '../../models/feedback_model/feedback_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../provider/product_provider/product_provider.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
+import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
 import '../../widgets/custom_annoucement_slider.dart';
 import '../../widgets/custom_crousal.dart';
 import '../../widgets/custom_slider.dart';
@@ -212,6 +214,9 @@ class _HomeScreenState extends State<HomeScreen>
                                   homeScreenProduct.isLoading,
                         ),
 
+                        /// whish user birth day card
+                        BirthdayAppreciationContainer(),
+
                         /// user pashes
                         SizeHelper.height(),
                         if (userProvider.isUserLoggedIn) ...[
@@ -229,7 +234,6 @@ class _HomeScreenState extends State<HomeScreen>
 
                           /// progress
                           ChapterProgressWidget(),
-
                           SizeHelper.height(),
                         ],
 
@@ -296,12 +300,6 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
 
-                        // BirthdayAppreciationContainer(
-                        //   userBirthday:
-                        //       userProvider.user.profile?.dateOfBirth ??
-                        //       "", // Replace with actual DOB
-                        //   userName: 'Rahul',
-                        // ),
                         SizeHelper.height(height: 7.h),
                       ],
                     ),
@@ -422,33 +420,55 @@ class TestimonialCard extends StatelessWidget {
   }
 }
 
-class BirthdayAppreciationContainer extends StatelessWidget {
-  final String userBirthday;
-  final String userName;
+class BirthdayAppreciationContainer extends StatefulWidget {
+  const BirthdayAppreciationContainer({super.key});
 
-  const BirthdayAppreciationContainer({
-    super.key,
-    required this.userBirthday,
-    required this.userName,
-  });
+  @override
+  State<BirthdayAppreciationContainer> createState() =>
+      _BirthdayAppreciationContainerState();
+}
 
-  bool isTodayBirthday(DateTime birthday) {
+class _BirthdayAppreciationContainerState
+    extends State<BirthdayAppreciationContainer> {
+  String? userName;
+  DateTime? userDOB;
+  bool isTodayBirthday(DateTime? birthday) {
     final now = DateTime.now();
-    return now.day == birthday.day && now.month == birthday.month;
+    if (birthday != null) {
+      return now.day == birthday.day && now.month == birthday.month;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetch();
+  }
+
+  void fetch() async {
+    userName = await SharedPrefs.getSharedString(AppStrings.userName);
+    userDOB = MethodHelper.parseDateFromString(
+      await SharedPrefs.getSharedString(AppStrings.dateOfBirth),
+    );
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (!isTodayBirthday(userBirthday)) return const SizedBox.shrink();
+    if (!isTodayBirthday(userDOB)) return const SizedBox.shrink();
 
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
+    return CustomContainer(
+      margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+      padding: const EdgeInsets.all(AppSize.size20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Colors.pinkAccent, Colors.orangeAccent],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSize.size10),
         boxShadow: [
           BoxShadow(
             color: Colors.orange.withOpacity(0.4),
@@ -460,15 +480,11 @@ class BirthdayAppreciationContainer extends StatelessWidget {
       child: Row(
         children: [
           const Icon(Icons.cake, color: Colors.white, size: 40),
-          const SizedBox(width: 12),
+          SizeHelper.width(width: 3.w),
           Expanded(
             child: Text(
-              "$userBirthday",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              "Happy Birthday, $userName! 🎉\nWishing you a joyful and fulfilling year ahead!",
+              style: TextStyleHelper.smallText.copyWith(color: AppColors.white),
             ),
           ),
         ],
