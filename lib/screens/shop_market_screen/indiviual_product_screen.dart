@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import '../../app_const/app_colors.dart';
 import '../../app_const/app_size.dart';
 import '../../app_const/app_strings.dart';
+import '../../utils/method_helpers/method_helper.dart';
 import '../../utils/method_helpers/size_helper.dart';
 import '../../utils/method_helpers/validator_helper.dart';
 import '../../utils/text_style_helper/text_style_helper.dart';
@@ -83,14 +84,14 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
                       style: TextStyleHelper.mediumHeading,
                     ),
                     SizeHelper.height(),
-                    CustomText(
-                      text:
-                          '${AppStrings.rupee} ${productProvider.orderModel?.price}',
-                      style: TextStyleHelper.smallHeading.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizeHelper.height(),
+                    // CustomText(
+                    //   text:
+                    //       '${AppStrings.rupee} ${productProvider.orderModel?.price}',
+                    //   style: TextStyleHelper.smallHeading.copyWith(
+                    //     color: AppColors.primary,
+                    //   ),
+                    // ),
+                    // SizeHelper.height(),
                   ],
                 ),
               ),
@@ -108,39 +109,111 @@ class _ProductPageState extends State<ProductPage> with NavigateHelper {
       ),
       bottomNavigationBar: SafeArea(
         child: CustomContainer(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+          backGroundColor: AppColors.xLightGrey,
+          borderRadius: BorderRadius.circular(AppSize.size10),
+          borderWidth: 0.2,
+          margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+          padding: EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomText(
-                    text: AppStrings.qty,
-                    style: TextStyleHelper.smallHeading.copyWith(
-                      color: AppColors.primary,
+              if (widget.product?.phone?.isNotEmpty == true)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomText(
+                      text: "Contact on this number :",
+                      style: TextStyleHelper.smallText,
                     ),
-                  ),
-                  QtyIncrementDecrement(product: widget.product),
-                ],
-              ),
-              SizeHelper.height(height: 1.h),
-              PrimaryBtn(
-                btnText: AppStrings.buyNow,
-                width: 90.w,
-                onTap:
-                    () => showModalBottomSheet(
-                      backgroundColor: AppColors.white,
-                      context: context,
-                      builder: (context) => OrderSheet(product: widget.product),
+                    SizeHelper.width(),
+                    InkWell(
+                      onTap:
+                          () => MethodHelper.makePhoneCall(
+                            phone: widget.product?.phone,
+                          ),
+                      child: CustomText(
+                        text: widget.product?.phone ?? "",
+                        style: TextStyleHelper.smallText.copyWith(
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
-              ),
+                  ],
+                ),
+
+              if (widget.product?.phone?.isNotEmpty == true &&
+                  widget.product?.url?.isNotEmpty == true)
+                Row(
+                  children: [
+                    Expanded(child: Divider(indent: 5.w, endIndent: 5.w)),
+                    CustomText(text: "or"),
+                    Expanded(child: Divider(indent: 5.w, endIndent: 5.w)),
+                  ],
+                ),
+
+              if (widget.product?.url?.isNotEmpty == true)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomText(text: "visit this link :"),
+                    SizeHelper.width(width: 2.w),
+                    InkWell(
+                      onTap:
+                          () => MethodHelper.launchUrlInBrowser(
+                            url: widget.product!.url ?? "",
+                          ),
+                      child: CustomText(
+                        text: widget.product!.url!,
+                        style: TextStyleHelper.smallText.copyWith(
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
       ),
+      // bottomNavigationBar: SafeArea(
+      //   child: CustomContainer(
+      //     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //           children: [
+      //             CustomText(
+      //               text: AppStrings.qty,
+      //               style: TextStyleHelper.smallHeading.copyWith(
+      //                 color: AppColors.primary,
+      //               ),
+      //             ),
+      //             QtyIncrementDecrement(product: widget.product),
+      //           ],
+      //         ),
+      //         SizeHelper.height(height: 1.h),
+      //         PrimaryBtn(
+      //           btnText: AppStrings.buyNow,
+      //           width: 90.w,
+      //           onTap:
+      //               () => showModalBottomSheet(
+      //                 backgroundColor: AppColors.white,
+      //                 context: context,
+      //                 builder: (context) => OrderSheet(product: widget.product),
+      //               ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

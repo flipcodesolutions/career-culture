@@ -34,7 +34,10 @@ class MethodHelper with NavigateHelper {
     final uri = Uri.tryParse(url);
 
     if (uri == null || !(uri.isScheme('http') || uri.isScheme('https'))) {
-      print('❌ Invalid or unsupported URL: $url');
+      WidgetHelper.customSnackBar(
+        title: 'Invalid or unsupported URL: $url',
+        isError: true,
+      );
       return false;
     }
 
@@ -51,7 +54,10 @@ class MethodHelper with NavigateHelper {
       );
       return true;
     } else {
-      print('❌ Cannot launch URL: $url');
+      WidgetHelper.customSnackBar(
+        title: 'Invalid or unsupported URL: $url',
+        isError: true,
+      );
       return false;
     }
   }
@@ -491,10 +497,10 @@ class MethodHelper with NavigateHelper {
 
   /// give us call method
   // Function to launch phone dialer
-  static Future<void> makePhoneCall() async {
+  static Future<void> makePhoneCall({String? phone}) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
-      path: AppStrings.mindfulYouthNumber,
+      path: phone ?? AppStrings.mindfulYouthNumber,
     );
     if (!await launchUrl(launchUri)) {
       // Handle error, e.g., show a SnackBar or AlertDialog

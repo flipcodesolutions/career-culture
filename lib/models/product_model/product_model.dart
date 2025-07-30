@@ -52,6 +52,8 @@ class Product {
   int? id;
   String? title;
   String? price;
+  String? phone;
+  String? url;
   String? description;
   String? image1;
   String? image2;
@@ -61,6 +63,8 @@ class Product {
     this.id,
     this.title,
     this.price,
+    this.phone,
+    this.url,
     this.description,
     this.image1,
     this.image2,
@@ -71,6 +75,8 @@ class Product {
     id = json['id'];
     title = json['title'];
     price = json['price'];
+    phone = json['phone'];
+    url = json['url'];
     description = json['description'];
     image1 = json['image1'];
     image2 = json['image2'];
@@ -82,6 +88,8 @@ class Product {
     data['id'] = this.id;
     data['title'] = this.title;
     data['price'] = this.price;
+    data['phone'] = this.phone;
+    data['url'] = this.url;
     data['description'] = this.description;
     data['image1'] = this.image1;
     data['image2'] = this.image2;

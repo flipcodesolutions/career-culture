@@ -164,12 +164,12 @@ class ProductCard extends StatelessWidget with NavigateHelper {
                     text: product?.title ?? "",
                     style: TextStyleHelper.mediumHeading,
                   ),
-                  CustomText(
-                    text: '${AppStrings.rupee} ${product?.price}',
-                    style: TextStyleHelper.smallHeading.copyWith(
-                      color: AppColors.primary,
-                    ),
-                  ),
+                  // CustomText(
+                  //   text: '${AppStrings.rupee} ${product?.price}',
+                  //   style: TextStyleHelper.smallHeading.copyWith(
+                  //     color: AppColors.primary,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

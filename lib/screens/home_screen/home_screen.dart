@@ -295,6 +295,14 @@ class _HomeScreenState extends State<HomeScreen>
                             enlargeCenterPage: true,
                           ),
                         ),
+
+                        // BirthdayAppreciationContainer(
+                        //   userBirthday:
+                        //       userProvider.user.profile?.dateOfBirth ??
+                        //       "", // Replace with actual DOB
+                        //   userName: 'Rahul',
+                        // ),
+                        SizeHelper.height(height: 7.h),
                       ],
                     ),
                   ),
@@ -406,6 +414,61 @@ class TestimonialCard extends StatelessWidget {
               ),
               useOverflow: false,
               maxLines: 6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BirthdayAppreciationContainer extends StatelessWidget {
+  final String userBirthday;
+  final String userName;
+
+  const BirthdayAppreciationContainer({
+    super.key,
+    required this.userBirthday,
+    required this.userName,
+  });
+
+  bool isTodayBirthday(DateTime birthday) {
+    final now = DateTime.now();
+    return now.day == birthday.day && now.month == birthday.month;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // if (!isTodayBirthday(userBirthday)) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Colors.pinkAccent, Colors.orangeAccent],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.4),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.cake, color: Colors.white, size: 40),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "$userBirthday",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
