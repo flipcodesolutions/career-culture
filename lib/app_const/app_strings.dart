@@ -1,14 +1,16 @@
+import 'package:mindful_youth/utils/environment_helper/environment_helper.dart';
+
 class AppStrings {
   //// important strings
   static const appName = "Career And Culture";
+  static final String appUrl = Environment.url;
 
   ///
   /// urls
   static const sliderUrl = "";
-  static const assetsUrl =
-      "https://career-culture.flipcodesolutions.com/uploads/";
-  static const wallPostShareUrl =
-      "https://career-culture.flipcodesolutions.com/wall/";
+  static final assetsUrl = "$appUrl/uploads/";
+  static final pdfArticleUrl = "$appUrl/uploads/";
+  static final String wallPostShareUrl = "$appUrl/wall/";
 
   /// app strings
   static const india = "India";
@@ -82,7 +84,8 @@ class AppStrings {
   static const contactNo2 = "Contact No 2";
   static const presentStudy = "Study - Ongoing Degree/Course";
   static const nameOfPresentStudy = "Enter Ongoing Degree or Course";
-  /// using this field as skills , it was used for last study but now will use as skills instead 
+
+  /// using this field as skills , it was used for last study but now will use as skills instead
   /// static const lastStudy = "Degree - Completed Degree/Course";
   static const skill = "Skill";
   static const nameOfLastStudy = "Enter Completed Degree or Course";

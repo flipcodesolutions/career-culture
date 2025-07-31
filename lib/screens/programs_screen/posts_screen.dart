@@ -447,8 +447,10 @@ class _SinglePostWIdgetState extends State<SinglePostWIdget>
                 itemBuilder:
                     (context, item, index) => GestureDetector(
                       onTap:
-                          () async =>
-                              launchUrl(url: item.url ?? "", context: context),
+                          () async => launchUrl(
+                            url: "${AppStrings.pdfArticleUrl}${item.url}",
+                            context: context,
+                          ),
                       child: CustomContainer(
                         backGroundColor: AppColors.lightWhite,
                         margin: EdgeInsets.symmetric(horizontal: 5.w),

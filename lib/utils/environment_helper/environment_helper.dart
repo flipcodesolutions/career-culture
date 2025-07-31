@@ -10,6 +10,9 @@ class Environment {
   static String get baseUrl {
     return dotenv.env['BASE_URL'] ?? '';
   }
+  static String get url {
+    return dotenv.env['APP_URL'] ?? '';
+  }
 
   static bool get debugMode {
     return dotenv.getBool('DEBUG_MODE', fallback: false);
