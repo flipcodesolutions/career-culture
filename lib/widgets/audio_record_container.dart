@@ -94,6 +94,22 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
   Future<void> _stopRecording() async {
     await _recorder.stopRecorder();
     await _recorderStreamController.close();
+    context.read<AssessmentProvider>().makeFilesSelection(
+      questionId: widget.questionId ?? -1,
+      maxFileSize: widget.maximumAudioSize + 1,
+      selectedFiles: [
+        PlatformFile(
+          name: "${DateTime.now().toIso8601String()}.pcm",
+          size: _audioBuffer.length,
+          bytes: Uint8List.fromList(_audioBuffer),
+        ),
+      ],
+    );
+    _stopPlayback();
+    // setState(() {
+    //   _audioBuffer.clear();
+    //   _currentFileSize = 0;
+    // });
     setState(() {
       _isRecording = false;
     });
@@ -217,52 +233,53 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
               ),
               useOverflow: false,
             ),
-            trailing:
-                _audioBuffer.isNotEmpty && !_isRecording
-                    ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            assessmentProvider.makeFilesSelection(
-                              questionId: widget.questionId ?? -1,
-                              maxFileSize: widget.maximumAudioSize + 1,
-                              selectedFiles: [
-                                PlatformFile(
-                                  name:
-                                      "${DateTime.now().toIso8601String()}.pcm",
-                                  size: _audioBuffer.length,
-                                  bytes: Uint8List.fromList(_audioBuffer),
-                                ),
-                              ],
-                            );
-                            _stopPlayback();
-                            setState(() {
-                              _audioBuffer.clear();
-                              _currentFileSize = 0;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.check_circle,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            assessmentProvider.clearFilesSelection(
-                              questionId: widget.questionId ?? -1,
-                            );
-                            _stopPlayback();
-                            setState(() {
-                              _audioBuffer.clear();
-                              _currentFileSize = 0;
-                            });
-                          },
-                          icon: Icon(Icons.delete, color: AppColors.error),
-                        ),
-                      ],
-                    )
-                    : null,
+            //   trailing:
+            //       _audioBuffer.isNotEmpty && !_isRecording
+            //           ? Row(
+            //             mainAxisSize: MainAxisSize.min,
+            //             children: [
+            //               IconButton(
+            //                 onPressed: () {
+            //                   assessmentProvider.makeFilesSelection(
+            //                     questionId: widget.questionId ?? -1,
+            //                     maxFileSize: widget.maximumAudioSize + 1,
+            //                     selectedFiles: [
+            //                       PlatformFile(
+            //                         name:
+            //                             "${DateTime.now().toIso8601String()}.pcm",
+            //                         size: _audioBuffer.length,
+            //                         bytes: Uint8List.fromList(_audioBuffer),
+            //                       ),
+            //                     ],
+            //                   );
+            //                   _stopPlayback();
+            //                   setState(() {
+            //                     _audioBuffer.clear();
+            //                     _currentFileSize = 0;
+            //                   });
+            //                 },
+            //                 icon: Icon(
+            //                   Icons.check_circle,
+            //                   color: AppColors.primary,
+            //                 ),
+            //               ),
+            //               IconButton(
+            //                 onPressed: () {
+            //                   assessmentProvider.clearFilesSelection(
+            //                     questionId: widget.questionId ?? -1,
+            //                   );
+            //                   _stopPlayback();
+            //                   setState(() {
+            //                     _audioBuffer.clear();
+            //                     _currentFileSize = 0;
+            //                   });
+            //                 },
+            //                 icon: Icon(Icons.delete, color: AppColors.error),
+            //               ),
+            //             ],
+            //           )
+            //           : null,
+            //
           ),
           if (selectedFileList.isNotEmpty)
             ListTile(
@@ -270,6 +287,19 @@ class _AudioRecorderPlayerState extends State<AudioRecorderPlayer> {
               title: CustomText(
                 text: selectedFileList.first.name,
                 useOverflow: false,
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  assessmentProvider.clearFilesSelection(
+                    questionId: widget.questionId ?? -1,
+                  );
+                  _stopPlayback();
+                  setState(() {
+                    _audioBuffer.clear();
+                    _currentFileSize = 0;
+                  });
+                },
+                icon: Icon(Icons.delete, color: AppColors.error),
               ),
             ),
         ],

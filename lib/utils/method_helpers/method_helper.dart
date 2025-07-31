@@ -435,15 +435,13 @@ class MethodHelper with NavigateHelper {
 
     Duration diff = finishTime.difference(startTime);
 
-    if (diff.inHours >= 1) {
-      int hours = diff.inHours;
-      int minutes = diff.inMinutes % 60;
-      return "${hours.toString().padLeft(2, '0')} : ${minutes.toString().padLeft(2, '0')} hr";
-    } else {
-      int minutes = diff.inMinutes;
-      int seconds = diff.inSeconds % 60;
-      return "${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')} min";
-    }
+    int hours = diff.inHours;
+    int minutes = diff.inMinutes % 60;
+    int seconds = diff.inSeconds % 60;
+
+    return "${hours.toString().padLeft(2, '0')} : "
+        "${minutes.toString().padLeft(2, '0')} : "
+        "${seconds.toString().padLeft(2, '0')}";
   }
 
   //// its a ui builder for pick image source
@@ -643,7 +641,7 @@ class MethodHelper with NavigateHelper {
   }
 
   /// parse date from [YYYY-MM-DD] to `DateTime`
- static DateTime? parseDateFromString(String dateString) {
+  static DateTime? parseDateFromString(String dateString) {
     try {
       return DateTime.parse(dateString);
     } catch (e) {
