@@ -82,7 +82,9 @@ class AppStrings {
   static const contactNo2 = "Contact No 2";
   static const presentStudy = "Study - Ongoing Degree/Course";
   static const nameOfPresentStudy = "Enter Ongoing Degree or Course";
-  static const lastStudy = "Degree - Completed Degree/Course";
+  /// using this field as skills , it was used for last study but now will use as skills instead 
+  /// static const lastStudy = "Degree - Completed Degree/Course";
+  static const skill = "Skill";
   static const nameOfLastStudy = "Enter Completed Degree or Course";
   static const collegeOrUniversity = "College / University";
   static const nameOfCollegeOrUniversity = "Name Of College Or University";

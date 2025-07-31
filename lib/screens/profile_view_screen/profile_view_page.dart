@@ -75,8 +75,8 @@ class ProfileViewPage extends StatelessWidget with NavigateHelper {
                     _buildField("State", profileData['state']),
                   ]),
                   _buildSection("Education / Work", [
-                    _buildField("Current Study", profileData['currentStudy']),
-                    _buildField("Degree", profileData['degree']),
+                    _buildField("Degree / Study", profileData['currentStudy']),
+                    _buildField("Skill", profileData['degree']),
                     _buildField("College", profileData['college']),
                     if (profileData['company'] != null)
                       _buildField("Company", profileData['company']),

@@ -932,9 +932,10 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   TextEditingController lastStudy = TextEditingController();
   String? isLastStudyErr;
   void validateLastStudy() {
-    isLastStudyErr = ValidatorHelper.validateValue(
-      value: lastStudy.text.trim(),
-    );
+    isLastStudyErr =
+        lastStudy.text.trim().isNotEmpty
+            ? ValidatorHelper.validateValue(value: lastStudy.text.trim())
+            : null;
     notifyListeners();
   }
 
@@ -942,7 +943,7 @@ class SignUpProvider extends ChangeNotifier with NavigateHelper {
   String? isCollegeUniErr;
   void validateCollegeUni() {
     isCollegeUniErr = ValidatorHelper.validateValue(
-      value: lastStudy.text.trim(),
+      value: collegeOrUniversity.text.trim(),
     );
     notifyListeners();
   }

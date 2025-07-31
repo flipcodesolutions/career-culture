@@ -71,13 +71,26 @@ class _ShareContactDetailsState extends State<ShareContactDetails>
                     errorText: signUpProvider.isEmailErr,
                     label: AppStrings.email,
                     icon: Icons.email,
-                    child: CustomTextFieldWithAnimatedIconForVerification(
-                      enabled: !signUpProvider.isEmailVerified,
-                      onChanged: (value) => signUpProvider.validateEmail(),
-                      decoration: BorderHelper.noBorder(
-                        hintText: AppStrings.email,
-                      ),
-                      controller: signUpProvider.email,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 6,
+                          child: CustomTextFieldWithAnimatedIconForVerification(
+                            enabled: !signUpProvider.isEmailVerified,
+                            onChanged:
+                                (value) => signUpProvider.validateEmail(),
+                            decoration: BorderHelper.noBorder(
+                              hintText: AppStrings.email,
+                            ),
+                            controller: signUpProvider.email,
+                          ),
+                        ),
+                        Expanded(
+                          child: verificationBadge(
+                            signUpProvider.isEmailVerified,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizeHelper.height(),

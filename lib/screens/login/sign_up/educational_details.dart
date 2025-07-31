@@ -71,7 +71,7 @@ class EducationalDetails extends StatelessWidget {
                 ),
                 SizeHelper.height(),
                 CustomFormFieldContainer(
-                  label: AppStrings.lastStudy,
+                  label: AppStrings.skill,
                   errorText: signUpProvider.isLastStudyErr,
                   icon: Icons.school,
                   child: CustomTextFormField(
@@ -79,7 +79,7 @@ class EducationalDetails extends StatelessWidget {
                     decoration: BorderHelper.noBorder(
                       hintText: AppStrings.nameOfLastStudy,
                     ),
-                    suggestions: ListHelper.degreesList,
+                    suggestions: ListHelper.humanSkills,
                     controller: signUpProvider.lastStudy,
                     onChanged: (value) => signUpProvider.validateLastStudy(),
                   ),
