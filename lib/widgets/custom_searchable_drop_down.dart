@@ -20,6 +20,7 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
     required this.onChanged,
     this.selectedItem,
     this.decoration,
+    this.filterFn
   });
   final void Function(T?)? onSaved;
   final bool Function(T, T)? compareFn;
@@ -31,9 +32,11 @@ class CustomSearchableDropDown<T> extends StatelessWidget {
   final void Function(T?)? onChanged;
   final T? selectedItem;
   final InputDecoration? decoration;
+  final bool Function(T, String)? filterFn;
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<T>(
+      filterFn: filterFn,
       onSaved: onSaved,
       items: (filter, loadProps) => list, // <-- Just pass List<Convener>
       compareFn: compareFn,

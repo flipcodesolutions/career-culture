@@ -176,13 +176,13 @@ class _StartYourJourneyState extends State<StartYourJourney> {
 
                 /// searchable convener drop down
                 if (!signUpProvider.isUpdatingProfile)
-                CustomContainer(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child:
-                      signUpProvider.isLoading
-                          ? Center(child: CustomLoader())
-                          : ConvenerDropDown(signUpProvider: signUpProvider),
-                ),
+                  CustomContainer(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child:
+                        signUpProvider.isLoading
+                            ? Center(child: CustomLoader())
+                            : ConvenerDropDown(signUpProvider: signUpProvider),
+                  ),
                 SizeHelper.height(),
                 RadioQuestionWidgetWithHeading(
                   question: signUpProvider.genderQuestion,
@@ -253,6 +253,12 @@ class ConvenerDropDown extends StatelessWidget {
         decoration: InputDecoration(border: InputBorder.none),
         list: signUpProvider.convenerListModel?.data?.convener ?? [],
         itemAsString: (p0) => p0.name ?? "",
+        // **THIS** is the key: a filter function that checks both name **and** city
+        filterFn: (convener, searchText) {
+          final q = searchText.toLowerCase();
+          return (convener.name ?? "").toLowerCase().contains(q) ||
+              (convener.city ?? "").toLowerCase().contains(q);
+        },
         itemBuilder:
             (context, convener, isDisabled, isSelected) => CustomContainer(
               padding: EdgeInsets.all(AppSize.size10),
