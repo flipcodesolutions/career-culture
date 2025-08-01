@@ -175,7 +175,7 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                 SizeHelper.height(),
 
                 /// searchable convener drop down
-                // if (!signUpProvider.isUpdatingProfile)
+                if (!signUpProvider.isUpdatingProfile)
                 CustomContainer(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child:
