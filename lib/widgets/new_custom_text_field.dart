@@ -11,12 +11,14 @@ class CustomFormFieldContainer extends StatelessWidget {
   final IconData? icon;
   final String label;
   final Widget child;
+  final Widget? infoIcon;
   final String? errorText;
   final void Function()? onLeadingTap;
   const CustomFormFieldContainer({
     super.key,
     this.icon,
     this.errorText,
+    this.infoIcon,
     required this.label,
     required this.child,
     this.onLeadingTap,
@@ -29,7 +31,13 @@ class CustomFormFieldContainer extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CustomText(text: label, style: TextStyleHelper.smallText),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CustomText(text: label, style: TextStyleHelper.smallText),
+            infoIcon ?? Spacer(),
+          ],
+        ),
         SizeHelper.height(height: 1.h),
         CustomContainer(
           borderRadius: BorderRadius.circular(AppSize.size10),

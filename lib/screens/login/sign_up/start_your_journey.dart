@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/models/login_model/convener_list_model.dart';
 import 'package:mindful_youth/provider/user_provider/sign_up_provider.dart';
 import 'package:mindful_youth/utils/border_helper/border_helper.dart';
+import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -173,14 +175,14 @@ class _StartYourJourneyState extends State<StartYourJourney> {
                 SizeHelper.height(),
 
                 /// searchable convener drop down
-                if (!signUpProvider.isUpdatingProfile)
-                  CustomContainer(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    child:
-                        signUpProvider.isLoading
-                            ? Center(child: CustomLoader())
-                            : ConvenerDropDown(signUpProvider: signUpProvider),
-                  ),
+                // if (!signUpProvider.isUpdatingProfile)
+                CustomContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                  child:
+                      signUpProvider.isLoading
+                          ? Center(child: CustomLoader())
+                          : ConvenerDropDown(signUpProvider: signUpProvider),
+                ),
                 SizeHelper.height(),
                 RadioQuestionWidgetWithHeading(
                   question: signUpProvider.genderQuestion,
@@ -244,6 +246,7 @@ class ConvenerDropDown extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomFormFieldContainer(
       label: AppStrings.selectConvener,
+      infoIcon: ConveneerToolTip(),
       icon: Icons.assignment_ind,
       errorText: signUpProvider.isConvenerErr,
       child: CustomSearchableDropDown<Convener>(
@@ -299,6 +302,31 @@ class ConvenerDropDown extends StatelessWidget {
         validator:
             (value) => ValidatorHelper.validateValue(value: value?.name ?? ""),
       ),
+    );
+  }
+}
+
+/// used to show brife info releated to convenner
+class ConveneerToolTip extends StatelessWidget {
+  const ConveneerToolTip({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      decoration: BoxDecoration(
+        boxShadow: ShadowHelper.scoreContainer,
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSize.size20),
+      ),
+      textStyle: TextStyleHelper.smallText,
+      triggerMode: TooltipTriggerMode.tap,
+      enableFeedback: true,
+      preferBelow: false,
+      showDuration: Duration(seconds: 20),
+      enableTapToDismiss: true,
+      message: AppStrings.whatIsConveneer,
+      child: Icon(Icons.info_outline, size: AppSize.size20),
     );
   }
 }
