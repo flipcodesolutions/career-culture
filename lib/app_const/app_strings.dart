@@ -313,8 +313,8 @@ class AppStrings {
   static const cityNotProvided = "City Not Provided";
   static const whatIsConveneer =
       "“You are requested to stay in touch with the program coordinator through whom you have joined this transformative program. The coordinator will assist you throughout the duration of the program. For any inputs, queries, or further clarification, feel free to talk on +91 9592363333.”";
-  static const selfieWebViewURL =
-      "https://career-culture.flipcodesolutions.com/gallery-description";
+  static final selfieWebViewURL =
+      "$appUrl/gallery-description";
   static String getMessageAccordingToProgress({required double percentage}) {
     String message;
     switch (percentage) {
