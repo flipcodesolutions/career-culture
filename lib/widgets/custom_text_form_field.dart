@@ -59,25 +59,24 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  late final TextEditingController _controller;
+  // late final TextEditingController _controller;
   late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
 
     if (widget.onChanged != null) {
-      _controller.addListener(() {
-        widget.onChanged!(_controller.text);
+      widget.controller?.addListener(() {
+        widget.onChanged!(widget.controller?.text ?? "");
       });
     }
   }
 
   @override
   void dispose() {
-    if (widget.controller == null) _controller.dispose();
+    widget.controller?.dispose();
     if (widget.focusNode == null) _focusNode.dispose();
     super.dispose();
   }
@@ -94,7 +93,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
     if (widget.suggestions != null && widget.suggestions!.isNotEmpty) {
       return RawAutocomplete<String>(
-        textEditingController: _controller,
+        textEditingController: widget.controller,
         focusNode: _focusNode,
         optionsBuilder: (TextEditingValue value) {
           if (value.text.isEmpty) return const Iterable<String>.empty();
@@ -163,7 +162,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     }
 
     return TextFormField(
-      controller: _controller,
+      controller: widget.controller,
       focusNode: _focusNode,
       autocorrect: widget.autocorrect,
       cursorColor: AppColors.primary,
