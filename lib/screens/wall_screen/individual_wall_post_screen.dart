@@ -93,12 +93,9 @@ class _IndividualWallPostScreenState extends State<IndividualWallPostScreen>
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: CustomImageWithLoader(
-                                imageUrl:
-                                    "${AppStrings.assetsUrl}${wallProvider.slugWallPost?.image ?? ""}",
-                              ),
+                            CustomImageWithLoader(
+                              imageUrl:
+                                  "${AppStrings.assetsUrl}${wallProvider.slugWallPost?.image ?? ""}",
                             ),
                             SizeHelper.height(),
                             Padding(
