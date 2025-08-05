@@ -7,10 +7,8 @@ import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/app_const/app_size.dart';
 import 'package:mindful_youth/provider/all_event_provider/all_event_provider.dart';
 import 'package:mindful_youth/provider/user_provider/user_provider.dart';
-import 'package:mindful_youth/screens/feedback_screen/feedback_screen.dart';
 import 'package:mindful_youth/screens/login/sign_up/sign_up.dart';
 import 'package:mindful_youth/screens/notification_screen/notification_screen.dart';
-import 'package:mindful_youth/screens/programs_screen/widgets/assessment_result_screen.dart';
 import 'package:mindful_youth/utils/list_helper/list_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/method_helper.dart';
 import 'package:mindful_youth/utils/method_helpers/shadow_helper.dart';
@@ -24,17 +22,14 @@ import 'package:mindful_youth/widgets/custom_product_showcase.dart';
 import 'package:mindful_youth/widgets/custom_refresh_indicator.dart';
 import 'package:mindful_youth/widgets/custom_text.dart';
 import 'package:mindful_youth/widgets/cutom_loader.dart';
-import 'package:mindful_youth/widgets/primary_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../app_const/app_strings.dart';
-import '../../models/feedback_model/feedback_model.dart';
 import '../../provider/home_screen_provider/home_screen_provider.dart';
 import '../../provider/product_provider/product_provider.dart';
 import '../../provider/user_provider/sign_up_provider.dart';
 import '../../utils/shared_prefs_helper/shared_prefs_helper.dart';
 import '../../widgets/custom_annoucement_slider.dart';
-import '../../widgets/custom_crousal.dart';
 import '../../widgets/custom_slider.dart';
 import '../../widgets/exit_app_dialogbox.dart';
 import '../shop_market_screen/products_screen.dart';
@@ -131,8 +126,8 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             AppBarIcon(
               icon: AppImageStrings.notificationBellIcon,
-              iconH: 3.5.h,
-              iconW: 3.5.h,
+              // iconH: 7.h,
+              iconW: 10.w,
               onTap:
                   () => push(
                     context: context,
@@ -140,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen>
                     transition: ScaleFadePageTransitionsBuilder(),
                   ),
             ),
+            SizeHelper.width(width: 3.w),
           ],
           // ],
         ),
