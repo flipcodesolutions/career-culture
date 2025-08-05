@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindful_youth/app_const/app_image_strings.dart';
 import 'package:mindful_youth/provider/programs_provider/post_provider/post_provider.dart';
 import 'package:mindful_youth/provider/recent_activity_provider/recent_activity_provider.dart';
 import 'package:mindful_youth/screens/programs_screen/posts_screen.dart';
@@ -40,7 +41,7 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
       },
       child: CustomContainer(
         width: 90.w,
-        height: recentActivityProvider.isRecentActivity() ? 15.h : 5.h,
+        height: 15.h,
         margin: EdgeInsets.symmetric(horizontal: 5.w),
         borderRadius: BorderRadius.circular(AppSize.size10),
         backGroundColor: AppColors.white,
@@ -105,7 +106,21 @@ class ChapterProgressWidget extends StatelessWidget with NavigateHelper {
                     ),
                   ],
                 )
-                : Center(child: CustomText(text: AppStrings.noRecentActivity)),
+                : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        width: 15.w,
+                        height: 7.h,
+                        AppImageStrings.noRecentActivity,
+                      ),
+                      CustomText(text: AppStrings.noRecentActivity),
+                    ],
+                  ),
+                ),
       ),
     );
   }

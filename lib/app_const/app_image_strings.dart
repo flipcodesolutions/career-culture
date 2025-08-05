@@ -47,4 +47,5 @@ class AppImageStrings {
   static const String trikaldash = "assets/images/trikaldash.jpeg";
   static const String dashrathPatel = "assets/images/dashrathPatel.jpeg";
   static const String kgMehta = "assets/images/kgMehta.jpeg";
+  static const String noRecentActivity = "assets/images/no_recent_activity.png";
 }
