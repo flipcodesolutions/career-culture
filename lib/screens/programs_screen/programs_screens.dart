@@ -209,7 +209,13 @@ class _ProgramsScreensState extends State<ProgramsScreens>
                                         <ChaptersInfo>[],
                                     itemBuilder:
                                         (item, index) => GestureDetector(
-                                          onTap: () => goToPost(context, item),
+                                          onTap:
+                                              () => goToPost(
+                                                context,
+                                                item,
+                                                item.isOpen != null &&
+                                                    item.isOpen == true,
+                                              ),
 
                                           child: CustomContainer(
                                             height: 50.h,
@@ -288,15 +294,21 @@ class _ProgramsScreensState extends State<ProgramsScreens>
     );
   }
 
-  Future<void> goToPost(BuildContext context, ChaptersInfo item) {
-    return push(
-      context: context,
-      widget: PostsScreen(
-        chapterId: item.id ?? -1,
-        chapterName: item.title ?? "",
-      ),
-      transition: FadeUpwardsPageTransitionsBuilder(),
-    );
+  void goToPost(BuildContext context, ChaptersInfo item, bool shouldPush) {
+    shouldPush
+        ? push(
+          context: context,
+          widget: PostsScreen(
+            isFromGridView: true,
+            chapterId: item.id ?? -1,
+            chapterName: item.title ?? "",
+          ),
+          transition: FadeUpwardsPageTransitionsBuilder(),
+        )
+        : WidgetHelper.customSnackBar(
+          title: AppStrings.notOpenYet,
+          isError: true,
+        );
   }
 
   /// redirect to login page if not logged in

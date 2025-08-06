@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:mindful_youth/app_const/app_colors.dart';
@@ -41,9 +40,11 @@ class PostsScreen extends StatefulWidget {
     super.key,
     required this.chapterId,
     required this.chapterName,
+    this.isFromGridView = false,
   });
   final int chapterId;
   final String chapterName;
+  final bool isFromGridView;
   @override
   State<PostsScreen> createState() => _PostsScreenState();
 }
@@ -105,10 +106,17 @@ class _PostsScreenState extends State<PostsScreen>
           context: context,
           pId: programsProvider.currentProgramInfo?.id.toString() ?? "",
         );
-        await context.read<ChapterProvider>().getChapterById(
-          context: context,
-          id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
-        );
+        if (!context.mounted) return;
+        if (!widget.isFromGridView) {
+          await context.read<ChapterProvider>().getChapterById(
+            context: context,
+            id: (programsProvider.currentProgramInfo?.id ?? 0).toString(),
+          );
+        } else {
+          await context.read<ChapterProvider>().getAllChapters(
+            context: context,
+          );
+        }
       },
       child: Scaffold(
         appBar: AppBar(
