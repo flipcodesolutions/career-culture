@@ -20,8 +20,8 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="http" android:host="app.careerandculture.org" />
-        <data android:scheme="https" android:host="app.careerandculture.org" />
+        <data android:scheme="http" android:host="app.careerandculture.org" android:pathPrefix="/wall"/>
+        <data android:scheme="https" android:host="app.careerandculture.org" android:pathPrefix="/wall" />
       </intent-filter>
 
     </activity>
